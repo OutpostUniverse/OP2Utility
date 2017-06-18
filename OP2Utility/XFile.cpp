@@ -1,5 +1,11 @@
 #include"XFile.h"
 
+#if defined(_WIN32)
+#include <filesystem>
+#include <experimental\filesystem>
+using namespace std::experimental::filesystem;
+#endif
+
 void XFile::ConvertToUpper(string& str)
 {
 	for (auto & c : str) c = toupper(c);

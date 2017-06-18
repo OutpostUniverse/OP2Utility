@@ -1,12 +1,7 @@
 #pragma once
 
-#if defined(_WIN32)
-#include <filesystem>
-#include <experimental\filesystem>
-using namespace std::experimental::filesystem;
-#endif
-
 #include <string>
+#include <vector>
 
 using namespace std;
 
