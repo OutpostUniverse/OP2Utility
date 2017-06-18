@@ -24,7 +24,6 @@ public:
 	static void GetFilesFromDirectory(vector<string>& filenamesOut, const string& pathStr, const string& fileType);
 
 private:
-public:
 	static void ConvertToUpper(string& str);
 	static string XFile::ConvertToUpper(const string& str);
 };
