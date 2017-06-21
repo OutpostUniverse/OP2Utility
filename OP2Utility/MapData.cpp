@@ -81,7 +81,34 @@ void MapData::ReadTileInfo(ifstream& file)
 	file.read((char*)&terrainTypeVector[0], numTerrainTypes * sizeof(TerrainType));
 }
 
-int MapData::GetTileIndex(unsigned int x, unsigned int y)
+int MapData::GetTileInfoIndex(unsigned int x, unsigned int y)
 {
 	return tileDataVector[GetCellIndex(x, y)].tileIndex;
+}
+
+int MapData::GetCellType(unsigned int x, unsigned int y)
+{
+	return tileDataVector[GetCellIndex(x, y)].cellType;
+}
+
+int MapData::GetLavaPossible(unsigned int x, unsigned int y)
+{
+	return tileDataVector[GetCellIndex(x, y)].bLavaPossible;
+}
+
+int MapData::GetTileSetIndex(unsigned int x, unsigned int y)
+{
+	return tileInfoVector[GetTileInfoIndex(x, y)].tileSetIndex;
+}
+
+int MapData::GetImageIndex(unsigned int x, unsigned int y)
+{
+	return tileInfoVector[GetTileInfoIndex(x, y)].tileIndex;
+}
+
+size_t MapData::GetCellIndex(unsigned int x, unsigned int y)
+{
+	unsigned int lowerX = x & 0x1F; // ... 0001 1111
+	unsigned int upperX = x >> 5;   // ... 1110 0000
+	return (upperX * mapHeader.mapTileHeight + y) * 32 + lowerX;
 }

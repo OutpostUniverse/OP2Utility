@@ -194,35 +194,14 @@ struct MapData
 public:
 	MapData(string filename);
 
-	int GetTileIndex(unsigned int x, unsigned int y);
-	
-	int GetCellType(unsigned int x, unsigned int y)
-	{
-		return tileDataVector[GetCellIndex(x, y)].cellType;
-	}
-
-	int GetLavaPossible(unsigned int x, unsigned int y)
-	{
-		return tileDataVector[GetCellIndex(x, y)].bLavaPossible;
-	}
-
-	int GetTileSetIndex(unsigned int x, unsigned int y)
-	{
-		return tileInfoVector[tileDataVector[GetTileIndex(x, y)].tileIndex].tileSetIndex;
-	}
-
-	int GetImageIndex(unsigned int x, unsigned int y)
-	{
-		return tileInfoVector[tileDataVector[GetTileIndex(x, y)].tileIndex].tileIndex;
-	}
+	int GetTileInfoIndex(unsigned int x, unsigned int y);
+	int GetCellType(unsigned int x, unsigned int y);
+	int GetLavaPossible(unsigned int x, unsigned int y);
+	int GetTileSetIndex(unsigned int x, unsigned int y);
+	int GetImageIndex(unsigned int x, unsigned int y);
 
 private:
-	size_t GetCellIndex(unsigned int x, unsigned int y)
-	{
-		unsigned int lowerX = x & 0x1F; // ... 0001 1111
-		unsigned int upperX = x >> 5;   // ... 1110 0000
-		return (upperX * mapHeader.mapTileHeight + y) * 32 + lowerX;
-	}
+	size_t GetCellIndex(unsigned int x, unsigned int y);
 
 	void ReadMapHeader(ifstream& file);
 	void ReadTileData(ifstream& file);
