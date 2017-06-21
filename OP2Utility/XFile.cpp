@@ -62,6 +62,11 @@ bool XFile::ExtensionMatches(const string& pathStr, const string& extension)
 #endif
 }
 
+string XFile::ChangeFileExtension(string filename, string newExtension)
+{
+	return path(filename).replace_extension(newExtension).string();
+}
+
 void XFile::GetFilesFromDirectory(vector<string>& filenamesOut, const string& pathStr, const string& fileType)
 {
 	//directory_iterator directoryIterator(path(pathStr));

@@ -1,5 +1,4 @@
 #include "MapData.h"
-#include <vector>
 #include <iostream>
 #include <fstream>
 
@@ -83,7 +82,8 @@ void MapData::ReadTileInfo(ifstream& file)
 
 int MapData::GetTileInfoIndex(unsigned int x, unsigned int y)
 {
-	return tileDataVector[GetCellIndex(x, y)].tileIndex;
+	int cellIndex = GetCellIndex(x, y);
+	return tileDataVector[cellIndex].tileIndex;
 }
 
 int MapData::GetCellType(unsigned int x, unsigned int y)
@@ -98,12 +98,14 @@ int MapData::GetLavaPossible(unsigned int x, unsigned int y)
 
 int MapData::GetTileSetIndex(unsigned int x, unsigned int y)
 {
-	return tileInfoVector[GetTileInfoIndex(x, y)].tileSetIndex;
+	int tileInfoIndex = GetTileInfoIndex(x, y);
+	return tileInfoVector[tileInfoIndex].tileSetIndex;
 }
 
 int MapData::GetImageIndex(unsigned int x, unsigned int y)
 {
-	return tileInfoVector[GetTileInfoIndex(x, y)].tileIndex;
+	int tileInfoIndex = GetTileInfoIndex(x, y);
+	return tileInfoVector[tileInfoIndex].tileIndex;
 }
 
 size_t MapData::GetCellIndex(unsigned int x, unsigned int y)

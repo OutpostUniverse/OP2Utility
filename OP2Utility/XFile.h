@@ -23,6 +23,8 @@ public:
 	//Brett: I've been defeated trying to get the iterator working on this function.
 	static void GetFilesFromDirectory(vector<string>& filenamesOut, const string& pathStr, const string& fileType);
 
+	static string ChangeFileExtension(string filename, string newExtension);
+
 private:
 	static void ConvertToUpper(string& str);
 	static string XFile::ConvertToUpper(const string& str);
