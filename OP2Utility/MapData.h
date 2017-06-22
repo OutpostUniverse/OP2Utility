@@ -49,7 +49,7 @@ struct TileData
 
 	// The tile's associated index in the TileInfo array. 
 	// TileInfo lists general properties associated with a tile.
-	int tileIndex : 11;
+	unsigned int tileIndex : 11;
 
 	// Index of the unit that occupies the tile.
 	int unitIndex : 11;
@@ -194,11 +194,11 @@ struct MapData
 public:
 	MapData(string filename);
 
-	int GetTileInfoIndex(unsigned int x, unsigned int y);
+	unsigned int GetTileInfoIndex(unsigned int x, unsigned int y);
 	int GetCellType(unsigned int x, unsigned int y);
 	int GetLavaPossible(unsigned int x, unsigned int y);
-	int GetTileSetIndex(unsigned int x, unsigned int y);
-	int GetImageIndex(unsigned int x, unsigned int y);
+	short GetTileSetIndex(unsigned int x, unsigned int y);
+	short GetImageIndex(unsigned int x, unsigned int y);
 
 private:
 	size_t GetCellIndex(unsigned int x, unsigned int y);

@@ -72,17 +72,19 @@ void MapData::ReadTileInfo(ifstream& file)
 {
 	size_t numTileInfo;
 	file.read((char*)&numTileInfo, sizeof(numTileInfo));
+
 	tileInfoVector.resize(numTileInfo);
 	file.read((char*)&tileInfoVector[0], numTileInfo * sizeof(TileInfo));
+
 	size_t numTerrainTypes;
 	file.read((char*)&numTerrainTypes, sizeof(numTerrainTypes));
 	terrainTypeVector.resize(numTerrainTypes);
 	file.read((char*)&terrainTypeVector[0], numTerrainTypes * sizeof(TerrainType));
 }
 
-int MapData::GetTileInfoIndex(unsigned int x, unsigned int y)
+unsigned int MapData::GetTileInfoIndex(unsigned int x, unsigned int y)
 {
-	int cellIndex = GetCellIndex(x, y);
+	size_t cellIndex = GetCellIndex(x, y);
 	return tileDataVector[cellIndex].tileIndex;
 }
 
@@ -96,15 +98,15 @@ int MapData::GetLavaPossible(unsigned int x, unsigned int y)
 	return tileDataVector[GetCellIndex(x, y)].bLavaPossible;
 }
 
-int MapData::GetTileSetIndex(unsigned int x, unsigned int y)
+short MapData::GetTileSetIndex(unsigned int x, unsigned int y)
 {
-	int tileInfoIndex = GetTileInfoIndex(x, y);
+	unsigned int tileInfoIndex = GetTileInfoIndex(x, y);
 	return tileInfoVector[tileInfoIndex].tileSetIndex;
 }
 
-int MapData::GetImageIndex(unsigned int x, unsigned int y)
+short MapData::GetImageIndex(unsigned int x, unsigned int y)
 {
-	int tileInfoIndex = GetTileInfoIndex(x, y);
+	unsigned int tileInfoIndex = GetTileInfoIndex(x, y);
 	return tileInfoVector[tileInfoIndex].tileIndex;
 }
 
