@@ -25,6 +25,10 @@ public:
 
 	static string ChangeFileExtension(string filename, string newExtension);
 
+	static void CreateDirectory(const string& newPath);
+
+	static bool PathExists(const string& pathStr);
+
 private:
 	static void ConvertToUpper(string& str);
 	static string XFile::ConvertToUpper(const string& str);

@@ -64,7 +64,23 @@ bool XFile::ExtensionMatches(const string& pathStr, const string& extension)
 
 string XFile::ChangeFileExtension(string filename, string newExtension)
 {
+#if defined(_WIN32)
 	return path(filename).replace_extension(newExtension).string();
+#endif
+}
+
+void XFile::CreateDirectory(const string& newPath)
+{
+#if defined(_WIN32)
+	create_directory(path(newPath));
+#endif
+}
+
+bool XFile::PathExists(const string& pathStr)
+{
+#if defined(_WIN32)
+	return exists(path(pathStr));
+#endif
 }
 
 void XFile::GetFilesFromDirectory(vector<string>& filenamesOut, const string& pathStr, const string& fileType)
