@@ -83,6 +83,21 @@ bool XFile::PathExists(const string& pathStr)
 #endif
 }
 
+string XFile::AppendToFilename(const string& filename, const string& valueToAppend)
+{
+#if defined(_WIN32)
+	path newPath(filename);
+	
+	path newFilename = newPath.filename().replace_extension("");
+	newFilename += valueToAppend;
+	newFilename.replace_extension(newPath.extension());
+
+	newPath.replace_filename(newFilename);
+	
+	return newPath.string();
+#endif
+}
+
 void XFile::GetFilesFromDirectory(vector<string>& filenamesOut, const string& pathStr, const string& fileType)
 {
 	//directory_iterator directoryIterator(path(pathStr));

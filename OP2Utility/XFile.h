@@ -29,6 +29,8 @@ public:
 
 	static bool PathExists(const string& pathStr);
 
+	static string XFile::AppendToFilename(const string& filename, const string& valueToAppend);
+
 private:
 	static void ConvertToUpper(string& str);
 	static string XFile::ConvertToUpper(const string& str);
