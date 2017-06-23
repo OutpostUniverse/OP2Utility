@@ -100,21 +100,26 @@ string XFile::AppendToFilename(const string& filename, const string& valueToAppe
 
 void XFile::GetFilesFromDirectory(vector<string>& filenamesOut, const string& pathStr, const string& fileType)
 {
-	//directory_iterator directoryIterator(path(pathStr));
-	//directory_entry directoryEntry;
+#if defined(_WIN32)
+	path p(pathStr);
 
-	//directory_iterator end;
+	if (pathStr == "" || pathStr == "/" || pathStr == "\\" || pathStr == " ")
+		p = current_path();
 
-	//for (directory_iterator iter(path(pathStr)); iter != end; iter)
-	//{
-	//	filenames.insert(iter.);
-	//}
+	for (auto& directoryEntry : directory_iterator(p))
+	{
+		if (directoryEntry.path().extension() == fileType )
+			filenamesOut.push_back(directoryEntry.path().string());
+	}
+#endif
+}
 
-	//while (directoryIterator.increment(directoryEntry))
-	//{
-
-	//}
-	//for (directory_iterator next(path("abc")), end; next != end; ++next) 
-
-	//visit(next->path());
+string XFile::AppendSubDirectory(const string& pathStr, const string& subDirectory)
+{
+#if defined(_WIN32)
+	path p(pathStr);
+	path filename(p.filename());
+	p.remove_filename();
+	return p.append(subDirectory).append(filename).string();
+#endif
 }
