@@ -62,7 +62,7 @@ bool XFile::ExtensionMatches(const string& pathStr, const string& extension)
 #endif
 }
 
-string XFile::ChangeFileExtension(string filename, string newExtension)
+string XFile::ChangeFileExtension(const string& filename, const string& newExtension)
 {
 #if defined(_WIN32)
 	return path(filename).replace_extension(newExtension).string();

@@ -23,7 +23,7 @@ public:
 	//Brett: I've been defeated trying to get the iterator working on this function.
 	static void GetFilesFromDirectory(vector<string>& filenamesOut, const string& pathStr, const string& fileType);
 
-	static string ChangeFileExtension(string filename, string newExtension);
+	static string ChangeFileExtension(const string& filename, const string& newExtension);
 
 	static void CreateDirectory(const string& newPath);
 
