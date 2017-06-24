@@ -123,3 +123,11 @@ string XFile::AppendSubDirectory(const string& pathStr, const string& subDirecto
 	return p.append(subDirectory).append(filename).string();
 #endif
 }
+
+string XFile::GetFilename(const string& pathStr)
+{
+#if defined(_WIN32)
+	path p(pathStr);
+	return p.filename().string();
+#endif
+}

@@ -33,6 +33,8 @@ public:
 
 	static string XFile::AppendSubDirectory(const string& pathStr, const string& subDirectory);
 
+	static string XFile::GetFilename(const string& pathStr);
+
 private:
 	static void ConvertToUpper(string& str);
 	static string XFile::ConvertToUpper(const string& str);
