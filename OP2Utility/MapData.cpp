@@ -4,13 +4,16 @@
 
 using namespace std;
 
-MapData::MapData(string filename)
+MapData::MapData(string filename, bool saveGame)
 {
 	ifstream file(filename, ios::in | ios::binary);
 
 	if (!file.is_open())
 		throw exception("Map file could not be opened.");
 	
+	if (saveGame)
+		SkipSaveGameHeader(file);
+
 	ReadMapHeader(file);
 	ReadTileData(file);
 	ReadClipRect(file);
@@ -19,6 +22,11 @@ MapData::MapData(string filename)
 	ReadTileInfo(file);
 
 	file.close();
+}
+
+void MapData::SkipSaveGameHeader(ifstream& file)
+{
+	file.ignore(0x1E025);
 }
 
 void MapData::ReadMapHeader(ifstream& file)

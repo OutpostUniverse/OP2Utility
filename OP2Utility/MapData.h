@@ -14,6 +14,13 @@ using namespace std;
 // ALT IMPLEMENTATION (with COM support)
 //     Outpost2SVN\MapEditor\OP2Editor.
 
+struct SaveGameHeader
+{
+	char SaveGameHeaderString[23];//OUTPOST 2.00 SAVED GAME
+
+	int Unknown[11]; // 116 * 2 * 0x1E0
+};
+
 struct MapHeader
 {
 	// The map's version tag. 
@@ -192,7 +199,7 @@ struct MapData
 	vector<TerrainType> terrainTypeVector;
 
 public:
-	MapData(string filename);
+	MapData(string filename, bool saveGame);
 
 	unsigned int GetTileInfoIndex(unsigned int x, unsigned int y);
 	int GetCellType(unsigned int x, unsigned int y);
@@ -203,6 +210,7 @@ public:
 private:
 	size_t GetCellIndex(unsigned int x, unsigned int y);
 
+	void MapData::SkipSaveGameHeader(ifstream& file);
 	void ReadMapHeader(ifstream& file);
 	void ReadTileData(ifstream& file);
 	void ReadClipRect(ifstream& file);

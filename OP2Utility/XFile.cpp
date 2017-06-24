@@ -119,7 +119,11 @@ string XFile::AppendSubDirectory(const string& pathStr, const string& subDirecto
 #if defined(_WIN32)
 	path p(pathStr);
 	path filename(p.filename());
-	p.remove_filename();
+	
+	if (p == filename)
+		return path().append(subDirectory).append(filename).string();
+
+	p = p.remove_filename();
 	return p.append(subDirectory).append(filename).string();
 #endif
 }
