@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archives">
+      <UniqueIdentifier>{351a0216-e40c-4520-b35c-25690fb48ab0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapData.h">
@@ -27,12 +30,60 @@
     <ClInclude Include="OP2Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Archives\CAdaptHuffTree.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\CArchiveFile.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\CBitStream.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\CClmFile.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\CHuffLZ.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\CVolFile.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchiveHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MapData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\CAdaptHuffTree.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\CArchiveFile.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\CBitStream.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\CClmFile.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\CHuffLZ.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\CVolFile.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchiveHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

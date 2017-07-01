@@ -12,40 +12,40 @@ MapData::MapData(string filename, bool saveGame)
 		throw exception("Map file could not be opened.");
 	
 	if (saveGame)
-		SkipSaveGameHeader(file);
+		skipSaveGameHeader(file);
 
-	ReadMapHeader(file);
-	ReadTileData(file);
-	ReadClipRect(file);
-	ReadTileSetSources(file);
-	ReadTileSetHeader(file);
-	ReadTileInfo(file);
+	readMapHeader(file);
+	readTileData(file);
+	readClipRect(file);
+	readTileSetSources(file);
+	readTileSetHeader(file);
+	readTileInfo(file);
 
 	file.close();
 }
 
-void MapData::SkipSaveGameHeader(ifstream& file)
+void MapData::skipSaveGameHeader(ifstream& file)
 {
 	file.ignore(0x1E025);
 }
 
-void MapData::ReadMapHeader(ifstream& file)
+void MapData::readMapHeader(ifstream& file)
 {
 	file.read((char*)&mapHeader, sizeof(mapHeader));
 }
 
-void MapData::ReadTileData(ifstream& file)
+void MapData::readTileData(ifstream& file)
 {
 	tileDataVector.resize(mapHeader.mapTileHeight << mapHeader.lgMapTileWidth);
 	file.read((char*)&tileDataVector[0], tileDataVector.size() * sizeof(TileData));
 }
 
-void MapData::ReadClipRect(ifstream& file)
+void MapData::readClipRect(ifstream& file)
 {
 	file.read((char*)&clipRect, sizeof(clipRect));
 }
 
-void MapData::ReadTileSetHeader(ifstream& file)
+void MapData::readTileSetHeader(ifstream& file)
 {
 	char buffer[10];
 	file.read(buffer, sizeof(buffer));
@@ -55,7 +55,7 @@ void MapData::ReadTileSetHeader(ifstream& file)
 	}
 }
 
-void MapData::ReadTileSetSources(ifstream& file)
+void MapData::readTileSetSources(ifstream& file)
 {
 	tileSetSources.resize((size_t)mapHeader.numTileSets);
 
@@ -76,7 +76,7 @@ void MapData::ReadTileSetSources(ifstream& file)
 	}
 }
 
-void MapData::ReadTileInfo(ifstream& file)
+void MapData::readTileInfo(ifstream& file)
 {
 	size_t numTileInfo;
 	file.read((char*)&numTileInfo, sizeof(numTileInfo));
@@ -90,31 +90,31 @@ void MapData::ReadTileInfo(ifstream& file)
 	file.read((char*)&terrainTypeVector[0], numTerrainTypes * sizeof(TerrainType));
 }
 
-unsigned int MapData::GetTileInfoIndex(unsigned int x, unsigned int y)
+unsigned int MapData::getTileInfoIndex(unsigned int x, unsigned int y)
 {
 	size_t cellIndex = GetCellIndex(x, y);
 	return tileDataVector[cellIndex].tileIndex;
 }
 
-int MapData::GetCellType(unsigned int x, unsigned int y)
+int MapData::getCellType(unsigned int x, unsigned int y)
 {
 	return tileDataVector[GetCellIndex(x, y)].cellType;
 }
 
-int MapData::GetLavaPossible(unsigned int x, unsigned int y)
+int MapData::getLavaPossible(unsigned int x, unsigned int y)
 {
 	return tileDataVector[GetCellIndex(x, y)].bLavaPossible;
 }
 
-short MapData::GetTileSetIndex(unsigned int x, unsigned int y)
+short MapData::getTileSetIndex(unsigned int x, unsigned int y)
 {
-	unsigned int tileInfoIndex = GetTileInfoIndex(x, y);
+	unsigned int tileInfoIndex = getTileInfoIndex(x, y);
 	return tileInfoVector[tileInfoIndex].tileSetIndex;
 }
 
-short MapData::GetImageIndex(unsigned int x, unsigned int y)
+short MapData::getImageIndex(unsigned int x, unsigned int y)
 {
-	unsigned int tileInfoIndex = GetTileInfoIndex(x, y);
+	unsigned int tileInfoIndex = getTileInfoIndex(x, y);
 	return tileInfoVector[tileInfoIndex].tileIndex;
 }
 

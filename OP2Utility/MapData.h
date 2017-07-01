@@ -14,13 +14,6 @@ using namespace std;
 // ALT IMPLEMENTATION (with COM support)
 //     Outpost2SVN\MapEditor\OP2Editor.
 
-struct SaveGameHeader
-{
-	char SaveGameHeaderString[23];//OUTPOST 2.00 SAVED GAME
-
-	int Unknown[11]; // 116 * 2 * 0x1E0
-};
-
 struct MapHeader
 {
 	// The map's version tag. 
@@ -42,7 +35,7 @@ struct MapHeader
 	unsigned int numTileSets;
 
 	// Map Width in Tiles.
-	unsigned int MapTileWidth()
+	unsigned int mapTileWidth()
 	{
 		return (unsigned int)pow(2, lgMapTileWidth);
 	}
@@ -96,7 +89,7 @@ struct TileSetSource
 	// Number of Tiles in set (represented on BMP).
 	int numTiles;
 
-	std::string GetTileSetFilename()
+	std::string getTileSetFilename()
 	{
 		string s;
 		for (int i = 0; i < 8; ++i)
@@ -201,20 +194,20 @@ struct MapData
 public:
 	MapData(string filename, bool saveGame);
 
-	unsigned int GetTileInfoIndex(unsigned int x, unsigned int y);
-	int GetCellType(unsigned int x, unsigned int y);
-	int GetLavaPossible(unsigned int x, unsigned int y);
-	short GetTileSetIndex(unsigned int x, unsigned int y);
-	short GetImageIndex(unsigned int x, unsigned int y);
+	unsigned int getTileInfoIndex(unsigned int x, unsigned int y);
+	int getCellType(unsigned int x, unsigned int y);
+	int getLavaPossible(unsigned int x, unsigned int y);
+	short getTileSetIndex(unsigned int x, unsigned int y);
+	short getImageIndex(unsigned int x, unsigned int y);
 
 private:
 	size_t GetCellIndex(unsigned int x, unsigned int y);
 
-	void MapData::SkipSaveGameHeader(ifstream& file);
-	void ReadMapHeader(ifstream& file);
-	void ReadTileData(ifstream& file);
-	void ReadClipRect(ifstream& file);
-	void ReadTileSetSources(ifstream& file);
-	void ReadTileSetHeader(ifstream& file);
-	void ReadTileInfo(ifstream& file);
+	void skipSaveGameHeader(ifstream& file);
+	void readMapHeader(ifstream& file);
+	void readTileData(ifstream& file);
+	void readClipRect(ifstream& file);
+	void readTileSetSources(ifstream& file);
+	void readTileSetHeader(ifstream& file);
+	void readTileInfo(ifstream& file);
 };

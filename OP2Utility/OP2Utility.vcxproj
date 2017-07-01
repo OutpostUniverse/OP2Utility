@@ -74,7 +74,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -90,7 +91,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -111,13 +113,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ArchiveHelper.h" />
+    <ClInclude Include="Archives\CAdaptHuffTree.h" />
+    <ClInclude Include="Archives\CArchiveFile.h" />
+    <ClInclude Include="Archives\CBitStream.h" />
+    <ClInclude Include="Archives\CClmFile.h" />
+    <ClInclude Include="Archives\CHuffLZ.h" />
+    <ClInclude Include="Archives\CVolFile.h" />
     <ClInclude Include="MapData.h" />
+    <ClCompile Include="ArchiveHelper.cpp" />
+    <ClCompile Include="Archives\CAdaptHuffTree.cpp" />
+    <ClCompile Include="Archives\CArchiveFile.cpp" />
+    <ClCompile Include="Archives\CBitStream.cpp" />
+    <ClCompile Include="Archives\CClmFile.cpp" />
+    <ClCompile Include="Archives\CHuffLZ.cpp" />
+    <ClCompile Include="Archives\CVolFile.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClInclude Include="OP2Utility.h" />
+    <ClInclude Include="StringHelper.h" />
     <ClInclude Include="TileSetBmpReader.h" />
     <ClInclude Include="XFile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="XFile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
