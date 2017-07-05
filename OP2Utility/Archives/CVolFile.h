@@ -20,6 +20,8 @@ class CVolFile : public CArchiveFile, public CMemoryMappedFile
 
 		// Extraction
 		int ExtractFile(int index, const char *filename);
+		void OpenStreamRead(const char *filename);
+		void OpenStreamRead(int fileIndex);
 
 		// Volume Creation
 		bool Repack();

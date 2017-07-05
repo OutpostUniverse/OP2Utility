@@ -48,7 +48,15 @@ int CVolFile::GetInternalFileNameOffset(int index)
 	return m_Index[index].fileNameOffset;
 }
 
+void CVolFile::OpenStreamRead(const char *filename)
+{
 
+}
+
+void CVolFile::OpenStreamRead(int fileIndex)
+{
+	//return OpenStreamRead(GetFileIndex(fileName));
+}
 
 // Extracts the internal file at the given index to the file 
 // filename. Returns nonzero if successful.

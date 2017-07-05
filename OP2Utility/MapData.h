@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 #include <string>
+#include <io.h>
 
 using namespace std;
 
@@ -192,7 +193,8 @@ struct MapData
 	vector<TerrainType> terrainTypeVector;
 
 public:
-	MapData(string filename, bool saveGame);
+	MapData(string filename, bool saveGame = false);
+	//MapData(StreamReader mapStream);
 
 	unsigned int getTileInfoIndex(unsigned int x, unsigned int y);
 	int getCellType(unsigned int x, unsigned int y);
