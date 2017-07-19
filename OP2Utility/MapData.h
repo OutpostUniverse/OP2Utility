@@ -1,9 +1,9 @@
 #pragma once
 
+#include "StreamReader.h"
 #include <vector>
 #include <cmath>
 #include <string>
-#include <io.h>
 
 using namespace std;
 
@@ -193,8 +193,8 @@ struct MapData
 	vector<TerrainType> terrainTypeVector;
 
 public:
-	MapData(string filename, bool saveGame = false);
-	//MapData(StreamReader mapStream);
+	MapData(SeekableStreamReader* mapStream, bool saveGame = false);
+	MapData(string filename, bool saveGame = false) : MapData(&FileStreamReader(filename), saveGame) {}
 
 	unsigned int getTileInfoIndex(unsigned int x, unsigned int y);
 	int getCellType(unsigned int x, unsigned int y);
@@ -205,11 +205,11 @@ public:
 private:
 	size_t GetCellIndex(unsigned int x, unsigned int y);
 
-	void skipSaveGameHeader(ifstream& file);
-	void readMapHeader(ifstream& file);
-	void readTileData(ifstream& file);
-	void readClipRect(ifstream& file);
-	void readTileSetSources(ifstream& file);
-	void readTileSetHeader(ifstream& file);
-	void readTileInfo(ifstream& file);
+	void skipSaveGameHeader(SeekableStreamReader* streamReader);
+	void readMapHeader(StreamReader* streamReader);
+	void readTileData(StreamReader* streamReader);
+	void readClipRect(StreamReader* streamReader);
+	void readTileSetSources(StreamReader* streamReader);
+	void readTileSetHeader(StreamReader* streamReader);
+	void readTileInfo(StreamReader* streamReader);
 };

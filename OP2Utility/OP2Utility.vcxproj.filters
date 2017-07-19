@@ -48,10 +48,13 @@
     <ClInclude Include="Archives\CVolFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="ArchiveHelper.h">
+    <ClInclude Include="StringHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StringHelper.h">
+    <ClInclude Include="StreamReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,10 +83,13 @@
     <ClCompile Include="Archives\CVolFile.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="ArchiveHelper.cpp">
+    <ClCompile Include="StringHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringHelper.cpp">
+    <ClCompile Include="StreamReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

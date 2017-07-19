@@ -1,6 +1,8 @@
+#pragma once
+
 #include <windows.h>
 #include "CArchiveFile.h"
-
+#include "../StreamReader.h"
 
 #define CLM_WRITE_SIZE 0x00020000
 
@@ -16,7 +18,10 @@ class CClmFile : public CArchiveFile
 		~CClmFile();
 
 		const char* GetInternalFileName(int index);
+		int GetInternalFileIndex(const char *internalFileName);
 		int ExtractFile(int index, const char *fileName);
+		SeekableStreamReader* OpenSeekableStreamReader(const char *internalFileName);
+		SeekableStreamReader* OpenSeekableStreamReader(int fileIndex);
 
 		int GetInternalFileSize(int index);
 

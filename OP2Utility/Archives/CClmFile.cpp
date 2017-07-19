@@ -82,6 +82,17 @@ const char* CClmFile::GetInternalFileName(int index)
 	return m_FileName[index];
 }
 
+int CClmFile::GetInternalFileIndex(const char *internalFileName)
+{
+	for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+	{
+		if (GetInternalFileName(i) == internalFileName)
+			return i;
+	}
+
+	return -1;
+}
+
 // Returns the size of the internal file corresponding to index
 int CClmFile::GetInternalFileSize(int index)
 {
@@ -192,7 +203,20 @@ int CClmFile::ExtractFile(int index, const char *fileName)
 	return true;
 }
 
+SeekableStreamReader* CClmFile::OpenSeekableStreamReader(const char *internalFileName)
+{
+	int fileIndex = GetInternalFileIndex(internalFileName);
 
+	if (fileIndex < 0)
+		throw exception("File does not exist in Archive.");
+
+	return OpenSeekableStreamReader(fileIndex);
+}
+
+SeekableStreamReader* CClmFile::OpenSeekableStreamReader(int fileIndex)
+{
+	throw exception("OpenStreamRead not yet implemented for Clm files.");
+}
 
 
 

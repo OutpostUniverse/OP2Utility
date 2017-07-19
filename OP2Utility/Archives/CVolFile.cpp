@@ -26,6 +26,17 @@ const char* CVolFile::GetInternalFileName(int index)
 	return m_StringTable + m_Index[index].fileNameOffset;
 }
 
+int CVolFile::GetInternalFileIndex(const char *internalFileName)
+{
+	for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+	{
+		if (GetInternalFileName(i) == internalFileName)
+			return i;
+	}
+
+	return -1;
+}
+
 short CVolFile::GetInternalCompressionCode(int index)
 {
 	return m_Index[index].compressionTag;
@@ -48,14 +59,24 @@ int CVolFile::GetInternalFileNameOffset(int index)
 	return m_Index[index].fileNameOffset;
 }
 
-void CVolFile::OpenStreamRead(const char *filename)
+SeekableStreamReader* CVolFile::OpenSeekableStreamReader(const char* internalFileName)
 {
+	int fileIndex = GetInternalFileIndex(internalFileName);
 
+	if (fileIndex < 0)
+		throw exception("File does not exist in Archive.");
+
+	return OpenSeekableStreamReader(fileIndex);
 }
 
-void CVolFile::OpenStreamRead(int fileIndex)
+SeekableStreamReader* CVolFile::OpenSeekableStreamReader(int fileIndex)
 {
-	//return OpenStreamRead(GetFileIndex(fileName));
+	// Get offset and length of file to extract
+	char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
+	size_t length = *(int*)(offset + 4) & 0x00FFFFFF;
+	offset += 8;
+
+	return &MemoryStreamReader(offset, length);
 }
 
 // Extracts the internal file at the given index to the file 

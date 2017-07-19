@@ -4,7 +4,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
+#include "../StreamReader.h"
 
 class CArchiveUnpacker
 {
@@ -17,8 +17,13 @@ class CArchiveUnpacker
 		int GetNumberOfPackedFiles()	{ return m_NumberOfPackedFiles; };
 
 		virtual const char* GetInternalFileName(int index) = 0;
+		// Returns -1 if internalFileName is not present in archive.
+		virtual int GetInternalFileIndex(const char *internalFileName) = 0;
 		virtual int GetInternalFileSize(int index) = 0;
 		virtual int ExtractFile(int index, const char *fileName) = 0;
+		virtual SeekableStreamReader* OpenSeekableStreamReader(const char *internalFileName) = 0;
+		virtual SeekableStreamReader* OpenSeekableStreamReader(int fileIndex) = 0;
+
 	protected:
 		char *m_VolumeFileName;
 		int m_NumberOfPackedFiles;

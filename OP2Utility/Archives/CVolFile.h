@@ -1,8 +1,10 @@
+#pragma once
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "CHuffLZ.h"
 #include "CArchiveFile.h"
-
+#include "../StreamReader.h"
 
 #define VOL_WRITE_SIZE 65536
 
@@ -15,13 +17,14 @@ class CVolFile : public CArchiveFile, public CMemoryMappedFile
 
 		// Internal file status
 		const char* GetInternalFileName(int index);
+		int GetInternalFileIndex(const char *internalFileName);
 		short GetInternalCompressionCode(int index);
 		int GetInternalFileSize(int index);
 
 		// Extraction
 		int ExtractFile(int index, const char *filename);
-		void OpenStreamRead(const char *filename);
-		void OpenStreamRead(int fileIndex);
+		SeekableStreamReader* OpenSeekableStreamReader(const char *internalFileName);
+		SeekableStreamReader* OpenSeekableStreamReader(int fileIndex);
 
 		// Volume Creation
 		bool Repack();

@@ -1,11 +1,12 @@
 #pragma once
 
 #include "StringHelper.h"
+#include "StreamReader.h"
 #include "XFile.h"
 #include "MapData.h"
 #include "TileSetBmpReader.h"
 
-#include "ArchiveHelper.h"
+#include "ResourceManager.h"
 #include "Archives/CClmFile.h"
 #include "Archives/CVolFile.h"
 
