@@ -112,15 +112,13 @@ int CVolFile::ExtractFile(int index, const char *filename)
 	offset += 8;
 
 	// Check if the file is compressed
-	if (m_Index[index].compressionTag == 0x100)
+	if (m_Index[index].compressionTag == (int)CompressionType::Uncompressed)
 	{
-		// Write the file (uncompressed)
 		retVal = WriteFile(outFile, offset, length, &bytesWritten, NULL);
 	}
 	else
 	{
-		// The file is compressed
-		if (m_Index[index].compressionTag == 0x103)
+		if (m_Index[index].compressionTag == (int)CompressionType::LZH)
 		{
 			// Decompress the file
 			// Construct the decompressor

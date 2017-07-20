@@ -43,7 +43,7 @@ bool CClmFile::ReadHeader()
 	if (ReadFile(m_FileHandle, buff, 32, &numBytes, NULL) == 0) return false;
 	if (memcmp(buff, "OP2 Clump File Version 1.0\x01A\0\0\0\0", 32)) return false;
 
-	// Read in the WaveFormat structure
+	// Read in the WAVEFORMATEX structure
 	if (ReadFile(m_FileHandle, &m_WaveFormat, sizeof(m_WaveFormat), &numBytes, NULL) == 0) return false;
 
 	// Read remaining header info
@@ -112,7 +112,7 @@ int CClmFile::ExtractFile(int index, const char *fileName)
 	{
 		int fmtTag;
 		int formatSize;
-		WaveFormat waveFormat;
+		WAVEFORMATEX waveFormat;
 	};
 	struct DataChunk
 	{
@@ -263,7 +263,7 @@ bool CClmFile::CreateVolume(const char *volumeFileName, int numFilesToPack,
 {
 	HANDLE outFile = NULL;
 	HANDLE *fileHandle;
-	WaveFormat *waveFormat;
+	WAVEFORMATEX *waveFormat;
 	IndexEntry *indexEntry;
 
 	// Allocate space for all the file handles
@@ -279,7 +279,7 @@ bool CClmFile::CreateVolume(const char *volumeFileName, int numFilesToPack,
 	// Allocate space for index entries
 	indexEntry = new IndexEntry[numFilesToPack];
 	// Allocate space for the format of all wave files
-	waveFormat = new WaveFormat[numFilesToPack];
+	waveFormat = new WAVEFORMATEX[numFilesToPack];
 	// Read in all the wave headers
 	if (ReadAllWaveHeaders(numFilesToPack, fileHandle, waveFormat, indexEntry) == false)
 	{
@@ -359,7 +359,7 @@ bool CClmFile::OpenAllInputFiles(int numFilesToPack, const char **filesToPack, H
 // Returns nonzero if successful and zero otherwise.
 // Note: This function assumes that all file pointers are initially set to the beginning
 //  of the file. When reading the wave file header, it does not seek to the file start.
-bool CClmFile::ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormat *format, IndexEntry *indexEntry)
+bool CClmFile::ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WAVEFORMATEX *format, IndexEntry *indexEntry)
 {
 	#pragma pack(push, 1)
 	struct RiffHeader
@@ -388,7 +388,7 @@ bool CClmFile::ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormat *
 		length = FindChunk(FMT, file[i]);
 		if (length == -1) return false;		// Format chunk not found
 		// Read in the wave format
-		if (ReadFile(file[i], &format[i], sizeof(WaveFormat), &numBytesRead, NULL) == 0)
+		if (ReadFile(file[i], &format[i], sizeof(WAVEFORMATEX), &numBytesRead, NULL) == 0)
 			return false;					// Error reading in wave format
 		format[i].cbSize = 0;
 
@@ -447,7 +447,7 @@ int CClmFile::FindChunk(int chunkTag, HANDLE file)
 void CClmFile::CleanUpVolumeCreate(HANDLE outFile,
 								   int numFilesToPack, 
 								   HANDLE *fileHandle, 
-								   WaveFormat *waveFormat,
+								   WAVEFORMATEX *waveFormat,
 								   IndexEntry *indexEntry)
 {
 	int i;
@@ -465,13 +465,13 @@ void CClmFile::CleanUpVolumeCreate(HANDLE outFile,
 
 // Compares wave format structures in the array waveFormat
 // Returns true if they are all the same and false otherwise.
-bool CClmFile::CompareWaveFormats(int numFilesToPack, WaveFormat *waveFormat)
+bool CClmFile::CompareWaveFormats(int numFilesToPack, WAVEFORMATEX *waveFormat)
 {
 	int i;
 
 	for (i = 1; i < numFilesToPack; i++)
 	{
-		if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WaveFormat)))
+		if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WAVEFORMATEX)))
 			return false;		// Mismatch found
 	}
 
@@ -483,13 +483,13 @@ bool CClmFile::WriteVolume(HANDLE outFile,
 						   HANDLE *fileHandle, 
 						   IndexEntry *entry,
 						   const char **internalName, 
-						   WaveFormat *waveFormat)
+						   WAVEFORMATEX *waveFormat)
 {
 	#pragma pack(push, 1)
 	struct SClmHeader
 	{
 		char textBuff[32];
-		WaveFormat waveFormat;
+		WAVEFORMATEX waveFormat;
 		char unknown[6];
 		int numIndexEntries;
 	};
@@ -515,7 +515,7 @@ bool CClmFile::WriteVolume(HANDLE outFile,
 	// Write the text header
 	if (WriteFile(outFile, textBuff, 32, &numBytes, NULL) == 0) return false;
 	// Write the wave format
-	if (WriteFile(outFile, waveFormat, sizeof(WaveFormat), &numBytes, NULL) == 0) return false;
+	if (WriteFile(outFile, waveFormat, sizeof(WAVEFORMATEX), &numBytes, NULL) == 0) return false;
 	// Write the unknown bytes
 	if (WriteFile(outFile, m_Unknown, 6, &numBytes, NULL) == 0) return false;
 	// Write the number of internal files

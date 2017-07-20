@@ -113,6 +113,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Archives\CompressionType.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Archives\CAdaptHuffTree.h" />
     <ClInclude Include="Archives\CArchiveFile.h" />

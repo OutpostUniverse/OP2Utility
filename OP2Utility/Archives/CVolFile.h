@@ -6,6 +6,7 @@
 #include "CArchiveFile.h"
 #include "../StreamReader.h"
 #include "../XFile.h"
+#include "CompressionType.h"
 
 #define VOL_WRITE_SIZE 65536
 
