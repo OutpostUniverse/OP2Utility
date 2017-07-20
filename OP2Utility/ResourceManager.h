@@ -5,7 +5,7 @@
 #include "StreamReader.h"
 #include "Archives\CVolFile.h"
 #include "Archives\CClmFile.h"
-#include "Archives\CArchiveFile.h"
+//#include "Archives\CArchiveFile.h"
 #include "XFile.h"
 #include "StringHelper.h"
 
@@ -16,6 +16,7 @@ class ResourceManager
 {
 public:
 	ResourceManager(const string& archiveDirectory);
+	~ResourceManager();
 
 	SeekableStreamReader* getResourceStream(const string& filename);
 	
@@ -29,8 +30,8 @@ public:
 	// Searches all .vol and .clm files and extracts any file with the given extension.
 	void extractAllOfFileType(const string& directory, const string& extension, bool overwrite = false);
 
+	bool existsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut);
+
 private:
-	vector<CArchiveFile> archiveFiles;
-	vector<CVolFile> volFiles;
-	vector<CClmFile> clmFiles;
+	vector<CArchiveFile*> archiveFiles;
 };

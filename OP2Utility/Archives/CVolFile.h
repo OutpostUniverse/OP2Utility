@@ -5,6 +5,7 @@
 #include "CHuffLZ.h"
 #include "CArchiveFile.h"
 #include "../StreamReader.h"
+#include "../XFile.h"
 
 #define VOL_WRITE_SIZE 65536
 

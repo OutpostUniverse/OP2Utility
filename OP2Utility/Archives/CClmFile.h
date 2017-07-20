@@ -11,6 +11,17 @@
 #define FMT  0x20746D66		// "fmt "
 #define DATA 0x61746164		// "data"
 
+// Replacement for the windows.h WAVEFORMATEX typedef.
+struct WaveFormat {
+	uint16_t wFormatTag;
+	uint16_t nChannels;
+	uint32_t nSamplesPerSec;
+	uint32_t nAvgBytesPerSec;
+	uint16_t nBlockAlign;
+	uint16_t wBitsPerSample;
+	uint16_t cbSize;
+};
+
 class CClmFile : public CArchiveFile
 {
 	public:
@@ -45,15 +56,15 @@ class CClmFile : public CArchiveFile
 
 		// Private functions for packing files
 		bool OpenAllInputFiles(int numFilesToPack, const char **filesToPack, HANDLE *fileHandle);
-		bool ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WAVEFORMATEX *format, IndexEntry *indexEntry);
+		bool ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormat *format, IndexEntry *indexEntry);
 		int FindChunk(int chunkTag, HANDLE file);
-		void CleanUpVolumeCreate(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, WAVEFORMATEX *waveFormat, IndexEntry *indexEntry);
-		bool CompareWaveFormats(int numFilesToPack, WAVEFORMATEX *waveFormat);
+		void CleanUpVolumeCreate(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, WaveFormat *waveFormat, IndexEntry *indexEntry);
+		bool CompareWaveFormats(int numFilesToPack, WaveFormat *waveFormat);
 		bool WriteVolume(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, 
-						 IndexEntry *entry, const char **internalName, WAVEFORMATEX *waveFormat);
+						 IndexEntry *entry, const char **internalName, WaveFormat *waveFormat);
 
 		HANDLE m_FileHandle;
-		WAVEFORMATEX m_WaveFormat;
+		WaveFormat m_WaveFormat;
 		char m_Unknown[6];
 		IndexEntry *m_IndexEntry;
 		char (*m_FileName)[9];

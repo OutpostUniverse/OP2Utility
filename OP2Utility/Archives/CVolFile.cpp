@@ -30,7 +30,8 @@ int CVolFile::GetInternalFileIndex(const char *internalFileName)
 {
 	for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 	{
-		if (GetInternalFileName(i) == internalFileName)
+		const char* actualInternalFileName = GetInternalFileName(i);
+		if (XFile::pathsAreEqual(actualInternalFileName, internalFileName))
 			return i;
 	}
 
@@ -73,10 +74,11 @@ SeekableStreamReader* CVolFile::OpenSeekableStreamReader(int fileIndex)
 {
 	// Get offset and length of file to extract
 	char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
-	size_t length = *(int*)(offset + 4) & 0x00FFFFFF;
+	size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
+	//size_t length = *(int*)(offset + 4) & 0x00FFFFFF;
 	offset += 8;
 
-	return &MemoryStreamReader(offset, length);
+	return new MemoryStreamReader(offset, length);
 }
 
 // Extracts the internal file at the given index to the file 
