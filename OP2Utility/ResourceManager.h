@@ -2,14 +2,11 @@
 
 #include <string>
 #include <vector>
-#include "StreamReader.h"
-#include "Archives\CVolFile.h"
-#include "Archives\CClmFile.h"
-//#include "Archives\CArchiveFile.h"
-#include "XFile.h"
-#include "StringHelper.h"
+#include "OP2Utility.h"
+#include "Archives\ArchiveFile.h"
 
 using namespace std;
+using namespace Archives;
 
 // Use to find files/resources either on disk or contained in an archive file (.vol|.clm).
 class ResourceManager
@@ -18,9 +15,11 @@ public:
 	ResourceManager(const string& archiveDirectory);
 	~ResourceManager();
 
-	SeekableStreamReader* getResourceStream(const string& filename);
-	
+	SeekableStreamReader* getResourceStream(const string& filename, bool accessArchives = true);
 
+	void ResourceManager::getAllStreamsOfFileType(vector<SeekableStreamReader*> seekableStreamReadersOut, const string& directory, const string& extension, bool accessArchives = true);
+
+	void ResourceManager::getAllFilenamesOfType(vector<string>& filenamesOut, const string& directory, const string& extension, bool accessArchives = true);
 
 	// Searches .vol and .clm files for file and then extracts it. 
 	// returns true if EITHER the file is extracted OR 
@@ -33,5 +32,5 @@ public:
 	bool existsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut);
 
 private:
-	vector<CArchiveFile*> archiveFiles;
+	vector<ArchiveFile*> archiveFiles;
 };

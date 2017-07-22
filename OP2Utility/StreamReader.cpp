@@ -23,6 +23,7 @@ void FileStreamReader::Ignore(size_t size) {
 	file.ignore(size);
 }
 
+
 MemoryStreamReader::MemoryStreamReader(char* buffer, size_t size) {
 	streamBuffer = buffer;
 	streamSize = size;
@@ -33,8 +34,7 @@ void MemoryStreamReader::Read(char* buffer, size_t size) {
 	if (offset + size > streamSize)
 		throw exception("Size to read exceeds remaining size of buffer.");
 
-	memcpy(buffer, streamBuffer, size);
-	//Copy streamBuffer[offset .. (offset + size)] to buffer
+	memcpy(buffer, streamBuffer + offset, size);
 	offset += size;
 }
 

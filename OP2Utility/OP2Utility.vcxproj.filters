@@ -30,24 +30,6 @@
     <ClInclude Include="OP2Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\CAdaptHuffTree.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
-    <ClInclude Include="Archives\CArchiveFile.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
-    <ClInclude Include="Archives\CBitStream.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
-    <ClInclude Include="Archives\CClmFile.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
-    <ClInclude Include="Archives\CHuffLZ.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
-    <ClInclude Include="Archives\CVolFile.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
     <ClInclude Include="StringHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -60,6 +42,24 @@
     <ClInclude Include="Archives\CompressionType.h">
       <Filter>Archives</Filter>
     </ClInclude>
+    <ClInclude Include="Archives\AdaptHuffTree.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\ArchiveFile.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\BitStream.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\ClmFile.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\HuffLZ.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\VolFile.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
@@ -67,24 +67,6 @@
     </ClCompile>
     <ClCompile Include="MapData.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Archives\CAdaptHuffTree.cpp">
-      <Filter>Archives</Filter>
-    </ClCompile>
-    <ClCompile Include="Archives\CArchiveFile.cpp">
-      <Filter>Archives</Filter>
-    </ClCompile>
-    <ClCompile Include="Archives\CBitStream.cpp">
-      <Filter>Archives</Filter>
-    </ClCompile>
-    <ClCompile Include="Archives\CClmFile.cpp">
-      <Filter>Archives</Filter>
-    </ClCompile>
-    <ClCompile Include="Archives\CHuffLZ.cpp">
-      <Filter>Archives</Filter>
-    </ClCompile>
-    <ClCompile Include="Archives\CVolFile.cpp">
-      <Filter>Archives</Filter>
     </ClCompile>
     <ClCompile Include="StringHelper.cpp">
       <Filter>Source Files</Filter>
@@ -94,6 +76,24 @@
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\AdaptHuffTree.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\ArchiveFile.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\BitStream.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\ClmFile.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\HuffLZ.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\VolFile.cpp">
+      <Filter>Archives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

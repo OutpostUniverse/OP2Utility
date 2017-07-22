@@ -6,35 +6,73 @@ ResourceManager::ResourceManager(const string& archiveDirectory)
 	XFile::getFilesFromDirectory(filenames, archiveDirectory, ".vol");
 
 	for each (const string& volFilename in filenames)
-		archiveFiles.push_back(new CVolFile(volFilename.c_str()));
+		archiveFiles.push_back(new VolFile(volFilename.c_str()));
 
 	filenames.clear();
 	XFile::getFilesFromDirectory(filenames, archiveDirectory, ".clm");
 
 	for each (const string& clmFilename in filenames)
-		archiveFiles.push_back(new CClmFile(clmFilename.c_str()));
+		archiveFiles.push_back(new ClmFile(clmFilename.c_str()));
 }
 
 ResourceManager::~ResourceManager()
 {
-	for each (CArchiveFile* archiveFile in archiveFiles)
+	for each (ArchiveFile* archiveFile in archiveFiles)
 		delete archiveFile;
 }
 
-SeekableStreamReader* ResourceManager::getResourceStream(const string& filename)
+// First searches for resources loosely in provided directory. 
+// Then, if accessArhives = true, searches the preloaded archives for the resource.
+SeekableStreamReader* ResourceManager::getResourceStream(const string& filename, bool accessArchives)
 {
 	if (XFile::PathExists(filename))
 		return new FileStreamReader(filename);
 
-	for (CArchiveFile* archiveFile : archiveFiles)
+	if (!accessArchives)
+		return nullptr;
+
+	for (ArchiveFile* archiveFile : archiveFiles)
 	{
-		int internalArchiveIndex = archiveFile->GetInternalFileIndex(filename.c_str());
+		string archiveFilename = XFile::getFilename(filename);
+		int internalArchiveIndex = archiveFile->GetInternalFileIndex(archiveFilename.c_str());
 
 		if (internalArchiveIndex > -1)
 			return archiveFile->OpenSeekableStreamReader(internalArchiveIndex);
 	}
 
 	return nullptr;
+}
+
+void ResourceManager::getAllStreamsOfFileType(vector<SeekableStreamReader*> seekableStreamReadersOut, const string& directory, const string& extension, bool accessArchives)
+{
+	vector<string> filenames;
+	XFile::getFilesFromDirectory(filenames, directory, extension);
+	
+	for each (string filename in filenames)
+		seekableStreamReadersOut.push_back(getResourceStream(filename, false));
+
+	for each (VolFile* volFile in archiveFiles)
+	{
+		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
+		{
+			if (XFile::extensionMatches(volFile->GetInternalFileName(i), extension))
+				seekableStreamReadersOut.push_back(volFile->OpenSeekableStreamReader(i));
+		}
+	}
+}
+
+void ResourceManager::getAllFilenamesOfType(vector<string>& filenamesOut, const string& directory, const string& extension, bool accessArchives)
+{
+	XFile::getFilesFromDirectory(filenamesOut, directory, extension);
+
+	for each (VolFile* volFile in archiveFiles)
+	{
+		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
+		{
+			if (XFile::extensionMatches(volFile->GetInternalFileName(i), extension))
+				filenamesOut.push_back(volFile->GetInternalFileName(i));
+		}
+	}
 }
 
 bool ResourceManager::existsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut)
@@ -73,7 +111,7 @@ bool ResourceManager::extractFromArchive(const string& filename, bool overwrite)
 
 void ResourceManager::extractAllOfFileType(const string& directory, const string& extension, bool overwrite)
 {
-	for each (CVolFile* volFile in archiveFiles)
+	for each (VolFile* volFile in archiveFiles)
 	{
 		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
 		{

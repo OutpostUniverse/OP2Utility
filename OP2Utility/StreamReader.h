@@ -34,7 +34,7 @@ public:
 	void Ignore(size_t size);
 
 private:
-	void* streamBuffer;
+	char* streamBuffer;
 	size_t streamSize;
 	size_t offset;
 };

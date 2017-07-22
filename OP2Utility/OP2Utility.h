@@ -7,8 +7,9 @@
 #include "TileSetBmpReader.h"
 
 #include "ResourceManager.h"
-#include "Archives/CClmFile.h"
-#include "Archives/CVolFile.h"
+#include "Archives/ArchiveFile.h"
+#include "Archives/ClmFile.h"
+#include "Archives/VolFile.h"
 
 // OP2Utility is a utility library to aid in Outpost 2 functions typically not
 // directly related to programming new scenarios. 

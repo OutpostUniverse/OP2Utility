@@ -1,10 +1,11 @@
-// Note: This was designed for use in the decompressor for the .vol files
-
-class CBitStream
+namespace Archives
 {
+	// This is designed for use in the .vol file decompressor
+	class BitStream
+	{
 	public:
-		CBitStream();				// Construct empty stream
-		CBitStream(int bufferSize, char *buffer);// Construct stream around given buffer
+		BitStream();				// Construct empty stream
+		BitStream(int bufferSize, char *buffer);// Construct stream around given buffer
 
 		bool ReadNextBit();			// Get bit at Read index and advance index
 		int  ReadNext8Bits();		// Get next 8 bits at Read index and advance index
@@ -20,4 +21,5 @@ class CBitStream
 
 		unsigned char m_ReadBuff;	// 1 Byte read buffer (shift bits out of)
 		unsigned char m_WriteBuff;	// 1 Byte write buffer (shift bits in to)
-};
+	};
+}

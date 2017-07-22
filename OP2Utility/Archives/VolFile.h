@@ -2,25 +2,26 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include "CHuffLZ.h"
-#include "CArchiveFile.h"
+#include "HuffLZ.h"
+#include "ArchiveFile.h"
 #include "../StreamReader.h"
 #include "../XFile.h"
 #include "CompressionType.h"
 
+namespace Archives
+{
 #define VOL_WRITE_SIZE 65536
 
-
-class CVolFile : public CArchiveFile, public CMemoryMappedFile
-{
+	class VolFile : public ArchiveFile, public MemoryMappedFile
+	{
 	public:
-		CVolFile(const char *filename);
-		~CVolFile();
+		VolFile(const char *filename);
+		~VolFile();
 
 		// Internal file status
 		const char* GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);
-		short GetInternalCompressionCode(int index);
+		CompressionType GetInternalCompressionCode(int index);
 		int GetInternalFileSize(int index);
 
 		// Extraction
@@ -31,25 +32,25 @@ class CVolFile : public CArchiveFile, public CMemoryMappedFile
 		// Volume Creation
 		bool Repack();
 		bool CreateVolume(const char *volumeFileName, int numFilesToPack,
-						const char **filesToPack, const char **internalNames);
+			const char **filesToPack, const char **internalNames);
 
 	private:
 		int GetInternalFileOffset(int index);
-		int GetInternalFileNameOffset(int index);		
+		int GetInternalFileNameOffset(int index);
 
-		#pragma pack(push, 1)
-		struct SIndexEntry
+#pragma pack(push, 1)
+		struct IndexEntry
 		{
 			unsigned int fileNameOffset;
 			unsigned int dataBlockOffset;
 			int fileSize;
-			short compressionTag;
+			CompressionType compressionType;
 		};
-		#pragma pack(pop)
+#pragma pack(pop)
 
-		struct SCreateVolumeInfo
+		struct CreateVolumeInfo
 		{
-			SIndexEntry *indexEntry;
+			IndexEntry *indexEntry;
 			int *fileNameLength;
 			HANDLE *fileHandle;
 			int numFilesToPack;
@@ -65,11 +66,11 @@ class CVolFile : public CArchiveFile, public CMemoryMappedFile
 		bool WriteTag(int length, const char *tagText);
 		bool CopyFileIntoVolume(HANDLE inputFile, int size);
 		bool ReadVolHeader();
-		bool WriteFiles(SCreateVolumeInfo &volInfo);
-		bool WriteHeader(SCreateVolumeInfo &volInfo);
-		bool PrepareHeader(SCreateVolumeInfo &volInfo);
-		bool OpenAllInputFiles(SCreateVolumeInfo &volInfo);
-		void CleanUpVolumeCreate(SCreateVolumeInfo &volInfo);
+		bool WriteFiles(CreateVolumeInfo &volInfo);
+		bool WriteHeader(CreateVolumeInfo &volInfo);
+		bool PrepareHeader(CreateVolumeInfo &volInfo);
+		bool OpenAllInputFiles(CreateVolumeInfo &volInfo);
+		void CleanUpVolumeCreate(CreateVolumeInfo &volInfo);
 
 		int m_NumberOfIndexEntries;
 		char *m_StringTable;
@@ -77,5 +78,6 @@ class CVolFile : public CArchiveFile, public CMemoryMappedFile
 		int m_StringTableLength;
 		int m_ActualStringTableLength;
 		int m_IndexTableLength;
-		SIndexEntry *m_Index;
-};
+		IndexEntry *m_Index;
+	};
+}

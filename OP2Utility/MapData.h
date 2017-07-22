@@ -14,7 +14,7 @@ using namespace std;
 
 // ALT IMPLEMENTATION (with COM support)
 //     Outpost2SVN\MapEditor\OP2Editor.
-
+#pragma pack(push, 1)				// Make sure structures are byte aligned
 struct MapHeader
 {
 	// The map's version tag. 
@@ -173,6 +173,8 @@ struct TerrainType
 	short unkown[15];
 };
 
+
+
 //Represents the data stored in an Outpost 2 map file. 
 struct MapData
 {
@@ -213,3 +215,5 @@ private:
 	void readTileSetHeader(StreamReader* streamReader);
 	void readTileInfo(StreamReader* streamReader);
 };
+
+#pragma pack(pop)
