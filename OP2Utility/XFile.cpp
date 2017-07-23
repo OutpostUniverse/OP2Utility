@@ -105,12 +105,27 @@ void XFile::getFilesFromDirectory(vector<string>& filenamesOut, const string& pa
 #endif
 }
 
+bool XFile::isRootPath(const string& pathStr)
+{
+	return path(pathStr).has_root_path();
+}
+
+string XFile::replaceFilename(const string& pathStr, const string& filename)
+{
+	path p(pathStr);
+	path filenamePath = path(filename).filename();
+	
+	// Brett208 22JUL17: There seems to be a bug in path.replace_filename that removes a directory if it has a space in it.
+
+	return p.string() + "\\" + filenamePath.string();
+}
+
 string XFile::appendSubDirectory(const string& pathStr, const string& subDirectory)
 {
 #if defined(_WIN32)
 	path p(pathStr);
 	path filename(p.filename());
-	
+
 	if (p == filename)
 		return path().append(subDirectory).append(filename).string();
 

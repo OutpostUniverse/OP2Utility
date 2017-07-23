@@ -51,6 +51,9 @@ void ResourceManager::getAllStreamsOfFileType(vector<SeekableStreamReader*> seek
 	for each (string filename in filenames)
 		seekableStreamReadersOut.push_back(getResourceStream(filename, false));
 
+	if (!accessArchives)
+		return;
+
 	for each (VolFile* volFile in archiveFiles)
 	{
 		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
@@ -64,6 +67,9 @@ void ResourceManager::getAllStreamsOfFileType(vector<SeekableStreamReader*> seek
 void ResourceManager::getAllFilenamesOfType(vector<string>& filenamesOut, const string& directory, const string& extension, bool accessArchives)
 {
 	XFile::getFilesFromDirectory(filenamesOut, directory, extension);
+
+	if (!accessArchives)
+		return;
 
 	for each (VolFile* volFile in archiveFiles)
 	{

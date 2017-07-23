@@ -39,4 +39,8 @@ public:
 	static string XFile::removeFilename(const string& pathStr);
 
 	static bool pathsAreEqual(const string& pathStr1, const string& pathStr2);
+
+	static bool XFile::isRootPath(const string& pathStr);
+
+	static string XFile::replaceFilename(const string& pathStr, const string& filename);
 };
