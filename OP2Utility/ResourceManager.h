@@ -31,6 +31,17 @@ public:
 
 	bool existsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut);
 
+	// Prevents SGAME10.OP2 from being returned in a directory wide file pull. Defaults to true.
+	void setIgnoreSGame10(bool ignore) { ignoreSGame10 = ignore; };
+
+	// Prevents wellpallet.bmp from being returned in a directory wide file pull. Defaults to true.
+	void setIgnoreWellPallet(bool ignore) { ignoreWellPallet = ignore; };
+
 private:
+	bool ignoreSGame10 = true; //SGAME10.OP2
+	bool ignoreWellPallet = true; //wellpallet.bmp
 	vector<ArchiveFile*> archiveFiles;
+
+	bool ignoreFilename(string filename);
+	bool duplicateFilename(vector<string>& currentFilenames, string pathToCheck);
 };

@@ -68,6 +68,14 @@ void ResourceManager::getAllFilenamesOfType(vector<string>& filenamesOut, const 
 {
 	XFile::getFilesFromDirectory(filenamesOut, directory, extension);
 
+	if (!filenamesOut.empty()) {
+		for (int i = filenamesOut.size() - 1; i >= 0; i--) {
+			if (ignoreFilename(filenamesOut.at(i))) {
+				filenamesOut.erase(filenamesOut.begin() + i);
+			}
+		}
+	}
+
 	if (!accessArchives)
 		return;
 
@@ -75,7 +83,10 @@ void ResourceManager::getAllFilenamesOfType(vector<string>& filenamesOut, const 
 	{
 		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::extensionMatches(volFile->GetInternalFileName(i), extension))
+			string internalFilename = volFile->GetInternalFileName(i);
+			if (XFile::extensionMatches(internalFilename, extension) &&
+				!duplicateFilename(filenamesOut, internalFilename) &&
+				!ignoreFilename(internalFilename))
 				filenamesOut.push_back(volFile->GetInternalFileName(i));
 		}
 	}
@@ -125,4 +136,27 @@ void ResourceManager::extractAllOfFileType(const string& directory, const string
 				volFile->ExtractFile(i, volFile->GetInternalFileName(i));
 		}
 	}
+}
+
+bool ResourceManager::duplicateFilename(vector<string>& currentFilenames, string pathToCheck)
+{
+	string filename = XFile::getFilename(pathToCheck);
+
+	for (size_t i = 0; i < currentFilenames.size(); ++i)
+		if (XFile::pathsAreEqual(XFile::getFilename(currentFilenames[i]), filename))
+			return true;
+
+	return false;
+}
+
+bool ResourceManager::ignoreFilename(string pathToCheck)
+{
+	string filename = XFile::getFilename(pathToCheck);
+	if (ignoreSGame10 && XFile::pathsAreEqual(filename, "SGAME10.OP2"))
+		return true;
+
+	if (ignoreWellPallet && XFile::pathsAreEqual(filename, "wellpallet.map"))
+		return true;
+
+	return false;
 }
