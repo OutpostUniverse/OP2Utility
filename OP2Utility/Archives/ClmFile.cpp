@@ -2,6 +2,13 @@
 
 namespace Archives
 {
+#define CLM_WRITE_SIZE 0x00020000
+
+#define RIFF 0x46464952		// "RIFF"
+#define WAVE 0x45564157		// "WAVE"
+#define FMT  0x20746D66		// "fmt "
+#define DATA 0x61746164		// "data"
+
 	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName)
 	{
 		m_FileName = NULL;
