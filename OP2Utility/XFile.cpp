@@ -86,9 +86,30 @@ string XFile::appendToFilename(const string& filename, const string& valueToAppe
 #endif
 }
 
-void XFile::getFilesFromDirectory(vector<string>& filenamesOut, const string& pathStr, const string& fileType)
+vector<string> XFile::getFilesFromDirectory(const string& directoryStr, const regex& filenameRegex)
+{
+	path directory(directoryStr);
+
+	if (directoryStr == "" || directoryStr == "/" || directoryStr == "\\" || directoryStr == " ")
+		directory = current_path();
+
+	vector<string> filenames;
+
+	for (auto& directoryEntry : directory_iterator(directory))
+	{
+		string filename = directoryEntry.path().filename().string();
+		if (regex_search(filename, filenameRegex))
+			filenames.push_back(directoryEntry.path().string());
+	}
+
+	return filenames;
+}
+
+vector<string> XFile::getFilesFromDirectory(const string& pathStr, const string& fileType)
 {
 #if defined(_WIN32)
+	vector<string> filenames;
+
 	path p(pathStr);
 	path directory(p.remove_filename());
 	if (p == directory)
@@ -100,8 +121,10 @@ void XFile::getFilesFromDirectory(vector<string>& filenamesOut, const string& pa
 	for (auto& directoryEntry : directory_iterator(directory))
 	{
 		if (directoryEntry.path().extension() == fileType )
-			filenamesOut.push_back(directoryEntry.path().string());
+			filenames.push_back(directoryEntry.path().string());
 	}
+
+	return filenames;
 #endif
 }
 

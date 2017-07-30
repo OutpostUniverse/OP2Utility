@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 #include "OP2Utility.h"
 #include "Archives/ArchiveFile.h"
 
@@ -17,31 +18,20 @@ public:
 
 	SeekableStreamReader* getResourceStream(const string& filename, bool accessArchives = true);
 
-	void ResourceManager::getAllStreamsOfFileType(vector<SeekableStreamReader*> seekableStreamReadersOut, const string& directory, const string& extension, bool accessArchives = true);
+	vector<string> getAllFilenames(const string& directory, const string& filenameRegexStr, bool accessArcives = true);
+	vector<string> getAllFilenamesOfType(const string& directory, const string& extension, bool accessArchives = true);
 
-	void ResourceManager::getAllFilenamesOfType(vector<string>& filenamesOut, const string& directory, const string& extension, bool accessArchives = true);
-
-	// Searches .vol and .clm files for file and then extracts it. 
+	// Searches .vol and .clm archives for file and then extracts it. 
 	// returns true if EITHER the file is extracted OR 
 	//     if BOTH overwrite == false AND the file already exists in the directory.
-	bool extractFromArchive(const string& filename, bool overwrite = false);
+	bool extractFile(const string& filename, bool overwrite = false);
 
 	// Searches all .vol and .clm files and extracts any file with the given extension.
 	void extractAllOfFileType(const string& directory, const string& extension, bool overwrite = false);
 
-	bool existsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut);
-
-	// Prevents SGAME10.OP2 from being returned in a directory wide file pull. Defaults to true.
-	void setIgnoreSGame10(bool ignore) { ignoreSGame10 = ignore; };
-
-	// Prevents wellpallet.bmp from being returned in a directory wide file pull. Defaults to true.
-	void setIgnoreWellPallet(bool ignore) { ignoreWellPallet = ignore; };
-
 private:
-	bool ignoreSGame10 = true; //SGAME10.OP2
-	bool ignoreWellPallet = true; //wellpallet.bmp
 	vector<ArchiveFile*> archiveFiles;
 
-	bool ignoreFilename(string filename);
+	bool existsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut);
 	bool duplicateFilename(vector<string>& currentFilenames, string pathToCheck);
 };

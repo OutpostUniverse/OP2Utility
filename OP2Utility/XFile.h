@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 
 using namespace std;
 
@@ -20,8 +21,9 @@ public:
 	//Returns true if path is a directory WITHOUT a file included.
 	static bool isDirectory(const string& pathStr);
 
-	//Brett: I've been defeated trying to get the iterator working on this function.
-	static void getFilesFromDirectory(vector<string>& filenamesOut, const string& pathStr, const string& fileType);
+	static vector<string> getFilesFromDirectory(const string& pathStr, const string& fileType);
+
+	static vector<string> getFilesFromDirectory(const string& directoryStr, const regex& filenameRegex);
 
 	static string changeFileExtension(const string& filename, const string& newExtension);
 

@@ -2,16 +2,14 @@
 
 ResourceManager::ResourceManager(const string& archiveDirectory)
 {
-	vector<string> filenames;
-	XFile::getFilesFromDirectory(filenames, archiveDirectory, ".vol");
+	vector<string> volFilenames = XFile::getFilesFromDirectory(archiveDirectory, ".vol");
 
-	for each (const string& volFilename in filenames)
+	for each (const string& volFilename in volFilenames)
 		archiveFiles.push_back(new VolFile(volFilename.c_str()));
 
-	filenames.clear();
-	XFile::getFilesFromDirectory(filenames, archiveDirectory, ".clm");
+	vector<string> clmFilenames = XFile::getFilesFromDirectory(archiveDirectory, ".clm");
 
-	for each (const string& clmFilename in filenames)
+	for each (const string& clmFilename in clmFilenames)
 		archiveFiles.push_back(new ClmFile(clmFilename.c_str()));
 }
 
@@ -43,53 +41,43 @@ SeekableStreamReader* ResourceManager::getResourceStream(const string& filename,
 	return nullptr;
 }
 
-void ResourceManager::getAllStreamsOfFileType(vector<SeekableStreamReader*> seekableStreamReadersOut, const string& directory, const string& extension, bool accessArchives)
+vector<string> ResourceManager::getAllFilenames(const string& directory, const string& filenameRegexStr, bool accessArcives)
 {
-	vector<string> filenames;
-	XFile::getFilesFromDirectory(filenames, directory, extension);
-	
-	for each (string filename in filenames)
-		seekableStreamReadersOut.push_back(getResourceStream(filename, false));
+	regex filenameRegex(filenameRegexStr, regex_constants::icase);
 
-	if (!accessArchives)
-		return;
+	vector<string> filenames = XFile::getFilesFromDirectory(directory, filenameRegex);
 
 	for each (VolFile* volFile in archiveFiles)
 	{
 		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::extensionMatches(volFile->GetInternalFileName(i), extension))
-				seekableStreamReadersOut.push_back(volFile->OpenSeekableStreamReader(i));
+			if (regex_search(volFile->GetInternalFileName(i), filenameRegex))
+				filenames.push_back(volFile->GetInternalFileName(i));
 		}
 	}
+
+	return filenames;
 }
 
-void ResourceManager::getAllFilenamesOfType(vector<string>& filenamesOut, const string& directory, const string& extension, bool accessArchives)
+vector<string> ResourceManager::getAllFilenamesOfType(const string& directory, const string& extension, bool accessArchives)
 {
-	XFile::getFilesFromDirectory(filenamesOut, directory, extension);
-
-	if (!filenamesOut.empty()) {
-		for (int i = filenamesOut.size() - 1; i >= 0; i--) {
-			if (ignoreFilename(filenamesOut.at(i))) {
-				filenamesOut.erase(filenamesOut.begin() + i);
-			}
-		}
-	}
+	vector<string> filenames = XFile::getFilesFromDirectory(directory, extension);
 
 	if (!accessArchives)
-		return;
+		return filenames;
 
 	for each (VolFile* volFile in archiveFiles)
 	{
 		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
 		{
 			string internalFilename = volFile->GetInternalFileName(i);
-			if (XFile::extensionMatches(internalFilename, extension) &&
-				!duplicateFilename(filenamesOut, internalFilename) &&
-				!ignoreFilename(internalFilename))
-				filenamesOut.push_back(volFile->GetInternalFileName(i));
+
+			if (XFile::extensionMatches(internalFilename, extension) && !duplicateFilename(filenames, internalFilename))
+				filenames.push_back(internalFilename);
 		}
 	}
+
+	return filenames;
 }
 
 bool ResourceManager::existsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut)
@@ -110,7 +98,7 @@ bool ResourceManager::existsInArchives(const string& filename, int& volFileIndex
 	return false;
 }
 
-bool ResourceManager::extractFromArchive(const string& filename, bool overwrite)
+bool ResourceManager::extractFile(const string& filename, bool overwrite)
 {
 	if (!overwrite && XFile::PathExists(filename))
 		return true;
@@ -145,18 +133,6 @@ bool ResourceManager::duplicateFilename(vector<string>& currentFilenames, string
 	for (size_t i = 0; i < currentFilenames.size(); ++i)
 		if (XFile::pathsAreEqual(XFile::getFilename(currentFilenames[i]), filename))
 			return true;
-
-	return false;
-}
-
-bool ResourceManager::ignoreFilename(string pathToCheck)
-{
-	string filename = XFile::getFilename(pathToCheck);
-	if (ignoreSGame10 && XFile::pathsAreEqual(filename, "SGAME10.OP2"))
-		return true;
-
-	if (ignoreWellPallet && XFile::pathsAreEqual(filename, "wellpallet.map"))
-		return true;
 
 	return false;
 }
