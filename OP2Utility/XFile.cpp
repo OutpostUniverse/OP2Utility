@@ -7,7 +7,7 @@
 using namespace std::experimental::filesystem;
 #endif
 
-string XFile::getFileExtension(string pathStr)
+string XFile::getFileExtension(const string& pathStr)
 {
 	return path(pathStr).extension().string();
 }

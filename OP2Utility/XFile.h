@@ -12,7 +12,7 @@ class XFile
 public:
 	//Returns the file extension as a std::string including the leading dot (.). 
 	//If no extension is available, an empty string is returned. 
-	static string getFileExtension(string pathStr);
+	static string getFileExtension(const string& pathStr);
 
 	//Checks if the extension on a path matches the provided extension.
 	//Provided extension does not require the leading dot (.).
