@@ -61,7 +61,7 @@ vector<string> XFile::getFilesFromDirectory(const string& directoryStr, const re
 {
 	path directory(directoryStr);
 
-	if (directoryStr == "" || directoryStr == "/" || directoryStr == "\\" || directoryStr == " ")
+	if (directoryStr == "/" || directoryStr == "\\")
 		directory = current_path();
 
 	vector<string> filenames;
@@ -78,15 +78,15 @@ vector<string> XFile::getFilesFromDirectory(const string& directoryStr, const re
 
 vector<string> XFile::getFilesFromDirectory(const string& pathStr, const string& fileType)
 {
-	vector<string> filenames;
-
 	path p(pathStr);
 	path directory(p.remove_filename());
 	if (p == directory)
 		directory = current_path();
 
-	if (pathStr == "" || pathStr == "/" || pathStr == "\\" || pathStr == " ")
+	if (pathStr == "/" || pathStr == "\\")
 		directory = current_path();
+
+	vector<string> filenames;
 
 	for (auto& directoryEntry : directory_iterator(directory))
 	{
