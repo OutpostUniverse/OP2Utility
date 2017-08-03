@@ -27,22 +27,23 @@ public:
 
 	static string changeFileExtension(const string& filename, const string& newExtension);
 
-	static void newDirectory(const string& newPath);
+	static void createDirectory(const string& newPath);
 
 	static bool PathExists(const string& pathStr);
 
 	// Adds a string to the end of the filename, but before the file's extension.
-	static string XFile::appendToFilename(const string& filename, const string& valueToAppend);
+	static string appendToFilename(const string& filename, const string& valueToAppend);
 
-	static string XFile::appendSubDirectory(const string& pathStr, const string& subDirectory);
+	// Appends a subdirectory right before the filename.
+	static string appendSubDirectory(const string& pathStr, const string& subDirectory);
 
-	static string XFile::getFilename(const string& pathStr);
+	static string getFilename(const string& pathStr);
 
-	static string XFile::removeFilename(const string& pathStr);
+	static string removeFilename(const string& pathStr);
 
 	static bool pathsAreEqual(const string& pathStr1, const string& pathStr2);
 
-	static bool XFile::isRootPath(const string& pathStr);
+	static bool isRootPath(const string& pathStr);
 
-	static string XFile::replaceFilename(const string& pathStr, const string& filename);
+	static string replaceFilename(const string& pathStr, const string& filename);
 };

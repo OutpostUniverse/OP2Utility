@@ -19,29 +19,29 @@ MapData::MapData(SeekableStreamReader* mapStream, bool saveGame)
 
 void MapData::skipSaveGameHeader(SeekableStreamReader* streamReader)
 {
-	streamReader->Ignore(0x1E025);
+	streamReader->ignore(0x1E025);
 }
 
 void MapData::readMapHeader(StreamReader* streamReader)
 {
-	streamReader->Read((char*)&mapHeader, sizeof(mapHeader));
+	streamReader->read((char*)&mapHeader, sizeof(mapHeader));
 }
 
 void MapData::readTileData(StreamReader* streamReader)
 {
 	tileDataVector.resize(mapHeader.mapTileHeight << mapHeader.lgMapTileWidth);
-	streamReader->Read((char*)&tileDataVector[0], tileDataVector.size() * sizeof(TileData));
+	streamReader->read((char*)&tileDataVector[0], tileDataVector.size() * sizeof(TileData));
 }
 
 void MapData::readClipRect(StreamReader* streamReader)
 {
-	streamReader->Read((char*)&clipRect, sizeof(clipRect));
+	streamReader->read((char*)&clipRect, sizeof(clipRect));
 }
 
 void MapData::readTileSetHeader(StreamReader* streamReader)
 {
 	char buffer[10];
-	streamReader->Read(buffer, sizeof(buffer));
+	streamReader->read(buffer, sizeof(buffer));
 
 	if (strncmp(buffer, "TILE SET\x1a", sizeof(buffer)))
 		throw exception("'TILE SET' string not found.");
@@ -54,7 +54,7 @@ void MapData::readTileSetSources(StreamReader* streamReader)
 	for (unsigned int i = 0; i < mapHeader.numTileSets; ++i)
 	{
 		size_t stringLength;
-		streamReader->Read((char*)&stringLength, sizeof(stringLength));
+		streamReader->read((char*)&stringLength, sizeof(stringLength));
 
 		if (stringLength > 8)
 			throw exception("Tile Set Name greater than 8 characters in length.");
@@ -62,24 +62,24 @@ void MapData::readTileSetSources(StreamReader* streamReader)
 		if (stringLength == 0)
 			continue;
 
-		streamReader->Read((char*)&tileSetSources[i].tileSetFilename, stringLength);
+		streamReader->read((char*)&tileSetSources[i].tileSetFilename, stringLength);
 
-		streamReader->Read((char*)&tileSetSources[i].numTiles, sizeof(int));
+		streamReader->read((char*)&tileSetSources[i].numTiles, sizeof(int));
 	}
 }
 
 void MapData::readTileInfo(StreamReader* streamReader)
 {
 	size_t numTileInfo;
-	streamReader->Read((char*)&numTileInfo, sizeof(numTileInfo));
+	streamReader->read((char*)&numTileInfo, sizeof(numTileInfo));
 
 	tileInfoVector.resize(numTileInfo);
-	streamReader->Read((char*)&tileInfoVector[0], numTileInfo * sizeof(TileInfo));
+	streamReader->read((char*)&tileInfoVector[0], numTileInfo * sizeof(TileInfo));
 
 	size_t numTerrainTypes;
-	streamReader->Read((char*)&numTerrainTypes, sizeof(numTerrainTypes));
+	streamReader->read((char*)&numTerrainTypes, sizeof(numTerrainTypes));
 	terrainTypeVector.resize(numTerrainTypes);
-	streamReader->Read((char*)&terrainTypeVector[0], numTerrainTypes * sizeof(TerrainType));
+	streamReader->read((char*)&terrainTypeVector[0], numTerrainTypes * sizeof(TerrainType));
 }
 
 unsigned int MapData::getTileInfoIndex(unsigned int x, unsigned int y)

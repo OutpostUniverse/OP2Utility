@@ -35,7 +35,7 @@ string XFile::changeFileExtension(const string& filename, const string& newExten
 	return path(filename).replace_extension(newExtension).string();
 }
 
-void XFile::newDirectory(const string& newPath)
+void XFile::createDirectory(const string& newPath)
 {
 	create_directory(path(newPath));
 }
