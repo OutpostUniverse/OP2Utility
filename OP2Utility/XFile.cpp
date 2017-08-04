@@ -1,11 +1,9 @@
-#include"XFile.h"
+#include "XFile.h"
 #include "StringHelper.h"
 
-#if defined(_WIN32)
 #include <filesystem>
 #include <experimental/filesystem>
 using namespace std::experimental::filesystem;
-#endif
 
 string XFile::getFileExtension(const string& pathStr)
 {
@@ -59,10 +57,11 @@ string XFile::appendToFilename(const string& filename, const string& valueToAppe
 
 vector<string> XFile::getFilesFromDirectory(const string& directoryStr, const regex& filenameRegex)
 {
-	path directory(directoryStr);
+	path directory(path(directoryStr).remove_filename());
 
-	if (directoryStr == "/" || directoryStr == "\\")
-		directory = current_path();
+	// Brett208 4Aug17: creating a path with an empty string will prevent the directory_iterator from finding any files in the current relative path on MSVC.
+	if (directoryStr == "")
+		directory = path(".");
 
 	vector<string> filenames;
 
@@ -76,15 +75,13 @@ vector<string> XFile::getFilesFromDirectory(const string& directoryStr, const re
 	return filenames;
 }
 
-vector<string> XFile::getFilesFromDirectory(const string& pathStr, const string& fileType)
+vector<string> XFile::getFilesFromDirectory(const string& directoryStr, const string& fileType)
 {
-	path p(pathStr);
-	path directory(p.remove_filename());
-	if (p == directory)
-		directory = current_path();
+	path directory(path(directoryStr).remove_filename());
 
-	if (pathStr == "/" || pathStr == "\\")
-		directory = current_path();
+	// Brett208 4Aug17: creating a path with an empty string will prevent the directory_iterator from finding any files in the current relative path on MSVC.
+	if (directoryStr == "")
+		directory = path(".");
 
 	vector<string> filenames;
 
@@ -102,14 +99,14 @@ bool XFile::isRootPath(const string& pathStr)
 	return path(pathStr).has_root_path();
 }
 
-string XFile::replaceFilename(const string& pathStr, const string& filename)
+string XFile::replaceFilename(const string& pathStr, const string& filenameStr)
 {
 	path p(pathStr);
-	path filenamePath = path(filename).filename();
+	path filename = path(filenameStr).filename();
 	
-	// Brett208 22JUL17: There seems to be a bug in path.replace_filename that removes a directory if it has a space in it.
+	// Brett208 22JUL17: There seems to be a bug in path.replace_filename that removes a directory if it has a space in it on MSVC.
 
-	return p.string() + "\\" + filenamePath.string();
+	return p.string() + "/" + filename.string();
 }
 
 string XFile::appendSubDirectory(const string& pathStr, const string& subDirectory)

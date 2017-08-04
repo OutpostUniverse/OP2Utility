@@ -21,7 +21,7 @@ public:
 	//Returns true if path is a directory WITHOUT a file included.
 	static bool isDirectory(const string& pathStr);
 
-	static vector<string> getFilesFromDirectory(const string& pathStr, const string& fileType);
+	static vector<string> getFilesFromDirectory(const string& directoryStr, const string& fileType);
 
 	static vector<string> getFilesFromDirectory(const string& directoryStr, const regex& filenameRegex);
 
@@ -31,10 +31,10 @@ public:
 
 	static bool PathExists(const string& pathStr);
 
-	// Adds a string to the end of the filename, but before the file's extension.
+	// Adds a string to the end of the filenameStr, but before the file's extension.
 	static string appendToFilename(const string& filename, const string& valueToAppend);
 
-	// Appends a subdirectory right before the filename.
+	// Appends a subdirectory right before the filenameStr.
 	static string appendSubDirectory(const string& pathStr, const string& subDirectory);
 
 	static string getFilename(const string& pathStr);
@@ -45,5 +45,5 @@ public:
 
 	static bool isRootPath(const string& pathStr);
 
-	static string replaceFilename(const string& pathStr, const string& filename);
+	static string replaceFilename(const string& pathStr, const string& filenameStr);
 };
