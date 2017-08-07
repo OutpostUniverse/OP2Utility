@@ -21,15 +21,17 @@ public:
 	//Returns true if path is a directory WITHOUT a file included.
 	static bool isDirectory(const string& pathStr);
 
-	static vector<string> getFilesFromDirectory(const string& directoryStr, const string& fileType);
+	static vector<string> getFilesFromDirectory(const string& directory);
 
-	static vector<string> getFilesFromDirectory(const string& directoryStr, const regex& filenameRegex);
+	static vector<string> getFilesFromDirectory(const string& directory, const string& fileType);
+
+	static vector<string> getFilesFromDirectory(const string& directory, const regex& filenameRegex);
 
 	static string changeFileExtension(const string& filename, const string& newExtension);
 
 	static void createDirectory(const string& newPath);
 
-	static bool PathExists(const string& pathStr);
+	static bool pathExists(const string& pathStr);
 
 	// Adds a string to the end of the filenameStr, but before the file's extension.
 	static string appendToFilename(const string& filename, const string& valueToAppend);
@@ -41,7 +43,7 @@ public:
 
 	static string removeFilename(const string& pathStr);
 
-	static bool pathsAreEqual(const string& pathStr1, const string& pathStr2);
+	static bool pathsAreEqual(string pathStr1, string pathStr2);
 
 	static bool isRootPath(const string& pathStr);
 

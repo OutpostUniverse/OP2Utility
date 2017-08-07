@@ -23,7 +23,7 @@ ResourceManager::~ResourceManager()
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
 SeekableStreamReader* ResourceManager::getResourceStream(const string& filename, bool accessArchives)
 {
-	if (XFile::PathExists(filename))
+	if (XFile::pathExists(filename))
 		return new FileStreamReader(filename);
 
 	if (!accessArchives)
@@ -100,7 +100,7 @@ bool ResourceManager::existsInArchives(const string& filename, int& volFileIndex
 
 bool ResourceManager::extractFile(const string& filename, bool overwrite)
 {
-	if (!overwrite && XFile::PathExists(filename))
+	if (!overwrite && XFile::pathExists(filename))
 		return true;
 
 	int fileIndex;

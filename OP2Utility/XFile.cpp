@@ -12,6 +12,9 @@ string XFile::getFileExtension(const string& pathStr)
 
 bool XFile::isDirectory(const string& pathStr)
 {
+	if (pathStr.length() == 0)
+		return true;
+
 	return is_directory(pathStr);
 }
 
@@ -38,7 +41,7 @@ void XFile::createDirectory(const string& newPath)
 	create_directory(path(newPath));
 }
 
-bool XFile::PathExists(const string& pathStr)
+bool XFile::pathExists(const string& pathStr)
 {
 	return exists(path(pathStr));
 }
@@ -55,40 +58,39 @@ string XFile::appendToFilename(const string& filename, const string& valueToAppe
 	return newPath.string();
 }
 
-vector<string> XFile::getFilesFromDirectory(const string& directoryStr, const regex& filenameRegex)
+vector<string> XFile::getFilesFromDirectory(const string& directory)
 {
-	path directory(path(directoryStr).remove_filename());
-
-	// Brett208 4Aug17: creating a path with an empty string will prevent the directory_iterator from finding any files in the current relative path on MSVC.
-	if (directoryStr == "")
-		directory = path(".");
+	// Brett208 6Aug17: Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
+	auto pathStr = directory.length() > 0 ? directory : "./";
 
 	vector<string> filenames;
+	for (auto& entry : directory_iterator(pathStr))
+		filenames.push_back(entry.path().string());
 
-	for (auto& directoryEntry : directory_iterator(directory))
+	return filenames;
+}
+
+vector<string> XFile::getFilesFromDirectory(const string& directory, const regex& filenameRegex)
+{
+	vector<string> filenames = getFilesFromDirectory(directory);
+
+	for (int i = filenames.size() - 1; i >= 0; i--) 
 	{
-		string filename = directoryEntry.path().filename().string();
-		if (regex_search(filename, filenameRegex))
-			filenames.push_back(directoryEntry.path().string());
+		if (!regex_search(filenames[i], filenameRegex))
+			filenames.erase(filenames.begin() + i);
 	}
 
 	return filenames;
 }
 
-vector<string> XFile::getFilesFromDirectory(const string& directoryStr, const string& fileType)
+vector<string> XFile::getFilesFromDirectory(const string& directory, const string& fileType)
 {
-	path directory(path(directoryStr).remove_filename());
+	vector<string> filenames = getFilesFromDirectory(directory);
 
-	// Brett208 4Aug17: creating a path with an empty string will prevent the directory_iterator from finding any files in the current relative path on MSVC.
-	if (directoryStr == "")
-		directory = path(".");
-
-	vector<string> filenames;
-
-	for (auto& directoryEntry : directory_iterator(directory))
+	for (int i = filenames.size() - 1; i >= 0; i--)
 	{
-		if (directoryEntry.path().extension() == fileType )
-			filenames.push_back(directoryEntry.path().string());
+		if (path(filenames[i]).extension() != fileType)
+			filenames.erase(filenames.begin() + i);
 	}
 
 	return filenames;
@@ -131,8 +133,14 @@ string XFile::removeFilename(const string& pathStr)
 	return path(pathStr).remove_filename().string();
 }
 
-bool XFile::pathsAreEqual(const string& pathStr1, const string& pathStr2)
+bool XFile::pathsAreEqual(string pathStr1, string pathStr2)
 {
+	if (pathStr1.length() == 0)
+		pathStr1 = "./";
+
+	if (pathStr2.length() == 0)
+		pathStr2 = "./";
+
 	path p1(pathStr1);
 	path p2(pathStr2);
 
