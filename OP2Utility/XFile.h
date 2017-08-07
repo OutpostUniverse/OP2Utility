@@ -43,7 +43,7 @@ public:
 
 	static string removeFilename(const string& pathStr);
 
-	static bool pathsAreEqual(string pathStr1, string pathStr2);
+	static bool pathsAreEquivalent(string path1, string path2);
 
 	static bool isRootPath(const string& pathStr);
 

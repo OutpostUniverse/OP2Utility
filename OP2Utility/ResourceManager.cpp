@@ -86,7 +86,7 @@ bool ResourceManager::existsInArchives(const string& filename, int& volFileIndex
 	{
 		for (int j = 0; j < archiveFiles[i]->GetNumberOfPackedFiles(); ++j)
 		{
-			if (XFile::pathsAreEqual(archiveFiles[i]->GetInternalFileName(j), filename))
+			if (archiveFiles[i]->GetInternalFileName(j) == filename)
 			{
 				volFileIndexOut = i;
 				internalVolIndexOut = j;
@@ -131,7 +131,7 @@ bool ResourceManager::duplicateFilename(vector<string>& currentFilenames, string
 	string filename = XFile::getFilename(pathToCheck);
 
 	for (size_t i = 0; i < currentFilenames.size(); ++i)
-		if (XFile::pathsAreEqual(XFile::getFilename(currentFilenames[i]), filename))
+		if (XFile::getFilename(currentFilenames[i]) == filename)
 			return true;
 
 	return false;

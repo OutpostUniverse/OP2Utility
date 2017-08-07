@@ -92,7 +92,7 @@ namespace Archives
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (GetInternalFileName(i) == internalFileName)
+			if (strcmp(GetInternalFileName(i), internalFileName) == 0) // Cannot use == to compare contents of char*
 				return i;
 		}
 
