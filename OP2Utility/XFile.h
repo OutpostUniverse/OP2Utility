@@ -43,9 +43,11 @@ public:
 
 	static string removeFilename(const string& pathStr);
 
-	static bool pathsAreEquivalent(string path1, string path2);
+	static bool pathsAreEqual(string pathStr1, string pathStr2);
 
 	static bool isRootPath(const string& pathStr);
 
 	static string replaceFilename(const string& pathStr, const string& filenameStr);
+
+	static string getDirectory(const string& pathStr);
 };

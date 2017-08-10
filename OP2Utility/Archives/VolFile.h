@@ -3,8 +3,7 @@
 #include <windows.h>
 #include "HuffLZ.h"
 #include "ArchiveFile.h"
-#include "../StreamReader.h"
-#include "../XFile.h"
+#include "../OP2Utility.h"
 #include "CompressionType.h"
 
 namespace Archives

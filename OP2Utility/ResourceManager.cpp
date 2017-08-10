@@ -86,7 +86,7 @@ bool ResourceManager::existsInArchives(const string& filename, int& volFileIndex
 	{
 		for (int j = 0; j < archiveFiles[i]->GetNumberOfPackedFiles(); ++j)
 		{
-			if (archiveFiles[i]->GetInternalFileName(j) == filename)
+			if (XFile::pathsAreEqual(archiveFiles[i]->GetInternalFileName(j), filename))
 			{
 				volFileIndexOut = i;
 				internalVolIndexOut = j;
@@ -128,11 +128,26 @@ void ResourceManager::extractAllOfFileType(const string& directory, const string
 
 bool ResourceManager::duplicateFilename(vector<string>& currentFilenames, string pathToCheck)
 {
+	// Brett: When called on a large loop of filenames (60 more more) this function, this will create a bottleneck.
+
 	string filename = XFile::getFilename(pathToCheck);
 
 	for (size_t i = 0; i < currentFilenames.size(); ++i)
-		if (XFile::getFilename(currentFilenames[i]) == filename)
+		if (XFile::pathsAreEqual(XFile::getFilename(currentFilenames[i]), filename))
 			return true;
 
 	return false;
+}
+
+string ResourceManager::findContainingArchiveFile(const string& filename)
+{
+	for each (ArchiveFile* archiveFile in archiveFiles)
+	{
+		int internalFileIndex = archiveFile->GetInternalFileIndex(filename.c_str());
+
+		if (internalFileIndex != -1)
+			return XFile::getFilename(archiveFile->GetVolumeFileName());
+	}
+
+	return string();
 }

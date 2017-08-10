@@ -29,6 +29,9 @@ public:
 	// Searches all .vol and .clm files and extracts any file with the given extension.
 	void extractAllOfFileType(const string& directory, const string& extension, bool overwrite = false);
 
+	// Returns an empty string if file is not located in an archive file in the ResourceManager's working directory.
+	string findContainingArchiveFile(const string& filename);
+
 private:
 	vector<ArchiveFile*> archiveFiles;
 

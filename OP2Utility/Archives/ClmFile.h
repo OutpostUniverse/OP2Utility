@@ -2,8 +2,7 @@
 
 #include <windows.h>
 #include <mmeapi.h>
-#include "ArchiveFile.h"
-#include "../StreamReader.h"
+#include "../OP2Utility.h"
 
 namespace Archives
 {

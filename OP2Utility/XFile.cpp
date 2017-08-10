@@ -133,14 +133,33 @@ string XFile::removeFilename(const string& pathStr)
 	return path(pathStr).remove_filename().string();
 }
 
-// Will throw an exception if passed only a filename as path1 or path2. Lead filenames with relative or full directory.
-bool XFile::pathsAreEquivalent(string path1, string path2)
+bool XFile::pathsAreEqual(string pathStr1, string pathStr2)
 {
-	if (path1.length() == 0)
-		path1 = "./";
+	StringHelper::convertToUpper(pathStr1);
+	StringHelper::convertToUpper(pathStr2);
 
-	if (path2.length() == 0)
-		path2 = "./";
+	path path1(pathStr1);
+	if (path1.has_relative_path() && path1.relative_path() == path1.filename())
+		path1 = ("./" + pathStr1);
+	
+	path path2(pathStr2);
+	if (path2.has_relative_path() && path2.relative_path() == path2.filename())
+		path2 = ("./" + pathStr2);
 
-	return equivalent(path(path1), path(path2));
+	return path1 == path2;
+}
+
+string XFile::getDirectory(const string& pathStr)
+{
+	path p(pathStr);
+
+	if (p.has_relative_path())
+		if (p.relative_path() == p.filename())
+			return "./";
+		return p.relative_path().string();
+
+	if (p.has_root_path())
+		return p.root_path().string();
+
+	return "./";
 }
