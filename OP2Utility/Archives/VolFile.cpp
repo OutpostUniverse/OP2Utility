@@ -1,4 +1,5 @@
 #include "VolFile.h"
+#include "../XFile.h"
 
 namespace Archives
 {
@@ -134,11 +135,6 @@ namespace Archives
 
 
 
-
-
-
-
-
 	bool VolFile::Repack()
 	{
 		int i;
@@ -178,13 +174,17 @@ namespace Archives
 		volInfo.filesToPack = filesToPack;
 		volInfo.internalNames = internalNames;
 
-		// Make sure files were specified
-		if (numFilesToPack < 1 || filesToPack == NULL || internalNames == NULL) return false;
+		// Make sure files are specified properly.
+		if (numFilesToPack > 0)
+			if (filesToPack == NULL || internalNames == NULL)
+				return false;
+		
 		// Open a file for output
-		if (OpenOutputFile("Temp.vol") == 0) return false;	// Return false on error
+		if (OpenOutputFile(volumeName) == 0) 
+			return false;	// Return false on error
 
 		// Open input files and prepare header and indexing info
-		if (PrepareHeader(volInfo) == false)
+		if (!PrepareHeader(volInfo))
 		{
 			CloseOutputFile();
 			return false;
@@ -194,12 +194,13 @@ namespace Archives
 		// Write volume contents
 		// ---------------------
 		// Write the header
-		if (WriteHeader(volInfo) == false)
+		if (!WriteHeader(volInfo))
 		{
 			CleanUpVolumeCreate(volInfo);
 			return false;
 		}
-		if (WriteFiles(volInfo) == false)
+		
+		if (!WriteFiles(volInfo))
 		{
 			CleanUpVolumeCreate(volInfo);
 			return false;

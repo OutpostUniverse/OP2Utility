@@ -20,6 +20,7 @@ namespace Archives
 		virtual int GetInternalFileIndex(const char *internalFileName) = 0;
 		virtual int GetInternalFileSize(int index) = 0;
 		virtual int ExtractFile(int index, const char *fileName) = 0;
+		virtual int ExtractAllFiles(const char* destDirectory);
 		virtual SeekableStreamReader* OpenSeekableStreamReader(const char *internalFileName) = 0;
 		virtual SeekableStreamReader* OpenSeekableStreamReader(int fileIndex) = 0;
 

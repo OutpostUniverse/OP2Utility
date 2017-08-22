@@ -12,3 +12,15 @@ string StringHelper::convertToUpper(const string& str)
 
 	return newString;
 }
+
+const char** StringHelper::vectorToCharArray(const vector<string>& stringVector)
+{
+	const char** filenames = new const char*[stringVector.size()];
+
+	for (size_t i = 0; i < stringVector.size(); ++i)
+	{
+		filenames[i] = stringVector[i].c_str();
+	}
+
+	return filenames;
+}

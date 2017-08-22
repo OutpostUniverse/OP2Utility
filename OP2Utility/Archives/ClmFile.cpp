@@ -209,6 +209,7 @@ namespace Archives
 		return true;
 	}
 
+
 	SeekableStreamReader* ClmFile::OpenSeekableStreamReader(const char *internalFileName)
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
@@ -269,6 +270,13 @@ namespace Archives
 	bool ClmFile::CreateVolume(const char *volumeFileName, int numFilesToPack,
 		const char **filesToPack, const char **internalNames)
 	{
+		// Make sure files are specified properly.
+		if (numFilesToPack < 1)
+			return false; //CLM files require at least one audio file present in order to properly write settings.
+		
+		if (filesToPack == NULL || internalNames == NULL)
+			return false;
+
 		HANDLE outFile = NULL;
 		HANDLE *fileHandle;
 		WAVEFORMATEX *waveFormat;
@@ -289,7 +297,7 @@ namespace Archives
 		// Allocate space for the format of all wave files
 		waveFormat = new WAVEFORMATEX[numFilesToPack];
 		// Read in all the wave headers
-		if (ReadAllWaveHeaders(numFilesToPack, fileHandle, waveFormat, indexEntry) == false)
+		if (!ReadAllWaveHeaders(numFilesToPack, fileHandle, waveFormat, indexEntry))
 		{
 			// Error reading in wave headers. Abort.
 			CleanUpVolumeCreate(outFile, numFilesToPack, fileHandle, waveFormat, indexEntry);
@@ -297,7 +305,7 @@ namespace Archives
 		}
 
 		// Check if all wave formats are the same
-		if (CompareWaveFormats(numFilesToPack, waveFormat) == false)
+		if (!CompareWaveFormats(numFilesToPack, waveFormat))
 		{
 			// Not all wave formats match
 			CleanUpVolumeCreate(outFile, numFilesToPack, fileHandle, waveFormat, indexEntry);
@@ -305,7 +313,7 @@ namespace Archives
 		}
 
 		// Open the output file
-		outFile = CreateFileA(volumeFileName, GENERIC_WRITE, 0, NULL, CREATE_NEW, 0, NULL);
+		outFile = CreateFileA(volumeFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL); //CREATE_ALWAYS was CREATE_NEW
 		if (outFile == INVALID_HANDLE_VALUE)
 		{
 			// Error opening the output file
@@ -314,7 +322,7 @@ namespace Archives
 		}
 
 		// Write the volume header and copy files into the volume
-		if (WriteVolume(outFile, numFilesToPack, fileHandle, indexEntry, internalNames, waveFormat) == false)
+		if (!WriteVolume(outFile, numFilesToPack, fileHandle, indexEntry, internalNames, waveFormat))
 		{
 			// Error writing volume file
 			CleanUpVolumeCreate(outFile, numFilesToPack, fileHandle, waveFormat, indexEntry);
@@ -326,8 +334,6 @@ namespace Archives
 
 		return true;
 	}
-
-
 
 
 	// Opens all files in filesToPack and stores the file handle in the fileHandle array

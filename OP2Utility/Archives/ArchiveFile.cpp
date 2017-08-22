@@ -1,4 +1,5 @@
 #include "ArchiveFile.h"
+#include "../Xfile.h"
 
 namespace Archives
 {
@@ -17,6 +18,16 @@ namespace Archives
 		delete m_VolumeFileName;
 	}
 
+	int ArchiveUnpacker::ExtractAllFiles(const char* destDirectory)
+	{
+		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		{
+			if (ExtractFile(i, XFile::replaceFilename(destDirectory, GetInternalFileName(i)).c_str()) == false)
+				return false;
+		}
+
+		return true;
+	}
 
 	// **************************************************************************************
 	// **************************************************************************************
