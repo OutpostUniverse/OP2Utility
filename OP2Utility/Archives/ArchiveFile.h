@@ -14,6 +14,7 @@ namespace Archives
 		const char* GetVolumeFileName() { return m_VolumeFileName; };
 		int GetVolumeFileSize() { return m_VolumeFileSize; };
 		int GetNumberOfPackedFiles() { return m_NumberOfPackedFiles; };
+		bool ContainsFile(const char* fileName);
 
 		virtual const char* GetInternalFileName(int index) = 0;
 		// Returns -1 if internalFileName is not present in archive.

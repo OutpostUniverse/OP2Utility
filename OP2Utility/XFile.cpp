@@ -163,3 +163,8 @@ string XFile::getDirectory(const string& pathStr)
 
 	return "./";
 }
+
+void XFile::deletePath(const string& pathStr)
+{
+	remove_all(pathStr);
+}

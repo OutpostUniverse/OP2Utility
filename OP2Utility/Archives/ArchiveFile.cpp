@@ -29,6 +29,17 @@ namespace Archives
 		return true;
 	}
 
+	bool ArchiveUnpacker::ContainsFile(const char* fileName)
+	{
+		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		{
+			if (XFile::pathsAreEqual(GetInternalFileName(i), fileName))
+				return true;
+		}
+
+		return false;
+	}
+
 	// **************************************************************************************
 	// **************************************************************************************
 	// **************************************************************************************

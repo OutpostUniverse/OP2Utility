@@ -98,7 +98,7 @@ bool ResourceManager::existsInArchives(const string& filename, int& volFileIndex
 	return false;
 }
 
-bool ResourceManager::extractFile(const string& filename, bool overwrite)
+bool ResourceManager::extractFileSpecificArchive(const string& filename, bool overwrite)
 {
 	if (!overwrite && XFile::pathExists(filename))
 		return true;

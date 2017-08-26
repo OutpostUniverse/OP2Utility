@@ -50,4 +50,6 @@ public:
 	static string replaceFilename(const string& pathStr, const string& filenameStr);
 
 	static string getDirectory(const string& pathStr);
+
+	static void deletePath(const string& pathStr);
 };
