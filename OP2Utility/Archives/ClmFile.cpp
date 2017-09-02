@@ -1,4 +1,5 @@
 #include "ClmFile.h"
+#include "../XFile.h"
 
 namespace Archives
 {
