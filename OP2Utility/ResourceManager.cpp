@@ -4,18 +4,18 @@ ResourceManager::ResourceManager(const string& archiveDirectory)
 {
 	vector<string> volFilenames = XFile::getFilesFromDirectory(archiveDirectory, ".vol");
 
-	for each (const string& volFilename in volFilenames)
+	for (const string& volFilename : volFilenames)
 		archiveFiles.push_back(new VolFile(volFilename.c_str()));
 
 	vector<string> clmFilenames = XFile::getFilesFromDirectory(archiveDirectory, ".clm");
 
-	for each (const string& clmFilename in clmFilenames)
+	for (const string& clmFilename : clmFilenames)
 		archiveFiles.push_back(new ClmFile(clmFilename.c_str()));
 }
 
 ResourceManager::~ResourceManager()
 {
-	for each (ArchiveFile* archiveFile in archiveFiles)
+	for (ArchiveFile* archiveFile : archiveFiles)
 		delete archiveFile;
 }
 
@@ -47,12 +47,12 @@ vector<string> ResourceManager::getAllFilenames(const string& directory, const s
 
 	vector<string> filenames = XFile::getFilesFromDirectory(directory, filenameRegex);
 
-	for each (VolFile* volFile in archiveFiles)
+	for (ArchiveFile* archiveFile : archiveFiles)
 	{
-		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
+		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
-			if (regex_search(volFile->GetInternalFileName(i), filenameRegex))
-				filenames.push_back(volFile->GetInternalFileName(i));
+			if (regex_search(archiveFile->GetInternalFileName(i), filenameRegex))
+				filenames.push_back(archiveFile->GetInternalFileName(i));
 		}
 	}
 
@@ -66,11 +66,11 @@ vector<string> ResourceManager::getAllFilenamesOfType(const string& directory, c
 	if (!accessArchives)
 		return filenames;
 
-	for each (VolFile* volFile in archiveFiles)
+	for (ArchiveFile* archiveFile : archiveFiles)
 	{
-		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
+		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
-			string internalFilename = volFile->GetInternalFileName(i);
+			string internalFilename = archiveFile->GetInternalFileName(i);
 
 			if (XFile::extensionMatches(internalFilename, extension) && !duplicateFilename(filenames, internalFilename))
 				filenames.push_back(internalFilename);
@@ -116,12 +116,12 @@ bool ResourceManager::extractFileSpecificArchive(const string& filename, bool ov
 
 void ResourceManager::extractAllOfFileType(const string& directory, const string& extension, bool overwrite)
 {
-	for each (VolFile* volFile in archiveFiles)
+	for (ArchiveFile* archiveFile : archiveFiles)
 	{
-		for (int i = 0; i < volFile->GetNumberOfPackedFiles(); ++i)
+		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::extensionMatches(volFile->GetInternalFileName(i), extension))
-				volFile->ExtractFile(i, volFile->GetInternalFileName(i));
+			if (XFile::extensionMatches(archiveFile->GetInternalFileName(i), extension))
+				archiveFile->ExtractFile(i, archiveFile->GetInternalFileName(i));
 		}
 	}
 }
@@ -141,7 +141,7 @@ bool ResourceManager::duplicateFilename(vector<string>& currentFilenames, string
 
 string ResourceManager::findContainingArchiveFile(const string& filename)
 {
-	for each (ArchiveFile* archiveFile in archiveFiles)
+	for (ArchiveFile* archiveFile : archiveFiles)
 	{
 		int internalFileIndex = archiveFile->GetInternalFileIndex(filename.c_str());
 

@@ -35,7 +35,9 @@ namespace Archives
 	{
 		delete[] m_FileName;
 		delete[] m_IndexEntry;
-		if (m_FileHandle) CloseHandle(m_FileHandle);
+
+		if (m_FileHandle) 
+			CloseHandle(m_FileHandle);
 	}
 
 
