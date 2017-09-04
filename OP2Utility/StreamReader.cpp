@@ -1,5 +1,4 @@
 #include "StreamReader.h"
-
 #include <iostream>
 #include <fstream>
 

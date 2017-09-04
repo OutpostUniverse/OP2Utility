@@ -1,10 +1,9 @@
 #pragma once
 
+#include "Archives/ArchiveFile.h"
 #include <string>
 #include <vector>
 #include <regex>
-#include "OP2Utility.h"
-#include "Archives/ArchiveFile.h"
 
 using namespace std;
 using namespace Archives;

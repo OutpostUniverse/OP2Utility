@@ -1,4 +1,7 @@
 #include "ResourceManager.h"
+#include "XFile.h"
+#include "Archives\VolFile.h"
+#include "Archives\ClmFile.h"
 
 ResourceManager::ResourceManager(const string& archiveDirectory)
 {
