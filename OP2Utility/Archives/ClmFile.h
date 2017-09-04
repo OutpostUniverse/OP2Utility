@@ -10,7 +10,7 @@ namespace Archives
 	{
 	public:
 		ClmFile(const char *fileName);
-		~ClmFile();
+		virtual ~ClmFile();
 
 		const char* GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);

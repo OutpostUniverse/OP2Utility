@@ -9,7 +9,7 @@ namespace Archives
 	{
 	public:
 		ArchiveUnpacker(const char *fileName);
-		~ArchiveUnpacker();
+		virtual ~ArchiveUnpacker();
 
 		const char* GetVolumeFileName() { return m_VolumeFileName; };
 		int GetVolumeFileSize() { return m_VolumeFileSize; };
@@ -36,7 +36,7 @@ namespace Archives
 	{
 	public:
 		ArchivePacker();
-		~ArchivePacker();
+		virtual ~ArchivePacker();
 
 		// Repack is used to replace the old volume with a new volume created from the
 		// files (in the current directory) that match the internal file names
@@ -58,6 +58,7 @@ namespace Archives
 	{
 	public:
 		ArchiveFile(const char *fileName) : ArchiveUnpacker(fileName) {};
+		virtual ~ArchiveFile() {};
 	};
 
 
