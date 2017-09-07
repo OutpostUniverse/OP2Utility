@@ -21,6 +21,8 @@ public:
 	//Returns true if path is a directory WITHOUT a file included.
 	static bool isDirectory(const string& pathStr);
 
+	static bool XFile::isFile(const string& path);
+
 	static vector<string> getFilesFromDirectory(const string& directory);
 
 	static vector<string> getFilesFromDirectory(const string& directory, const string& fileType);

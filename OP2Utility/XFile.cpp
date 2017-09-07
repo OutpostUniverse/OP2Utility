@@ -19,6 +19,11 @@ bool XFile::isDirectory(const string& pathStr)
 	return is_directory(pathStr);
 }
 
+bool XFile::isFile(const string& path)
+{
+	return is_regular_file(path);
+}
+
 bool XFile::extensionMatches(const string& pathStr, const string& extension)
 {
 	string pathExtension = getFileExtension(pathStr);
