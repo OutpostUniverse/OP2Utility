@@ -1,4 +1,5 @@
 #include "StringHelper.h"
+#include <algorithm>
 
 void StringHelper::convertToUpper(string& str)
 {
@@ -23,4 +24,18 @@ const char** StringHelper::vectorToCharArray(const vector<string>& stringVector)
 	}
 
 	return filenames;
+}
+
+vector<string> StringHelper::removeMatchingStrings(const vector<string>& strings, const vector<string>& stringsToRemove)
+{
+	vector<string> stringsToReturn(strings.begin(), strings.end());
+
+	auto pred = [&stringsToRemove](const std::string& key) ->bool
+	{
+		return std::find(stringsToRemove.begin(), stringsToRemove.end(), key) != stringsToRemove.end();
+	};
+
+	stringsToReturn.erase(std::remove_if(stringsToReturn.begin(), stringsToReturn.end(), pred), stringsToReturn.end());
+
+	return stringsToReturn;
 }
