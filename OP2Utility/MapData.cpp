@@ -49,7 +49,7 @@ void MapData::readTileSetHeader(StreamReader* streamReader)
 
 void MapData::readTileSetSources(StreamReader* streamReader)
 {
-	tileSetSources.resize((size_t)mapHeader.numTileSets);
+	tileSetSources.resize(static_cast<size_t>(mapHeader.numTileSets));
 
 	for (unsigned int i = 0; i < mapHeader.numTileSets; ++i)
 	{
