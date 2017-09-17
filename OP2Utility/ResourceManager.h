@@ -23,7 +23,7 @@ public:
 	// Searches .vol and .clm archives for file and then extracts it. 
 	// returns true if EITHER the file is extracted OR 
 	//     if BOTH overwrite == false AND the file already exists in the directory.
-	bool extractFileSpecificArchive(const string& filename, bool overwrite = false);
+	bool extractSpecificFile(const string& filename, bool overwrite = false);
 
 	// Searches all .vol and .clm files and extracts any file with the given extension.
 	void extractAllOfFileType(const string& directory, const string& extension, bool overwrite = false);
