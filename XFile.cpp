@@ -101,7 +101,8 @@ vector<string> XFile::getFilesFromDirectory(const string& directory, const strin
 		if (filenames.size() == 0)
 			return filenames;
 
-		if (path(filenames[i]).extension() != fileType)
+		string extension = path(filenames[i]).extension().string();
+		if (extension != fileType)
 			filenames.erase(filenames.begin() + i);
 
 		if (i == 0)
