@@ -1,9 +1,10 @@
 #pragma once
 
-#include <windows.h>
 #include "HuffLZ.h"
 #include "ArchiveFile.h"
 #include "CompressionType.h"
+#include <windows.h>
+#include <memory>
 
 namespace Archives
 {
@@ -23,8 +24,8 @@ namespace Archives
 
 		// Extraction
 		int ExtractFile(int index, const char *filename);
-		SeekableStreamReader* OpenSeekableStreamReader(const char *internalFileName);
-		SeekableStreamReader* OpenSeekableStreamReader(int fileIndex);
+		unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
+		unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		// Volume Creation
 		bool Repack();

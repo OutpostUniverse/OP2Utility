@@ -1,7 +1,8 @@
 #pragma once
 
-#include <windows.h>
 #include "../StreamReader.h"
+#include <windows.h>
+#include <memory>
 
 namespace Archives
 {
@@ -22,8 +23,8 @@ namespace Archives
 		virtual int GetInternalFileSize(int index) = 0;
 		virtual int ExtractFile(int index, const char *fileName) = 0;
 		virtual int ExtractAllFiles(const char* destDirectory);
-		virtual SeekableStreamReader* OpenSeekableStreamReader(const char *internalFileName) = 0;
-		virtual SeekableStreamReader* OpenSeekableStreamReader(int fileIndex) = 0;
+		virtual unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName) = 0;
+		virtual unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex) = 0;
 
 	protected:
 		char *m_VolumeFileName;

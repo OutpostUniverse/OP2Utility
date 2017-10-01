@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include <memory>
 
 using namespace std;
 using namespace Archives;
@@ -13,9 +14,8 @@ class ResourceManager
 {
 public:
 	ResourceManager(const string& archiveDirectory);
-	~ResourceManager();
 
-	SeekableStreamReader* getResourceStream(const string& filename, bool accessArchives = true);
+	unique_ptr<SeekableStreamReader> getResourceStream(const string& filename, bool accessArchives = true);
 
 	vector<string> getAllFilenames(const string& directory, const string& filenameRegexStr, bool accessArcives = true);
 	vector<string> getAllFilenamesOfType(const string& directory, const string& extension, bool accessArchives = true);
@@ -32,7 +32,7 @@ public:
 	string findContainingArchiveFile(const string& filename);
 
 private:
-	vector<ArchiveFile*> archiveFiles;
+	vector<unique_ptr<ArchiveFile>> archiveFiles;
 
 	bool existsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut);
 	bool duplicateFilename(vector<string>& currentFilenames, string pathToCheck);

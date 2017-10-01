@@ -8,31 +8,25 @@ ResourceManager::ResourceManager(const string& archiveDirectory)
 	vector<string> volFilenames = XFile::getFilesFromDirectory(archiveDirectory, ".vol");
 
 	for (const string& volFilename : volFilenames)
-		archiveFiles.push_back(new VolFile(volFilename.c_str()));
+		archiveFiles.push_back(make_unique<VolFile>(volFilename.c_str()));
 
 	vector<string> clmFilenames = XFile::getFilesFromDirectory(archiveDirectory, ".clm");
 
 	for (const string& clmFilename : clmFilenames)
-		archiveFiles.push_back(new ClmFile(clmFilename.c_str()));
-}
-
-ResourceManager::~ResourceManager()
-{
-	for (ArchiveFile* archiveFile : archiveFiles)
-		delete archiveFile;
+		archiveFiles.push_back(make_unique<ClmFile>(clmFilename.c_str()));
 }
 
 // First searches for resources loosely in provided directory. 
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
-SeekableStreamReader* ResourceManager::getResourceStream(const string& filename, bool accessArchives)
+unique_ptr<SeekableStreamReader> ResourceManager::getResourceStream(const string& filename, bool accessArchives)
 {
 	if (XFile::pathExists(filename))
-		return new FileStreamReader(filename);
+		return make_unique<FileStreamReader>(filename);
 
 	if (!accessArchives)
 		return nullptr;
 
-	for (ArchiveFile* archiveFile : archiveFiles)
+	for (unique_ptr<ArchiveFile>& archiveFile : archiveFiles)
 	{
 		string archiveFilename = XFile::getFilename(filename);
 		int internalArchiveIndex = archiveFile->GetInternalFileIndex(archiveFilename.c_str());
@@ -50,7 +44,7 @@ vector<string> ResourceManager::getAllFilenames(const string& directory, const s
 
 	vector<string> filenames = XFile::getFilesFromDirectory(directory, filenameRegex);
 
-	for (ArchiveFile* archiveFile : archiveFiles)
+	for (unique_ptr<ArchiveFile>& archiveFile : archiveFiles)
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
@@ -69,7 +63,7 @@ vector<string> ResourceManager::getAllFilenamesOfType(const string& directory, c
 	if (!accessArchives)
 		return filenames;
 
-	for (ArchiveFile* archiveFile : archiveFiles)
+	for (unique_ptr<ArchiveFile>& archiveFile : archiveFiles)
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
@@ -119,7 +113,7 @@ bool ResourceManager::extractSpecificFile(const string& filename, bool overwrite
 
 void ResourceManager::extractAllOfFileType(const string& directory, const string& extension, bool overwrite)
 {
-	for (ArchiveFile* archiveFile : archiveFiles)
+	for (unique_ptr<ArchiveFile>& archiveFile : archiveFiles)
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
@@ -144,7 +138,7 @@ bool ResourceManager::duplicateFilename(vector<string>& currentFilenames, string
 
 string ResourceManager::findContainingArchiveFile(const string& filename)
 {
-	for (ArchiveFile* archiveFile : archiveFiles)
+	for (unique_ptr<ArchiveFile>& archiveFile : archiveFiles)
 	{
 		int internalFileIndex = archiveFile->GetInternalFileIndex(filename.c_str());
 

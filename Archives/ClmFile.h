@@ -1,8 +1,9 @@
 #pragma once
 
+#include "ArchiveFile.h"
 #include <windows.h>
 #include <mmeapi.h>
-#include "ArchiveFile.h"
+#include <memory>
 
 namespace Archives
 {
@@ -15,8 +16,8 @@ namespace Archives
 		const char* GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);
 		int ExtractFile(int index, const char *fileName);
-		SeekableStreamReader* OpenSeekableStreamReader(const char *internalFileName);
-		SeekableStreamReader* OpenSeekableStreamReader(int fileIndex);
+		unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
+		unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		int GetInternalFileSize(int index);
 

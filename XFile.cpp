@@ -1,6 +1,5 @@
 #include "XFile.h"
 #include "StringHelper.h"
-#include <fstream>
 
 #include <filesystem>
 #include <experimental/filesystem>
@@ -50,18 +49,7 @@ void XFile::createDirectory(const string& newPath)
 
 bool XFile::pathExists(const string& pathStr)
 {
-	path absolutePath = absolute(path(pathStr));
-
-	ifstream stream(pathStr.c_str());
-	return stream.good();
-
-	// This is not properly returning paths that are relative?
-	//file_status newFileStatus(path(pathStr));
-	//return fileStatus::type() != file_type::not_found;
-	//file_type fileType = newFileStatus.type();
-	//return status_known(status(pathStr) == file_);
-	//path absolutePath = absolute(path(pathStr));
-	//return exists(path(pathStr));
+	return exists(path(pathStr));
 }
 
 string XFile::appendToFilename(const string& filename, const string& valueToAppend)
@@ -96,6 +84,9 @@ vector<string> XFile::getFilesFromDirectory(const string& directory, const regex
 	{
 		if (!regex_search(filenames[i], filenameRegex))
 			filenames.erase(filenames.begin() + i);
+
+		if (i == 0)
+			break;
 	}
 
 	return filenames;
@@ -112,6 +103,9 @@ vector<string> XFile::getFilesFromDirectory(const string& directory, const strin
 
 		if (path(filenames[i]).extension() != fileType)
 			filenames.erase(filenames.begin() + i);
+
+		if (i == 0)
+			break;
 	}
 
 	return filenames;
@@ -177,10 +171,10 @@ string XFile::getDirectory(const string& pathStr)
 	if (p.has_relative_path())
 		if (p.relative_path() == p.filename())
 			return "./";
-		return p.relative_path().string();
+		return p.remove_filename().relative_path().string();
 
 	if (p.has_root_path())
-		return p.root_path().string();
+		return p.remove_filename().root_path().string();
 
 	return "./";
 }

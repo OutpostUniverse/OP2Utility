@@ -212,8 +212,7 @@ namespace Archives
 		return true;
 	}
 
-
-	SeekableStreamReader* ClmFile::OpenSeekableStreamReader(const char *internalFileName)
+	unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
@@ -223,14 +222,10 @@ namespace Archives
 		return OpenSeekableStreamReader(fileIndex);
 	}
 
-	SeekableStreamReader* ClmFile::OpenSeekableStreamReader(int fileIndex)
+	unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
 	{
 		throw exception("OpenStreamRead not yet implemented for Clm files.");
 	}
-
-
-
-
 
 	// Repacks the volume using the same files as are specified by the internal file names
 	// Returns nonzero if successful and zero otherwise
