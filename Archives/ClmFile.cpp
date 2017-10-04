@@ -217,7 +217,7 @@ namespace Archives
 		return true;
 	}
 
-	unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
@@ -227,7 +227,7 @@ namespace Archives
 		return OpenSeekableStreamReader(fileIndex);
 	}
 
-	unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
 	{
 		throw std::logic_error("OpenSeekableStreamReader not yet implemented for Clm files.");
 	}

@@ -3,8 +3,6 @@
 #include <fstream>
 #include <string>
 
-using namespace std;
-
 class StreamReader {
 public:
 	virtual void read(char* buffer, size_t size) = 0;
@@ -23,7 +21,7 @@ public:
 	void ignore(size_t size);
 
 private:
-	ifstream file;
+	std::ifstream file;
 };
 
 

@@ -1,6 +1,8 @@
 #include "StringHelper.h"
 #include <algorithm>
 
+using namespace std;
+
 void StringHelper::convertToUpper(string& str)
 {
 	for (auto & c : str) c = toupper(c);

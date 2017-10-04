@@ -23,8 +23,8 @@ namespace Archives
 		virtual int GetInternalFileSize(int index) = 0;
 		virtual int ExtractFile(int index, const char *fileName) = 0;
 		virtual int ExtractAllFiles(const char* destDirectory);
-		virtual unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName) = 0;
-		virtual unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex) = 0;
+		virtual std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName) = 0;
+		virtual std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex) = 0;
 
 	protected:
 		char *m_VolumeFileName;

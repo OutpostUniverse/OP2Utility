@@ -5,8 +5,6 @@
 #include <cmath>
 #include <string>
 
-using namespace std;
-
 // Includes data structures to represent a map or saved game in Outpost 2.
 
 // FILE FORMAT DOCUMENTATION: 
@@ -92,7 +90,7 @@ struct TileSetSource
 
 	std::string getTileSetFilename()
 	{
-		string s;
+		std::string s;
 		for (int i = 0; i < 8; ++i)
 			s.push_back(tileSetFilename[i]);
 	    
@@ -181,22 +179,22 @@ struct MapData
 	MapHeader mapHeader;
 
 	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
-	vector<TileData> tileDataVector;
+	std::vector<TileData> tileDataVector;
 
 	ClipRect clipRect;
 
 	// Listing of all tile set sources associated with the map.
-	vector<TileSetSource> tileSetSources;
+	std::vector<TileSetSource> tileSetSources;
 
 	// Metadata about each available tile from the tile set sources.
-	vector<TileInfo> tileInfoVector;
+	std::vector<TileInfo> tileInfoVector;
 
 	// Listing of properties grouped by terrain type. Properties apply to a given range of tiles.
-	vector<TerrainType> terrainTypeVector;
+	std::vector<TerrainType> terrainTypeVector;
 
 public:
 	MapData(SeekableStreamReader* mapStream, bool saveGame = false);
-	MapData(string filename, bool saveGame = false) : MapData(&FileStreamReader(filename), saveGame) {}
+	MapData(std::string filename, bool saveGame = false) : MapData(&FileStreamReader(filename), saveGame) {}
 
 	unsigned int getTileInfoIndex(unsigned int x, unsigned int y);
 	int getCellType(unsigned int x, unsigned int y);
