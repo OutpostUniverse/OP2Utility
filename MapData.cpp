@@ -1,6 +1,7 @@
 #include "MapData.h"
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -44,7 +45,7 @@ void MapData::readTileSetHeader(StreamReader* streamReader)
 	streamReader->read(buffer, sizeof(buffer));
 
 	if (strncmp(buffer, "TILE SET\x1a", sizeof(buffer)))
-		throw exception("'TILE SET' string not found.");
+		throw runtime_error("'TILE SET' string not found.");
 }
 
 void MapData::readTileSetSources(StreamReader* streamReader)
@@ -57,7 +58,7 @@ void MapData::readTileSetSources(StreamReader* streamReader)
 		streamReader->read((char*)&stringLength, sizeof(stringLength));
 
 		if (stringLength > 8)
-			throw exception("Tile Set Name greater than 8 characters in length.");
+			throw runtime_error("Tile Set Name greater than 8 characters in length.");
 
 		if (stringLength == 0)
 			continue;

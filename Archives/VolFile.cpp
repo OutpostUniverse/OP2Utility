@@ -1,5 +1,6 @@
 #include "VolFile.h"
 #include "../XFile.h"
+#include <stdexcept>
 
 namespace Archives
 {
@@ -7,13 +8,13 @@ namespace Archives
 	{
 		// Memory map the .vol file
 		if (MemoryMapFile(filename))
-			throw "Could not open file";		// Error opening file
+			throw std::runtime_error("Could not open vol file.");
 
-		m_VolumeFileSize = m_MappedFileSize;	// Store the .vol file size
+		m_VolumeFileSize = m_MappedFileSize;
 
 		// Read in the header
 		if (!ReadVolHeader())
-			throw "Invalid header";				// Error reading in .vol header
+			throw std::runtime_error("Invalid vol file header.");
 	}
 
 	VolFile::~VolFile()
@@ -66,7 +67,7 @@ namespace Archives
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
 		if (fileIndex < 0)
-			throw exception("File does not exist in Archive.");
+			throw std::runtime_error("File does not exist in Archive.");
 
 		return OpenSeekableStreamReader(fileIndex);
 	}
