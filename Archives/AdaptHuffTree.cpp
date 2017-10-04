@@ -1,4 +1,5 @@
 #include "AdaptHuffTree.h"
+#include <stdexcept>
 
 namespace Archives
 {
@@ -62,8 +63,7 @@ namespace Archives
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NumNodes)
 		{
-			// nodeIndex is out of range
-			throw "Index out of range";
+			throw std::runtime_error("Index out of range");
 		}
 
 		// Return the child node index
@@ -77,8 +77,7 @@ namespace Archives
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NumNodes)
 		{
-			// nodeIndex is out of range
-			throw "Index out of range";
+			throw std::runtime_error("Index out of range");
 		}
 
 		// Return weather or not this is a terminal node
@@ -91,8 +90,7 @@ namespace Archives
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NumNodes)
 		{
-			// nodeIndex is out of range
-			throw "Index out of range";
+			throw std::runtime_error("Index out of range");
 		}
 
 		// Return weather or not this is a terminal node
@@ -113,13 +111,12 @@ namespace Archives
 		// Make sure the code is in range
 		if (code >= m_NumTerminalNodes)
 		{
-			// Code is out of range
-			throw "Code value out of range";
+			throw std::runtime_error("Code value out of range");
 		}
 
 		// Get the index of the node containing this code
 		curNodeIndex = m_Parent[code + m_NumNodes];
-		m_Count[curNodeIndex]++;					// Update the node count
+		m_Count[curNodeIndex]++; // Update the node count
 
 		// Propagate the count increase up to the root of the tree
 		while (curNodeIndex != m_RootNodeIndex)
@@ -196,8 +193,7 @@ namespace Archives
 		// Make sure the code is in range
 		if (code >= m_NumTerminalNodes)
 		{
-			// code is out of range
-			throw "Code value is out of range";
+			throw std::runtime_error("Code value is out of range");
 		}
 
 		// Get the node containing the given code
