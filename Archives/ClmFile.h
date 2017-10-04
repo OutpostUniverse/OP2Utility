@@ -16,8 +16,8 @@ namespace Archives
 		const char* GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);
 		int ExtractFile(int index, const char *fileName);
-		unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
-		unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
+		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
+		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		int GetInternalFileSize(int index);
 

@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <experimental/filesystem>
 
+using namespace std;
 using namespace std::experimental::filesystem;
 
 string XFile::getFileExtension(const string& pathStr)

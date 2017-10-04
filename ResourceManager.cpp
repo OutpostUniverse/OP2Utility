@@ -3,6 +3,9 @@
 #include "Archives\VolFile.h"
 #include "Archives\ClmFile.h"
 
+using namespace std;
+using namespace Archives;
+
 ResourceManager::ResourceManager(const string& archiveDirectory)
 {
 	vector<string> volFilenames = XFile::getFilesFromDirectory(archiveDirectory, ".vol");

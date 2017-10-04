@@ -4,54 +4,52 @@
 #include <vector>
 #include <regex>
 
-using namespace std;
-
 // Cross platform file system access.
 class XFile
 {
 public:
 	//Returns the file extension as a std::string including the leading dot (.). 
 	//If no extension is available, an empty string is returned. 
-	static string getFileExtension(const string& pathStr);
+	static std::string getFileExtension(const std::string& pathStr);
 
 	//Checks if the extension on a path matches the provided extension.
 	//Provided extension does not require the leading dot (.).
-	static bool extensionMatches(const string& pathStr, const string& extension);
+	static bool extensionMatches(const std::string& pathStr, const std::string& extension);
 
 	//Returns true if path is a directory WITHOUT a file included.
-	static bool isDirectory(const string& pathStr);
+	static bool isDirectory(const std::string& pathStr);
 
-	static bool XFile::isFile(const string& path);
+	static bool XFile::isFile(const std::string& path);
 
-	static vector<string> getFilesFromDirectory(const string& directory);
+	static std::vector<std::string> getFilesFromDirectory(const std::string& directory);
 
-	static vector<string> getFilesFromDirectory(const string& directory, const string& fileType);
+	static std::vector<std::string> getFilesFromDirectory(const std::string& directory, const std::string& fileType);
 
-	static vector<string> getFilesFromDirectory(const string& directory, const regex& filenameRegex);
+	static std::vector<std::string> getFilesFromDirectory(const std::string& directory, const std::regex& filenameRegex);
 
-	static string changeFileExtension(const string& filename, const string& newExtension);
+	static std::string changeFileExtension(const std::string& filename, const std::string& newExtension);
 
-	static void createDirectory(const string& newPath);
+	static void createDirectory(const std::string& newPath);
 
-	static bool pathExists(const string& pathStr);
+	static bool pathExists(const std::string& pathStr);
 
 	// Adds a string to the end of the filenameStr, but before the file's extension.
-	static string appendToFilename(const string& filename, const string& valueToAppend);
+	static std::string appendToFilename(const std::string& filename, const std::string& valueToAppend);
 
 	// Appends a subdirectory right before the filenameStr.
-	static string appendSubDirectory(const string& pathStr, const string& subDirectory);
+	static std::string appendSubDirectory(const std::string& pathStr, const std::string& subDirectory);
 
-	static string getFilename(const string& pathStr);
+	static std::string getFilename(const std::string& pathStr);
 
-	static string removeFilename(const string& pathStr);
+	static std::string removeFilename(const std::string& pathStr);
 
-	static bool pathsAreEqual(string pathStr1, string pathStr2);
+	static bool pathsAreEqual(std::string pathStr1, std::string pathStr2);
 
-	static bool isRootPath(const string& pathStr);
+	static bool isRootPath(const std::string& pathStr);
 
-	static string replaceFilename(const string& pathStr, const string& filenameStr);
+	static std::string replaceFilename(const std::string& pathStr, const std::string& filenameStr);
 
-	static string getDirectory(const string& pathStr);
+	static std::string getDirectory(const std::string& pathStr);
 
-	static void deletePath(const string& pathStr);
+	static void deletePath(const std::string& pathStr);
 };

@@ -62,7 +62,7 @@ namespace Archives
 		return m_Index[index].fileNameOffset;
 	}
 
-	unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const char* internalFileName)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const char* internalFileName)
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
@@ -72,13 +72,13 @@ namespace Archives
 		return OpenSeekableStreamReader(fileIndex);
 	}
 
-	unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(int fileIndex)
 	{
 		char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
 		size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
 		offset += 8;
 
-		return make_unique<MemoryStreamReader>(offset, length);
+		return std::make_unique<MemoryStreamReader>(offset, length);
 	}
 
 	// Extracts the internal file at the given index to the file 
