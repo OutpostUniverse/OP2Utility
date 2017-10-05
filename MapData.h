@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <string>
+#include <memory>
 
 // Includes data structures to represent a map or saved game in Outpost 2.
 
@@ -193,8 +194,8 @@ struct MapData
 	std::vector<TerrainType> terrainTypeVector;
 
 public:
-	MapData(SeekableStreamReader* mapStream, bool saveGame = false);
-	MapData(std::string filename, bool saveGame = false) : MapData(&FileStreamReader(filename), saveGame) {}
+	MapData(std::unique_ptr<SeekableStreamReader> mapStream, bool saveGame = false);
+	MapData(std::string filename, bool saveGame = false) : MapData(std::make_unique<FileStreamReader>(filename), saveGame) {}
 
 	unsigned int getTileInfoIndex(unsigned int x, unsigned int y);
 	int getCellType(unsigned int x, unsigned int y);

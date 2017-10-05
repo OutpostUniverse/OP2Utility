@@ -5,7 +5,7 @@
 
 using namespace std;
 
-MapData::MapData(SeekableStreamReader* mapStream, bool saveGame)
+MapData::MapData(unique_ptr<SeekableStreamReader> mapStream, bool saveGame)
 {
 	if (saveGame)
 		skipSaveGameHeader(*mapStream);
