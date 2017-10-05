@@ -205,13 +205,13 @@ public:
 private:
 	size_t GetCellIndex(unsigned int x, unsigned int y);
 
-	void skipSaveGameHeader(SeekableStreamReader* streamReader);
-	void readMapHeader(StreamReader* streamReader);
-	void readTileData(StreamReader* streamReader);
-	void readClipRect(StreamReader* streamReader);
-	void readTileSetSources(StreamReader* streamReader);
-	void readTileSetHeader(StreamReader* streamReader);
-	void readTileInfo(StreamReader* streamReader);
+	void skipSaveGameHeader(SeekableStreamReader& streamReader);
+	void readMapHeader(StreamReader& streamReader);
+	void readTileData(StreamReader& streamReader);
+	void readClipRect(StreamReader& streamReader);
+	void readTileSetSources(StreamReader& streamReader);
+	void readTileSetHeader(StreamReader& streamReader);
+	void readTileInfo(StreamReader& streamReader);
 };
 
 #pragma pack(pop)
