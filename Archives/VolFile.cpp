@@ -1,20 +1,21 @@
 #include "VolFile.h"
 #include "../XFile.h"
 #include <stdexcept>
+#include <string>
 
 namespace Archives
 {
-	VolFile::VolFile(const char *filename) : ArchiveFile(filename)
+	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName)
 	{
 		// Memory map the .vol file
-		if (MemoryMapFile(filename))
-			throw std::runtime_error("Could not open vol file.");
+		if (MemoryMapFile(fileName))
+			throw std::runtime_error("Could not open vol file " + std::string(fileName));
 
 		m_VolumeFileSize = m_MappedFileSize;
 
 		// Read in the header
 		if (!ReadVolHeader())
-			throw std::runtime_error("Invalid vol file header.");
+			throw std::runtime_error("Invalid vol header in " + std::string(fileName));
 	}
 
 	VolFile::~VolFile()
@@ -82,14 +83,14 @@ namespace Archives
 	}
 
 	// Extracts the internal file at the given index to the file 
-	// filename. Returns nonzero if successful.
+	// fileName. Returns nonzero if successful.
 	int VolFile::ExtractFile(int index, const char *filename)
 	{
 		HANDLE outFile;
 		unsigned long bytesWritten;
 		int retVal;
 
-		outFile = CreateFileA(filename,					// filename
+		outFile = CreateFileA(filename,					// fileName
 			GENERIC_WRITE,			// access mode
 			0,						// share mode
 			NULL,					// security attributes
@@ -146,9 +147,9 @@ namespace Archives
 		// Create a list of filenames
 		for (i = 0; i < m_NumberOfPackedFiles; i++)
 		{
-			// Get the internal filename
+			// Get the internal fileName
 			internalNames[i] = GetInternalFileName(i);
-			// Generate the external filename
+			// Generate the external fileName
 			filesToPack[i] = internalNames[i];
 		}
 
@@ -289,7 +290,7 @@ namespace Archives
 		for (i = 0; i < volInfo.numFilesToPack; i++)
 		{
 			volInfo.fileHandle[i] = CreateFileA(
-				volInfo.filesToPack[i],	// filename
+				volInfo.filesToPack[i],	// fileName
 				GENERIC_READ,			// access mode
 				0,						// share mode
 				NULL,					// security attributes
@@ -423,7 +424,7 @@ namespace Archives
 		// Note: the size of this section must be 0
 		if (ReadTag(8, "volh") != 0) return false;
 
-		// Check for filename string table tag ("vols" tag)
+		// Check for fileName string table tag ("vols" tag)
 		// ------------------------------------------------
 		if ((m_StringTableLength = ReadTag(16, "vols")) == -1) return false;
 		m_ActualStringTableLength = *((int*)m_BaseOfFile + 6);	// Store actual length
