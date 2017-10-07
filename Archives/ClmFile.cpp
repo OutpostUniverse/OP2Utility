@@ -1,5 +1,6 @@
 #include "ClmFile.h"
 #include "../XFile.h"
+#include <stdexcept>
 
 namespace Archives
 {
@@ -23,8 +24,12 @@ namespace Archives
 			OPEN_EXISTING,			// creation disposition
 			FILE_ATTRIBUTE_NORMAL,	// attributes
 			NULL);					// template
-		if (m_FileHandle == INVALID_HANDLE_VALUE) throw "Could not open file";
-		if (ReadHeader() == false) throw "Invalid header";
+
+		if (m_FileHandle == INVALID_HANDLE_VALUE) 
+			throw std::runtime_error("Could not open file");
+		
+		if (ReadHeader() == false) 
+			throw std::runtime_error("Invalid header");
 
 		// Initialize the unknown data
 		memset(m_Unknown, 0, 6);
@@ -212,19 +217,19 @@ namespace Archives
 		return true;
 	}
 
-	unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
 		if (fileIndex < 0)
-			throw exception("File does not exist in Archive.");
+			throw std::runtime_error("File does not exist in Archive.");
 
 		return OpenSeekableStreamReader(fileIndex);
 	}
 
-	unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
 	{
-		throw exception("OpenStreamRead not yet implemented for Clm files.");
+		throw std::logic_error("OpenSeekableStreamReader not yet implemented for Clm files.");
 	}
 
 	// Repacks the volume using the same files as are specified by the internal file names

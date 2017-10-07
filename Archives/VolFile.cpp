@@ -1,5 +1,6 @@
 #include "VolFile.h"
 #include "../XFile.h"
+#include <stdexcept>
 
 namespace Archives
 {
@@ -7,13 +8,13 @@ namespace Archives
 	{
 		// Memory map the .vol file
 		if (MemoryMapFile(filename))
-			throw "Could not open file";		// Error opening file
+			throw std::runtime_error("Could not open vol file.");
 
-		m_VolumeFileSize = m_MappedFileSize;	// Store the .vol file size
+		m_VolumeFileSize = m_MappedFileSize;
 
 		// Read in the header
 		if (!ReadVolHeader())
-			throw "Invalid header";				// Error reading in .vol header
+			throw std::runtime_error("Invalid vol file header.");
 	}
 
 	VolFile::~VolFile()
@@ -61,23 +62,23 @@ namespace Archives
 		return m_Index[index].fileNameOffset;
 	}
 
-	unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const char* internalFileName)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const char* internalFileName)
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
 		if (fileIndex < 0)
-			throw exception("File does not exist in Archive.");
+			throw std::runtime_error("File does not exist in Archive.");
 
 		return OpenSeekableStreamReader(fileIndex);
 	}
 
-	unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(int fileIndex)
 	{
 		char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
 		size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
 		offset += 8;
 
-		return make_unique<MemoryStreamReader>(offset, length);
+		return std::make_unique<MemoryStreamReader>(offset, length);
 	}
 
 	// Extracts the internal file at the given index to the file 
