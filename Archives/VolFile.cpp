@@ -7,15 +7,13 @@ namespace Archives
 {
 	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName)
 	{
-		// Memory map the .vol file
 		if (MemoryMapFile(fileName))
-			throw std::runtime_error("Could not open vol file " + std::string(fileName));
+			throw std::runtime_error("Could not open vol file " + std::string(fileName) + ".");
 
 		m_VolumeFileSize = m_MappedFileSize;
 
-		// Read in the header
 		if (!ReadVolHeader())
-			throw std::runtime_error("Invalid vol header in " + std::string(fileName));
+			throw std::runtime_error("Invalid vol header in " + std::string(fileName) + ".");
 	}
 
 	VolFile::~VolFile()

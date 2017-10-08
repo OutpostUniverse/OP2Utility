@@ -27,10 +27,10 @@ namespace Archives
 			NULL);					// template
 
 		if (m_FileHandle == INVALID_HANDLE_VALUE) 
-			throw std::runtime_error("Could not open clm file " + std::string(fileName));
+			throw std::runtime_error("Could not open clm file " + std::string(fileName) + ".");
 		
 		if (ReadHeader() == false) 
-			throw std::runtime_error("Invalid clm header in " + std::string(fileName));
+			throw std::runtime_error("Invalid clm header in " + std::string(fileName) + ".");
 
 		// Initialize the unknown data
 		memset(m_Unknown, 0, 6);
