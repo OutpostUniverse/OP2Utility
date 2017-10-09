@@ -7,6 +7,9 @@ using namespace std;
 
 MapData::MapData(unique_ptr<SeekableStreamReader> mapStream, bool saveGame)
 {
+	if (!mapStream)
+		throw runtime_error("Provided map or save stream does not exist or is malformed.");
+
 	if (saveGame)
 		skipSaveGameHeader(*mapStream);
 
