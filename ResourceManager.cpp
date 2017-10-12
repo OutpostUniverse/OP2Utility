@@ -31,8 +31,8 @@ unique_ptr<SeekableStreamReader> ResourceManager::getResourceStream(const string
 
 	for (unique_ptr<ArchiveFile>& archiveFile : archiveFiles)
 	{
-		string archiveFilename = XFile::getFilename(filename);
-		int internalArchiveIndex = archiveFile->GetInternalFileIndex(archiveFilename.c_str());
+		string internalArchiveFilename = XFile::getFilename(filename);
+		int internalArchiveIndex = archiveFile->GetInternalFileIndex(internalArchiveFilename.c_str());
 
 		if (internalArchiveIndex > -1)
 			return archiveFile->OpenSeekableStreamReader(internalArchiveIndex);
