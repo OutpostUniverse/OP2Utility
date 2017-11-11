@@ -1,6 +1,7 @@
 #include "StreamReader.h"
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include <stdexcept>
 
 using namespace std;

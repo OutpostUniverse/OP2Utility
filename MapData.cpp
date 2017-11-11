@@ -1,6 +1,7 @@
 #include "MapData.h"
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include <stdexcept>
 
 using namespace std;
