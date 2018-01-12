@@ -84,6 +84,10 @@ namespace Archives
 	// fileName. Returns nonzero if successful.
 	int VolFile::ExtractFile(int index, const char *filename)
 	{
+		if (index < 0) {
+			return false;
+		}
+
 		HANDLE outFile;
 		unsigned long bytesWritten;
 		int retVal;
