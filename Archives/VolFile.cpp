@@ -32,7 +32,7 @@ namespace Archives
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
 			const char* actualInternalFileName = GetInternalFileName(i);
-			if (XFile::pathsAreEqual(actualInternalFileName, internalFileName))
+			if (XFile::PathsAreEqual(actualInternalFileName, internalFileName))
 				return i;
 		}
 

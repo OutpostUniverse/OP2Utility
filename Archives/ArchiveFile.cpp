@@ -22,7 +22,7 @@ namespace Archives
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (ExtractFile(i, XFile::replaceFilename(destDirectory, GetInternalFileName(i)).c_str()) == false)
+			if (ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFileName(i)).c_str()) == false)
 				return false;
 		}
 
@@ -33,7 +33,7 @@ namespace Archives
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::pathsAreEqual(GetInternalFileName(i), fileName))
+			if (XFile::PathsAreEqual(GetInternalFileName(i), fileName))
 				return true;
 		}
 

@@ -89,7 +89,7 @@ struct TileSetSource
 	// Number of Tiles in set (represented on BMP).
 	int numTiles;
 
-	std::string getTileSetFilename()
+	std::string GetTileSetFilename()
 	{
 		std::string s;
 		for (int i = 0; i < 8; ++i)
@@ -197,22 +197,22 @@ public:
 	MapData(std::unique_ptr<SeekableStreamReader> mapStream, bool saveGame = false);
 	MapData(std::string filename, bool saveGame = false) : MapData(std::make_unique<FileStreamReader>(filename), saveGame) {}
 
-	unsigned int getTileInfoIndex(unsigned int x, unsigned int y);
-	int getCellType(unsigned int x, unsigned int y);
-	int getLavaPossible(unsigned int x, unsigned int y);
-	short getTileSetIndex(unsigned int x, unsigned int y);
-	short getImageIndex(unsigned int x, unsigned int y);
+	unsigned int GetTileInfoIndex(unsigned int x, unsigned int y);
+	int GetCellType(unsigned int x, unsigned int y);
+	int GetLavaPossible(unsigned int x, unsigned int y);
+	short GetTileSetIndex(unsigned int x, unsigned int y);
+	short GetImageIndex(unsigned int x, unsigned int y);
 
 private:
 	size_t GetCellIndex(unsigned int x, unsigned int y);
 
-	void skipSaveGameHeader(SeekableStreamReader& streamReader);
-	void readMapHeader(StreamReader& streamReader);
-	void readTileData(StreamReader& streamReader);
-	void readClipRect(StreamReader& streamReader);
-	void readTileSetSources(StreamReader& streamReader);
-	void readTileSetHeader(StreamReader& streamReader);
-	void readTileInfo(StreamReader& streamReader);
+	void SkipSaveGameHeader(SeekableStreamReader& streamReader);
+	void ReadMapHeader(StreamReader& streamReader);
+	void ReadTileData(StreamReader& streamReader);
+	void ReadClipRect(StreamReader& streamReader);
+	void ReadTileSetSources(StreamReader& streamReader);
+	void ReadTileSetHeader(StreamReader& streamReader);
+	void ReadTileInfo(StreamReader& streamReader);
 };
 
 #pragma pack(pop)

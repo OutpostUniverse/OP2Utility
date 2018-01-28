@@ -3,20 +3,20 @@
 
 using namespace std;
 
-void StringHelper::convertToUpper(string& str)
+void StringHelper::ConvertToUpper(string& str)
 {
 	for (auto & c : str) c = toupper(c);
 }
 
-string StringHelper::convertToUpper(const string& str)
+string StringHelper::ConvertToUpper(const string& str)
 {
 	string newString = str;
-	convertToUpper(newString);
+	ConvertToUpper(newString);
 
 	return newString;
 }
 
-const char** StringHelper::vectorToCharArray(const vector<string>& stringVector)
+const char** StringHelper::VectorToCharArray(const vector<string>& stringVector)
 {
 	const char** filenames = new const char*[stringVector.size()];
 
@@ -28,7 +28,7 @@ const char** StringHelper::vectorToCharArray(const vector<string>& stringVector)
 	return filenames;
 }
 
-vector<string> StringHelper::removeMatchingStrings(const vector<string>& strings, const vector<string>& stringsToRemove)
+vector<string> StringHelper::RemoveMatchingStrings(const vector<string>& strings, const vector<string>& stringsToRemove)
 {
 	vector<string> stringsToReturn(strings.begin(), strings.end());
 

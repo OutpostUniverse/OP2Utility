@@ -101,7 +101,7 @@ namespace Archives
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::pathsAreEqual(GetInternalFileName(i), internalFileName))
+			if (XFile::PathsAreEqual(GetInternalFileName(i), internalFileName))
 				return i;
 		}
 
