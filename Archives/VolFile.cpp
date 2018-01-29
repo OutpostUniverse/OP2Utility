@@ -7,13 +7,15 @@ namespace Archives
 {
 	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName)
 	{
-		if (MemoryMapFile(fileName))
+		if (MemoryMapFile(fileName)) {
 			throw std::runtime_error("Could not open vol file " + std::string(fileName) + ".");
+		}
 
 		m_VolumeFileSize = m_MappedFileSize;
 
-		if (!ReadVolHeader())
+		if (!ReadVolHeader()) {
 			throw std::runtime_error("Invalid vol header in " + std::string(fileName) + ".");
+		}
 	}
 
 	VolFile::~VolFile()
@@ -32,8 +34,9 @@ namespace Archives
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
 			const char* actualInternalFileName = GetInternalFileName(i);
-			if (XFile::PathsAreEqual(actualInternalFileName, internalFileName))
+			if (XFile::PathsAreEqual(actualInternalFileName, internalFileName)) {
 				return i;
+			}
 		}
 
 		return -1;
@@ -65,8 +68,9 @@ namespace Archives
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
-		if (fileIndex < 0)
+		if (fileIndex < 0) {
 			throw std::runtime_error("File does not exist in Archive.");
+		}
 
 		return OpenSeekableStreamReader(fileIndex);
 	}
@@ -95,14 +99,15 @@ namespace Archives
 		outFile = CreateFileA(filename,					// fileName
 			GENERIC_WRITE,			// access mode
 			0,						// share mode
-			NULL,					// security attributes
+			nullptr,				// security attributes
 			CREATE_ALWAYS,			// creation disposition
 			FILE_ATTRIBUTE_NORMAL,	// file attributes
 			0);						// template
 
 		// Check for errors opening file
-		if (m_FileHandle == INVALID_HANDLE_VALUE)
+		if (m_FileHandle == INVALID_HANDLE_VALUE) {
 			return false; // Error opening file
+		}
 
 		char* offset = (char*)m_BaseOfFile + m_Index[index].dataBlockOffset;
 		int length = *(int*)(offset + 4) & 0x7FFFFFFF;
@@ -110,7 +115,7 @@ namespace Archives
 
 		if (m_Index[index].compressionType == CompressionType::Uncompressed)
 		{
-			retVal = WriteFile(outFile, offset, length, &bytesWritten, NULL);
+			retVal = WriteFile(outFile, offset, length, &bytesWritten, nullptr);
 		}
 		else
 		{
@@ -124,11 +129,12 @@ namespace Archives
 				do
 				{
 					buff = decomp.GetInternalBuffer(&length);
-					retVal = WriteFile(outFile, buff, length, &bytesWritten, NULL);
+					retVal = WriteFile(outFile, buff, length, &bytesWritten, nullptr);
 				} while (length);
 			}
-			else
+			else {
 				retVal = 0;
+			}
 		}
 
 		// Close the file
@@ -179,17 +185,22 @@ namespace Archives
 		volInfo.internalNames = internalNames;
 
 		// Make sure files are specified properly.
-		if (numFilesToPack > 0)
-			if (filesToPack == NULL || internalNames == NULL)
-				return false;
-		
+		if (numFilesToPack > 0) {
+			if (filesToPack == nullptr) {
+				throw std::runtime_error("File paths to pack were passed as null.");
+			}
+			if (internalNames == nullptr) {
+				throw std::runtime_error("Filenames to pack were passed as null.");
+			}
+		}
+
 		// Open a file for output
-		if (OpenOutputFile(volumeName) == 0) 
+		if (OpenOutputFile(volumeName) == 0) {
 			return false;	// Return false on error
+		}
 
 		// Open input files and prepare header and indexing info
-		if (!PrepareHeader(volInfo))
-		{
+		if (!PrepareHeader(volInfo)) {
 			CloseOutputFile();
 			return false;
 		}
@@ -198,14 +209,12 @@ namespace Archives
 		// Write volume contents
 		// ---------------------
 		// Write the header
-		if (!WriteHeader(volInfo))
-		{
+		if (!WriteHeader(volInfo)) {
 			CleanUpVolumeCreate(volInfo);
 			return false;
 		}
 		
-		if (!WriteFiles(volInfo))
-		{
+		if (!WriteFiles(volInfo)) {
 			CleanUpVolumeCreate(volInfo);
 			return false;
 		}
@@ -246,7 +255,7 @@ namespace Archives
 			if (CopyFileIntoVolume(volInfo.fileHandle[i], volInfo.indexEntry[i].fileSize) == false) return false;
 			temp = 0;			// Pad with 0 bytes
 			if (WriteFile(m_OutFileHandle, &temp, (-volInfo.indexEntry[i].fileSize) & 3,
-				&numBytesWritten, NULL) == false) return false;
+				&numBytesWritten, nullptr) == false) return false;
 		}
 
 		return true;
@@ -263,18 +272,18 @@ namespace Archives
 
 		// Write the string table
 		if (WriteTag(volInfo.paddedStringTableLength, "vols") == false) return false;
-		if (WriteFile(m_OutFileHandle, &volInfo.stringTableLength, 4, &numBytesWritten, NULL) == 0) return false;
+		if (WriteFile(m_OutFileHandle, &volInfo.stringTableLength, 4, &numBytesWritten, nullptr) == 0) return false;
 		// Write out all internal file name strings (including NULL terminator)
 		for (i = 0; i < volInfo.numFilesToPack; i++)
-			if (WriteFile(m_OutFileHandle, volInfo.internalNames[i], volInfo.fileNameLength[i], &numBytesWritten, NULL) == 0) return false;
+			if (WriteFile(m_OutFileHandle, volInfo.internalNames[i], volInfo.fileNameLength[i], &numBytesWritten, nullptr) == 0) return false;
 		i = 0;			// Pad with 0 bytes
-		if (WriteFile(m_OutFileHandle, &i, volInfo.paddedStringTableLength - (volInfo.stringTableLength + 4), &numBytesWritten, NULL) == 0) return false;
+		if (WriteFile(m_OutFileHandle, &i, volInfo.paddedStringTableLength - (volInfo.stringTableLength + 4), &numBytesWritten, nullptr) == 0) return false;
 
 		// Write the index table
 		if (WriteTag(volInfo.indexTableLength, "voli") == false) return false;
-		if (WriteFile(m_OutFileHandle, volInfo.indexEntry, volInfo.indexTableLength, &numBytesWritten, NULL) == 0) return false;
+		if (WriteFile(m_OutFileHandle, volInfo.indexEntry, volInfo.indexTableLength, &numBytesWritten, nullptr) == 0) return false;
 		i = 0;			// Pad with 0 bytes
-		if (WriteFile(m_OutFileHandle, &i, volInfo.paddedIndexTableLength - volInfo.indexTableLength, &numBytesWritten, NULL) == 0) return false;
+		if (WriteFile(m_OutFileHandle, &i, volInfo.paddedIndexTableLength - volInfo.indexTableLength, &numBytesWritten, nullptr) == 0) return false;
 
 		return true;
 	}
@@ -295,10 +304,10 @@ namespace Archives
 				volInfo.filesToPack[i],	// fileName
 				GENERIC_READ,			// access mode
 				0,						// share mode
-				NULL,					// security attributes
+				nullptr,				// security attributes
 				OPEN_EXISTING,			// creation disposition
 				FILE_ATTRIBUTE_NORMAL,	// file attributes
-				NULL);					// template
+				nullptr);				// template
 			if (volInfo.fileHandle[i] == INVALID_HANDLE_VALUE)// Check for errors
 			{
 				// Error opening file. Close already opened files and return error
@@ -359,8 +368,8 @@ namespace Archives
 		do
 		{
 			// Read a chunk from the input file
-			if (ReadFile(inputFile, buffer, VOL_WRITE_SIZE, &numBytesRead, NULL) == 0) return false;
-			if (WriteFile(m_OutFileHandle, buffer, numBytesRead, &numBytesWritten, NULL) == 0) return false;
+			if (ReadFile(inputFile, buffer, VOL_WRITE_SIZE, &numBytesRead, nullptr) == 0) return false;
+			if (WriteFile(m_OutFileHandle, buffer, numBytesRead, &numBytesWritten, nullptr) == 0) return false;
 		} while (numBytesRead != 0 && numBytesWritten != 0);
 
 		return true;
@@ -375,7 +384,7 @@ namespace Archives
 		buffer[0] = *(int*)tagText;
 		buffer[1] = length | 0x80000000;
 
-		return WriteFile(m_OutFileHandle, buffer, 8, &numBytesWritten, NULL) != 0;
+		return WriteFile(m_OutFileHandle, buffer, 8, &numBytesWritten, nullptr) != 0;
 	}
 
 

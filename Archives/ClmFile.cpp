@@ -14,23 +14,25 @@ namespace Archives
 
 	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName)
 	{
-		m_FileName = NULL;
-		m_IndexEntry = NULL;
+		m_FileName = nullptr;
+		m_IndexEntry = nullptr;
 
 		// Open the file for reading
 		m_FileHandle = CreateFileA(fileName,					// filename
 			GENERIC_READ,				// desired access
 			FILE_SHARE_READ,			// share mode
-			NULL,						// security attributes
-			OPEN_EXISTING,			// creation disposition
-			FILE_ATTRIBUTE_NORMAL,	// attributes
-			NULL);					// template
+			nullptr,					// security attributes
+			OPEN_EXISTING,				// creation disposition
+			FILE_ATTRIBUTE_NORMAL,		// attributes
+			nullptr);					// template
 
-		if (m_FileHandle == INVALID_HANDLE_VALUE) 
+		if (m_FileHandle == INVALID_HANDLE_VALUE) {
 			throw std::runtime_error("Could not open clm file " + std::string(fileName) + ".");
-		
-		if (ReadHeader() == false) 
+		}
+
+		if (ReadHeader() == false) {
 			throw std::runtime_error("Invalid clm header in " + std::string(fileName) + ".");
+		}
 
 		// Initialize the unknown data
 		memset(m_Unknown, 0, 6);
@@ -42,8 +44,9 @@ namespace Archives
 		delete[] m_FileName;
 		delete[] m_IndexEntry;
 
-		if (m_FileHandle) 
+		if (m_FileHandle) {
 			CloseHandle(m_FileHandle);
+		}
 	}
 
 
@@ -57,15 +60,15 @@ namespace Archives
 		unsigned long numBytes;
 		int i;
 
-		if (ReadFile(m_FileHandle, buff, 32, &numBytes, NULL) == 0) return false;
+		if (ReadFile(m_FileHandle, buff, 32, &numBytes, nullptr) == 0) return false;
 		if (memcmp(buff, "OP2 Clump File Version 1.0\x01A\0\0\0\0", 32)) return false;
 
 		// Read in the WAVEFORMATEX structure
-		if (ReadFile(m_FileHandle, &m_WaveFormat, sizeof(m_WaveFormat), &numBytes, NULL) == 0) return false;
+		if (ReadFile(m_FileHandle, &m_WaveFormat, sizeof(m_WaveFormat), &numBytes, nullptr) == 0) return false;
 
 		// Read remaining header info
-		if (ReadFile(m_FileHandle, m_Unknown, 6, &numBytes, NULL) == 0) return false;
-		if (ReadFile(m_FileHandle, &m_NumberOfPackedFiles, 4, &numBytes, NULL) == 0) return false;
+		if (ReadFile(m_FileHandle, m_Unknown, 6, &numBytes, nullptr) == 0) return false;
+		if (ReadFile(m_FileHandle, &m_NumberOfPackedFiles, 4, &numBytes, nullptr) == 0) return false;
 		if (m_NumberOfPackedFiles < 1) return false;
 
 		// Allocate space
@@ -73,7 +76,7 @@ namespace Archives
 		m_FileName = new char[m_NumberOfPackedFiles][9];
 
 		// Read Index info
-		if (ReadFile(m_FileHandle, m_IndexEntry, m_NumberOfPackedFiles * sizeof(IndexEntry), &numBytes, NULL) == 0)
+		if (ReadFile(m_FileHandle, m_IndexEntry, m_NumberOfPackedFiles * sizeof(IndexEntry), &numBytes, nullptr) == 0)
 		{
 			delete[] m_FileName;
 			delete[] m_IndexEntry;
@@ -101,8 +104,9 @@ namespace Archives
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::PathsAreEqual(GetInternalFileName(i), internalFileName))
+			if (XFile::PathsAreEqual(GetInternalFileName(i), internalFileName)) {
 				return i;
+			}
 		}
 
 		return -1;
@@ -150,10 +154,10 @@ namespace Archives
 		outFile = CreateFileA(fileName,				// filename
 			GENERIC_WRITE,			// desired access
 			0,						// share mode
-			NULL,					// security attributes
+			nullptr,				// security attributes
 			CREATE_ALWAYS,			// creation disposition
 			FILE_ATTRIBUTE_NORMAL,	// attributes
-			NULL);					// template
+			nullptr);				// template
 // Check for errors opening the file
 		if (outFile == INVALID_HANDLE_VALUE) return false;
 
@@ -170,23 +174,23 @@ namespace Archives
 		dataChunk.dataTag = DATA;
 		dataChunk.dataSize = m_IndexEntry[index].dataLength;
 		// Write the Wave file header
-		if (WriteFile(outFile, &riffHeader, sizeof(riffHeader), &numBytes, NULL) == 0)
+		if (WriteFile(outFile, &riffHeader, sizeof(riffHeader), &numBytes, nullptr) == 0)
 		{
 			CloseHandle(outFile);
 			return false;
 		}
-		if (WriteFile(outFile, &formatChunk, sizeof(formatChunk), &numBytes, NULL) == 0)
+		if (WriteFile(outFile, &formatChunk, sizeof(formatChunk), &numBytes, nullptr) == 0)
 		{
 			CloseHandle(outFile);
 			return false;
 		}
-		if (WriteFile(outFile, &dataChunk, sizeof(dataChunk), &numBytes, NULL) == 0)
+		if (WriteFile(outFile, &dataChunk, sizeof(dataChunk), &numBytes, nullptr) == 0)
 		{
 			CloseHandle(outFile);
 			return false;
 		}
 		// Seek to the beginning of the file data (in the .clm file)
-		if (SetFilePointer(m_FileHandle, m_IndexEntry[index].dataOffset, NULL, FILE_BEGIN) == -1)
+		if (SetFilePointer(m_FileHandle, m_IndexEntry[index].dataOffset, nullptr, FILE_BEGIN) == -1)
 		{
 			CloseHandle(outFile);
 			return false;
@@ -197,15 +201,16 @@ namespace Archives
 		do
 		{
 			// Read the input data
-			if (ReadFile(m_FileHandle, buff, CLM_WRITE_SIZE, &numBytesRead, NULL) == 0)
+			if (ReadFile(m_FileHandle, buff, CLM_WRITE_SIZE, &numBytesRead, nullptr) == 0)
 			{
 				CloseHandle(outFile);
 				return false;
 			}
-			if (totalSize + numBytesRead > m_IndexEntry[index].dataLength)
+			if (totalSize + numBytesRead > m_IndexEntry[index].dataLength) {
 				numBytesRead = m_IndexEntry[index].dataLength - totalSize;
+			}
 			totalSize += numBytesRead;
-			if (WriteFile(outFile, buff, numBytesRead, &numBytes, NULL) == 0)
+			if (WriteFile(outFile, buff, numBytesRead, &numBytes, nullptr) == 0)
 			{
 				CloseHandle(outFile);
 				return false;
@@ -222,8 +227,9 @@ namespace Archives
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
-		if (fileIndex < 0)
+		if (fileIndex < 0) {
 			throw std::runtime_error("File does not exist in Archive.");
+		}
 
 		return OpenSeekableStreamReader(fileIndex);
 	}
@@ -259,8 +265,9 @@ namespace Archives
 		bRet = CreateVolume("temp.clm", m_NumberOfPackedFiles, (const char**)filesToPack, internalNames);
 
 		// Clean up
-		for (i = 0; i < m_NumberOfPackedFiles; i++)
+		for (i = 0; i < m_NumberOfPackedFiles; i++) {
 			delete filesToPack[i];
+		}
 		delete[] internalNames;
 		delete[] filesToPack;
 
@@ -275,13 +282,15 @@ namespace Archives
 		const char **filesToPack, const char **internalNames)
 	{
 		// Make sure files are specified properly.
-		if (numFilesToPack < 1)
+		if (numFilesToPack < 1) {
 			return false; //CLM files require at least one audio file present in order to properly write settings.
-		
-		if (filesToPack == NULL || internalNames == NULL)
-			return false;
+		}
 
-		HANDLE outFile = NULL;
+		if (filesToPack == nullptr || internalNames == nullptr) {
+			return false;
+		}
+
+		HANDLE outFile = nullptr;
 		HANDLE *fileHandle;
 		WAVEFORMATEX *waveFormat;
 		IndexEntry *indexEntry;
@@ -317,7 +326,7 @@ namespace Archives
 		}
 
 		// Open the output file
-		outFile = CreateFileA(volumeFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL); //CREATE_ALWAYS was CREATE_NEW
+		outFile = CreateFileA(volumeFileName, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr); //CREATE_ALWAYS was CREATE_NEW
 		if (outFile == INVALID_HANDLE_VALUE)
 		{
 			// Error opening the output file
@@ -353,16 +362,17 @@ namespace Archives
 			fileHandle[i] = CreateFileA(filesToPack[i],			// filename
 				GENERIC_READ,			// access mode
 				0,						// share mode
-				NULL,					// security attributes
+				nullptr,				// security attributes
 				OPEN_EXISTING,			// creation disposition
 				FILE_ATTRIBUTE_NORMAL,	// file attributes
-				NULL);					// template
+				nullptr);				// template
 // Make sure the file was opened
 			if (fileHandle[i] == INVALID_HANDLE_VALUE)
 			{
 				// Error opening files. Close already opened files and return error
-				for (i--; i; i--)
+				for (i--; i; i--) {
 					CloseHandle(fileHandle[i]);	// Close the file
+				}
 				return false;
 			}
 		}
@@ -396,18 +406,20 @@ namespace Archives
 		for (i = 0; i < numFilesToPack; i++)
 		{
 			// Read the file header
-			retVal = ReadFile(file[i], &header, sizeof(header), &numBytesRead, NULL);
-			if (retVal == 0 || header.riffTag != RIFF || header.waveTag != WAVE)
+			retVal = ReadFile(file[i], &header, sizeof(header), &numBytesRead, nullptr);
+			if (retVal == 0 || header.riffTag != RIFF || header.waveTag != WAVE) {
 				return false;		// Error reading header
+			}
 			// Check that the file size makes sense (matches with header chunk length + 8)
-			if (header.chunkSize + 8 != GetFileSize(file[i], NULL)) return false;
+			if (header.chunkSize + 8 != GetFileSize(file[i], nullptr)) return false;
 
 			// Read the format tag
 			length = FindChunk(FMT, file[i]);
 			if (length == -1) return false;		// Format chunk not found
 			// Read in the wave format
-			if (ReadFile(file[i], &format[i], sizeof(WAVEFORMATEX), &numBytesRead, NULL) == 0)
+			if (ReadFile(file[i], &format[i], sizeof(WAVEFORMATEX), &numBytesRead, nullptr) == 0) {
 				return false;					// Error reading in wave format
+			}
 			format[i].cbSize = 0;
 
 			// Find the start of the data
@@ -439,22 +451,22 @@ namespace Archives
 		int curPos;
 		int fileSize;
 
-		fileSize = GetFileSize(file, NULL);
+		fileSize = GetFileSize(file, nullptr);
 		if (fileSize < 20) return -1;
 		// Seek to beginning of first internal chunk (provided it exists)
 		// Note: this seeks past the initial format tag (such as RIFF and WAVE)
-		if (SetFilePointer(file, 12, NULL, FILE_BEGIN) == -1) return -1;
+		if (SetFilePointer(file, 12, nullptr, FILE_BEGIN) == -1) return -1;
 
 		curPos = 12;
 		do
 		{
 			// Read the tag
-			ReadFile(file, &header, sizeof(header), &numBytesRead, NULL);
+			ReadFile(file, &header, sizeof(header), &numBytesRead, nullptr);
 			// Check if this is the right header
 			if (header.formatTag == chunkTag) return header.length;
 			// Not the right header. Skip to next header
 			curPos += header.length + 8;
-			if (SetFilePointer(file, curPos, NULL, FILE_BEGIN) == -1) return -1;
+			if (SetFilePointer(file, curPos, nullptr, FILE_BEGIN) == -1) return -1;
 		} while (curPos < fileSize);
 
 		return -1;	// Failed to find the tag
@@ -473,8 +485,9 @@ namespace Archives
 		// Close the output file
 		if (outFile) CloseHandle(outFile);
 		// Close all open input files
-		for (i = 0; i < numFilesToPack; i++)
+		for (i = 0; i < numFilesToPack; i++) {
 			CloseHandle(fileHandle[i]);
+		}
 		// Free temporary memory
 		delete[] fileHandle;
 		delete[] waveFormat;
@@ -489,8 +502,9 @@ namespace Archives
 
 		for (i = 1; i < numFilesToPack; i++)
 		{
-			if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WAVEFORMATEX)))
+			if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WAVEFORMATEX))) {
 				return false;		// Mismatch found
+			}
 		}
 
 		return true;				// They are all the same
@@ -527,7 +541,7 @@ namespace Archives
 		header.numIndexEntries = numFilesToPack;
 
 		// Write the header
-		if (WriteFile(outFile, &header, sizeof(header), &numBytes, NULL) == 0) return false;
+		if (WriteFile(outFile, &header, sizeof(header), &numBytes, nullptr) == 0) return false;
 
 		/*
 		// Write the text header
@@ -552,7 +566,7 @@ namespace Archives
 		}
 
 		// Write the index
-		if (WriteFile(outFile, entry, numFilesToPack * sizeof(IndexEntry), &numBytes, NULL) == 0)
+		if (WriteFile(outFile, entry, numFilesToPack * sizeof(IndexEntry), &numBytes, nullptr) == 0)
 		{
 			// Error writing index table
 			delete[] entry;		// Release the memory for the index table
@@ -568,7 +582,7 @@ namespace Archives
 				numBytes = CLM_WRITE_SIZE;
 				if (offset + numBytes > entry[i].dataLength) numBytes = entry[i].dataLength - offset;
 				// Read the input file
-				if (ReadFile(fileHandle[i], buff, numBytes, &numBytesRead, NULL) == 0)
+				if (ReadFile(fileHandle[i], buff, numBytes, &numBytesRead, nullptr) == 0)
 				{
 					// Error reading input file
 					delete[] entry;		// Release the memory for the index table
@@ -576,7 +590,7 @@ namespace Archives
 				}
 				offset += numBytesRead;
 				// Write the data to the output file
-				if (WriteFile(outFile, buff, numBytesRead, &numBytes, NULL) == 0)
+				if (WriteFile(outFile, buff, numBytesRead, &numBytes, nullptr) == 0)
 				{
 					// Error writing output file
 					delete[] entry;		// Release the memory for the index table

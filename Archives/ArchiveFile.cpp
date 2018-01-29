@@ -22,8 +22,9 @@ namespace Archives
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFileName(i)).c_str()) == false)
+			if (ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFileName(i)).c_str()) == false) {
 				return false;
+			}
 		}
 
 		return true;
@@ -45,7 +46,7 @@ namespace Archives
 	// **************************************************************************************
 	ArchivePacker::ArchivePacker()
 	{
-		m_OutFileHandle = NULL;
+		m_OutFileHandle = nullptr;
 	}
 
 	ArchivePacker::~ArchivePacker()
@@ -59,22 +60,24 @@ namespace Archives
 		m_OutFileHandle = CreateFileA(fileName,		// filename
 			GENERIC_WRITE,			// desired access
 			0,						// share mode
-			NULL,					// security attributes
+			nullptr,				// security attributes
 			CREATE_ALWAYS,			// creation disposition
 			FILE_ATTRIBUTE_NORMAL,	// attributes
-			NULL);					// template
+			nullptr);				// template
 
-		if (m_OutFileHandle == INVALID_HANDLE_VALUE)
+		if (m_OutFileHandle == INVALID_HANDLE_VALUE) {
 			return 0;
-		else
+		}
+		else {
 			return 1;
+		}
 	}
 
 	// Closes the file whose handle is in m_OutFileHandle
 	void ArchivePacker::CloseOutputFile()
 	{
 		if (m_OutFileHandle) CloseHandle(m_OutFileHandle);
-		m_OutFileHandle = NULL;
+		m_OutFileHandle = nullptr;
 	}
 
 	// newFile has it's name changed to that of fileToReplace and the old file is deleted.
@@ -95,9 +98,9 @@ namespace Archives
 	// Initialize memory mapping variables
 	MemoryMappedFile::MemoryMappedFile()
 	{
-		m_FileHandle = NULL;
-		m_FileMappingHandle = NULL;
-		m_BaseOfFile = NULL;
+		m_FileHandle = nullptr;
+		m_FileMappingHandle = nullptr;
+		m_BaseOfFile = nullptr;
 		m_MappedFileSize = 0;
 	}
 
@@ -117,7 +120,7 @@ namespace Archives
 		m_FileHandle = CreateFileA(fileName,			// filename
 			GENERIC_READ,			// access mode
 			FILE_SHARE_READ,		// share mode
-			NULL,					// security attributes
+			nullptr,				// security attributes
 			OPEN_EXISTING,			// creation disposition
 			FILE_ATTRIBUTE_NORMAL,	// file attributes
 			0);						// template
@@ -128,15 +131,15 @@ namespace Archives
 			return 1;
 		}
 		// Store the file size
-		m_MappedFileSize = GetFileSize(m_FileHandle, NULL);
+		m_MappedFileSize = GetFileSize(m_FileHandle, nullptr);
 
 		// Create a file mapping object
 		m_FileMappingHandle = CreateFileMapping(m_FileHandle,	// file handle
-			NULL,					// security attributes
+			nullptr,				// security attributes
 			PAGE_READONLY,			// flProtect
 			0,						// size high
 			0,						// size low
-			NULL);					// name of mapping
+			nullptr);				// name of mapping
 // Map the entire file into memory
 		m_BaseOfFile = MapViewOfFile(m_FileMappingHandle,		// file mapping handle
 			FILE_MAP_READ,			// desired access
@@ -154,9 +157,9 @@ namespace Archives
 		if (m_FileMappingHandle) CloseHandle(m_FileMappingHandle);
 		if (m_FileHandle) CloseHandle(m_FileHandle);
 
-		m_BaseOfFile = NULL;
-		m_FileMappingHandle = NULL;
-		m_FileHandle = NULL;
+		m_BaseOfFile = nullptr;
+		m_FileMappingHandle = nullptr;
+		m_FileHandle = nullptr;
 		m_MappedFileSize = 0;
 	}
 }
