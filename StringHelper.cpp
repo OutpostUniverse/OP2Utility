@@ -5,7 +5,9 @@ using namespace std;
 
 void StringHelper::ConvertToUpper(string& str)
 {
-	for (auto & c : str) c = toupper(c);
+	for (auto & c : str) {
+		c = toupper(c);
+	}
 }
 
 string StringHelper::ConvertToUpper(const string& str)
@@ -39,4 +41,25 @@ vector<string> StringHelper::RemoveMatchingStrings(const vector<string>& strings
 	stringsToReturn.erase(std::remove_if(stringsToReturn.begin(), stringsToReturn.end(), pred), stringsToReturn.end());
 
 	return stringsToReturn;
+}
+
+bool StringHelper::ContainsStringCaseInsensitive(vector<string> stringsToSearch, string stringToFind)
+{
+	auto itr = std::find_if(stringsToSearch.begin(), stringsToSearch.end(),
+		[&](auto &s) {
+
+		if (s.size() != stringToFind.size()) {
+			return false;
+		}
+
+		for (size_t i = 0; i < s.size(); ++i) {
+			if (::tolower(s[i]) != ::tolower(stringToFind[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	);
+
+	return itr != stringsToSearch.end();
 }

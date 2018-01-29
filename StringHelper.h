@@ -10,4 +10,5 @@ public:
 	static std::string ConvertToUpper(const std::string& str);
 	static const char** VectorToCharArray(const std::vector<std::string>& stringVector);
 	static std::vector<std::string> RemoveMatchingStrings(const std::vector<std::string>& strings, const std::vector<std::string>& stringsToRemove);
+	static bool ContainsStringCaseInsensitive(std::vector<std::string> stringsToSearch, std::string stringToFind);
 };
