@@ -14,8 +14,9 @@ string XFile::GetFileExtension(const string& pathStr)
 
 bool XFile::IsDirectory(const string& pathStr)
 {
-	if (pathStr.length() == 0)
+	if (pathStr.length() == 0) {
 		return true;
+	}
 
 	return is_directory(pathStr);
 }
@@ -32,8 +33,9 @@ bool XFile::ExtensionMatches(const string& pathStr, const string& extension)
 
 	string extensionUpper = StringHelper::ConvertToUpper(extension);
 
-	if (extensionUpper.length() > 0 && extensionUpper[0] != '.')
+	if (extensionUpper.length() > 0 && extensionUpper[0] != '.') {
 		extensionUpper.insert(0, ".");
+	}
 
 	return pathExtension == extensionUpper;
 }
@@ -71,8 +73,9 @@ vector<string> XFile::GetFilesFromDirectory(const string& directory)
 	auto pathStr = directory.length() > 0 ? directory : "./";
 
 	vector<string> filenames;
-	for (auto& entry : directory_iterator(pathStr))
+	for (auto& entry : directory_iterator(pathStr)) {
 		filenames.push_back(entry.path().string());
+	}
 
 	return filenames;
 }
@@ -83,11 +86,13 @@ vector<string> XFile::GetFilesFromDirectory(const string& directory, const regex
 
 	for (size_t i = filenames.size() - 1; i >= 0; i--) 
 	{
-		if (!regex_search(filenames[i], filenameRegex))
+		if (!regex_search(filenames[i], filenameRegex)) {
 			filenames.erase(filenames.begin() + i);
+		}
 
-		if (i == 0)
+		if (i == 0) {
 			break;
+		}
 	}
 
 	return filenames;
@@ -99,15 +104,18 @@ vector<string> XFile::GetFilesFromDirectory(const string& directory, const strin
 
 	for (size_t i = filenames.size() - 1; i >= 0; --i)
 	{
-		if (filenames.size() == 0)
+		if (filenames.size() == 0) {
 			return filenames;
+		}
 
 		string extension = path(filenames[i]).extension().string();
-		if (extension != fileType)
+		if (extension != fileType) {
 			filenames.erase(filenames.begin() + i);
+		}
 
-		if (i == 0)
+		if (i == 0) {
 			break;
+		}
 	}
 
 	return filenames;
@@ -133,8 +141,9 @@ string XFile::AppendSubDirectory(const string& pathStr, const string& subDirecto
 	path p(pathStr);
 	path filename(p.filename());
 
-	if (p == filename)
+	if (p == filename) {
 		return path().append(subDirectory).append(filename).string();
+	}
 
 	p = p.remove_filename();
 	return p.append(subDirectory).append(filename).string();
@@ -156,12 +165,14 @@ bool XFile::PathsAreEqual(string pathStr1, string pathStr2)
 	StringHelper::ConvertToUpper(pathStr2);
 
 	path path1(pathStr1);
-	if (path1.has_relative_path() && path1.relative_path() == path1.filename())
+	if (path1.has_relative_path() && path1.relative_path() == path1.filename()) {
 		path1 = ("./" + pathStr1);
-	
+	}
+
 	path path2(pathStr2);
-	if (path2.has_relative_path() && path2.relative_path() == path2.filename())
+	if (path2.has_relative_path() && path2.relative_path() == path2.filename()) {
 		path2 = ("./" + pathStr2);
+	}
 
 	return path1 == path2;
 }
@@ -170,13 +181,18 @@ string XFile::GetDirectory(const string& pathStr)
 {
 	path p(pathStr);
 
-	if (p.has_relative_path())
-		if (p.relative_path() == p.filename())
+	if (p.has_relative_path()) 
+	{
+		if (p.relative_path() == p.filename()) {
 			return "./";
-		return p.remove_filename().relative_path().string();
+		}
 
-	if (p.has_root_path())
+		return p.remove_filename().relative_path().string();
+	}
+
+	if (p.has_root_path()) {
 		return p.remove_filename().root_path().string();
+	}
 
 	return "./";
 }

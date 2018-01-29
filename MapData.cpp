@@ -8,11 +8,13 @@ using namespace std;
 
 MapData::MapData(unique_ptr<SeekableStreamReader> mapStream, bool saveGame)
 {
-	if (!mapStream)
+	if (!mapStream) {
 		throw runtime_error("Provided map or save stream does not exist or is malformed.");
+	}
 
-	if (saveGame)
+	if (saveGame) {
 		SkipSaveGameHeader(*mapStream);
+	}
 
 	ReadMapHeader(*mapStream);
 	ReadTileData(*mapStream);
@@ -48,8 +50,9 @@ void MapData::ReadTileSetHeader(StreamReader& streamReader)
 	char buffer[10];
 	streamReader.Read(buffer, sizeof(buffer));
 
-	if (strncmp(buffer, "TILE SET\x1a", sizeof(buffer)))
+	if (strncmp(buffer, "TILE SET\x1a", sizeof(buffer))) {
 		throw runtime_error("'TILE SET' string not found.");
+	}
 }
 
 void MapData::ReadTileSetSources(StreamReader& streamReader)
@@ -61,11 +64,13 @@ void MapData::ReadTileSetSources(StreamReader& streamReader)
 		size_t stringLength;
 		streamReader.Read((char*)&stringLength, sizeof(stringLength));
 
-		if (stringLength > 8)
+		if (stringLength > 8) {
 			throw runtime_error("Tile Set Name greater than 8 characters in length.");
+		}
 
-		if (stringLength == 0)
+		if (stringLength == 0) {
 			continue;
+		}
 
 		streamReader.Read((char*)&tileSetSources[i].tileSetFilename, stringLength);
 

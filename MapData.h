@@ -92,9 +92,10 @@ struct TileSetSource
 	std::string GetTileSetFilename()
 	{
 		std::string s;
-		for (int i = 0; i < 8; ++i)
+		for (int i = 0; i < 8; ++i) {
 			s.push_back(tileSetFilename[i]);
-	    
+		}
+
 		return s;
 	}
 };

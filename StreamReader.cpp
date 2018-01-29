@@ -9,9 +9,10 @@ using namespace std;
 // Defers calls to C++ standard library methods
 FileStreamReader::FileStreamReader(std::string filename) {
 	file = ifstream(filename, ios::in | ios::binary);
-	
-	if (!file.is_open())
+
+	if (!file.is_open()) {
 		throw runtime_error("File could not be opened.");
+	}
 }
 
 FileStreamReader::~FileStreamReader() {
@@ -33,9 +34,11 @@ MemoryStreamReader::MemoryStreamReader(char* buffer, size_t size) {
 	offset = 0;
 }
 
-void MemoryStreamReader::Read(char* buffer, size_t size) {
-	if (offset + size > streamSize)
+void MemoryStreamReader::Read(char* buffer, size_t size) 
+{
+	if (offset + size > streamSize) {
 		throw runtime_error("Size of bytes to read exceeds remaining size of buffer.");
+	}
 
 	memcpy(buffer, streamBuffer + offset, size);
 	offset += size;
@@ -43,8 +46,9 @@ void MemoryStreamReader::Read(char* buffer, size_t size) {
 
 void MemoryStreamReader::Ignore(size_t size)
 {
-	if (offset + size > streamSize)
+	if (offset + size > streamSize) {
 		throw runtime_error("Size of bytes to ignore exceeds remaining size of buffer.");
+	}
 
 	offset += size;
 }
