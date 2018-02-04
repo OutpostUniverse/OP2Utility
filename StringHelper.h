@@ -11,4 +11,5 @@ public:
 	static const char** VectorToCharArray(const std::vector<std::string>& stringVector);
 	static std::vector<std::string> RemoveMatchingStrings(const std::vector<std::string>& strings, const std::vector<std::string>& stringsToRemove);
 	static bool ContainsStringCaseInsensitive(std::vector<std::string> stringsToSearch, std::string stringToFind);
+	static bool StringCompareCaseInsensitive(const std::string& string1, const std::string& string2);
 };
