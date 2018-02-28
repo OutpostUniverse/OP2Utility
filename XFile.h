@@ -19,7 +19,7 @@ public:
 	//Returns true if path is a directory WITHOUT a file included.
 	static bool IsDirectory(const std::string& pathStr);
 
-	static bool XFile::IsFile(const std::string& path);
+	static bool IsFile(const std::string& path);
 
 	static std::vector<std::string> GetFilesFromDirectory(const std::string& directory);
 
