@@ -2,7 +2,7 @@
 
 #include "ArchiveFile.h"
 #include <windows.h>
-#include <mmeapi.h>
+#include <mmreg.h>	// WAVEFORMATEX (omitted from windows.h if #define WIN32_LEAN_AND_MEAN)
 #include <memory>
 
 namespace Archives
