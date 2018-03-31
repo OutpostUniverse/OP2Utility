@@ -1,5 +1,5 @@
 #include "ArchiveFile.h"
-#include "../Xfile.h"
+#include "../XFile.h"
 
 namespace Archives
 {
