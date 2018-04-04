@@ -29,6 +29,17 @@ const char** StringHelper::VectorToCharArray(const vector<string>& stringVector)
 	return filenames;
 }
 
+std::vector<std::string> StringHelper::CharArrayToVector(int numberOfStrings, const char** charArray)
+{
+	std::vector<std::string> charVector;
+
+	for (int i = 0; i < numberOfStrings; ++i) {
+		charVector.push_back(charArray[i]);
+	}
+
+	return charVector;
+}
+
 // Returns a new vector with matching strings removed. Case insensitive.
 vector<string> StringHelper::RemoveMatchingStrings(const vector<string>& strings, const vector<string>& stringsToRemove)
 {
@@ -85,4 +96,9 @@ bool StringHelper::StringCompareCaseInsensitive(const std::string& string1, cons
 	}
 
 	return (string1.length() < string2.length());
+}
+
+bool StringHelper::ContainsNonAsciiChars(string str)
+{
+	return std::any_of(str.begin(), str.end(), [](char i) { return (i < 0 || i > 127); });
 }
