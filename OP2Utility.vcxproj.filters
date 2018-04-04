@@ -60,6 +60,15 @@
     <ClInclude Include="Archives\VolFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
+    <ClInclude Include="Archives\ArchiveUnpacker.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\ArchivePacker.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Archives\MemoryMappedFile.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
@@ -80,9 +89,6 @@
     <ClCompile Include="Archives\AdaptHuffTree.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="Archives\ArchiveFile.cpp">
-      <Filter>Archives</Filter>
-    </ClCompile>
     <ClCompile Include="Archives\BitStream.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
@@ -93,6 +99,15 @@
       <Filter>Archives</Filter>
     </ClCompile>
     <ClCompile Include="Archives\VolFile.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\ArchiveUnpacker.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\ArchivePacker.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="Archives\MemoryMappedFile.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
   </ItemGroup>
