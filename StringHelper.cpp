@@ -100,5 +100,5 @@ bool StringHelper::StringCompareCaseInsensitive(const std::string& string1, cons
 
 bool StringHelper::ContainsNonAsciiChars(string str)
 {
-	return std::any_of(str.begin(), str.end(), [](char i) { return (i < 0 || i > 127); });
+	return std::any_of(str.begin(), str.end(), [](unsigned char i) { return (static_cast<unsigned short>(i) > 127); });
 }
