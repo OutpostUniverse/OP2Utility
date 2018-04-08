@@ -1,6 +1,7 @@
 #pragma once
 
 #include "HuffLZ.h"
+#include "MemoryMappedFile.h"
 #include "ArchiveFile.h"
 #include "CompressionType.h"
 #include <windows.h>
