@@ -5,6 +5,8 @@
 #include "ArchiveFile.h"
 #include "CompressionType.h"
 #include <windows.h>
+#include <string>
+#include <vector>
 #include <memory>
 
 namespace Archives
@@ -30,8 +32,7 @@ namespace Archives
 
 		// Volume Creation
 		bool Repack();
-		bool CreateVolume(const char *volumeFileName, int numFilesToPack,
-			const char **filesToPack, const char **internalNames);
+		bool CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack, std::vector<std::string> internalNames);
 
 	private:
 		int GetInternalFileOffset(int index);
@@ -52,13 +53,17 @@ namespace Archives
 			IndexEntry *indexEntry;
 			int *fileNameLength;
 			HANDLE *fileHandle;
-			int numFilesToPack;
-			const char **filesToPack;
-			const char **internalNames;
+			std::vector<std::string> filesToPack;
+			std::vector<std::string> internalNames;
 			int stringTableLength;
 			int indexTableLength;
 			int paddedStringTableLength;
 			int paddedIndexTableLength;
+
+			size_t fileCount()
+			{
+				return filesToPack.size();
+			}
 		};
 
 		int ReadTag(int offset, const char *tagText);

@@ -1,7 +1,6 @@
 #include "VolFile.h"
 #include "../XFile.h"
 #include <stdexcept>
-#include <string>
 
 namespace Archives
 {
@@ -147,56 +146,36 @@ namespace Archives
 
 	bool VolFile::Repack()
 	{
-		int i;
-		bool bRet;
-		const char **filesToPack = new const char*[m_NumberOfPackedFiles];
-		const char **internalNames = new const char*[m_NumberOfPackedFiles];
+		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
+		std::vector<std::string> internalNames(m_NumberOfPackedFiles);
 
-		// Create a list of filenames
-		for (i = 0; i < m_NumberOfPackedFiles; i++)
+		for (int i = 0; i < m_NumberOfPackedFiles; i++)
 		{
-			// Get the internal fileName
-			internalNames[i] = GetInternalFileName(i);
-			// Generate the external fileName
-			filesToPack[i] = internalNames[i];
+			//Filename is equivalent to internalName since filename is a relative path from current directory.
+			internalNames.push_back(GetInternalFileName(i));
+			filesToPack.push_back(internalNames[i]); 
 		}
 
-		// Repack the .vol file
-		bRet = CreateVolume("Temp.vol", m_NumberOfPackedFiles, filesToPack, internalNames);
-
-		delete[] internalNames;
-		delete[] filesToPack;
-
-		if (bRet == false) return false;
+		if (!CreateVolume("Temp.vol", filesToPack, internalNames)) {
+			return false;
+		}
 
 		// Close the currently opened file so it can be replaced
 		UnmapFile();
+
 		// Rename the output file to the desired file
 		return ReplaceFileWithFile(m_VolumeFileName, "Temp.vol");
 	}
 
-	bool VolFile::CreateVolume(const char *volumeName, int numFilesToPack,
-		const char **filesToPack, const char **internalNames)
+	bool VolFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack, std::vector<std::string> internalNames)
 	{
 		CreateVolumeInfo volInfo;
 
-		volInfo.numFilesToPack = numFilesToPack;
 		volInfo.filesToPack = filesToPack;
 		volInfo.internalNames = internalNames;
 
-		// Make sure files are specified properly.
-		if (numFilesToPack > 0) {
-			if (filesToPack == nullptr) {
-				throw std::runtime_error("File paths to pack were passed as null.");
-			}
-			if (internalNames == nullptr) {
-				throw std::runtime_error("Filenames to pack were passed as null.");
-			}
-		}
-
-		// Open a file for output
-		if (OpenOutputFile(volumeName) == 0) {
-			return false;	// Return false on error
+		if (OpenOutputFile(volumeFileName.c_str()) == 0) {
+			return false;
 		}
 
 		// Open input files and prepare header and indexing info
@@ -226,14 +205,14 @@ namespace Archives
 
 	void VolFile::CleanUpVolumeCreate(CreateVolumeInfo &volInfo)
 	{
-		int i;
-
 		// Close all input files
-		for (i = 0; i < volInfo.numFilesToPack; i++)
+		for (size_t i = 0; i < volInfo.fileCount(); i++)
 		{
 			CloseHandle(volInfo.fileHandle[i]);
 		}
+
 		CloseOutputFile();
+
 		// Release memory used to create the index
 		delete[] volInfo.indexEntry;
 		delete[] volInfo.fileHandle;
@@ -243,19 +222,25 @@ namespace Archives
 	bool VolFile::WriteFiles(CreateVolumeInfo &volInfo)
 	{
 		unsigned long numBytesWritten;
-		int i;
 		int temp;
 
 		// Write each file header and contents
-		for (i = 0; i < volInfo.numFilesToPack; i++)
+		for (size_t i = 0; i < volInfo.fileCount(); i++)
 		{
-			// Write out the block tag
-			if (WriteTag(volInfo.indexEntry[i].fileSize, "VBLK") == false) return false;
-			// Copy the file into the volume
-			if (CopyFileIntoVolume(volInfo.fileHandle[i], volInfo.indexEntry[i].fileSize) == false) return false;
-			temp = 0;			// Pad with 0 bytes
+			if (WriteTag(volInfo.indexEntry[i].fileSize, "VBLK") == false) {
+				return false;
+			}
+
+			if (CopyFileIntoVolume(volInfo.fileHandle[i], volInfo.indexEntry[i].fileSize) == false) {
+				return false;
+			}
+
+			temp = 0; // Pad with 0 bytes
+
 			if (WriteFile(m_OutFileHandle, &temp, (-volInfo.indexEntry[i].fileSize) & 3,
-				&numBytesWritten, nullptr) == false) return false;
+				&numBytesWritten, nullptr) == false) {
+				return false;
+			}
 		}
 
 		return true;
@@ -264,50 +249,69 @@ namespace Archives
 	bool VolFile::WriteHeader(CreateVolumeInfo &volInfo)
 	{
 		unsigned long numBytesWritten;
-		int i;
 
 		// Write the header
-		if (WriteTag(volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24, "VOL ") == false) return false;
-		if (WriteTag(0, "volh") == false) return false;
+		if (WriteTag(volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24, "VOL ") == false) {
+			return false;
+		}
+
+		if (WriteTag(0, "volh") == false) {
+			return false;
+		}
 
 		// Write the string table
-		if (WriteTag(volInfo.paddedStringTableLength, "vols") == false) return false;
-		if (WriteFile(m_OutFileHandle, &volInfo.stringTableLength, 4, &numBytesWritten, nullptr) == 0) return false;
+		if (WriteTag(volInfo.paddedStringTableLength, "vols") == false) {
+			return false;
+		}
+
+		if (WriteFile(m_OutFileHandle, &volInfo.stringTableLength, 4, &numBytesWritten, nullptr) == 0) {
+			return false;
+		}
+
 		// Write out all internal file name strings (including NULL terminator)
-		for (i = 0; i < volInfo.numFilesToPack; i++)
-			if (WriteFile(m_OutFileHandle, volInfo.internalNames[i], volInfo.fileNameLength[i], &numBytesWritten, nullptr) == 0) return false;
-		i = 0;			// Pad with 0 bytes
+		for (size_t i = 0; i < volInfo.fileCount(); i++) {
+			if (WriteFile(m_OutFileHandle, volInfo.internalNames[i].c_str(), volInfo.fileNameLength[i], &numBytesWritten, nullptr) == 0) return false;
+		}
+
+		int i = 0; // Pad with 0 bytes
 		if (WriteFile(m_OutFileHandle, &i, volInfo.paddedStringTableLength - (volInfo.stringTableLength + 4), &numBytesWritten, nullptr) == 0) return false;
 
 		// Write the index table
-		if (WriteTag(volInfo.indexTableLength, "voli") == false) return false;
-		if (WriteFile(m_OutFileHandle, volInfo.indexEntry, volInfo.indexTableLength, &numBytesWritten, nullptr) == 0) return false;
-		i = 0;			// Pad with 0 bytes
-		if (WriteFile(m_OutFileHandle, &i, volInfo.paddedIndexTableLength - volInfo.indexTableLength, &numBytesWritten, nullptr) == 0) return false;
+		if (WriteTag(volInfo.indexTableLength, "voli") == false) {
+			return false;
+		}
+
+		if (WriteFile(m_OutFileHandle, volInfo.indexEntry, volInfo.indexTableLength, &numBytesWritten, nullptr) == 0) {
+			return false;
+		}
+
+		if (WriteFile(m_OutFileHandle, &i, volInfo.paddedIndexTableLength - volInfo.indexTableLength, &numBytesWritten, nullptr) == 0) {
+			return false;
+		}
 
 		return true;
 	}
 
 	bool VolFile::OpenAllInputFiles(CreateVolumeInfo &volInfo)
 	{
-		int i;
-
 		// Allocate space to keep track of all input files
-		volInfo.indexEntry = new IndexEntry[volInfo.numFilesToPack];
-		volInfo.fileHandle = new HANDLE[volInfo.numFilesToPack];
-		volInfo.fileNameLength = new int[volInfo.numFilesToPack];
+		volInfo.indexEntry = new IndexEntry[volInfo.fileCount()];
+		volInfo.fileHandle = new HANDLE[volInfo.fileCount()];
+		volInfo.fileNameLength = new int[volInfo.fileCount()];
 		volInfo.stringTableLength = 0;
+
 		// Open all the input files and store indexing info
-		for (i = 0; i < volInfo.numFilesToPack; i++)
+		for (size_t i = 0; i < volInfo.fileCount(); i++)
 		{
 			volInfo.fileHandle[i] = CreateFileA(
-				volInfo.filesToPack[i],	// fileName
+				volInfo.filesToPack[i].c_str(),	// fileName
 				GENERIC_READ,			// access mode
 				0,						// share mode
 				nullptr,				// security attributes
 				OPEN_EXISTING,			// creation disposition
 				FILE_ATTRIBUTE_NORMAL,	// file attributes
 				nullptr);				// template
+
 			if (volInfo.fileHandle[i] == INVALID_HANDLE_VALUE)// Check for errors
 			{
 				// Error opening file. Close already opened files and return error
@@ -316,6 +320,7 @@ namespace Archives
 				delete[] volInfo.indexEntry;
 				delete[] volInfo.fileHandle;
 				delete[] volInfo.fileNameLength;
+
 				return false;
 			}
 		}
@@ -325,35 +330,34 @@ namespace Archives
 
 	bool VolFile::PrepareHeader(CreateVolumeInfo &volInfo)
 	{
-		int i;
 		IndexEntry *tempPtr;
 
 		if (OpenAllInputFiles(volInfo) == false) return false;// Verify input files can be read
 
 		// Get files sizes and calculate length of string table
-		for (i = 0; i < volInfo.numFilesToPack; i++)
+		for (size_t i = 0; i < volInfo.fileCount(); i++)
 		{
 			// Store the indexing info into the index struct
 			volInfo.indexEntry[i].fileSize = GetFileSize(volInfo.fileHandle[i], 0);
 			volInfo.indexEntry[i].fileNameOffset = volInfo.stringTableLength;
 			volInfo.indexEntry[i].compressionType = CompressionType::Uncompressed;
 			// Calculate length of internal file names for string table
-			volInfo.fileNameLength[i] = strlen(volInfo.internalNames[i]) + 1;
+			volInfo.fileNameLength[i] = volInfo.internalNames[i].size() + 1; //Accounts for null terminator in size
 			volInfo.stringTableLength += volInfo.fileNameLength[i];
 		}
+
 		// Calculate size of index table
-		volInfo.indexTableLength = volInfo.numFilesToPack * sizeof(IndexEntry);
+		volInfo.indexTableLength = volInfo.fileCount() * sizeof(IndexEntry);
 		// Calculate the zero padded length of the string table and index table
 		volInfo.paddedStringTableLength = (volInfo.stringTableLength + 7) & ~3;
 		volInfo.paddedIndexTableLength = (volInfo.indexTableLength + 3) & ~3;
-		volInfo.indexEntry[0].dataBlockOffset =
-			volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 32;
+		volInfo.indexEntry[0].dataBlockOffset = volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 32;
+		
 		// Calculate offsets to the files
-		for (i = 1; i < volInfo.numFilesToPack; i++)
+		for (size_t i = 1; i < volInfo.fileCount(); i++)
 		{
 			tempPtr = &volInfo.indexEntry[i - 1];
-			volInfo.indexEntry[i].dataBlockOffset =
-				(tempPtr->dataBlockOffset + tempPtr->fileSize + 11) & ~3;
+			volInfo.indexEntry[i].dataBlockOffset = (tempPtr->dataBlockOffset + tempPtr->fileSize + 11) & ~3;
 		}
 
 		return true;
