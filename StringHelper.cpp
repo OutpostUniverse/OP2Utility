@@ -18,28 +18,6 @@ string StringHelper::ConvertToUpper(const string& str)
 	return newString;
 }
 
-const char** StringHelper::VectorToCharArray(const vector<string>& stringVector)
-{
-	const char** filenames = new const char*[stringVector.size()];
-
-	for (size_t i = 0; i < stringVector.size(); ++i) {
-		filenames[i] = stringVector[i].c_str();
-	}
-
-	return filenames;
-}
-
-std::vector<std::string> StringHelper::CharArrayToVector(int numberOfStrings, const char** charArray)
-{
-	std::vector<std::string> charVector;
-
-	for (int i = 0; i < numberOfStrings; ++i) {
-		charVector.push_back(charArray[i]);
-	}
-
-	return charVector;
-}
-
 // Returns a new vector with matching strings removed. Case insensitive.
 vector<string> StringHelper::RemoveMatchingStrings(const vector<string>& strings, const vector<string>& stringsToRemove)
 {
@@ -100,5 +78,5 @@ bool StringHelper::StringCompareCaseInsensitive(const std::string& string1, cons
 
 bool StringHelper::ContainsNonAsciiChars(string str)
 {
-	return std::any_of(str.begin(), str.end(), [](unsigned char i) { return (static_cast<unsigned short>(i) > 127); });
+	return std::any_of(str.begin(), str.end(), [](unsigned char i) { return (static_cast<unsigned char>(i) > 127); });
 }
