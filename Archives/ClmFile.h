@@ -3,6 +3,8 @@
 #include "ArchiveFile.h"
 #include <windows.h>
 #include <mmreg.h>	// WAVEFORMATEX (omitted from windows.h if #define WIN32_LEAN_AND_MEAN)
+#include <string>
+#include <vector>
 #include <memory>
 
 namespace Archives
@@ -22,8 +24,7 @@ namespace Archives
 		int GetInternalFileSize(int index);
 
 		bool Repack();
-		bool CreateVolume(const char *volumeFileName, int numFilesToPack,
-			const char **filesToPack, const char **internalNames);
+		bool CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack, std::vector<std::string> internalNames);
 
 	private:
 
@@ -40,13 +41,13 @@ namespace Archives
 		bool ReadHeader();
 
 		// Private functions for packing files
-		bool OpenAllInputFiles(int numFilesToPack, const char **filesToPack, HANDLE *fileHandle);
+		bool OpenAllInputFiles(std::vector<std::string> filesToPack, HANDLE *fileHandle);
 		bool ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WAVEFORMATEX *format, IndexEntry *indexEntry);
 		int FindChunk(int chunkTag, HANDLE file);
 		void CleanUpVolumeCreate(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, WAVEFORMATEX *waveFormat, IndexEntry *indexEntry);
 		bool CompareWaveFormats(int numFilesToPack, WAVEFORMATEX *waveFormat);
 		bool WriteVolume(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle,
-			IndexEntry *entry, const char **internalName, WAVEFORMATEX *waveFormat);
+			IndexEntry *entry, std::vector<std::string> internalNames, WAVEFORMATEX *waveFormat);
 
 		HANDLE m_FileHandle;
 		WAVEFORMATEX m_WaveFormat;

@@ -1,7 +1,6 @@
 #include "ClmFile.h"
 #include "../XFile.h"
 #include <stdexcept>
-#include <string>
 
 namespace Archives
 {
@@ -243,51 +242,28 @@ namespace Archives
 	// Returns nonzero if successful and zero otherwise
 	bool ClmFile::Repack()
 	{
-		char **filesToPack;
-		const char **internalNames;
-		int i;
-		bool bRet;
+		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
+		std::vector<std::string> internalNames(m_NumberOfPackedFiles);
 
-		// Allocate space for file names
-		filesToPack = new char*[m_NumberOfPackedFiles];
-		internalNames = new const char*[m_NumberOfPackedFiles];
-
-		// Make a list of file names
-		for (i = 0; i < m_NumberOfPackedFiles; i++)
+		for (int i = 0; i < m_NumberOfPackedFiles; i++)
 		{
 			internalNames[i] = GetInternalFileName(i);
-			filesToPack[i] = new char[13];
-			strcpy(filesToPack[i], internalNames[i]);
-			strcat(filesToPack[i], ".wav");
+			filesToPack[i] = internalNames[i] + ".wav";
 		}
 
 		// Create the volume
-		bRet = CreateVolume("temp.clm", m_NumberOfPackedFiles, (const char**)filesToPack, internalNames);
-
-		// Clean up
-		for (i = 0; i < m_NumberOfPackedFiles; i++) {
-			delete filesToPack[i];
-		}
-		delete[] internalNames;
-		delete[] filesToPack;
-
-		return bRet;
+		return CreateVolume("temp.clm", filesToPack, internalNames);
 	}
 
 	// Creates a new volume file with the file name volumeFileName and packs the
 	// numFilesToPack files listed in the array filesToPack into the volume.
 	// The internal names of these files are given in the array internalNames.
 	// Returns nonzero if successful and zero otherwise
-	bool ClmFile::CreateVolume(const char *volumeFileName, int numFilesToPack,
-		const char **filesToPack, const char **internalNames)
+	bool ClmFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack, std::vector<std::string> internalNames)
 	{
 		// Make sure files are specified properly.
-		if (numFilesToPack < 1) {
+		if (filesToPack.size() < 1) {
 			return false; //CLM files require at least one audio file present in order to properly write settings.
-		}
-
-		if (filesToPack == nullptr || internalNames == nullptr) {
-			return false;
 		}
 
 		HANDLE outFile = nullptr;
@@ -296,9 +272,9 @@ namespace Archives
 		IndexEntry *indexEntry;
 
 		// Allocate space for all the file handles
-		fileHandle = new HANDLE[numFilesToPack];
+		fileHandle = new HANDLE[filesToPack.size()];
 		// Open all the files (and store file handles)
-		if (OpenAllInputFiles(numFilesToPack, filesToPack, fileHandle) == false)
+		if (OpenAllInputFiles(filesToPack, fileHandle) == false)
 		{
 			// Error opening files. Abort.
 			delete[] fileHandle;
@@ -306,44 +282,44 @@ namespace Archives
 		}
 
 		// Allocate space for index entries
-		indexEntry = new IndexEntry[numFilesToPack];
+		indexEntry = new IndexEntry[filesToPack.size()];
 		// Allocate space for the format of all wave files
-		waveFormat = new WAVEFORMATEX[numFilesToPack];
+		waveFormat = new WAVEFORMATEX[filesToPack.size()];
 		// Read in all the wave headers
-		if (!ReadAllWaveHeaders(numFilesToPack, fileHandle, waveFormat, indexEntry))
+		if (!ReadAllWaveHeaders(filesToPack.size(), fileHandle, waveFormat, indexEntry))
 		{
 			// Error reading in wave headers. Abort.
-			CleanUpVolumeCreate(outFile, numFilesToPack, fileHandle, waveFormat, indexEntry);
+			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
 			return false;
 		}
 
 		// Check if all wave formats are the same
-		if (!CompareWaveFormats(numFilesToPack, waveFormat))
+		if (!CompareWaveFormats(filesToPack.size(), waveFormat))
 		{
 			// Not all wave formats match
-			CleanUpVolumeCreate(outFile, numFilesToPack, fileHandle, waveFormat, indexEntry);
+			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
 			return false;
 		}
 
 		// Open the output file
-		outFile = CreateFileA(volumeFileName, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr); //CREATE_ALWAYS was CREATE_NEW
+		outFile = CreateFileA(volumeFileName.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr); //CREATE_ALWAYS was CREATE_NEW
 		if (outFile == INVALID_HANDLE_VALUE)
 		{
 			// Error opening the output file
-			CleanUpVolumeCreate(outFile, numFilesToPack, fileHandle, waveFormat, indexEntry);
+			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
 			return false;
 		}
 
 		// Write the volume header and copy files into the volume
-		if (!WriteVolume(outFile, numFilesToPack, fileHandle, indexEntry, internalNames, waveFormat))
+		if (!WriteVolume(outFile, filesToPack.size(), fileHandle, indexEntry, internalNames, waveFormat))
 		{
 			// Error writing volume file
-			CleanUpVolumeCreate(outFile, numFilesToPack, fileHandle, waveFormat, indexEntry);
+			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
 			return false;
 		}
 
 		// Close all open input files and release memory
-		CleanUpVolumeCreate(outFile, numFilesToPack, fileHandle, waveFormat, indexEntry);
+		CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
 
 		return true;
 	}
@@ -352,14 +328,12 @@ namespace Archives
 	// Opens all files in filesToPack and stores the file handle in the fileHandle array
 	// If any file fails to open, all already opened files are closed and the return value
 	// is zero. If the function succeeds, the return value is nonzero.
-	bool ClmFile::OpenAllInputFiles(int numFilesToPack, const char **filesToPack, HANDLE *fileHandle)
+	bool ClmFile::OpenAllInputFiles(std::vector<std::string> filesToPack, HANDLE *fileHandle)
 	{
-		int i;
-
 		// Open all the files
-		for (i = 0; i < numFilesToPack; i++)
+		for (size_t i = 0; i < filesToPack.size(); i++)
 		{
-			fileHandle[i] = CreateFileA(filesToPack[i],			// filename
+			fileHandle[i] = CreateFileA(filesToPack[i].c_str(),		// filename
 				GENERIC_READ,			// access mode
 				0,						// share mode
 				nullptr,				// security attributes
@@ -514,7 +488,7 @@ namespace Archives
 		int numFilesToPack,
 		HANDLE *fileHandle,
 		IndexEntry *entry,
-		const char **internalName,
+		std::vector<std::string> internalNames,
 		WAVEFORMATEX *waveFormat)
 	{
 #pragma pack(push, 1)
@@ -559,7 +533,7 @@ namespace Archives
 		for (i = 0; i < numFilesToPack; i++)
 		{
 			// Copy the filename into the entry
-			strncpy((char*)&entry[i].fileName, internalName[i], 8);
+			strncpy((char*)&entry[i].fileName, internalNames[i].c_str(), 8);
 			// Set the offset of the file
 			entry[i].dataOffset = offset;
 			offset += entry[i].dataLength;
