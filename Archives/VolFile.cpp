@@ -147,16 +147,14 @@ namespace Archives
 	bool VolFile::Repack()
 	{
 		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
-		std::vector<std::string> internalNames(m_NumberOfPackedFiles);
 
 		for (int i = 0; i < m_NumberOfPackedFiles; i++)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			internalNames.push_back(GetInternalFileName(i));
-			filesToPack.push_back(internalNames[i]); 
+			filesToPack.push_back(GetInternalFileName(i));
 		}
 
-		if (!CreateVolume("Temp.vol", filesToPack, internalNames)) {
+		if (!CreateVolume("Temp.vol", filesToPack)) {
 			return false;
 		}
 
@@ -167,12 +165,12 @@ namespace Archives
 		return ReplaceFileWithFile(m_VolumeFileName, "Temp.vol");
 	}
 
-	bool VolFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack, std::vector<std::string> internalNames)
+	bool VolFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack)
 	{
 		CreateVolumeInfo volInfo;
 
 		volInfo.filesToPack = filesToPack;
-		volInfo.internalNames = internalNames;
+		volInfo.internalNames = GetInternalNamesFromPaths(filesToPack);
 
 		if (OpenOutputFile(volumeFileName.c_str()) == 0) {
 			return false;

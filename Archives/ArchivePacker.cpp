@@ -1,4 +1,7 @@
 #include "ArchivePacker.h"
+#include "../XFile.h"
+#include "../StringHelper.h"
+#include <stdexcept>
 
 namespace Archives
 {
@@ -47,5 +50,20 @@ namespace Archives
 		DeleteFileA("Delete.vol");
 
 		return true;
+	}
+
+	std::vector<std::string> ArchivePacker::GetInternalNamesFromPaths(std::vector<std::string> paths)
+	{
+		std::vector<std::string> fileNames;
+
+		for (std::string fileName : paths) {
+			if (StringHelper::ContainsStringCaseInsensitive(fileNames, fileName)) {
+				throw std::runtime_error("Unable to create an archive containing multiple files with the same filename.");
+			}
+
+			fileNames.push_back(XFile::GetFilename(fileName));
+		}
+
+		return fileNames;
 	}
 }

@@ -247,19 +247,18 @@ namespace Archives
 
 		for (int i = 0; i < m_NumberOfPackedFiles; i++)
 		{
-			internalNames[i] = GetInternalFileName(i);
-			filesToPack[i] = internalNames[i] + ".wav";
+			//Filename is equivalent to internalName since filename is a relative path from current directory.
+			filesToPack[i] = std::string(GetInternalFileName(i)) + ".wav";
 		}
 
-		// Create the volume
-		return CreateVolume("temp.clm", filesToPack, internalNames);
+		return CreateVolume("temp.clm", filesToPack);
 	}
 
 	// Creates a new volume file with the file name volumeFileName and packs the
 	// numFilesToPack files listed in the array filesToPack into the volume.
 	// The internal names of these files are given in the array internalNames.
 	// Returns nonzero if successful and zero otherwise
-	bool ClmFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack, std::vector<std::string> internalNames)
+	bool ClmFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack)
 	{
 		// Make sure files are specified properly.
 		if (filesToPack.size() < 1) {
@@ -311,7 +310,7 @@ namespace Archives
 		}
 
 		// Write the volume header and copy files into the volume
-		if (!WriteVolume(outFile, filesToPack.size(), fileHandle, indexEntry, internalNames, waveFormat))
+		if (!WriteVolume(outFile, filesToPack.size(), fileHandle, indexEntry, GetInternalNamesFromPaths(filesToPack), waveFormat))
 		{
 			// Error writing volume file
 			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
