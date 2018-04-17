@@ -1,6 +1,7 @@
 #include "ClmFile.h"
 #include "../XFile.h"
 #include <stdexcept>
+#include <algorithm>
 
 namespace Archives
 {
@@ -256,14 +257,14 @@ namespace Archives
 
 	// Creates a new volume file with the file name volumeFileName and packs the
 	// numFilesToPack files listed in the array filesToPack into the volume.
-	// The internal names of these files are given in the array internalNames.
-	// Returns nonzero if successful and zero otherwise
+	// Returns nonzero if successful and zero otherwise.
 	bool ClmFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack)
 	{
-		// Make sure files are specified properly.
 		if (filesToPack.size() < 1) {
-			return false; //CLM files require at least one audio file present in order to properly write settings.
+			return false; //CLM files require at least one audio file present to properly write settings.
 		}
+
+		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
 
 		HANDLE outFile = nullptr;
 		HANDLE *fileHandle;
@@ -301,7 +302,7 @@ namespace Archives
 		}
 
 		// Open the output file
-		outFile = CreateFileA(volumeFileName.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr); //CREATE_ALWAYS was CREATE_NEW
+		outFile = CreateFileA(volumeFileName.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
 		if (outFile == INVALID_HANDLE_VALUE)
 		{
 			// Error opening the output file
