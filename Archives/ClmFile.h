@@ -24,7 +24,7 @@ namespace Archives
 		int GetInternalFileSize(int index);
 
 		bool Repack();
-		bool CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack, std::vector<std::string> internalNames);
+		bool CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack);
 
 	private:
 
