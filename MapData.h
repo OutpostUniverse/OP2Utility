@@ -2,7 +2,6 @@
 
 #include "StreamReader.h"
 #include <vector>
-#include <cmath>
 #include <string>
 #include <memory>
 
@@ -13,7 +12,7 @@
 
 // ALT IMPLEMENTATION (with COM support)
 //     Outpost2SVN\MapEditor\OP2Editor.
-#pragma pack(push, 1)				// Make sure structures are byte aligned
+#pragma pack(push, 1) // Make sure structures are byte aligned
 struct MapHeader
 {
 	// The map's version tag. 
@@ -35,10 +34,7 @@ struct MapHeader
 	unsigned int numTileSets;
 
 	// Map Width in Tiles.
-	unsigned int mapTileWidth()
-	{
-		return (unsigned int)pow(2, lgMapTileWidth);
-	}
+	unsigned int mapTileWidth();
 };
 
 // Bitfield structure (32 bits total) containing metadata for a tile placed on the map.
