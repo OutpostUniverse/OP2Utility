@@ -141,7 +141,6 @@
     <ClInclude Include="OP2Utility.h" />
     <ClInclude Include="StreamReader.h" />
     <ClInclude Include="StringHelper.h" />
-    <ClInclude Include="TileSetBmpReader.h" />
     <ClInclude Include="XFile.h" />
   </ItemGroup>
   <ItemGroup>

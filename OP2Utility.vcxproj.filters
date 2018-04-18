@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TileSetBmpReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="XFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>

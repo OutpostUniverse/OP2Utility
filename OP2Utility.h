@@ -4,7 +4,6 @@
 #include "StreamReader.h"
 #include "XFile.h"
 #include "OP2Maps/MapData.h"
-#include "TileSetBmpReader.h"
 
 #include "ResourceManager.h"
 #include "Archives/ArchiveFile.h"
@@ -16,6 +15,6 @@
 
 /*This includes
     Loading an Outpost 2 Map file into memory.
-	Loading an Outpost 2 Tile Set BMP into memory.
+	Handling Outpost 2 Archive files (clm and vol).
 	Cross platform file system support.
 */
