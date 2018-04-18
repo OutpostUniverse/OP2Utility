@@ -38,12 +38,8 @@ struct TileSetSource
 
 	std::string GetTileSetFilename()
 	{
-		std::string s;
-		for (int i = 0; i < 8; ++i) {
-			s.push_back(tileSetFilename[i]);
-		}
-
-		return s;
+		// Constructing string with a char[] without specifying range adds an extra char to the end of the string.
+		return std::string(tileSetFilename, 8);
 	}
 };
 
