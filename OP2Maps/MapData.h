@@ -5,6 +5,7 @@
 #include "TileSetSource.h"
 #include "TileInfo.h"
 #include "TerrainType.h"
+#include "ClipRect.h"
 #include "../StreamReader.h"
 #include <string>
 #include <vector>
@@ -17,18 +18,6 @@
 
 // ALT IMPLEMENTATION (with COM support)
 //     Outpost2SVN\MapEditor\OP2Editor.
-
-#pragma pack(push, 1) // Make sure structures are byte aligned
-
-// Represents playable area of the map.
-struct ClipRect
-{
-	int x1;
-	int y1;
-	int x2;
-	int y2;
-};
-
 
 //Represents the data stored in an Outpost 2 map file. 
 struct MapData
@@ -70,5 +59,3 @@ private:
 	void ReadTileSetHeader(StreamReader& streamReader);
 	void ReadTileInfo(StreamReader& streamReader);
 };
-
-#pragma pack(pop)
