@@ -121,7 +121,9 @@
     <ClInclude Include="Archives\MemoryMappedFile.h" />
     <ClInclude Include="OP2Maps\MapData.h" />
     <ClInclude Include="OP2Maps\MapHeader.h" />
+    <ClInclude Include="OP2Maps\TerrainType.h" />
     <ClInclude Include="OP2Maps\TileData.h" />
+    <ClInclude Include="OP2Maps\TileSetSource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Archives\AdaptHuffTree.h" />
     <ClInclude Include="Archives\ArchiveFile.h" />

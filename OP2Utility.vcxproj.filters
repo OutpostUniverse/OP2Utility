@@ -75,6 +75,12 @@
     <ClInclude Include="OP2Maps\TileData.h">
       <Filter>OP2Maps</Filter>
     </ClInclude>
+    <ClInclude Include="OP2Maps\TileSetSource.h">
+      <Filter>OP2Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="OP2Maps\TerrainType.h">
+      <Filter>OP2Maps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
