@@ -3,6 +3,7 @@
 #include "MapHeader.h"
 #include "TileData.h"
 #include "TileSetSource.h"
+#include "TileInfo.h"
 #include "TerrainType.h"
 #include "../StreamReader.h"
 #include <string>
@@ -26,23 +27,6 @@ struct ClipRect
 	int y1;
 	int x2;
 	int y2;
-};
-
-// Metadata that applies to all tiles on a map with the same TileSet and TileIndex.
-struct TileInfo
-{
-	// The tile set the tile comes from.
-	short tileSetIndex;
-
-	// The tile index within the tile set. 
-	short tileIndex;
-
-	// The number of tiles following this index that may be used to represent the tile 
-	// for an animation sequence. 
-	short numAnimations;
-
-	// The number of cycles elapsed before cycling to the next tile in an animation.
-	short animationDelay;
 };
 
 
