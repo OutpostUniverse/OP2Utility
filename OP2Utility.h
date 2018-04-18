@@ -3,7 +3,7 @@
 #include "StringHelper.h"
 #include "StreamReader.h"
 #include "XFile.h"
-#include "MapData.h"
+#include "OP2Maps/MapData.h"
 #include "TileSetBmpReader.h"
 
 #include "ResourceManager.h"

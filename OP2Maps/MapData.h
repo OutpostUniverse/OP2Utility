@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StreamReader.h"
+#include "../StreamReader.h"
 #include <vector>
 #include <string>
 #include <memory>

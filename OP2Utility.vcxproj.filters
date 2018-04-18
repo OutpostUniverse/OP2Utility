@@ -16,11 +16,11 @@
     <Filter Include="Archives">
       <UniqueIdentifier>{351a0216-e40c-4520-b35c-25690fb48ab0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OP2Maps">
+      <UniqueIdentifier>{60765cf0-2ed7-4327-8d32-801355cab8ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MapData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TileSetBmpReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,12 +69,12 @@
     <ClInclude Include="Archives\MemoryMappedFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
+    <ClInclude Include="OP2Maps\MapData.h">
+      <Filter>OP2Maps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MapData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StringHelper.cpp">
@@ -109,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="Archives\MemoryMappedFile.cpp">
       <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="OP2Maps\MapData.cpp">
+      <Filter>OP2Maps</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
