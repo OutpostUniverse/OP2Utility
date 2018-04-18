@@ -23,7 +23,7 @@ struct MapHeader
 	unsigned int numTileSets;
 
 	// Map Width in Tiles.
-	unsigned int mapTileWidth();
+	unsigned int MapTileWidth();
 };
 
 #pragma pack(pop)

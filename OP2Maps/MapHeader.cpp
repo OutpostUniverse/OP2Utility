@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-unsigned int MapHeader::mapTileWidth()
+unsigned int MapHeader::MapTileWidth()
 {
 	return (unsigned int)pow(2, lgMapTileWidth);
 }
