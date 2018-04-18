@@ -1,16 +1,10 @@
 #include "MapData.h"
-#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <cstring>
 #include <stdexcept>
 
 using namespace std;
-
-unsigned int MapHeader::mapTileWidth()
-{
-	return (unsigned int)pow(2, lgMapTileWidth);
-}
 
 MapData::MapData(unique_ptr<SeekableStreamReader> mapStream, bool saveGame)
 {

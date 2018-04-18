@@ -69,6 +69,9 @@
     <ClInclude Include="OP2Maps\MapData.h">
       <Filter>OP2Maps</Filter>
     </ClInclude>
+    <ClInclude Include="OP2Maps\MapHeader.h">
+      <Filter>OP2Maps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
@@ -108,6 +111,9 @@
       <Filter>Archives</Filter>
     </ClCompile>
     <ClCompile Include="OP2Maps\MapData.cpp">
+      <Filter>OP2Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="OP2Maps\MapHeader.cpp">
       <Filter>OP2Maps</Filter>
     </ClCompile>
   </ItemGroup>

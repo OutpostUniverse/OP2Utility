@@ -120,6 +120,7 @@
     <ClInclude Include="Archives\CompressionType.h" />
     <ClInclude Include="Archives\MemoryMappedFile.h" />
     <ClInclude Include="OP2Maps\MapData.h" />
+    <ClInclude Include="OP2Maps\MapHeader.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Archives\AdaptHuffTree.h" />
     <ClInclude Include="Archives\ArchiveFile.h" />
@@ -130,6 +131,7 @@
     <ClCompile Include="Archives\ArchivePacker.cpp" />
     <ClCompile Include="Archives\ArchiveUnpacker.cpp" />
     <ClCompile Include="OP2Maps\MapData.cpp" />
+    <ClCompile Include="OP2Maps\MapHeader.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Archives\AdaptHuffTree.cpp" />
     <ClCompile Include="Archives\MemoryMappedFile.cpp" />
