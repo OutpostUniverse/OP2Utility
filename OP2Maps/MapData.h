@@ -2,9 +2,10 @@
 
 #include "MapHeader.h"
 #include "TileData.h"
+#include "TileSetSource.h"
 #include "../StreamReader.h"
-#include <vector>
 #include <string>
+#include <vector>
 #include <memory>
 
 // Includes data structures to represent a map or saved game in Outpost 2.
@@ -24,23 +25,6 @@ struct ClipRect
 	int y1;
 	int x2;
 	int y2;
-};
-
-// Contains information to find the source BMP file (well00XX.bmp) for a tile set.
-struct TileSetSource
-{
-	// Fixed length string. Map and save files require tile set filenames to be exactly 8
-	// characters long. User must handle terminating the string.
-	char tileSetFilename[8]; 
-
-	// Number of Tiles in set (represented on BMP).
-	int numTiles;
-
-	std::string GetTileSetFilename()
-	{
-		// Constructing string with a char[] without specifying range adds an extra char to the end of the string.
-		return std::string(tileSetFilename, 8);
-	}
 };
 
 // Metadata that applies to all tiles on a map with the same TileSet and TileIndex.
