@@ -66,4 +66,9 @@ namespace Archives
 
 		return fileNames;
 	}
+
+	bool ArchivePacker::ComparePathFilenames(const std::string path1, const std::string path2)
+	{
+		return StringHelper::StringCompareCaseInsensitive(XFile::GetFilename(path1), XFile::GetFilename(path2));
+	}
 }

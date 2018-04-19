@@ -28,6 +28,10 @@ namespace Archives
 		// Throws an error if 2 filenames are identical, case insensitve.
 		std::vector<std::string> ArchivePacker::GetInternalNamesFromPaths(std::vector<std::string> paths);
 
+		// Compares 2 filenames case insensitive to determine which comes first alphabetically.
+		// Does not compare the entire path, but only the filename.
+		static bool ComparePathFilenames(const std::string path1, const std::string path2);
+
 		HANDLE m_OutFileHandle;
 	};
 }

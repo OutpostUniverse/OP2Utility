@@ -1,6 +1,7 @@
 #include "VolFile.h"
 #include "../XFile.h"
 #include <stdexcept>
+#include <algorithm>
 
 namespace Archives
 {
@@ -167,6 +168,8 @@ namespace Archives
 
 	bool VolFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack)
 	{
+		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
+
 		CreateVolumeInfo volInfo;
 
 		volInfo.filesToPack = filesToPack;
