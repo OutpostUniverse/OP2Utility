@@ -19,11 +19,22 @@ struct MapHeader
 	// Height of map in tiles. Will be rounded to a power of 2 by Outpost 2.
 	unsigned int mapTileHeight;
 
-	// Number of tile sets within the map.
-	unsigned int numTileSets;
+	// Number of tile sets on map.
+	unsigned int numTilesets;
 
 	// Map Width in Tiles.
 	unsigned int MapTileWidth();
+
+	bool VersionTagValid() const
+	{
+		return versionTag >= 0x1010;
+	}
+
+	// Total number of tiles on map.
+	unsigned int TileCount() const
+	{
+		return mapTileHeight << lgMapTileWidth;
+	}
 };
 
 #pragma pack(pop)
