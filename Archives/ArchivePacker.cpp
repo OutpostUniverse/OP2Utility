@@ -56,15 +56,26 @@ namespace Archives
 	{
 		std::vector<std::string> fileNames;
 
-		for (std::string fileName : paths) {
-			if (StringHelper::ContainsStringCaseInsensitive(fileNames, fileName)) {
-				throw std::runtime_error("Unable to create an archive containing multiple files with the same filename.");
-			}
-
+		for (std::string fileName : paths) 
+		{
 			fileNames.push_back(XFile::GetFilename(fileName));
 		}
 
 		return fileNames;
+	}
+
+	void ArchivePacker::CheckForDuplicateNames(std::vector<std::string> internalNames)
+	{
+		std::vector<std::string> checkedNames;
+
+		for (std::string internalName : internalNames)
+		{
+			if (StringHelper::ContainsStringCaseInsensitive(checkedNames, internalName)) {
+				throw std::runtime_error("Unable to create an archive containing files with the same filename. Duplicate filename: " + internalName);
+			}
+
+			checkedNames.push_back(internalName);
+		}
 	}
 
 	bool ArchivePacker::ComparePathFilenames(const std::string path1, const std::string path2)
