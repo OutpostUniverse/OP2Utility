@@ -128,8 +128,5 @@
     <ClCompile Include="OP2Maps\MapData.cpp">
       <Filter>OP2Maps</Filter>
     </ClCompile>
-    <ClCompile Include="OP2Maps\MapHeader.cpp">
-      <Filter>OP2Maps</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

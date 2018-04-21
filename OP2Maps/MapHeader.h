@@ -1,7 +1,8 @@
 #pragma once
 
-#pragma pack(push, 1) // Make sure structures are byte aligned
+#pragma pack(push, 1) // Make sure structure is byte aligned
 
+// Outpost 2 map and save file header
 struct MapHeader
 {
 	// The map's version tag. 
@@ -23,7 +24,10 @@ struct MapHeader
 	unsigned int numTileSets;
 
 	// Map Width in Tiles.
-	unsigned int MapTileWidth();
+	unsigned int MapTileWidth()
+	{
+		return  1 << lgMapTileWidth; // Use bitwise left shift to translate base 2 logarithm.
+	}
 };
 
 #pragma pack(pop)
