@@ -48,6 +48,7 @@ namespace Archives
 		bool CompareWaveFormats(int numFilesToPack, WAVEFORMATEX *waveFormat);
 		bool WriteVolume(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle,
 			IndexEntry *entry, std::vector<std::string> internalNames, WAVEFORMATEX *waveFormat);
+		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 
 		HANDLE m_FileHandle;
 		WAVEFORMATEX m_WaveFormat;
