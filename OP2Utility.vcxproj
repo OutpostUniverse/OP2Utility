@@ -136,7 +136,6 @@
     <ClCompile Include="Archives\ArchivePacker.cpp" />
     <ClCompile Include="Archives\ArchiveUnpacker.cpp" />
     <ClCompile Include="OP2Maps\MapData.cpp" />
-    <ClCompile Include="OP2Maps\MapHeader.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Archives\AdaptHuffTree.cpp" />
     <ClCompile Include="Archives\MemoryMappedFile.cpp" />
