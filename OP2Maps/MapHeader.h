@@ -1,6 +1,6 @@
 #pragma once
 
-#pragma pack(push, 1) // Make sure structures are byte aligned
+#pragma pack(push, 1) // Make sure structure is byte aligned
 
 // Outpost 2 map and save file header
 struct MapHeader
