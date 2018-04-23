@@ -24,7 +24,7 @@ struct MapHeader
 	unsigned int numTileSets;
 
 	// Map Width in Tiles.
-	unsigned int MapTileWidth()
+	unsigned int MapTileWidth() const
 	{
 		return  1 << lgMapTileWidth; // Use bitwise left shift to translate base 2 logarithm.
 	}
