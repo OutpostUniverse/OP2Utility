@@ -119,13 +119,16 @@
     <ClInclude Include="Archives\ArchiveUnpacker.h" />
     <ClInclude Include="Archives\CompressionType.h" />
     <ClInclude Include="Archives\MemoryMappedFile.h" />
-    <ClInclude Include="OP2Maps\ClipRect.h" />
-    <ClInclude Include="OP2Maps\MapData.h" />
-    <ClInclude Include="OP2Maps\MapHeader.h" />
-    <ClInclude Include="OP2Maps\TerrainType.h" />
-    <ClInclude Include="OP2Maps\TileData.h" />
-    <ClInclude Include="OP2Maps\TileInfo.h" />
-    <ClInclude Include="OP2Maps\TileSetSource.h" />
+    <ClInclude Include="Maps\ClipRect.h" />
+    <ClInclude Include="Maps\MapData.h" />
+    <ClInclude Include="Maps\MapHeader.h" />
+    <ClInclude Include="Maps\MapReader.h" />
+    <ClInclude Include="Maps\MapWriter.h" />
+    <ClInclude Include="Maps\TerrainType.h" />
+    <ClInclude Include="Maps\TileData.h" />
+    <ClInclude Include="Maps\TileGroup.h" />
+    <ClInclude Include="Maps\TileInfo.h" />
+    <ClInclude Include="Maps\TileSetSource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Archives\AdaptHuffTree.h" />
     <ClInclude Include="Archives\ArchiveFile.h" />
@@ -135,7 +138,10 @@
     <ClInclude Include="Archives\VolFile.h" />
     <ClCompile Include="Archives\ArchivePacker.cpp" />
     <ClCompile Include="Archives\ArchiveUnpacker.cpp" />
-    <ClCompile Include="OP2Maps\MapData.cpp" />
+    <ClCompile Include="Maps\MapData.cpp" />
+    <ClCompile Include="Maps\MapReader.cpp" />
+    <ClCompile Include="Maps\MapWriter.cpp" />
+
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Archives\AdaptHuffTree.cpp" />
     <ClCompile Include="Archives\MemoryMappedFile.cpp" />

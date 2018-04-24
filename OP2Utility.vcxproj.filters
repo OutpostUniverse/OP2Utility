@@ -16,7 +16,7 @@
     <Filter Include="Archives">
       <UniqueIdentifier>{351a0216-e40c-4520-b35c-25690fb48ab0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OP2Maps">
+    <Filter Include="Maps">
       <UniqueIdentifier>{60765cf0-2ed7-4327-8d32-801355cab8ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -66,26 +66,35 @@
     <ClInclude Include="Archives\MemoryMappedFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="OP2Maps\MapData.h">
-      <Filter>OP2Maps</Filter>
+    <ClInclude Include="Maps\MapData.h">
+      <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="OP2Maps\MapHeader.h">
-      <Filter>OP2Maps</Filter>
+    <ClInclude Include="Maps\MapHeader.h">
+      <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="OP2Maps\TileData.h">
-      <Filter>OP2Maps</Filter>
+    <ClInclude Include="Maps\TileData.h">
+      <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="OP2Maps\TileSetSource.h">
-      <Filter>OP2Maps</Filter>
+    <ClInclude Include="Maps\TileSetSource.h">
+      <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="OP2Maps\TerrainType.h">
-      <Filter>OP2Maps</Filter>
+    <ClInclude Include="Maps\TerrainType.h">
+      <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="OP2Maps\TileInfo.h">
-      <Filter>OP2Maps</Filter>
+    <ClInclude Include="Maps\TileInfo.h">
+      <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="OP2Maps\ClipRect.h">
-      <Filter>OP2Maps</Filter>
+    <ClInclude Include="Maps\ClipRect.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="Maps\MapWriter.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="Maps\TileGroup.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="Maps\MapReader.h">
+      <Filter>Maps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,8 +134,14 @@
     <ClCompile Include="Archives\MemoryMappedFile.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="OP2Maps\MapData.cpp">
-      <Filter>OP2Maps</Filter>
+    <ClCompile Include="Maps\MapData.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="Maps\MapWriter.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="Maps\MapReader.cpp">
+      <Filter>Maps</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
