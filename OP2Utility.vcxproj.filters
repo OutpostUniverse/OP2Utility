@@ -96,6 +96,9 @@
     <ClInclude Include="Maps\MapReader.h">
       <Filter>Maps</Filter>
     </ClInclude>
+    <ClInclude Include="Maps\CellType.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
