@@ -119,6 +119,7 @@
     <ClInclude Include="Archives\ArchiveUnpacker.h" />
     <ClInclude Include="Archives\CompressionType.h" />
     <ClInclude Include="Archives\MemoryMappedFile.h" />
+    <ClInclude Include="Maps\CellType.h" />
     <ClInclude Include="Maps\ClipRect.h" />
     <ClInclude Include="Maps\MapData.h" />
     <ClInclude Include="Maps\MapHeader.h" />
@@ -141,7 +142,6 @@
     <ClCompile Include="Maps\MapData.cpp" />
     <ClCompile Include="Maps\MapReader.cpp" />
     <ClCompile Include="Maps\MapWriter.cpp" />
-
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Archives\AdaptHuffTree.cpp" />
     <ClCompile Include="Archives\MemoryMappedFile.cpp" />
