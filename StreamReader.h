@@ -5,11 +5,13 @@
 
 class StreamReader {
 public:
+	virtual ~StreamReader() = 0;
 	virtual void Read(char* buffer, size_t size) = 0;
 };
 
 class SeekableStreamReader : public StreamReader {
 public:
+	//virtual ~SeekableStreamReader() = 0;
 	virtual void Ignore(size_t size) = 0;
 };
 
