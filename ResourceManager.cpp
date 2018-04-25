@@ -1,7 +1,8 @@
 #include "ResourceManager.h"
-#include "XFile.h"
 #include "Archives/VolFile.h"
 #include "Archives/ClmFile.h"
+#include "StreamReader.h"
+#include "XFile.h"
 
 using namespace std;
 using namespace Archives;

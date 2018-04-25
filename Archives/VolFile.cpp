@@ -1,7 +1,9 @@
 #include "VolFile.h"
+#include "../StreamReader.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
+
 
 namespace Archives
 {
