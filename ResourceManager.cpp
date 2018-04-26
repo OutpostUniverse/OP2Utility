@@ -97,7 +97,7 @@ bool ResourceManager::ExistsInArchives(const string& filename, int& volFileIndex
 		{
 			if (XFile::PathsAreEqual(ArchiveFiles[i]->GetInternalFileName(j), filename))
 			{
-				volFileIndexOut = i;
+				volFileIndexOut = static_cast<int>(i);
 				internalVolIndexOut = j;
 				return true;
 			}
