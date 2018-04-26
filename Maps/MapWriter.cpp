@@ -55,7 +55,7 @@ void MapWriter::WriteTilesetSources(const std::vector<TilesetSource>& tileSetSou
 		// Only include the number of tiles if the tileset contains a filename.
 		if (tilesetSource.tilesetFilename.size() > 0)
 		{
-			fileStream.write((char*)&tilesetSource.numTiles, sizeof(int));
+			fileStream.write((char*)&tilesetSource.tileCount, sizeof(int));
 		}
 	}
 }

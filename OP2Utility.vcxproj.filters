@@ -143,5 +143,8 @@
     <ClCompile Include="Maps\MapReader.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
+    <ClCompile Include="Maps\TileSetSource.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

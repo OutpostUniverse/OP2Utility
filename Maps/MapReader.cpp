@@ -79,7 +79,7 @@ void MapReader::ReadTilesetSources(MapData& mapData)
 		}
 
 		if (mapData.tilesetSources[i].tilesetFilename.size() > 0) {
-			streamReader->Read((char*)&mapData.tilesetSources[i].numTiles, sizeof(int));
+			streamReader->Read((char*)&mapData.tilesetSources[i].tileCount, sizeof(int));
 		}
 	}
 }

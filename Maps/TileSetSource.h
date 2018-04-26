@@ -13,7 +13,15 @@ struct TilesetSource
 	std::string tilesetFilename;
 	
 	// Number of Tiles in set (represented on BMP).
-	int numTiles;
+	int tileCount;
+
+	void Set(std::string filename, int tileCount);
+	void Remove();
+
+	bool IsSet()
+	{
+		return tileCount > 0;
+	}
 };
 
 #pragma pack(pop)
