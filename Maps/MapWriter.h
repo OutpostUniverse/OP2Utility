@@ -11,11 +11,11 @@ class StreamWriter;
 class MapWriter
 {
 public:
-	void MapWriter::Write(std::unique_ptr<StreamWriter> mapStream, const MapData& mapData);
+	void MapWriter::Write(StreamWriter& mapStream, const MapData& mapData);
 	void MapWriter::Write(const std::string& filename, const MapData& mapData);
 
 private:
-	std::unique_ptr<StreamWriter> streamWriter;
+	StreamWriter* streamWriter;
 
 	void WriteHeader(const MapHeader& header);
 	void WriteTiles(const std::vector<TileData>& tiles);

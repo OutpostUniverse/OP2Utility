@@ -1,14 +1,9 @@
 #include "MapWriter.h"
 #include "../StreamWriter.h"
-#include <stdexcept>
 
-void MapWriter::Write(std::unique_ptr<StreamWriter> mapStream, const MapData& mapData)
-{
-	if (!mapStream) {
-		throw std::runtime_error("Provided map or save stream does not exist or is malformed.");
-	}
-
-	streamWriter = std::move(mapStream);
+void MapWriter::Write(StreamWriter& mapStream, const MapData& mapData)
+{	
+	streamWriter = &mapStream;
 
 	WriteHeader(mapData.header);
 	WriteTiles(mapData.tiles);
@@ -26,7 +21,7 @@ void MapWriter::Write(std::unique_ptr<StreamWriter> mapStream, const MapData& ma
 
 void MapWriter::Write(const std::string& filename, const MapData& mapData)
 {
-	Write(std::make_unique<FileStreamWriter>(filename), mapData);
+	Write(FileStreamWriter(filename), mapData);
 }
 
 void MapWriter::WriteHeader(const MapHeader& header)

@@ -7,7 +7,6 @@ class StreamWriter
 {
 public:
 	virtual ~StreamWriter() = 0;
-	virtual void Write(char* buffer, size_t size) = 0;
 	virtual void Write(const char* buffer, size_t size) = 0;
 };
 
@@ -16,7 +15,6 @@ class FileStreamWriter : public StreamWriter
 public:
 	FileStreamWriter(const std::string& filename);
 	~FileStreamWriter();
-	void Write(char* buffer, size_t size);
 	void Write(const char* buffer, size_t size);
 
 private:
@@ -30,7 +28,6 @@ public:
 	// size: Amount of space allocated in the buffer for writing into.
 	MemoryStreamWriter(char* buffer, size_t size);
 
-	void Write(char* buffer, size_t size);
 	void Write(const char* buffer, size_t size);
 
 private:

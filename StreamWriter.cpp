@@ -16,11 +16,6 @@ FileStreamWriter::~FileStreamWriter() {
 	fileStream.close();
 }
 
-void FileStreamWriter::Write(char* buffer, size_t size)
-{
-	fileStream.write(buffer, size);
-}
-
 void FileStreamWriter::Write(const char* buffer, size_t size)
 {
 	fileStream.write(buffer, size);
@@ -33,15 +28,6 @@ MemoryStreamWriter::MemoryStreamWriter(char* buffer, size_t size)
 	offset = 0;
 }
 
-void MemoryStreamWriter::Write(char* buffer, size_t size)
-{
-	if (offset + size > streamSize) {
-		throw std::runtime_error("Size of bytes to write exceeds remaining size of buffer.");
-	}
-
-	memcpy(streamBuffer + offset, buffer, size);
-	offset += size;
-}
 
 void MemoryStreamWriter::Write(const char* buffer, size_t size)
 {
