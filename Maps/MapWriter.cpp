@@ -1,7 +1,7 @@
 #include "MapWriter.h"
 #include "../StreamWriter.h"
 
-void MapWriter::Write(StreamWriter& mapStream, const MapData& mapData)
+void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData)
 {	
 	streamWriter = &mapStream;
 
@@ -92,8 +92,7 @@ void MapWriter::WriteTileGroups(const std::vector<TileGroup>& tileGroups)
 {
 	WriteContainerSize(tileGroups.size());
 
-	int temp = 0;
-	streamWriter->Write((char*)&temp, sizeof(temp));
+	streamWriter->Seek(sizeof(int));
 
 	for (TileGroup tileGroup : tileGroups)
 	{

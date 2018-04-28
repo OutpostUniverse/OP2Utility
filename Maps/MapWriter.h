@@ -5,17 +5,17 @@
 #include <vector>
 #include <memory>
 
-class StreamWriter;
+class SeekableStreamWriter;
 
 // Writes an Outpost 2 map to file.
 class MapWriter
 {
 public:
-	void MapWriter::Write(StreamWriter& mapStream, const MapData& mapData);
+	void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData);
 	void MapWriter::Write(const std::string& filename, const MapData& mapData);
 
 private:
-	StreamWriter* streamWriter;
+	SeekableStreamWriter* streamWriter;
 
 	void WriteHeader(const MapHeader& header);
 	void WriteTiles(const std::vector<TileData>& tiles);

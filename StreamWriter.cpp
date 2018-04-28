@@ -21,13 +21,18 @@ void FileStreamWriter::Write(const char* buffer, size_t size)
 	fileStream.write(buffer, size);
 }
 
+void FileStreamWriter::Seek(int offset)
+{
+	fileStream.seekg(offset, std::ios_base::cur);
+}
+
+
 MemoryStreamWriter::MemoryStreamWriter(char* buffer, size_t size)
 {
 	streamBuffer = buffer;
 	streamSize = size;
 	offset = 0;
 }
-
 
 void MemoryStreamWriter::Write(const char* buffer, size_t size)
 {
@@ -37,4 +42,13 @@ void MemoryStreamWriter::Write(const char* buffer, size_t size)
 
 	memcpy(streamBuffer + offset, buffer, size);
 	offset += size;
+}
+
+void MemoryStreamWriter::Seek(int offset)
+{
+	if (this->offset + offset > streamSize || this->offset + offset < 0) {
+		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
+	}
+
+	this->offset += offset;
 }

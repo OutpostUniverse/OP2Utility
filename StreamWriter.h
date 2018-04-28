@@ -10,18 +10,27 @@ public:
 	virtual void Write(const char* buffer, size_t size) = 0;
 };
 
-class FileStreamWriter : public StreamWriter
+class SeekableStreamWriter : public StreamWriter
+{
+public:
+	// Change position forward or backword in buffer.
+	virtual void Seek(int offset) = 0;
+};
+
+class FileStreamWriter : public SeekableStreamWriter
 {
 public:
 	FileStreamWriter(const std::string& filename);
 	~FileStreamWriter();
 	void Write(const char* buffer, size_t size);
+	// Change position forward or backword in buffer.
+	void Seek(int offset);
 
 private:
 	std::fstream fileStream;
 };
 
-class MemoryStreamWriter : public StreamWriter
+class MemoryStreamWriter : public SeekableStreamWriter
 {
 public:
 	// buffer: where data will be written to.
@@ -29,6 +38,8 @@ public:
 	MemoryStreamWriter(char* buffer, size_t size);
 
 	void Write(const char* buffer, size_t size);
+	// Change position forward or backword in buffer.
+	void Seek(int offset);
 
 private:
 	// Memory location to write data into.
