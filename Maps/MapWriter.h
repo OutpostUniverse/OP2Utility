@@ -1,16 +1,21 @@
+#pragma once
+
 #include "MapData.h"
-#include <fstream>
 #include <string>
 #include <vector>
+#include <memory>
+
+class SeekableStreamWriter;
 
 // Writes an Outpost 2 map to file.
 class MapWriter
 {
 public:
+	void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData);
 	void MapWriter::Write(const std::string& filename, const MapData& mapData);
 
 private:
-	std::fstream fileStream;
+	SeekableStreamWriter* streamWriter;
 
 	void WriteHeader(const MapHeader& header);
 	void WriteTiles(const std::vector<TileData>& tiles);

@@ -152,10 +152,12 @@
     <ClCompile Include="StreamReader.cpp" />
     <ClInclude Include="OP2Utility.h" />
     <ClInclude Include="StreamReader.h" />
+    <ClInclude Include="StreamWriter.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="XFile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="StreamWriter.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="XFile.cpp" />
   </ItemGroup>
