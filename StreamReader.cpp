@@ -6,6 +6,8 @@
 
 using namespace std;
 
+StreamReader::~StreamReader() { }
+
 // Defers calls to C++ standard library methods
 FileStreamReader::FileStreamReader(std::string filename) {
 	file = ifstream(filename, ios::in | ios::binary);
