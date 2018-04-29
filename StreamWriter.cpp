@@ -1,11 +1,24 @@
 #include "StreamWriter.h"
+#include "XFile.h"
 #include <stdexcept>
 
 StreamWriter::~StreamWriter() { }
 
-FileStreamWriter::FileStreamWriter(const std::string& filename)
+FileStreamWriter::FileStreamWriter(const std::string& filename, unsigned int writeSettings)
 {
-	fileStream.open(filename.c_str(), std::ios::trunc | std::ios::out | std::ios::binary);
+	if (!FlagSet(writeSettings, FileWriteFlag::Overwrite)) {
+		if (XFile::PathExists(filename)) {
+			throw std::runtime_error("File already exists at provided path: " + filename + ".");
+		}
+	}
+	
+	if (FlagSet(writeSettings, FileWriteFlag::DoNotCreate)) {
+		if (!XFile::PathExists(filename)) {
+			throw std::runtime_error("File does not exist at provided path: " + filename + ".");
+		}
+	}
+
+	fileStream.open(filename.c_str(), FormatFstreamMode(writeSettings));
 
 	if (!fileStream.is_open()) {
 		throw std::runtime_error("File could not be opened.");
@@ -51,4 +64,28 @@ void MemoryStreamWriter::Seek(int offset)
 	}
 
 	this->offset += offset;
+}
+
+// Transfer the writeSettings bitfield into an fstream _Mode bitfield 
+unsigned int FileStreamWriter::FormatFstreamMode(unsigned int writeSettings) const
+{
+	unsigned int fstreamMode = std::ios::out;
+
+	if (FlagSet(writeSettings, FileWriteFlag::Truncate)) {
+		fstreamMode |= std::ios::trunc;
+	}
+	else {
+		fstreamMode |= std::ios::app;
+	}
+
+	if (!FlagSet(writeSettings, FileWriteFlag::Text)) {
+		fstreamMode |= std::ios::binary;
+	}
+
+	return fstreamMode;
+}
+
+bool FileStreamWriter::FlagSet(unsigned int bitfield, unsigned int flag) const
+{
+	return ((bitfield & flag) == flag);
 }

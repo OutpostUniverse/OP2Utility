@@ -1,5 +1,6 @@
 #pragma once
 
+#include "FileWriteFlags.h"
 #include <fstream>
 #include <string>
 
@@ -20,7 +21,7 @@ public:
 class FileStreamWriter : public SeekableStreamWriter
 {
 public:
-	FileStreamWriter(const std::string& filename);
+	FileStreamWriter(const std::string& filename, unsigned int writeSettings);
 	~FileStreamWriter();
 	void Write(const char* buffer, size_t size);
 	// Change position forward or backword in buffer.
@@ -28,6 +29,9 @@ public:
 
 private:
 	std::fstream fileStream;
+
+	unsigned int FormatFstreamMode(unsigned int writeSettings) const;
+	bool FlagSet(unsigned int bitfield, unsigned int flag) const;
 };
 
 class MemoryStreamWriter : public SeekableStreamWriter

@@ -19,9 +19,10 @@ void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData)
 	WriteTileGroups(mapData.tileGroups);
 }
 
+// Creates a new map file by truncating an existing file if it exists.
 void MapWriter::Write(const std::string& filename, const MapData& mapData)
 {
-	Write(FileStreamWriter(filename), mapData);
+	Write(FileStreamWriter(filename, FileWriteFlag::Overwrite | FileWriteFlag::Truncate), mapData);
 }
 
 void MapWriter::WriteHeader(const MapHeader& header)

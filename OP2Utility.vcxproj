@@ -119,6 +119,7 @@
     <ClInclude Include="Archives\ArchiveUnpacker.h" />
     <ClInclude Include="Archives\CompressionType.h" />
     <ClInclude Include="Archives\MemoryMappedFile.h" />
+    <ClInclude Include="FileWriteFlags.h" />
     <ClInclude Include="Maps\CellType.h" />
     <ClInclude Include="Maps\ClipRect.h" />
     <ClInclude Include="Maps\MapData.h" />
