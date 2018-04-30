@@ -313,6 +313,7 @@ namespace Archives
 
 		std::vector<std::string> internalFileNames = GetInternalNamesFromPaths(filesToPack);
 		internalFileNames = StripFileNameExtensions(internalFileNames);
+		CheckForDuplicateNames(internalFileNames);
 
 		// Write the volume header and copy files into the volume
 		if (!WriteVolume(outFile, filesToPack.size(), fileHandle, indexEntry, internalFileNames, waveFormat))
