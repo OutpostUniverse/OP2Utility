@@ -174,7 +174,7 @@ namespace Archives
 
 		volInfo.filesToPack = filesToPack;
 		volInfo.internalNames = GetInternalNamesFromPaths(filesToPack);
-		CheckForDuplicateNames(volInfo.internalNames);
+		CheckSortedContainerForDuplicateNames(volInfo.internalNames);
 
 		if (OpenOutputFile(volumeFileName.c_str()) == 0) {
 			return false;
