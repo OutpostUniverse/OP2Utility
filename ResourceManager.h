@@ -6,6 +6,8 @@
 #include <regex>
 #include <memory>
 
+class SeekableStreamReader;
+
 // Use to find files/resources either on disk or contained in an archive file (.vol|.clm).
 class ResourceManager
 {

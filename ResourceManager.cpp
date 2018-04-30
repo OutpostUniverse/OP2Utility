@@ -1,7 +1,8 @@
 #include "ResourceManager.h"
-#include "XFile.h"
 #include "Archives/VolFile.h"
 #include "Archives/ClmFile.h"
+#include "StreamReader.h"
+#include "XFile.h"
 
 using namespace std;
 using namespace Archives;
@@ -96,7 +97,7 @@ bool ResourceManager::ExistsInArchives(const string& filename, int& volFileIndex
 		{
 			if (XFile::PathsAreEqual(ArchiveFiles[i]->GetInternalFileName(j), filename))
 			{
-				volFileIndexOut = i;
+				volFileIndexOut = static_cast<int>(i);
 				internalVolIndexOut = j;
 				return true;
 			}

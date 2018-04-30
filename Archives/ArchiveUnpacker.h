@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../StreamReader.h"
 #include <memory>
+
+class SeekableStreamReader;
 
 namespace Archives
 {
