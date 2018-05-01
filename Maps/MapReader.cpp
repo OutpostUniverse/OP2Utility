@@ -37,7 +37,7 @@ MapData MapReader::Read(std::unique_ptr<SeekableStreamReader> mapStream, bool sa
 
 void MapReader::SkipSaveGameHeader()
 {
-	streamReader->Seek(0x1E025);
+	streamReader->SeekRelative(0x1E025);
 }
 
 void MapReader::ReadHeader(MapData& mapData)
@@ -113,7 +113,7 @@ void MapReader::ReadTileGroups(MapData& mapData)
 {
 	int numTileGroups;
 	streamReader->Read((char*)&numTileGroups, sizeof(numTileGroups));
-	streamReader->Seek(4);
+	streamReader->SeekRelative(4);
 
 	for (int i = 0; i < numTileGroups; ++i)
 	{

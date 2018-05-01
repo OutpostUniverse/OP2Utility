@@ -21,7 +21,7 @@ void FileStreamWriter::Write(const char* buffer, size_t size)
 	fileStream.write(buffer, size);
 }
 
-void FileStreamWriter::Seek(int offset)
+void FileStreamWriter::SeekRelative(int offset)
 {
 	fileStream.seekg(offset, std::ios_base::cur);
 }
@@ -44,7 +44,7 @@ void MemoryStreamWriter::Write(const char* buffer, size_t size)
 	offset += size;
 }
 
-void MemoryStreamWriter::Seek(int offset)
+void MemoryStreamWriter::SeekRelative(int offset)
 {
 	// Checking if offset goes below 0 is unnecessary. Arithmetic on a signed and unsigned number results 
 	// in a signed number that will wraparound to a large positive and be caught.

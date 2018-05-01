@@ -92,7 +92,7 @@ void MapWriter::WriteTileGroups(const std::vector<TileGroup>& tileGroups)
 {
 	WriteContainerSize(tileGroups.size());
 
-	streamWriter->Seek(sizeof(int));
+	streamWriter->SeekRelative(sizeof(int));
 
 	for (TileGroup tileGroup : tileGroups)
 	{

@@ -14,7 +14,7 @@ class SeekableStreamWriter : public StreamWriter
 {
 public:
 	// Change position forward or backword in buffer.
-	virtual void Seek(int offset) = 0;
+	virtual void SeekRelative(int offset) = 0;
 };
 
 class FileStreamWriter : public SeekableStreamWriter
@@ -24,7 +24,7 @@ public:
 	~FileStreamWriter();
 	void Write(const char* buffer, size_t size);
 	// Change position forward or backword in buffer.
-	void Seek(int offset);
+	void SeekRelative(int offset);
 
 private:
 	std::fstream fileStream;
@@ -39,7 +39,7 @@ public:
 
 	void Write(const char* buffer, size_t size);
 	// Change position forward or backword in buffer.
-	void Seek(int offset);
+	void SeekRelative(int offset);
 
 private:
 	// Memory location to write data into.

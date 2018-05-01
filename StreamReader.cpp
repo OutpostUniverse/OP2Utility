@@ -23,7 +23,7 @@ void FileStreamReader::Read(char* buffer, size_t size) {
 	file.read(buffer, size);
 }
 
-void FileStreamReader::Seek(int offset) {
+void FileStreamReader::SeekRelative(int offset) {
 	file.seekg(offset, std::ios_base::cur);
 }
 
@@ -44,7 +44,7 @@ void MemoryStreamReader::Read(char* buffer, size_t size)
 	offset += size;
 }
 
-void MemoryStreamReader::Seek(int offset)
+void MemoryStreamReader::SeekRelative(int offset)
 {
 	// Checking if offset goes below 0 is unnecessary. Arithmetic on a signed and unsigned number results 
 	// in a signed number that will wraparound to a large positive and be caught.
