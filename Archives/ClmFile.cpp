@@ -259,7 +259,7 @@ namespace Archives
 
 	// Creates a new volume file with the file name volumeFileName and packs the
 	// numFilesToPack files listed in the array filesToPack into the volume.
-	// Automatically strips file name extensions from filesToPack.
+	// Automatically strips file name extensions from filesToPack. 
 	// Returns nonzero if successful and zero otherwise.
 	bool ClmFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack)
 	{
@@ -315,6 +315,7 @@ namespace Archives
 
 		std::vector<std::string> internalFileNames = GetInternalNamesFromPaths(filesToPack);
 		internalFileNames = StripFileNameExtensions(internalFileNames);
+		CheckSortedContainerForDuplicateNames(internalFileNames);
 
 		// Write the volume header and copy files into the volume
 		if (!WriteVolume(outFile, filesToPack.size(), fileHandle, indexEntry, internalFileNames, waveFormat))
@@ -586,8 +587,7 @@ namespace Archives
 	{
 		std::vector<std::string> strippedExtensions;
 
-		for (std::string path : paths)
-		{
+		for (std::string path : paths) {
 			strippedExtensions.push_back(XFile::ChangeFileExtension(path, ""));
 		}
 
