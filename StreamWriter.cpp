@@ -46,7 +46,9 @@ void MemoryStreamWriter::Write(const char* buffer, size_t size)
 
 void MemoryStreamWriter::Seek(int offset)
 {
-	if (this->offset + offset > streamSize || this->offset + offset < 0) {
+	// Checking if offset goes below 0 is unnecessary. Arithmetic on a signed and unsigned number results 
+	// in a signed number that will wraparound to a large positive and be caught.
+	if (this->offset + offset > streamSize) {
 		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 	}
 
