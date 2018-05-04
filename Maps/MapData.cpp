@@ -1,4 +1,5 @@
 #include "MapData.h"
+#include "CellType.h"
 #include "../XFile.h"
 #include <stdexcept>
 
@@ -8,7 +9,7 @@ unsigned int MapData::GetTileInfoIndex(unsigned int x, unsigned int y) const
 	return tiles[cellIndex].tileIndex;
 }
 
-int MapData::GetCellType(unsigned int x, unsigned int y) const
+CellType MapData::GetCellType(unsigned int x, unsigned int y) const
 {
 	return tiles[GetCellIndex(x, y)].cellType;
 }

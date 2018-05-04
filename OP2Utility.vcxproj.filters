@@ -96,6 +96,12 @@
     <ClInclude Include="Maps\MapReader.h">
       <Filter>Maps</Filter>
     </ClInclude>
+    <ClInclude Include="Maps\CellType.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
@@ -145,6 +151,8 @@
     </ClCompile>
     <ClCompile Include="Maps\TileSetSource.cpp">
       <Filter>Maps</Filter>
+    <ClCompile Include="StreamWriter.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

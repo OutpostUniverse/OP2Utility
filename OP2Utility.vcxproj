@@ -119,6 +119,7 @@
     <ClInclude Include="Archives\ArchiveUnpacker.h" />
     <ClInclude Include="Archives\CompressionType.h" />
     <ClInclude Include="Archives\MemoryMappedFile.h" />
+    <ClInclude Include="Maps\CellType.h" />
     <ClInclude Include="Maps\ClipRect.h" />
     <ClInclude Include="Maps\MapData.h" />
     <ClInclude Include="Maps\MapHeader.h" />
@@ -152,10 +153,12 @@
     <ClCompile Include="StreamReader.cpp" />
     <ClInclude Include="OP2Utility.h" />
     <ClInclude Include="StreamReader.h" />
+    <ClInclude Include="StreamWriter.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="XFile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="StreamWriter.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="XFile.cpp" />
   </ItemGroup>

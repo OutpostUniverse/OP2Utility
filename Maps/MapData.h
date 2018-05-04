@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+enum class CellType;
 
 // FILE FORMAT DOCUMENTATION: 
 //     Outpost2SVN\OllyDbg\InternalData\FileFormat SavedGame and Map.txt.
@@ -40,7 +41,7 @@ struct MapData
 
 public:
 	unsigned int GetTileInfoIndex(unsigned int x, unsigned int y) const;
-	int GetCellType(unsigned int x, unsigned int y) const;
+	CellType GetCellType(unsigned int x, unsigned int y) const;
 	int GetLavaPossible(unsigned int x, unsigned int y) const;
 	short GetTilesetIndex(unsigned int x, unsigned int y) const;
 	short GetImageIndex(unsigned int x, unsigned int y) const;

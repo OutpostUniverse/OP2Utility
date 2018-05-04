@@ -33,6 +33,21 @@ vector<string> StringHelper::RemoveMatchingStrings(const vector<string>& strings
 	return stringsToReturn;
 }
 
+bool StringHelper::CheckIfStringsAreEqual(const std::string& string1, const std::string& string2)
+{
+	if (string1.size() != string2.size()) {
+		return false;
+	}
+
+	for (size_t i = 0; i < string1.size(); ++i) {
+		if (::tolower(string1[i]) != ::tolower(string2[i])) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 // Returns true if the vector contains the given string, ignoring letter casing.
 bool StringHelper::ContainsStringCaseInsensitive(vector<string> stringsToSearch, string stringToFind)
 {

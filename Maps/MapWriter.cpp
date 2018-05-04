@@ -1,9 +1,9 @@
 #include "MapWriter.h"
-#include <stdexcept>
+#include "../StreamWriter.h"
 
-void MapWriter::Write(const std::string& filename, const MapData& mapData)
-{
-	fileStream.open(filename.c_str(), std::ios::trunc | std::ios::out | std::ios::binary);
+void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData)
+{	
+	streamWriter = &mapStream;
 
 	WriteHeader(mapData.header);
 	WriteTiles(mapData.tiles);
@@ -17,8 +17,11 @@ void MapWriter::Write(const std::string& filename, const MapData& mapData)
 	WriteVersionTag(mapData.header.versionTag);
 
 	WriteTileGroups(mapData.tileGroups);
+}
 
-	fileStream.close();
+void MapWriter::Write(const std::string& filename, const MapData& mapData)
+{
+	Write(FileStreamWriter(filename), mapData);
 }
 
 void MapWriter::WriteHeader(const MapHeader& header)
@@ -28,22 +31,22 @@ void MapWriter::WriteHeader(const MapHeader& header)
 		throw std::runtime_error("All instances of version tag in .map and .op2 files must be greater than 0x1010.");
 	}
 
-	fileStream.write((char*)&header, sizeof(header));
+	streamWriter->Write((char*)&header, sizeof(header));
 }
 
 void MapWriter::WriteVersionTag(int versionTag)
 {
-	fileStream.write((char*)&versionTag, sizeof(versionTag));
+	streamWriter->Write((char*)&versionTag, sizeof(versionTag));
 }
 
 void MapWriter::WriteTiles(const std::vector<TileData>& tiles)
 {
-	fileStream.write((char*)&tiles[0], tiles.size() * sizeof(TileData));
+	streamWriter->Write((char*)&tiles[0], tiles.size() * sizeof(TileData));
 }
 
 void MapWriter::WriteClipRect(const ClipRect& clipRect)
 {
-	fileStream.write((char*)&clipRect, sizeof(clipRect));
+	streamWriter->Write((char*)&clipRect, sizeof(clipRect));
 }
 
 void MapWriter::WriteTilesetSources(const std::vector<TilesetSource>& tileSetSources)
@@ -55,14 +58,14 @@ void MapWriter::WriteTilesetSources(const std::vector<TilesetSource>& tileSetSou
 		// Only include the number of tiles if the tileset contains a filename.
 		if (tilesetSource.tilesetFilename.size() > 0)
 		{
-			fileStream.write((char*)&tilesetSource.tileCount, sizeof(int));
+			streamWriter->Write((char*)&tilesetSource.numTiles, sizeof(int));
 		}
 	}
 }
 
 void MapWriter::WriteTilesetHeader()
 {
-	fileStream.write("TILE SET\x1a", 10);
+	streamWriter->Write("TILE SET\x1a", 10);
 }
 
 void MapWriter::WriteTileInfo(const std::vector<TileInfo>& tileInfos)
@@ -71,7 +74,7 @@ void MapWriter::WriteTileInfo(const std::vector<TileInfo>& tileInfos)
 
 	for (TileInfo tileInfo : tileInfos)
 	{
-		fileStream.write((char*)&tileInfo, sizeof(TileInfo));
+		streamWriter->Write((char*)&tileInfo, sizeof(TileInfo));
 	}
 }
 
@@ -81,7 +84,7 @@ void MapWriter::WriteTerrainType(const std::vector<TerrainType>& terrainTypes)
 
 	for (TerrainType terrainType : terrainTypes)
 	{
-		fileStream.write((char*)&terrainType, sizeof(TerrainType));
+		streamWriter->Write((char*)&terrainType, sizeof(TerrainType));
 	}
 }
 
@@ -89,17 +92,16 @@ void MapWriter::WriteTileGroups(const std::vector<TileGroup>& tileGroups)
 {
 	WriteContainerSize(tileGroups.size());
 
-	int temp = 0;
-	fileStream.write((char*)&temp, sizeof(temp));
+	streamWriter->SeekRelative(sizeof(int));
 
 	for (TileGroup tileGroup : tileGroups)
 	{
-		fileStream.write((char*)&tileGroup.tileWidth, sizeof(tileGroup.tileWidth));
-		fileStream.write((char*)&tileGroup.tileHeight, sizeof(tileGroup.tileHeight));
+		streamWriter->Write((char*)&tileGroup.tileWidth, sizeof(tileGroup.tileWidth));
+		streamWriter->Write((char*)&tileGroup.tileHeight, sizeof(tileGroup.tileHeight));
 
 		for (int mappingIndex : tileGroup.mappingIndices)
 		{
-			fileStream.write((char*)&mappingIndex, sizeof(mappingIndex));
+			streamWriter->Write((char*)&mappingIndex, sizeof(mappingIndex));
 		}
 
 		WriteString(tileGroup.name);
@@ -108,7 +110,7 @@ void MapWriter::WriteTileGroups(const std::vector<TileGroup>& tileGroups)
 
 void MapWriter::WriteContainerSize(size_t size)
 {
-	fileStream.write((char*)&size, sizeof(size));
+	streamWriter->Write((char*)&size, sizeof(size));
 }
 
 // String must be stored in file as string length followed by char[].
@@ -117,6 +119,6 @@ void MapWriter::WriteString(const std::string& s)
 	WriteContainerSize(s.size());
 
 	if (s.size() > 0) {
-		fileStream.write(s.c_str(), s.size());
+		streamWriter->Write(s.c_str(), s.size());
 	}
 }
