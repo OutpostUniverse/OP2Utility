@@ -4,11 +4,37 @@
 
 struct TileRange
 {
+	TileRange() {}
+
+	TileRange(short start, short end)
+	{
+		this->start = start;
+		this->end = end;
+	}
+
 	// First tile index in range.
 	short start;
 
 	// Last tile index in range.
 	short end;
+
+	bool Includes(short index) const
+	{
+		return index > start && index <= end;
+	}
+
+	// Returns true if any portion of the range intersects.
+	bool Includes(const TileRange& tileRange) const
+	{
+		return Includes(tileRange.start) ||
+			Includes(tileRange.end) ||
+			(tileRange.start < start && tileRange.end > end);
+	}
+
+	short const Range() const
+	{
+		return end - start;
+	}
 };
 
 // The properties associated with a range of tiles.
@@ -55,7 +81,7 @@ struct TerrainType
 	TileRange scorchedRange[3];
 
 	// UNKNOWN
-	short unkown[15];
+	short unknown[15];
 };
 
 #pragma pack(pop)

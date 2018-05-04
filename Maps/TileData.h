@@ -32,6 +32,18 @@ struct TileData
 
 	// True if a wall or a building has been built on the tile.
 	int bWallOrBuilding : 1;
+
+	void Reset()
+	{
+		cellType = 0;
+		tileIndex = 0;
+		unitIndex = 0;
+		bLava = false;
+		bLavaPossible = false;
+		bExpansion = false;
+		bMicrobe = false;
+		bWallOrBuilding = false;
+	}
 };
 
 #pragma pack(pop)

@@ -46,6 +46,24 @@ public:
 	short GetTilesetIndex(unsigned int x, unsigned int y) const;
 	short GetImageIndex(unsigned int x, unsigned int y) const;
 
+	// Fills tileset's associated TileInfos with default values.
+	void AddTileset(std::string filename, int tileCount);
+
+	// If tileset is not found, function exits without throwing an error.
+	// Only removes the tileset if it does not belog to a TerrainType.
+	// After removingtileset:
+	//   1. Sets all tiles on the map that were associated with the tileset to index 0 (typically blue)
+	//   2. Sets all tiles on TileGroups that were associated with the tileset to index 0
+	void RemoveTileset(std::string filename);
+	
 private:
 	size_t GetCellIndex(unsigned int x, unsigned int y) const;
+
+	void AddTilesetSource(std::string filename, int tileCount);
+	size_t GetTilesetIndex(std::string filename);
+	void RemoveTilesetSource(size_t tilesetIndex);
+	void RemoveTileInfos(size_t tilesetIndex);
+	void UpdateTilesAfterTilesetRemoval(const TileRange& tileRange);
+	void UpdateTileGroupsAfterTilesetRemoval(const TileRange& tileRange);
+	void UpdateTerrainTypesAfterTilesetRemoval(const TileRange& rangeRemoved, std::string tilesetName);
 };

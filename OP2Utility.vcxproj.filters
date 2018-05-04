@@ -149,6 +149,8 @@
     <ClCompile Include="Maps\MapReader.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
+    <ClCompile Include="Maps\TileSetSource.cpp">
+      <Filter>Maps</Filter>
     <ClCompile Include="StreamWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
