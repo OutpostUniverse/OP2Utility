@@ -2,7 +2,6 @@
 
 #include "ArchiveFile.h"
 #include <windows.h>
-#include <mmreg.h>	// WAVEFORMATEX (omitted from windows.h if #define WIN32_LEAN_AND_MEAN)
 #include <string>
 #include <vector>
 #include <memory>
@@ -28,6 +27,22 @@ namespace Archives
 
 	private:
 #pragma pack(push, 1)
+		/*
+		*  extended waveform format structure used for all non-PCM formats. this
+		*  structure is common to all non-PCM formats.
+		*  Identical to Windows.h WAVEFORMATEX typedef contained in mmeapi.h
+		*/
+		struct WaveFormatEx
+		{
+			unsigned short wFormatTag;         /* format type */
+			unsigned short nChannels;          /* number of channels (i.e. mono, stereo...) */
+			unsigned long  nSamplesPerSec;     /* sample rate */
+			unsigned long  nAvgBytesPerSec;    /* for buffer estimation */
+			unsigned short nBlockAlign;        /* block size of data */
+			unsigned short wBitsPerSample;     /* number of bits per sample of mono data */
+			unsigned short cbSize;             /* the count in bytes of the size of extra information (after cbSize) */
+		};
+
 		struct RiffHeader
 		{
 			int riffTag;
@@ -39,7 +54,7 @@ namespace Archives
 		{
 			int fmtTag;
 			int formatSize;
-			WAVEFORMATEX waveFormat;
+			WaveFormatEx waveFormat;
 		};
 
 		struct DataChunk
@@ -54,10 +69,7 @@ namespace Archives
 			FormatChunk formatChunk;
 			DataChunk dataChunk;
 		};
-#pragma pack(pop)
 
-
-#pragma pack(push, 1)
 		struct IndexEntry
 		{
 			char fileName[8];
@@ -81,7 +93,7 @@ namespace Archives
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 
 		HANDLE m_FileHandle;
-		WAVEFORMATEX m_WaveFormat;
+		WaveFormatEx m_WaveFormat;
 		char m_Unknown[6];
 		IndexEntry *m_IndexEntry;
 		char(*m_FileName)[9];

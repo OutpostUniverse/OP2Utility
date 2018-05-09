@@ -99,7 +99,6 @@ namespace Archives
 			ExtractFileLzh(fileIndex, pathOut);
 		}
 		else {
-			//TODO: Convert Compression Type from an enum to a string for output in error message
 			throw std::runtime_error("Compression type is not supported."); 
 		}
 	}
