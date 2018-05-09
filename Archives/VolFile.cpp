@@ -1,5 +1,6 @@
 #include "VolFile.h"
 #include "../StreamReader.h"
+#include "../StreamWriter.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
@@ -86,63 +87,63 @@ namespace Archives
 		return std::make_unique<MemoryStreamReader>(offset, length);
 	}
 
-	// Extracts the internal file at the given index to the file 
-	// fileName. Returns nonzero if successful.
-	int VolFile::ExtractFile(int index, const char *filename)
+	// Extracts the internal file at the given index to the fileName.
+	void VolFile::ExtractFile(size_t fileIndex, const std::string& pathOut)
 	{
-		if (index < 0) {
-			return false;
-		}
-
-		HANDLE outFile;
-		unsigned long bytesWritten;
-		int retVal;
-
-		outFile = CreateFileA(filename,					// fileName
-			GENERIC_WRITE,			// access mode
-			0,						// share mode
-			nullptr,				// security attributes
-			CREATE_ALWAYS,			// creation disposition
-			FILE_ATTRIBUTE_NORMAL,	// file attributes
-			0);						// template
-
-		// Check for errors opening file
-		if (m_FileHandle == INVALID_HANDLE_VALUE) {
-			return false; // Error opening file
-		}
-
-		char* offset = (char*)m_BaseOfFile + m_Index[index].dataBlockOffset;
-		int length = *(int*)(offset + 4) & 0x7FFFFFFF;
-		offset += 8;
-
-		if (m_Index[index].compressionType == CompressionType::Uncompressed)
+		if (m_Index[fileIndex].compressionType == CompressionType::Uncompressed)
 		{
-			retVal = WriteFile(outFile, offset, length, &bytesWritten, nullptr);
+			ExtractFileUncompressed(fileIndex, pathOut);
 		}
-		else
+		else if (m_Index[fileIndex].compressionType == CompressionType::LZH)
 		{
-			if (m_Index[index].compressionType == CompressionType::LZH)
+			ExtractFileLzh(fileIndex, pathOut);
+		}
+		else {
+			//TODO: Convert Compression Type from an enum to a string for output in error message
+			throw std::runtime_error("Compression type is not supported."); 
+		}
+	}
+
+	void VolFile::ExtractFileUncompressed(size_t fileIndex, const std::string& pathOut)
+	{
+		try
+		{
+			char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
+			int length = *(int*)(offset + 4) & 0x7FFFFFFF;
+			offset += 8;
+			
+			FileStreamWriter fileStreamWriter(pathOut);
+			fileStreamWriter.Write(offset, length);
+		}
+		catch (std::exception e)
+		{
+			throw std::runtime_error("Error attempting to extracted uncompressed file " + pathOut + ". Internal Error Message: " + e.what());
+		}
+	}
+
+	void VolFile::ExtractFileLzh(size_t fileIndex, const std::string& pathOut)
+	{
+		try
+		{
+			char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
+			int length = *(int*)(offset + 4) & 0x7FFFFFFF;
+			offset += 8;
+
+			HuffLZ decompressor(length, offset);
+			const char *buffer = 0;
+
+			FileStreamWriter fileStreamWriter(pathOut);
+
+			do
 			{
-				// Decompress the file
-				// Construct the decompressor
-				HuffLZ decomp(length, offset);
-				const char *buff = 0;
-
-				do
-				{
-					buff = decomp.GetInternalBuffer(&length);
-					retVal = WriteFile(outFile, buff, length, &bytesWritten, nullptr);
-				} while (length);
-			}
-			else {
-				retVal = 0;
-			}
+				buffer = decompressor.GetInternalBuffer(&length);
+				fileStreamWriter.Write(buffer, length);
+			} while (length);
 		}
-
-		// Close the file
-		CloseHandle(outFile);
-
-		return retVal;
+		catch (std::exception e)
+		{
+			throw std::runtime_error("Error attempting to extracted LZH compressed file " + pathOut + ". Internal Error Message: " + e.what());
+		}
 	}
 
 

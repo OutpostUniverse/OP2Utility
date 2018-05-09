@@ -26,7 +26,7 @@ namespace Archives
 		int GetInternalFileSize(int index);
 
 		// Extraction
-		int ExtractFile(int index, const char *filename);
+		void ExtractFile(size_t fileIndex, const std::string& pathOut);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
@@ -37,6 +37,9 @@ namespace Archives
 	private:
 		int GetInternalFileOffset(int index);
 		int GetInternalFileNameOffset(int index);
+
+		void VolFile::ExtractFileUncompressed(size_t index, const std::string& filename);
+		void VolFile::ExtractFileLzh(size_t index, const std::string& filename);
 
 #pragma pack(push, 1)
 		struct IndexEntry

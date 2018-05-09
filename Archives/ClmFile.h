@@ -17,7 +17,7 @@ namespace Archives
 
 		const char* GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);
-		int ExtractFile(int index, const char *fileName);
+		void ExtractFile(size_t fileIndex, const std::string& pathOut);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
@@ -27,6 +27,35 @@ namespace Archives
 		bool CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack);
 
 	private:
+#pragma pack(push, 1)
+		struct RiffHeader
+		{
+			int riffTag;
+			int chunkSize;
+			int waveTag;
+		};
+
+		struct FormatChunk
+		{
+			int fmtTag;
+			int formatSize;
+			WAVEFORMATEX waveFormat;
+		};
+
+		struct DataChunk
+		{
+			int dataTag;
+			int dataSize;
+		};
+
+		struct WaveHeader
+		{
+			RiffHeader riffHeader;
+			FormatChunk formatChunk;
+			DataChunk dataChunk;
+		};
+#pragma pack(pop)
+
 
 #pragma pack(push, 1)
 		struct IndexEntry
@@ -49,6 +78,7 @@ namespace Archives
 		bool WriteVolume(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle,
 			IndexEntry *entry, std::vector<std::string> internalNames, WAVEFORMATEX *waveFormat);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
+		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 
 		HANDLE m_FileHandle;
 		WAVEFORMATEX m_WaveFormat;

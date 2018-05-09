@@ -1,5 +1,6 @@
 #include "ClmFile.h"
 #include "../StreamReader.h"
+#include "../StreamWriter.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
@@ -120,109 +121,71 @@ namespace Archives
 		return m_IndexEntry[index].dataLength;
 	}
 
-	// Extracts the internal file corresponding to index into the file fileName
-	// Returns nonzero if successful and zero otherwise
-	int ClmFile::ExtractFile(int index, const char *fileName)
+	
+
+	// Extracts the internal file corresponding to index
+	void ClmFile::ExtractFile(size_t fileIndex, const std::string& pathOut)
 	{
-#pragma pack(push, 1)
-		struct RiffHeader
-		{
-			int riffTag;
-			int chunkSize;
-			int waveTag;
-		};
-		struct FormatChunk
-		{
-			int fmtTag;
-			int formatSize;
-			WAVEFORMATEX waveFormat;
-		};
-		struct DataChunk
-		{
-			int dataTag;
-			int dataSize;
-		};
-#pragma pack(pop)
+		WaveHeader header;
+		InitializeWaveHeader(header, fileIndex);
 
-		unsigned long numBytes;
-		unsigned long numBytesRead;
-		unsigned int totalSize;
-		HANDLE outFile;
-		RiffHeader riffHeader;
-		FormatChunk formatChunk;
-		DataChunk dataChunk;
+		try
+		{
+			FileStreamWriter fileStreamWriter(pathOut);
 
-		// Open the file
-		outFile = CreateFileA(fileName,				// filename
-			GENERIC_WRITE,			// desired access
-			0,						// share mode
-			nullptr,				// security attributes
-			CREATE_ALWAYS,			// creation disposition
-			FILE_ATTRIBUTE_NORMAL,	// attributes
-			nullptr);				// template
-// Check for errors opening the file
-		if (outFile == INVALID_HANDLE_VALUE) return false;
+			fileStreamWriter.Write((char*)&header, sizeof(header));
 
-		// Write the output
-		// ----------------
-		// Prepare the Wave file header
-		riffHeader.riffTag = RIFF;
-		riffHeader.waveTag = WAVE;
-		riffHeader.chunkSize = sizeof(formatChunk) + 12 + m_IndexEntry[index].dataLength;
-		formatChunk.fmtTag = FMT;
-		formatChunk.formatSize = sizeof(formatChunk.waveFormat);
-		formatChunk.waveFormat = m_WaveFormat;
-		formatChunk.waveFormat.cbSize = 0;
-		dataChunk.dataTag = DATA;
-		dataChunk.dataSize = m_IndexEntry[index].dataLength;
-		// Write the Wave file header
-		if (WriteFile(outFile, &riffHeader, sizeof(riffHeader), &numBytes, nullptr) == 0)
-		{
-			CloseHandle(outFile);
-			return false;
-		}
-		if (WriteFile(outFile, &formatChunk, sizeof(formatChunk), &numBytes, nullptr) == 0)
-		{
-			CloseHandle(outFile);
-			return false;
-		}
-		if (WriteFile(outFile, &dataChunk, sizeof(dataChunk), &numBytes, nullptr) == 0)
-		{
-			CloseHandle(outFile);
-			return false;
-		}
-		// Seek to the beginning of the file data (in the .clm file)
-		if (SetFilePointer(m_FileHandle, m_IndexEntry[index].dataOffset, nullptr, FILE_BEGIN) == -1)
-		{
-			CloseHandle(outFile);
-			return false;
-		}
-		// Write the Wave data
-		char buff[CLM_WRITE_SIZE];
-		totalSize = 0;
-		do
-		{
-			// Read the input data
-			if (ReadFile(m_FileHandle, buff, CLM_WRITE_SIZE, &numBytesRead, nullptr) == 0)
+			// TODO: Replace with a non Windows specific solution
+			// Seek to the beginning of the file data (in the .clm file)
+			if (SetFilePointer(m_FileHandle, m_IndexEntry[fileIndex].dataOffset, nullptr, FILE_BEGIN) == -1) {
+				return;
+			}
+
+			// Write the Wave data
+			char buffer[CLM_WRITE_SIZE];
+			unsigned int totalSize = 0;
+			unsigned long numBytesRead = 0;
+			do
 			{
-				CloseHandle(outFile);
-				return false;
-			}
-			if (totalSize + numBytesRead > m_IndexEntry[index].dataLength) {
-				numBytesRead = m_IndexEntry[index].dataLength - totalSize;
-			}
-			totalSize += numBytesRead;
-			if (WriteFile(outFile, buff, numBytesRead, &numBytes, nullptr) == 0)
-			{
-				CloseHandle(outFile);
-				return false;
-			}
-		} while (numBytesRead);
+				// Will throw an error
+				//MemoryStreamReader streamReader(buffer, CLM_WRITE_SIZE);
+				//streamReader.Read((char*)m_FileHandle, CLM_WRITE_SIZE);
 
-		// Close the file
-		CloseHandle(outFile);
+				// TODO: Replace with a non-Windows specific solution
+				if (ReadFile(m_FileHandle, buffer, CLM_WRITE_SIZE, &numBytesRead, nullptr) == 0)
+				{
+					return;
+				}
 
-		return true;
+				if (totalSize + numBytesRead > m_IndexEntry[fileIndex].dataLength) {
+					numBytesRead = m_IndexEntry[fileIndex].dataLength - totalSize;
+				}
+
+				totalSize += numBytesRead;
+
+				fileStreamWriter.Write(buffer, numBytesRead);
+
+			} while (numBytesRead);
+		}
+		catch (std::exception e)
+		{
+			throw std::runtime_error("Error attempting to extracted uncompressed file " + pathOut + ". Internal Error Message: " + e.what());
+		}
+	}
+
+	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, int fileIndex)
+	{
+		headerOut.riffHeader.riffTag = RIFF;
+		headerOut.riffHeader.waveTag = WAVE;
+		headerOut.riffHeader.chunkSize = sizeof(headerOut.formatChunk) + 12 + m_IndexEntry[fileIndex].dataLength;
+
+		headerOut.formatChunk.fmtTag = FMT;
+		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
+		headerOut.formatChunk.waveFormat = m_WaveFormat;
+		headerOut.formatChunk.waveFormat.cbSize = 0;
+
+		headerOut.dataChunk.dataTag = DATA;
+		headerOut.dataChunk.dataSize = m_IndexEntry[fileIndex].dataLength;
 	}
 
 	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
