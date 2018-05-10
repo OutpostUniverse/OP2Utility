@@ -66,7 +66,7 @@ namespace Archives
 		if (ReadFile(m_FileHandle, buff, 32, &numBytes, nullptr) == 0) return false;
 		if (memcmp(buff, "OP2 Clump File Version 1.0\x01A\0\0\0\0", 32)) return false;
 
-		// Read in the WAVEFORMATEX structure
+		// Read in the WaveFormatEx structure
 		if (ReadFile(m_FileHandle, &m_WaveFormat, sizeof(m_WaveFormat), &numBytes, nullptr) == 0) return false;
 
 		// Read remaining header info
@@ -124,7 +124,7 @@ namespace Archives
 	
 
 	// Extracts the internal file corresponding to index
-	void ClmFile::ExtractFile(size_t fileIndex, const std::string& pathOut)
+	void ClmFile::ExtractFile(int fileIndex, const std::string& pathOut)
 	{
 		WaveHeader header;
 		InitializeWaveHeader(header, fileIndex);
@@ -234,7 +234,7 @@ namespace Archives
 
 		HANDLE outFile = nullptr;
 		HANDLE *fileHandle;
-		WAVEFORMATEX *waveFormat;
+		WaveFormatEx *waveFormat;
 		IndexEntry *indexEntry;
 
 		// Allocate space for all the file handles
@@ -250,7 +250,7 @@ namespace Archives
 		// Allocate space for index entries
 		indexEntry = new IndexEntry[filesToPack.size()];
 		// Allocate space for the format of all wave files
-		waveFormat = new WAVEFORMATEX[filesToPack.size()];
+		waveFormat = new WaveFormatEx[filesToPack.size()];
 		// Read in all the wave headers
 		if (!ReadAllWaveHeaders(filesToPack.size(), fileHandle, waveFormat, indexEntry))
 		{
@@ -331,7 +331,7 @@ namespace Archives
 	// Returns nonzero if successful and zero otherwise.
 	// Note: This function assumes that all file pointers are initially set to the beginning
 	//  of the file. When reading the wave file header, it does not seek to the file start.
-	bool ClmFile::ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WAVEFORMATEX *format, IndexEntry *indexEntry)
+	bool ClmFile::ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormatEx *format, IndexEntry *indexEntry)
 	{
 #pragma pack(push, 1)
 		struct RiffHeader
@@ -361,7 +361,7 @@ namespace Archives
 			length = FindChunk(FMT, file[i]);
 			if (length == -1) return false;		// Format chunk not found
 			// Read in the wave format
-			if (ReadFile(file[i], &format[i], sizeof(WAVEFORMATEX), &numBytesRead, nullptr) == 0) {
+			if (ReadFile(file[i], &format[i], sizeof(WaveFormatEx), &numBytesRead, nullptr) == 0) {
 				return false;					// Error reading in wave format
 			}
 			format[i].cbSize = 0;
@@ -421,7 +421,7 @@ namespace Archives
 	void ClmFile::CleanUpVolumeCreate(HANDLE outFile,
 		int numFilesToPack,
 		HANDLE *fileHandle,
-		WAVEFORMATEX *waveFormat,
+		WaveFormatEx *waveFormat,
 		IndexEntry *indexEntry)
 	{
 		int i;
@@ -440,13 +440,13 @@ namespace Archives
 
 	// Compares wave format structures in the array waveFormat
 	// Returns true if they are all the same and false otherwise.
-	bool ClmFile::CompareWaveFormats(int numFilesToPack, WAVEFORMATEX *waveFormat)
+	bool ClmFile::CompareWaveFormats(int numFilesToPack, WaveFormatEx *waveFormat)
 	{
 		int i;
 
 		for (i = 1; i < numFilesToPack; i++)
 		{
-			if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WAVEFORMATEX))) {
+			if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WaveFormatEx))) {
 				return false;		// Mismatch found
 			}
 		}
@@ -459,13 +459,13 @@ namespace Archives
 		HANDLE *fileHandle,
 		IndexEntry *entry,
 		std::vector<std::string> internalNames,
-		WAVEFORMATEX *waveFormat)
+		WaveFormatEx *waveFormat)
 	{
 #pragma pack(push, 1)
 		struct SClmHeader
 		{
 			char textBuff[32];
-			WAVEFORMATEX waveFormat;
+			WaveFormatEx waveFormat;
 			char unknown[6];
 			int numIndexEntries;
 		};
@@ -491,7 +491,7 @@ namespace Archives
 		// Write the text header
 		if (WriteFile(outFile, textBuff, 32, &numBytes, NULL) == 0) return false;
 		// Write the wave format
-		if (WriteFile(outFile, waveFormat, sizeof(WAVEFORMATEX), &numBytes, NULL) == 0) return false;
+		if (WriteFile(outFile, waveFormat, sizeof(WaveFormatEx), &numBytes, NULL) == 0) return false;
 		// Write the unknown bytes
 		if (WriteFile(outFile, m_Unknown, 6, &numBytes, NULL) == 0) return false;
 		// Write the number of internal files

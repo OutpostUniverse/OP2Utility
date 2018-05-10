@@ -16,7 +16,7 @@ namespace Archives
 
 		const char* GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);
-		void ExtractFile(size_t fileIndex, const std::string& pathOut);
+		void ExtractFile(int fileIndex, const std::string& pathOut);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
@@ -83,12 +83,12 @@ namespace Archives
 
 		// Private functions for packing files
 		bool OpenAllInputFiles(std::vector<std::string> filesToPack, HANDLE *fileHandle);
-		bool ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WAVEFORMATEX *format, IndexEntry *indexEntry);
+		bool ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormatEx *format, IndexEntry *indexEntry);
 		int FindChunk(int chunkTag, HANDLE file);
-		void CleanUpVolumeCreate(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, WAVEFORMATEX *waveFormat, IndexEntry *indexEntry);
-		bool CompareWaveFormats(int numFilesToPack, WAVEFORMATEX *waveFormat);
+		void CleanUpVolumeCreate(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, WaveFormatEx *waveFormat, IndexEntry *indexEntry);
+		bool CompareWaveFormats(int numFilesToPack, WaveFormatEx *waveFormat);
 		bool WriteVolume(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle,
-			IndexEntry *entry, std::vector<std::string> internalNames, WAVEFORMATEX *waveFormat);
+			IndexEntry *entry, std::vector<std::string> internalNames, WaveFormatEx *waveFormat);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 

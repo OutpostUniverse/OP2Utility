@@ -88,7 +88,7 @@ namespace Archives
 	}
 
 	// Extracts the internal file at the given index to the fileName.
-	void VolFile::ExtractFile(size_t fileIndex, const std::string& pathOut)
+	void VolFile::ExtractFile(int fileIndex, const std::string& pathOut)
 	{
 		if (m_Index[fileIndex].compressionType == CompressionType::Uncompressed)
 		{
