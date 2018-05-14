@@ -2,6 +2,7 @@
 
 #include "ArchiveFile.h"
 #include <windows.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <memory>
@@ -34,13 +35,13 @@ namespace Archives
 		*/
 		struct WaveFormatEx
 		{
-			unsigned short wFormatTag;         /* format type */
-			unsigned short nChannels;          /* number of channels (i.e. mono, stereo...) */
-			unsigned long  nSamplesPerSec;     /* sample rate */
-			unsigned long  nAvgBytesPerSec;    /* for buffer estimation */
-			unsigned short nBlockAlign;        /* block size of data */
-			unsigned short wBitsPerSample;     /* number of bits per sample of mono data */
-			unsigned short cbSize;             /* the count in bytes of the size of extra information (after cbSize) */
+			uint16_t wFormatTag;         /* format type */
+			uint16_t nChannels;          /* number of channels (i.e. mono, stereo...) */
+			uint32_t nSamplesPerSec;     /* sample rate */
+			uint32_t nAvgBytesPerSec;    /* for buffer estimation */
+			uint16_t nBlockAlign;        /* block size of data */
+			uint16_t wBitsPerSample;     /* number of bits per sample of mono data */
+			uint16_t cbSize;             /* the count in bytes of the size of extra information (after cbSize) */
 		};
 
 		struct RiffHeader
