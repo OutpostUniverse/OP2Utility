@@ -36,4 +36,11 @@ namespace Archives
 
 		return false;
 	}
+
+	void ArchiveUnpacker::CheckPackedFileIndexBounds(int fileIndex)
+	{
+		if (fileIndex < 0 || fileIndex >= m_NumberOfPackedFiles) {
+			throw std::runtime_error("fileIndex is outside the bounds of packed files.");
+		}
+	}
 }

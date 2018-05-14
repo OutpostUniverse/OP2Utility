@@ -28,6 +28,8 @@ namespace Archives
 		virtual std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex) = 0;
 
 	protected:
+		void CheckPackedFileIndexBounds(int fileIndex);
+
 		char *m_VolumeFileName;
 		int m_NumberOfPackedFiles;
 		int m_VolumeFileSize;

@@ -29,6 +29,8 @@ namespace Archives
 
 	const char* VolFile::GetInternalFileName(int index)
 	{
+		CheckPackedFileIndexBounds(index);
+
 		return m_StringTable + m_Index[index].fileNameOffset;
 	}
 
@@ -47,11 +49,15 @@ namespace Archives
 
 	CompressionType VolFile::GetInternalCompressionCode(int index)
 	{
+		CheckPackedFileIndexBounds(index);
+
 		return m_Index[index].compressionType;
 	}
 
 	int VolFile::GetInternalFileSize(int index)
 	{
+		CheckPackedFileIndexBounds(index);
+
 		return m_Index[index].fileSize;
 	}
 
@@ -80,6 +86,8 @@ namespace Archives
 
 	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(int fileIndex)
 	{
+		CheckPackedFileIndexBounds(fileIndex);
+
 		char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
 		size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
 		offset += 8;
@@ -90,6 +98,8 @@ namespace Archives
 	// Extracts the internal file at the given index to the fileName.
 	void VolFile::ExtractFile(int fileIndex, const std::string& pathOut)
 	{
+		CheckPackedFileIndexBounds(fileIndex);
+
 		if (m_Index[fileIndex].compressionType == CompressionType::Uncompressed)
 		{
 			ExtractFileUncompressed(fileIndex, pathOut);

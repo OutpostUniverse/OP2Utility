@@ -100,6 +100,8 @@ namespace Archives
 	// Returns the internal file name of the internal file corresponding to index
 	const char* ClmFile::GetInternalFileName(int index)
 	{
+		CheckPackedFileIndexBounds(index);
+
 		return m_FileName[index];
 	}
 
@@ -118,6 +120,8 @@ namespace Archives
 	// Returns the size of the internal file corresponding to index
 	int ClmFile::GetInternalFileSize(int index)
 	{
+		CheckPackedFileIndexBounds(index);
+
 		return m_IndexEntry[index].dataLength;
 	}
 
@@ -126,6 +130,8 @@ namespace Archives
 	// Extracts the internal file corresponding to index
 	void ClmFile::ExtractFile(int fileIndex, const std::string& pathOut)
 	{
+		CheckPackedFileIndexBounds(fileIndex);
+
 		WaveHeader header;
 		InitializeWaveHeader(header, fileIndex);
 
@@ -201,6 +207,8 @@ namespace Archives
 
 	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
 	{
+		CheckPackedFileIndexBounds(fileIndex);
+
 		throw std::logic_error("OpenSeekableStreamReader not yet implemented for Clm files.");
 	}
 
