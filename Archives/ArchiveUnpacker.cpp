@@ -18,16 +18,12 @@ namespace Archives
 		delete m_VolumeFileName;
 	}
 
-	int ArchiveUnpacker::ExtractAllFiles(const char* destDirectory)
+	void ArchiveUnpacker::ExtractAllFiles(const char* destDirectory)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFileName(i)).c_str()) == false) {
-				return false;
-			}
+			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFileName(i)).c_str());
 		}
-
-		return true;
 	}
 
 	bool ArchiveUnpacker::ContainsFile(const char* fileName)
@@ -39,5 +35,12 @@ namespace Archives
 		}
 
 		return false;
+	}
+
+	void ArchiveUnpacker::CheckPackedFileIndexBounds(int fileIndex)
+	{
+		if (fileIndex < 0 || fileIndex >= m_NumberOfPackedFiles) {
+			throw std::runtime_error("fileIndex is outside the bounds of packed files.");
+		}
 	}
 }

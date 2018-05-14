@@ -1,5 +1,6 @@
 #include "ClmFile.h"
 #include "../StreamReader.h"
+#include "../StreamWriter.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
@@ -65,7 +66,7 @@ namespace Archives
 		if (ReadFile(m_FileHandle, buff, 32, &numBytes, nullptr) == 0) return false;
 		if (memcmp(buff, "OP2 Clump File Version 1.0\x01A\0\0\0\0", 32)) return false;
 
-		// Read in the WAVEFORMATEX structure
+		// Read in the WaveFormatEx structure
 		if (ReadFile(m_FileHandle, &m_WaveFormat, sizeof(m_WaveFormat), &numBytes, nullptr) == 0) return false;
 
 		// Read remaining header info
@@ -99,6 +100,8 @@ namespace Archives
 	// Returns the internal file name of the internal file corresponding to index
 	const char* ClmFile::GetInternalFileName(int index)
 	{
+		CheckPackedFileIndexBounds(index);
+
 		return m_FileName[index];
 	}
 
@@ -117,112 +120,78 @@ namespace Archives
 	// Returns the size of the internal file corresponding to index
 	int ClmFile::GetInternalFileSize(int index)
 	{
+		CheckPackedFileIndexBounds(index);
+
 		return m_IndexEntry[index].dataLength;
 	}
 
-	// Extracts the internal file corresponding to index into the file fileName
-	// Returns nonzero if successful and zero otherwise
-	int ClmFile::ExtractFile(int index, const char *fileName)
+	
+
+	// Extracts the internal file corresponding to index
+	void ClmFile::ExtractFile(int fileIndex, const std::string& pathOut)
 	{
-#pragma pack(push, 1)
-		struct RiffHeader
-		{
-			int riffTag;
-			int chunkSize;
-			int waveTag;
-		};
-		struct FormatChunk
-		{
-			int fmtTag;
-			int formatSize;
-			WAVEFORMATEX waveFormat;
-		};
-		struct DataChunk
-		{
-			int dataTag;
-			int dataSize;
-		};
-#pragma pack(pop)
+		CheckPackedFileIndexBounds(fileIndex);
 
-		unsigned long numBytes;
-		unsigned long numBytesRead;
-		unsigned int totalSize;
-		HANDLE outFile;
-		RiffHeader riffHeader;
-		FormatChunk formatChunk;
-		DataChunk dataChunk;
+		WaveHeader header;
+		InitializeWaveHeader(header, fileIndex);
 
-		// Open the file
-		outFile = CreateFileA(fileName,				// filename
-			GENERIC_WRITE,			// desired access
-			0,						// share mode
-			nullptr,				// security attributes
-			CREATE_ALWAYS,			// creation disposition
-			FILE_ATTRIBUTE_NORMAL,	// attributes
-			nullptr);				// template
-// Check for errors opening the file
-		if (outFile == INVALID_HANDLE_VALUE) return false;
+		try
+		{
+			FileStreamWriter fileStreamWriter(pathOut);
 
-		// Write the output
-		// ----------------
-		// Prepare the Wave file header
-		riffHeader.riffTag = RIFF;
-		riffHeader.waveTag = WAVE;
-		riffHeader.chunkSize = sizeof(formatChunk) + 12 + m_IndexEntry[index].dataLength;
-		formatChunk.fmtTag = FMT;
-		formatChunk.formatSize = sizeof(formatChunk.waveFormat);
-		formatChunk.waveFormat = m_WaveFormat;
-		formatChunk.waveFormat.cbSize = 0;
-		dataChunk.dataTag = DATA;
-		dataChunk.dataSize = m_IndexEntry[index].dataLength;
-		// Write the Wave file header
-		if (WriteFile(outFile, &riffHeader, sizeof(riffHeader), &numBytes, nullptr) == 0)
-		{
-			CloseHandle(outFile);
-			return false;
-		}
-		if (WriteFile(outFile, &formatChunk, sizeof(formatChunk), &numBytes, nullptr) == 0)
-		{
-			CloseHandle(outFile);
-			return false;
-		}
-		if (WriteFile(outFile, &dataChunk, sizeof(dataChunk), &numBytes, nullptr) == 0)
-		{
-			CloseHandle(outFile);
-			return false;
-		}
-		// Seek to the beginning of the file data (in the .clm file)
-		if (SetFilePointer(m_FileHandle, m_IndexEntry[index].dataOffset, nullptr, FILE_BEGIN) == -1)
-		{
-			CloseHandle(outFile);
-			return false;
-		}
-		// Write the Wave data
-		char buff[CLM_WRITE_SIZE];
-		totalSize = 0;
-		do
-		{
-			// Read the input data
-			if (ReadFile(m_FileHandle, buff, CLM_WRITE_SIZE, &numBytesRead, nullptr) == 0)
+			fileStreamWriter.Write((char*)&header, sizeof(header));
+
+			// TODO: Replace with a non Windows specific solution
+			// Seek to the beginning of the file data (in the .clm file)
+			if (SetFilePointer(m_FileHandle, m_IndexEntry[fileIndex].dataOffset, nullptr, FILE_BEGIN) == -1) {
+				return;
+			}
+
+			// Write the Wave data
+			char buffer[CLM_WRITE_SIZE];
+			unsigned int totalSize = 0;
+			unsigned long numBytesRead = 0;
+			do
 			{
-				CloseHandle(outFile);
-				return false;
-			}
-			if (totalSize + numBytesRead > m_IndexEntry[index].dataLength) {
-				numBytesRead = m_IndexEntry[index].dataLength - totalSize;
-			}
-			totalSize += numBytesRead;
-			if (WriteFile(outFile, buff, numBytesRead, &numBytes, nullptr) == 0)
-			{
-				CloseHandle(outFile);
-				return false;
-			}
-		} while (numBytesRead);
+				// Will throw an error
+				//MemoryStreamReader streamReader(buffer, CLM_WRITE_SIZE);
+				//streamReader.Read((char*)m_FileHandle, CLM_WRITE_SIZE);
 
-		// Close the file
-		CloseHandle(outFile);
+				// TODO: Replace with a non-Windows specific solution
+				if (ReadFile(m_FileHandle, buffer, CLM_WRITE_SIZE, &numBytesRead, nullptr) == 0)
+				{
+					return;
+				}
 
-		return true;
+				if (totalSize + numBytesRead > m_IndexEntry[fileIndex].dataLength) {
+					numBytesRead = m_IndexEntry[fileIndex].dataLength - totalSize;
+				}
+
+				totalSize += numBytesRead;
+
+				fileStreamWriter.Write(buffer, numBytesRead);
+
+			} while (numBytesRead);
+		}
+		catch (std::exception e)
+		{
+			throw std::runtime_error("Error attempting to extracted uncompressed file " + pathOut + ". Internal Error Message: " + e.what());
+		}
+	}
+
+	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, int fileIndex)
+	{
+		headerOut.riffHeader.riffTag = RIFF;
+		headerOut.riffHeader.waveTag = WAVE;
+		headerOut.riffHeader.chunkSize = sizeof(headerOut.formatChunk) + 12 + m_IndexEntry[fileIndex].dataLength;
+
+		headerOut.formatChunk.fmtTag = FMT;
+		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
+		headerOut.formatChunk.waveFormat = m_WaveFormat;
+		headerOut.formatChunk.waveFormat.cbSize = 0;
+
+		headerOut.dataChunk.dataTag = DATA;
+		headerOut.dataChunk.dataSize = m_IndexEntry[fileIndex].dataLength;
 	}
 
 	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
@@ -238,6 +207,8 @@ namespace Archives
 
 	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
 	{
+		CheckPackedFileIndexBounds(fileIndex);
+
 		throw std::logic_error("OpenSeekableStreamReader not yet implemented for Clm files.");
 	}
 
@@ -271,7 +242,7 @@ namespace Archives
 
 		HANDLE outFile = nullptr;
 		HANDLE *fileHandle;
-		WAVEFORMATEX *waveFormat;
+		WaveFormatEx *waveFormat;
 		IndexEntry *indexEntry;
 
 		// Allocate space for all the file handles
@@ -287,7 +258,7 @@ namespace Archives
 		// Allocate space for index entries
 		indexEntry = new IndexEntry[filesToPack.size()];
 		// Allocate space for the format of all wave files
-		waveFormat = new WAVEFORMATEX[filesToPack.size()];
+		waveFormat = new WaveFormatEx[filesToPack.size()];
 		// Read in all the wave headers
 		if (!ReadAllWaveHeaders(filesToPack.size(), fileHandle, waveFormat, indexEntry))
 		{
@@ -368,7 +339,7 @@ namespace Archives
 	// Returns nonzero if successful and zero otherwise.
 	// Note: This function assumes that all file pointers are initially set to the beginning
 	//  of the file. When reading the wave file header, it does not seek to the file start.
-	bool ClmFile::ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WAVEFORMATEX *format, IndexEntry *indexEntry)
+	bool ClmFile::ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormatEx *format, IndexEntry *indexEntry)
 	{
 #pragma pack(push, 1)
 		struct RiffHeader
@@ -398,7 +369,7 @@ namespace Archives
 			length = FindChunk(FMT, file[i]);
 			if (length == -1) return false;		// Format chunk not found
 			// Read in the wave format
-			if (ReadFile(file[i], &format[i], sizeof(WAVEFORMATEX), &numBytesRead, nullptr) == 0) {
+			if (ReadFile(file[i], &format[i], sizeof(WaveFormatEx), &numBytesRead, nullptr) == 0) {
 				return false;					// Error reading in wave format
 			}
 			format[i].cbSize = 0;
@@ -458,7 +429,7 @@ namespace Archives
 	void ClmFile::CleanUpVolumeCreate(HANDLE outFile,
 		int numFilesToPack,
 		HANDLE *fileHandle,
-		WAVEFORMATEX *waveFormat,
+		WaveFormatEx *waveFormat,
 		IndexEntry *indexEntry)
 	{
 		int i;
@@ -477,13 +448,13 @@ namespace Archives
 
 	// Compares wave format structures in the array waveFormat
 	// Returns true if they are all the same and false otherwise.
-	bool ClmFile::CompareWaveFormats(int numFilesToPack, WAVEFORMATEX *waveFormat)
+	bool ClmFile::CompareWaveFormats(int numFilesToPack, WaveFormatEx *waveFormat)
 	{
 		int i;
 
 		for (i = 1; i < numFilesToPack; i++)
 		{
-			if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WAVEFORMATEX))) {
+			if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WaveFormatEx))) {
 				return false;		// Mismatch found
 			}
 		}
@@ -496,13 +467,13 @@ namespace Archives
 		HANDLE *fileHandle,
 		IndexEntry *entry,
 		std::vector<std::string> internalNames,
-		WAVEFORMATEX *waveFormat)
+		WaveFormatEx *waveFormat)
 	{
 #pragma pack(push, 1)
 		struct SClmHeader
 		{
 			char textBuff[32];
-			WAVEFORMATEX waveFormat;
+			WaveFormatEx waveFormat;
 			char unknown[6];
 			int numIndexEntries;
 		};
@@ -528,7 +499,7 @@ namespace Archives
 		// Write the text header
 		if (WriteFile(outFile, textBuff, 32, &numBytes, NULL) == 0) return false;
 		// Write the wave format
-		if (WriteFile(outFile, waveFormat, sizeof(WAVEFORMATEX), &numBytes, NULL) == 0) return false;
+		if (WriteFile(outFile, waveFormat, sizeof(WaveFormatEx), &numBytes, NULL) == 0) return false;
 		// Write the unknown bytes
 		if (WriteFile(outFile, m_Unknown, 6, &numBytes, NULL) == 0) return false;
 		// Write the number of internal files

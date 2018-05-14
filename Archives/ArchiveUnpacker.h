@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <memory>
 
 class SeekableStreamReader;
@@ -21,12 +22,14 @@ namespace Archives
 		// Returns -1 if internalFileName is not present in archive.
 		virtual int GetInternalFileIndex(const char *internalFileName) = 0;
 		virtual int GetInternalFileSize(int index) = 0;
-		virtual int ExtractFile(int index, const char *fileName) = 0;
-		virtual int ExtractAllFiles(const char* destDirectory);
+		virtual void ExtractFile(int fileIndex, const std::string& pathOut) = 0;
+		virtual void ExtractAllFiles(const char* destDirectory);
 		virtual std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName) = 0;
 		virtual std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex) = 0;
 
 	protected:
+		void CheckPackedFileIndexBounds(int fileIndex);
+
 		char *m_VolumeFileName;
 		int m_NumberOfPackedFiles;
 		int m_VolumeFileSize;

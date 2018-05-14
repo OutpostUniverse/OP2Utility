@@ -2,7 +2,7 @@
 
 #include "ArchiveFile.h"
 #include <windows.h>
-#include <mmreg.h>	// WAVEFORMATEX (omitted from windows.h if #define WIN32_LEAN_AND_MEAN)
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <memory>
@@ -17,7 +17,7 @@ namespace Archives
 
 		const char* GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);
-		int ExtractFile(int index, const char *fileName);
+		void ExtractFile(int fileIndex, const std::string& pathOut);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
@@ -27,8 +27,50 @@ namespace Archives
 		bool CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack);
 
 	private:
-
 #pragma pack(push, 1)
+		/*
+		*  extended waveform format structure used for all non-PCM formats. this
+		*  structure is common to all non-PCM formats.
+		*  Identical to Windows.h WAVEFORMATEX typedef contained in mmeapi.h
+		*/
+		struct WaveFormatEx
+		{
+			uint16_t wFormatTag;         /* format type */
+			uint16_t nChannels;          /* number of channels (i.e. mono, stereo...) */
+			uint32_t nSamplesPerSec;     /* sample rate */
+			uint32_t nAvgBytesPerSec;    /* for buffer estimation */
+			uint16_t nBlockAlign;        /* block size of data */
+			uint16_t wBitsPerSample;     /* number of bits per sample of mono data */
+			uint16_t cbSize;             /* the count in bytes of the size of extra information (after cbSize) */
+		};
+
+		struct RiffHeader
+		{
+			int riffTag;
+			int chunkSize;
+			int waveTag;
+		};
+
+		struct FormatChunk
+		{
+			int fmtTag;
+			int formatSize;
+			WaveFormatEx waveFormat;
+		};
+
+		struct DataChunk
+		{
+			int dataTag;
+			int dataSize;
+		};
+
+		struct WaveHeader
+		{
+			RiffHeader riffHeader;
+			FormatChunk formatChunk;
+			DataChunk dataChunk;
+		};
+
 		struct IndexEntry
 		{
 			char fileName[8];
@@ -42,16 +84,17 @@ namespace Archives
 
 		// Private functions for packing files
 		bool OpenAllInputFiles(std::vector<std::string> filesToPack, HANDLE *fileHandle);
-		bool ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WAVEFORMATEX *format, IndexEntry *indexEntry);
+		bool ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormatEx *format, IndexEntry *indexEntry);
 		int FindChunk(int chunkTag, HANDLE file);
-		void CleanUpVolumeCreate(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, WAVEFORMATEX *waveFormat, IndexEntry *indexEntry);
-		bool CompareWaveFormats(int numFilesToPack, WAVEFORMATEX *waveFormat);
+		void CleanUpVolumeCreate(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, WaveFormatEx *waveFormat, IndexEntry *indexEntry);
+		bool CompareWaveFormats(int numFilesToPack, WaveFormatEx *waveFormat);
 		bool WriteVolume(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle,
-			IndexEntry *entry, std::vector<std::string> internalNames, WAVEFORMATEX *waveFormat);
+			IndexEntry *entry, std::vector<std::string> internalNames, WaveFormatEx *waveFormat);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
+		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 
 		HANDLE m_FileHandle;
-		WAVEFORMATEX m_WaveFormat;
+		WaveFormatEx m_WaveFormat;
 		char m_Unknown[6];
 		IndexEntry *m_IndexEntry;
 		char(*m_FileName)[9];
