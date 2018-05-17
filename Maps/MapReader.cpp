@@ -150,12 +150,20 @@ std::string MapReader::ReadString()
 		return std::string();
 	}
 
-	char* tileGroupName = new char[stringLength];
+	char* cString = new char[stringLength];
 
-	streamReader->Read(tileGroupName, stringLength);
-	std::string s(tileGroupName, stringLength);
+	try
+	{
+		streamReader->Read(cString, stringLength);
+		std::string s(cString, stringLength);
+		delete cString;
 
-	delete tileGroupName;
+		return s;
+	}
+	catch (std::exception e)
+	{
+		delete cString;
 
-	return s;
+		throw e;
+	}
 }
