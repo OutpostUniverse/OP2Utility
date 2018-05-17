@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <cstdint>
 #include <string>
+#include <array>
 #include <vector>
 #include <memory>
 
@@ -27,6 +28,8 @@ namespace Archives
 		bool CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack);
 
 	private:
+		static const unsigned int CLM_WRITE_SIZE = 0x00020000;
+
 #pragma pack(push, 1)
 		/*
 		*  extended waveform format structure used for all non-PCM formats. this
@@ -88,8 +91,10 @@ namespace Archives
 		int FindChunk(int chunkTag, HANDLE file);
 		void CleanUpVolumeCreate(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, WaveFormatEx *waveFormat, IndexEntry *indexEntry);
 		bool CompareWaveFormats(int numFilesToPack, WaveFormatEx *waveFormat);
-		bool WriteVolume(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle,
-			IndexEntry *entry, std::vector<std::string> internalNames, WaveFormatEx *waveFormat);
+		bool WriteVolume(HANDLE outFile, HANDLE *fileHandle,
+			IndexEntry *entry, const std::vector<std::string>& internalNames, WaveFormatEx *waveFormat);
+		void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, IndexEntry* entry);
+		bool PackFile(HANDLE outFile, std::array<char, CLM_WRITE_SIZE>& buffer, unsigned long& numBytesRead, const IndexEntry& entry, HANDLE fileHandle);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 
