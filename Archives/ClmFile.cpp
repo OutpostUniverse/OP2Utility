@@ -7,11 +7,10 @@
 
 namespace Archives
 {
-	const int RIFF = 0x46464952;	// "RIFF"
-	const int WAVE = 0x45564157;	// "WAVE"
+	const int32_t RIFF = 0x46464952;	// "RIFF"
+	const int32_t WAVE = 0x45564157;	// "WAVE"
 	const int FMT  = 0x20746D66;	// "fmt "
 	const int DATA = 0x61746164;	// "data"
-
 	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName)
 	{
 		m_FileName = nullptr;
@@ -338,21 +337,12 @@ namespace Archives
 	//  of the file. When reading the wave file header, it does not seek to the file start.
 	bool ClmFile::ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormatEx *format, IndexEntry *indexEntry)
 	{
-#pragma pack(push, 1)
-		struct RiffHeader
-		{
-			int riffTag;
-			unsigned int chunkSize;
-			int waveTag;
-		};
-#pragma pack(pop)
-
 		unsigned long numBytesRead;
 		RiffHeader header;
-		int i, length, retVal;
+		int length, retVal;
 
 		// Read in all the headers and find start of data
-		for (i = 0; i < numFilesToPack; i++)
+		for (int i = 0; i < numFilesToPack; i++)
 		{
 			// Read the file header
 			retVal = ReadFile(file[i], &header, sizeof(header), &numBytesRead, nullptr);
@@ -360,11 +350,16 @@ namespace Archives
 				return false;		// Error reading header
 			}
 			// Check that the file size makes sense (matches with header chunk length + 8)
-			if (header.chunkSize + 8 != GetFileSize(file[i], nullptr)) return false;
+			if (header.chunkSize + 8 != GetFileSize(file[i], nullptr)) {
+				return false;
+			}
 
 			// Read the format tag
 			length = FindChunk(FMT, file[i]);
-			if (length == -1) return false;		// Format chunk not found
+			if (length == -1) {
+				return false;		// Format chunk not found
+			}
+
 			// Read in the wave format
 			if (ReadFile(file[i], &format[i], sizeof(WaveFormatEx), &numBytesRead, nullptr) == 0) {
 				return false;					// Error reading in wave format
@@ -373,7 +368,9 @@ namespace Archives
 
 			// Find the start of the data
 			length = FindChunk(DATA, file[i]);
-			if (length == -1) return false;		// Data chunk not found
+			if (length == -1) {
+				return false;		// Data chunk not found
+			}
 			// Store the length of the wave data
 			indexEntry[i].dataLength = length;
 			// Note: Current file pointer is set to the start of the wave data
@@ -445,16 +442,14 @@ namespace Archives
 	// Returns true if they are all the same and false otherwise.
 	bool ClmFile::CompareWaveFormats(int numFilesToPack, WaveFormatEx *waveFormat)
 	{
-		int i;
-
-		for (i = 1; i < numFilesToPack; i++)
+		for (int i = 1; i < numFilesToPack; i++)
 		{
 			if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WaveFormatEx))) {
-				return false;		// Mismatch found
+				return false;
 			}
 		}
 
-		return true;				// They are all the same
+		return true;
 	}
 
 	bool ClmFile::WriteVolume(HANDLE outFile,

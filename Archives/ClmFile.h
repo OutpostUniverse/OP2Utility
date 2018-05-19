@@ -49,9 +49,9 @@ namespace Archives
 
 		struct RiffHeader
 		{
-			int riffTag;
-			int chunkSize;
-			int waveTag;
+			int32_t riffTag;
+			uint32_t chunkSize;
+			int32_t waveTag;
 		};
 
 		struct FormatChunk
