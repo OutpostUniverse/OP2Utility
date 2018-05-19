@@ -7,6 +7,7 @@
 
 namespace Archives
 {
+	const unsigned int CLM_WRITE_SIZE = 0x00020000;
 	const int32_t RIFF = 0x46464952;	// "RIFF"
 	const int32_t WAVE = 0x45564157;	// "WAVE"
 	const int FMT  = 0x20746D66;	// "fmt "
@@ -490,10 +491,9 @@ namespace Archives
 
 		// Copy the files into the volume
 		unsigned long numBytesRead;
-		std::array<char, CLM_WRITE_SIZE> buffer;
 		for (int i = 0; i < header.packedFilesCount; i++)
 		{
-			if (!PackFile(outFile, buffer, numBytesRead, entry[i], fileHandle[i])) {
+			if (!PackFile(outFile, numBytesRead, entry[i], fileHandle[i])) {
 				// Error reading input file
 				delete[] entry;	// Release the memory for the index table
 				return false;
@@ -516,8 +516,9 @@ namespace Archives
 		}
 	}
 
-	bool ClmFile::PackFile(HANDLE outFile, std::array<char, CLM_WRITE_SIZE>& buffer, unsigned long& numBytesRead, const IndexEntry& entry, HANDLE fileHandle)
+	bool ClmFile::PackFile(HANDLE outFile, unsigned long& numBytesRead, const IndexEntry& entry, HANDLE fileHandle)
 	{
+		std::array<char, CLM_WRITE_SIZE> buffer;
 		int offset = 0;
 		do
 		{
