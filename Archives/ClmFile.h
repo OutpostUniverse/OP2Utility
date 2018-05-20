@@ -92,7 +92,7 @@ namespace Archives
 		bool WriteVolume(HANDLE outFile, HANDLE *fileHandle,
 			IndexEntry *entry, const std::vector<std::string>& internalNames, WaveFormatEx *waveFormat);
 		void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, IndexEntry* entry);
-		bool PackFile(HANDLE outFile, unsigned long& numBytesRead, const IndexEntry& entry, HANDLE fileHandle);
+		bool PackFile(HANDLE outFile, const IndexEntry& entry, HANDLE fileHandle);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 

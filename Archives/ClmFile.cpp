@@ -490,10 +490,9 @@ namespace Archives
 		}
 
 		// Copy the files into the volume
-		unsigned long numBytesRead;
 		for (int i = 0; i < header.packedFilesCount; i++)
 		{
-			if (!PackFile(outFile, numBytesRead, entry[i], fileHandle[i])) {
+			if (!PackFile(outFile, entry[i], fileHandle[i])) {
 				// Error reading input file
 				delete[] entry;	// Release the memory for the index table
 				return false;
@@ -516,28 +515,34 @@ namespace Archives
 		}
 	}
 
-	bool ClmFile::PackFile(HANDLE outFile, unsigned long& numBytesRead, const IndexEntry& entry, HANDLE fileHandle)
+	// Write file into the Clm Archive by using the fixed memory size of CLM_WRITE_SIZE.
+	bool ClmFile::PackFile(HANDLE outFile, const IndexEntry& entry, HANDLE fileHandle)
 	{
+		unsigned long numBytesRead;
+		unsigned long numBytesToRead;
 		std::array<char, CLM_WRITE_SIZE> buffer;
 		int offset = 0;
+
 		do
 		{
-			unsigned long numBytes = CLM_WRITE_SIZE;
-			if (offset + numBytes > entry.dataLength) {
-				numBytes = entry.dataLength - offset;
+			numBytesToRead = CLM_WRITE_SIZE;
+
+			// Check if less than CLM_WRITE_SIZE of data remains for writing to disk.
+			if (offset + numBytesToRead > entry.dataLength) {
+				numBytesToRead = entry.dataLength - offset;
 			}
 
 			// Read the input file
-			if (ReadFile(fileHandle, buffer.data(), numBytes, &numBytesRead, nullptr) == 0) {
+			if (ReadFile(fileHandle, buffer.data(), numBytesToRead, &numBytesRead, nullptr) == 0) {
 				return false;
 			}
 			offset += numBytesRead;
 
 			// Write file to the output
-			if (WriteFile(outFile, buffer.data(), numBytesRead, &numBytes, nullptr) == 0) {
+			if (WriteFile(outFile, buffer.data(), numBytesRead, &numBytesToRead, nullptr) == 0) {
 				return false;
 			}
-		} while (numBytesRead);
+		} while (numBytesRead); // End loop when numBytesRead/Written is equal to 0
 
 		return true;
 	}
