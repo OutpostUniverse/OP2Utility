@@ -5,11 +5,9 @@
 #include <stdexcept>
 #include <algorithm>
 
-
 namespace Archives
 {
 	const unsigned int CLM_WRITE_SIZE = 0x00020000;
-
 	const int32_t RIFF = 0x46464952;	// "RIFF"
 	const int32_t WAVE = 0x45564157;	// "WAVE"
 	const int FMT  = 0x20746D66;	// "fmt "
@@ -288,7 +286,7 @@ namespace Archives
 		CheckSortedContainerForDuplicateNames(internalFileNames);
 
 		// Write the volume header and copy files into the volume
-		if (!WriteVolume(outFile, filesToPack.size(), fileHandle, indexEntry, internalFileNames, waveFormat))
+		if (!WriteVolume(outFile, fileHandle, indexEntry, internalFileNames, waveFormat))
 		{
 			// Error writing volume file
 			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
@@ -429,12 +427,10 @@ namespace Archives
 		WaveFormatEx *waveFormat,
 		IndexEntry *indexEntry)
 	{
-		int i;
-
 		// Close the output file
 		if (outFile) CloseHandle(outFile);
 		// Close all open input files
-		for (i = 0; i < numFilesToPack; i++) {
+		for (int i = 0; i < numFilesToPack; i++) {
 			CloseHandle(fileHandle[i]);
 		}
 		// Free temporary memory
@@ -458,52 +454,58 @@ namespace Archives
 	}
 
 	bool ClmFile::WriteVolume(HANDLE outFile,
-		int numFilesToPack,
 		HANDLE *fileHandle,
 		IndexEntry *entry,
-		std::vector<std::string> internalNames,
+		const std::vector<std::string>& internalNames,
 		WaveFormatEx *waveFormat)
 	{
 #pragma pack(push, 1)
-		struct SClmHeader
+		struct ClmHeader
 		{
-			char textBuff[32];
+			ClmHeader() { memcpy(fileVersion.data(), "OP2 Clump File Version 1.0\x01A\0\0\0\0", 32); }
+
+			std::array<char, 32> fileVersion;
 			WaveFormatEx waveFormat;
-			char unknown[6];
-			int numIndexEntries;
+			std::array<char, 6> unknown { 0, 0, 0, 0, 1, 0 };
+			int packedFilesCount;
 		};
 #pragma pack(pop)
 
-		char buff[CLM_WRITE_SIZE];
-		SClmHeader header;
-		//	char textBuff[32] = "OP2 Clump File Version 1.0\x01A\0\0\0\0";
-		unsigned long numBytesRead;
-		unsigned long numBytes;
-		int i;
-		int offset;
-
-		memcpy(&header.textBuff, "OP2 Clump File Version 1.0\x01A\0\0\0\0", 32);
+		ClmHeader header;
 		header.waveFormat = *waveFormat;
-		memcpy(header.unknown, m_Unknown, 6);
-		header.numIndexEntries = numFilesToPack;
+		header.packedFilesCount = internalNames.size();
 
 		// Write the header
-		if (WriteFile(outFile, &header, sizeof(header), &numBytes, nullptr) == 0) return false;
+		unsigned long numBytes;
+		if (WriteFile(outFile, &header, sizeof(header), &numBytes, nullptr) == 0) {
+			return false;
+		}
 
-		/*
-		// Write the text header
-		if (WriteFile(outFile, textBuff, 32, &numBytes, NULL) == 0) return false;
-		// Write the wave format
-		if (WriteFile(outFile, waveFormat, sizeof(WaveFormatEx), &numBytes, NULL) == 0) return false;
-		// Write the unknown bytes
-		if (WriteFile(outFile, m_Unknown, 6, &numBytes, NULL) == 0) return false;
-		// Write the number of internal files
-		if (WriteFile(outFile, &m_NumberOfPackedFiles, 4, &numBytes, NULL) == 0) return false;
-		*/
+		PrepareIndex(sizeof(header), internalNames, entry);
+		
+		if (WriteFile(outFile, entry, header.packedFilesCount * sizeof(IndexEntry), &numBytes, nullptr) == 0) {
+			// Error writing index table
+			delete[] entry;		// Release the memory for the index table
+			return false;
+		}
 
-		// Prepare the index entries
-		offset = sizeof(header) + numFilesToPack * sizeof(IndexEntry);
-		for (i = 0; i < numFilesToPack; i++)
+		// Copy the files into the volume
+		for (int i = 0; i < header.packedFilesCount; i++)
+		{
+			if (!PackFile(outFile, entry[i], fileHandle[i])) {
+				// Error reading input file
+				delete[] entry;	// Release the memory for the index table
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, IndexEntry* entry)
+	{
+		int offset = headerSize + internalNames.size() * sizeof(IndexEntry);
+		for (size_t i = 0; i < internalNames.size(); i++)
 		{
 			// Copy the filename into the entry
 			strncpy((char*)&entry[i].fileName, internalNames[i].c_str(), 8);
@@ -511,40 +513,36 @@ namespace Archives
 			entry[i].dataOffset = offset;
 			offset += entry[i].dataLength;
 		}
+	}
 
-		// Write the index
-		if (WriteFile(outFile, entry, numFilesToPack * sizeof(IndexEntry), &numBytes, nullptr) == 0)
-		{
-			// Error writing index table
-			delete[] entry;		// Release the memory for the index table
-			return false;
-		}
+	// Write file into the Clm Archive by using the fixed memory size of CLM_WRITE_SIZE.
+	bool ClmFile::PackFile(HANDLE outFile, const IndexEntry& entry, HANDLE fileHandle)
+	{
+		unsigned long numBytesRead;
+		unsigned long numBytesToRead;
+		std::array<char, CLM_WRITE_SIZE> buffer;
+		int offset = 0;
 
-		// Copy the files into the volume
-		for (i = 0; i < numFilesToPack; i++)
+		do
 		{
-			offset = 0;
-			do
-			{
-				numBytes = CLM_WRITE_SIZE;
-				if (offset + numBytes > entry[i].dataLength) numBytes = entry[i].dataLength - offset;
-				// Read the input file
-				if (ReadFile(fileHandle[i], buff, numBytes, &numBytesRead, nullptr) == 0)
-				{
-					// Error reading input file
-					delete[] entry;		// Release the memory for the index table
-					return false;
-				}
-				offset += numBytesRead;
-				// Write the data to the output file
-				if (WriteFile(outFile, buff, numBytesRead, &numBytes, nullptr) == 0)
-				{
-					// Error writing output file
-					delete[] entry;		// Release the memory for the index table
-					return false;
-				}
-			} while (numBytesRead);
-		}
+			numBytesToRead = CLM_WRITE_SIZE;
+
+			// Check if less than CLM_WRITE_SIZE of data remains for writing to disk.
+			if (offset + numBytesToRead > entry.dataLength) {
+				numBytesToRead = entry.dataLength - offset;
+			}
+
+			// Read the input file
+			if (ReadFile(fileHandle, buffer.data(), numBytesToRead, &numBytesRead, nullptr) == 0) {
+				return false;
+			}
+			offset += numBytesRead;
+
+			// Write file to the output
+			if (WriteFile(outFile, buffer.data(), numBytesRead, &numBytesToRead, nullptr) == 0) {
+				return false;
+			}
+		} while (numBytesRead); // End loop when numBytesRead/Written is equal to 0
 
 		return true;
 	}
