@@ -1,10 +1,11 @@
 #pragma once
 
 #include "ArchiveFile.h"
+#include "../StreamReader.h"
+#include "../StreamWriter.h"
 #include <windows.h>
 #include <cstdint>
 #include <string>
-#include <array>
 #include <vector>
 #include <memory>
 
@@ -25,7 +26,7 @@ namespace Archives
 		int GetInternalFileSize(int index);
 
 		bool Repack();
-		bool CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack);
+		bool CreateArchive(std::string archiveFileName, std::vector<std::string> filesToPack);
 
 	private:
 #pragma pack(push, 1)
@@ -77,6 +78,8 @@ namespace Archives
 			char fileName[8];
 			unsigned int dataOffset;
 			unsigned int dataLength;
+
+			std::string GetFileName() const { return std::string(fileName); }
 		};
 #pragma pack(pop)
 
@@ -84,15 +87,13 @@ namespace Archives
 		bool ReadHeader();
 
 		// Private functions for packing files
-		bool OpenAllInputFiles(std::vector<std::string> filesToPack, HANDLE *fileHandle);
-		bool ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormatEx *format, IndexEntry *indexEntry);
-		int FindChunk(int chunkTag, HANDLE file);
-		void CleanUpVolumeCreate(HANDLE outFile, int numFilesToPack, HANDLE *fileHandle, WaveFormatEx *waveFormat, IndexEntry *indexEntry);
-		bool CompareWaveFormats(int numFilesToPack, WaveFormatEx *waveFormat);
-		bool WriteVolume(HANDLE outFile, HANDLE *fileHandle,
-			IndexEntry *entry, const std::vector<std::string>& internalNames, WaveFormatEx *waveFormat);
-		void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, IndexEntry* entry);
-		bool PackFile(HANDLE outFile, const IndexEntry& entry, HANDLE fileHandle);
+		bool ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
+		int FindChunk(uint32_t chunkTag, FileStreamReader& fileStreamReader);
+		bool CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats);
+		void WriteArchive(std::string& archiveFileName, std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
+			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& internalNames, const WaveFormatEx& waveFormat);
+		void PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries);
+		void PackFile(FileStreamWriter& clmFileWriter, const IndexEntry& entry, FileStreamReader& fileToPackReader);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 

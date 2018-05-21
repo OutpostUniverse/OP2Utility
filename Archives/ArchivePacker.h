@@ -17,7 +17,7 @@ namespace Archives
 		virtual bool Repack() = 0;
 		// Create volume is used to create a new volume file with the files specified in filesToPack.
 		// Returns true if successful and false otherwise
-		virtual bool CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack) = 0;
+		virtual bool CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack) = 0;
 
 	protected:
 		int OpenOutputFile(const char *fileName);

@@ -19,8 +19,10 @@ class FileStreamReader : public SeekableStreamReader {
 public:
 	FileStreamReader(std::string fileName);
 	~FileStreamReader();
+
 	void Read(char* buffer, size_t size);
-	// Change position forward or backword in buffer.
+	uint64_t Length();
+	void Seek(uint64_t position);
 	void SeekRelative(int offset);
 
 private:

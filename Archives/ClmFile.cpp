@@ -1,17 +1,17 @@
 #include "ClmFile.h"
-#include "../StreamReader.h"
-#include "../StreamWriter.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
+#include <array>
 
 namespace Archives
 {
-	const unsigned int CLM_WRITE_SIZE = 0x00020000;
-	const int32_t RIFF = 0x46464952;	// "RIFF"
-	const int32_t WAVE = 0x45564157;	// "WAVE"
-	const int FMT  = 0x20746D66;	// "fmt "
-	const int DATA = 0x61746164;	// "data"
+	const uint32_t CLM_WRITE_SIZE = 0x00020000;
+	const uint32_t RIFF = 0x46464952;	// "RIFF" Resource Interchange File Format
+	const uint32_t WAVE = 0x45564157;	// "WAVE"
+	const uint32_t FMT  = 0x20746D66;	// "fmt "
+	const uint32_t DATA = 0x61746164;	// "data"
+
 	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName)
 	{
 		m_FileName = nullptr;
@@ -170,7 +170,7 @@ namespace Archives
 
 			} while (numBytesRead);
 		}
-		catch (std::exception e)
+		catch (std::exception& e)
 		{
 			throw std::runtime_error("Error attempting to extracted uncompressed file " + pathOut + ". Internal Error Message: " + e.what());
 		}
@@ -222,230 +222,163 @@ namespace Archives
 			filesToPack[i] = std::string(GetInternalFileName(i)) + ".wav";
 		}
 
-		return CreateVolume("temp.clm", filesToPack);
+		return CreateArchive("temp.clm", filesToPack);
 	}
 
-	// Creates a new volume file with the file name volumeFileName and packs the
-	// numFilesToPack files listed in the array filesToPack into the volume.
+	// Creates a new Archive file with the file name archiveFileName. The
+	// files listed in the container filesToPack are packed into the archive.
 	// Automatically strips file name extensions from filesToPack. 
 	// Returns nonzero if successful and zero otherwise.
-	bool ClmFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack)
+	bool ClmFile::CreateArchive(std::string archiveFileName, std::vector<std::string> filesToPack)
 	{
 		if (filesToPack.size() < 1) {
 			return false; //CLM files require at least one audio file present to properly write settings.
 		}
 
+		// Sort files alphabetically based on the fileName only (not including the full path).
+		// Packed files must be locatable by a binary search of their fileName.
 		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
 
-		HANDLE outFile = nullptr;
-		HANDLE *fileHandle;
-		WaveFormatEx *waveFormat;
-		IndexEntry *indexEntry;
-
-		// Allocate space for all the file handles
-		fileHandle = new HANDLE[filesToPack.size()];
-		// Open all the files (and store file handles)
-		if (OpenAllInputFiles(filesToPack, fileHandle) == false)
-		{
-			// Error opening files. Abort.
-			delete[] fileHandle;
+		std::vector<std::unique_ptr<FileStreamReader>> filesToPackReaders;
+		try {
+			// Opens all files for packing. If there is a problem opening a file, an exception is raised.
+			for (std::string fileName : filesToPack) {
+				filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
+			}
+		}
+		catch (std::exception& e) {
 			return false;
 		}
 
-		// Allocate space for index entries
-		indexEntry = new IndexEntry[filesToPack.size()];
-		// Allocate space for the format of all wave files
-		waveFormat = new WaveFormatEx[filesToPack.size()];
-		// Read in all the wave headers
-		if (!ReadAllWaveHeaders(filesToPack.size(), fileHandle, waveFormat, indexEntry))
-		{
-			// Error reading in wave headers. Abort.
-			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
-			return false;
+		// Initialize vectors with default values for the number of files to pack. 
+		// Allows directly reading data into the vector using a StreamReader.
+		std::vector<WaveFormatEx> waveFormats(filesToPack.size());
+		std::vector<IndexEntry> indexEntries(filesToPack.size());
+
+		if (!ReadAllWaveHeaders(filesToPackReaders, waveFormats, indexEntries)) {	
+			return false; // Error reading in wave headers. Abort.
 		}
 
 		// Check if all wave formats are the same
-		if (!CompareWaveFormats(filesToPack.size(), waveFormat))
-		{
-			// Not all wave formats match
-			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
-			return false;
-		}
-
-		// Open the output file
-		outFile = CreateFileA(volumeFileName.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
-		if (outFile == INVALID_HANDLE_VALUE)
-		{
-			// Error opening the output file
-			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
-			return false;
+		if (!CompareWaveFormats(waveFormats)) {	
+			return false; // Not all wave formats match
 		}
 
 		std::vector<std::string> internalFileNames = GetInternalNamesFromPaths(filesToPack);
 		internalFileNames = StripFileNameExtensions(internalFileNames);
-		CheckSortedContainerForDuplicateNames(internalFileNames);
+		// Do not allow duplicate names when packing. Will cause undefined behaviour in binary search and file extraction.
+		CheckSortedContainerForDuplicateNames(internalFileNames); 
 
-		// Write the volume header and copy files into the volume
-		if (!WriteVolume(outFile, fileHandle, indexEntry, internalFileNames, waveFormat))
-		{
-			// Error writing volume file
-			CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
-			return false;
+		// Write the archive header and copy files into the archive
+		try {
+			WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, waveFormats[0]);
 		}
-
-		// Close all open input files and release memory
-		CleanUpVolumeCreate(outFile, filesToPack.size(), fileHandle, waveFormat, indexEntry);
+		catch (std::exception& e) {
+			return false; // Error writing CLM archive file
+		}
 
 		return true;
 	}
 
 
-	// Opens all files in filesToPack and stores the file handle in the fileHandle array
-	// If any file fails to open, all already opened files are closed and the return value
-	// is zero. If the function succeeds, the return value is nonzero.
-	bool ClmFile::OpenAllInputFiles(std::vector<std::string> filesToPack, HANDLE *fileHandle)
-	{
-		// Open all the files
-		for (size_t i = 0; i < filesToPack.size(); i++)
-		{
-			fileHandle[i] = CreateFileA(filesToPack[i].c_str(),		// filename
-				GENERIC_READ,			// access mode
-				0,						// share mode
-				nullptr,				// security attributes
-				OPEN_EXISTING,			// creation disposition
-				FILE_ATTRIBUTE_NORMAL,	// file attributes
-				nullptr);				// template
-// Make sure the file was opened
-			if (fileHandle[i] == INVALID_HANDLE_VALUE)
-			{
-				// Error opening files. Close already opened files and return error
-				for (i--; i; i--) {
-					CloseHandle(fileHandle[i]);	// Close the file
-				}
-				return false;
-			}
-		}
-
-		// All files opened successfully
-		return true;
-	}
-
-	// Reads the beginning of the file and verifies that the file is a WAVE file and finds
-	// the format structure and start of data. The format is stored in the format array
-	// and the current file pointer is set to the start of the data chunk.
+	// Reads the beginning of each file and verifies it is formatted as a WAVE file. Locates
+	// the WaveFormatEx structure and start of data. The WaveFormat is stored in the waveFormats container.
+	// The current stream position is set to the start of the data chunk.
 	// Returns nonzero if successful and zero otherwise.
-	// Note: This function assumes that all file pointers are initially set to the beginning
+	// Note: This function assumes that all stream positions are initially set to the beginning
 	//  of the file. When reading the wave file header, it does not seek to the file start.
-	bool ClmFile::ReadAllWaveHeaders(int numFilesToPack, HANDLE *file, WaveFormatEx *format, IndexEntry *indexEntry)
+	bool ClmFile::ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries)
 	{
-		unsigned long numBytesRead;
 		RiffHeader header;
-		int length, retVal;
 
 		// Read in all the headers and find start of data
-		for (int i = 0; i < numFilesToPack; i++)
+		for (size_t i = 0; i < filesToPackReaders.size(); i++)
 		{
 			// Read the file header
-			retVal = ReadFile(file[i], &header, sizeof(header), &numBytesRead, nullptr);
-			if (retVal == 0 || header.riffTag != RIFF || header.waveTag != WAVE) {
+			filesToPackReaders[i]->Read((char*)&header, sizeof(header));
+			if (header.riffTag != RIFF || header.waveTag != WAVE) {
 				return false;		// Error reading header
 			}
+
 			// Check that the file size makes sense (matches with header chunk length + 8)
-			if (header.chunkSize + 8 != GetFileSize(file[i], nullptr)) {
+			if (header.chunkSize + 8 != filesToPackReaders[i]->Length()) {
 				return false;
 			}
 
 			// Read the format tag
-			length = FindChunk(FMT, file[i]);
-			if (length == -1) {
+			int fmtChunkLength = FindChunk(FMT, *filesToPackReaders[i]);
+			if (fmtChunkLength == -1) {
 				return false;		// Format chunk not found
 			}
 
 			// Read in the wave format
-			if (ReadFile(file[i], &format[i], sizeof(WaveFormatEx), &numBytesRead, nullptr) == 0) {
-				return false;					// Error reading in wave format
-			}
-			format[i].cbSize = 0;
+			filesToPackReaders[i]->Read((char*)&waveFormats[i], sizeof(WaveFormatEx));
+			waveFormats[i].cbSize = 0;
 
 			// Find the start of the data
-			length = FindChunk(DATA, file[i]);
-			if (length == -1) {
+			int dataChunkLength = FindChunk(DATA, *filesToPackReaders[i]);
+			if (dataChunkLength == -1) {
 				return false;		// Data chunk not found
 			}
+
 			// Store the length of the wave data
-			indexEntry[i].dataLength = length;
-			// Note: Current file pointer is set to the start of the wave data
+			indexEntries[i].dataLength = dataChunkLength;
+			// Note: Current stream position is set to the start of the wave data
 		}
 
 		return true;
 	}
 
 	// Searches through the wave file to find the given chunk length
-	// The current file pointer is set the the first byte after the chunk header
+	// The current stream position is set the the first byte after the chunk header
 	// Returns the chunk length if found or -1 otherwise
-	int ClmFile::FindChunk(int chunkTag, HANDLE file)
+	int ClmFile::FindChunk(uint32_t chunkTag, FileStreamReader& fileStreamReader)
 	{
 #pragma pack(push, 1)
 		struct ChunkHeader
 		{
-			int formatTag;
-			int length;
+			uint32_t formatTag;
+			uint32_t length;
 		};
 #pragma pack(pop)
 
-		unsigned long numBytesRead;
-		ChunkHeader header;
-		int curPos;
-		int fileSize;
+		uint64_t fileSize = fileStreamReader.Length();
 
-		fileSize = GetFileSize(file, nullptr);
-		if (fileSize < 20) return -1;
+		if (fileSize < 20) {
+			return -1;
+		}
+
 		// Seek to beginning of first internal chunk (provided it exists)
 		// Note: this seeks past the initial format tag (such as RIFF and WAVE)
-		if (SetFilePointer(file, 12, nullptr, FILE_BEGIN) == -1) return -1;
+		fileStreamReader.Seek(12);
 
-		curPos = 12;
+		ChunkHeader header;
+		uint32_t currentPosition = 12;
 		do
 		{
 			// Read the tag
-			ReadFile(file, &header, sizeof(header), &numBytesRead, nullptr);
+			fileStreamReader.Read((char*)&header, sizeof(header));
+			
 			// Check if this is the right header
-			if (header.formatTag == chunkTag) return header.length;
-			// Not the right header. Skip to next header
-			curPos += header.length + 8;
-			if (SetFilePointer(file, curPos, nullptr, FILE_BEGIN) == -1) return -1;
-		} while (curPos < fileSize);
+			if (header.formatTag == chunkTag) {
+				return header.length;
+			}
+			
+			// If not the right header, skip to next header
+			currentPosition += header.length + 8;
+			fileStreamReader.Seek(currentPosition);
+		} while (currentPosition < fileSize);
 
 		return -1;	// Failed to find the tag
 	}
 
-	// Closes all input files in the array fileHandle (of size numFilesToPack)
-	// and releases the memory for the file handles and the wave format structures.
-	void ClmFile::CleanUpVolumeCreate(HANDLE outFile,
-		int numFilesToPack,
-		HANDLE *fileHandle,
-		WaveFormatEx *waveFormat,
-		IndexEntry *indexEntry)
-	{
-		// Close the output file
-		if (outFile) CloseHandle(outFile);
-		// Close all open input files
-		for (int i = 0; i < numFilesToPack; i++) {
-			CloseHandle(fileHandle[i]);
-		}
-		// Free temporary memory
-		delete[] fileHandle;
-		delete[] waveFormat;
-		delete[] indexEntry;
-	}
-
-	// Compares wave format structures in the array waveFormat
+	// Compares wave format structures in the waveFormats container
 	// Returns true if they are all the same and false otherwise.
-	bool ClmFile::CompareWaveFormats(int numFilesToPack, WaveFormatEx *waveFormat)
+	bool ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats)
 	{
-		for (int i = 1; i < numFilesToPack; i++)
+		for (WaveFormatEx waveFormat : waveFormats)
 		{
-			if (memcmp(&waveFormat[i], &waveFormat[0], sizeof(WaveFormatEx))) {
+			if (memcmp(&waveFormat, &waveFormats[0], sizeof(WaveFormatEx))) {
 				return false;
 			}
 		}
@@ -453,11 +386,11 @@ namespace Archives
 		return true;
 	}
 
-	bool ClmFile::WriteVolume(HANDLE outFile,
-		HANDLE *fileHandle,
-		IndexEntry *entry,
+	void ClmFile::WriteArchive(std::string& archiveFileName,
+		std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
+		std::vector<IndexEntry>& indexEntries,
 		const std::vector<std::string>& internalNames,
-		WaveFormatEx *waveFormat)
+		const WaveFormatEx& waveFormat)
 	{
 #pragma pack(push, 1)
 		struct ClmHeader
@@ -467,84 +400,64 @@ namespace Archives
 			std::array<char, 32> fileVersion;
 			WaveFormatEx waveFormat;
 			std::array<char, 6> unknown { 0, 0, 0, 0, 1, 0 };
-			int packedFilesCount;
+			uint32_t packedFilesCount;
 		};
 #pragma pack(pop)
 
 		ClmHeader header;
-		header.waveFormat = *waveFormat;
+		header.waveFormat = waveFormat;
 		header.packedFilesCount = internalNames.size();
 
-		// Write the header
-		unsigned long numBytes;
-		if (WriteFile(outFile, &header, sizeof(header), &numBytes, nullptr) == 0) {
-			return false;
-		}
+		FileStreamWriter clmFileWriter(archiveFileName);
 
-		PrepareIndex(sizeof(header), internalNames, entry);
-		
-		if (WriteFile(outFile, entry, header.packedFilesCount * sizeof(IndexEntry), &numBytes, nullptr) == 0) {
-			// Error writing index table
-			delete[] entry;		// Release the memory for the index table
-			return false;
-		}
+		clmFileWriter.Write((char*)&header, sizeof(header));
 
-		// Copy the files into the volume
-		for (int i = 0; i < header.packedFilesCount; i++)
-		{
-			if (!PackFile(outFile, entry[i], fileHandle[i])) {
-				// Error reading input file
-				delete[] entry;	// Release the memory for the index table
-				return false;
-			}
-		}
+		// Prepare and write Archive Index
+		PrepareIndex(sizeof(header), internalNames, indexEntries);
+		clmFileWriter.Write((char*)indexEntries.data(), header.packedFilesCount * sizeof(IndexEntry));
 
-		return true;
+		// Copy files into the archive
+		for (int i = 0; i < header.packedFilesCount; i++) {
+			PackFile(clmFileWriter, indexEntries[i], *filesToPackReaders[i]);
+		}
 	}
 
-	void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, IndexEntry* entry)
+	void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries)
 	{
-		int offset = headerSize + internalNames.size() * sizeof(IndexEntry);
+		uint32_t offset = headerSize + internalNames.size() * sizeof(IndexEntry);
 		for (size_t i = 0; i < internalNames.size(); i++)
 		{
 			// Copy the filename into the entry
-			strncpy((char*)&entry[i].fileName, internalNames[i].c_str(), 8);
+			strncpy((char*)&indexEntries[i].fileName, internalNames[i].c_str(), 8);
+
 			// Set the offset of the file
-			entry[i].dataOffset = offset;
-			offset += entry[i].dataLength;
+			indexEntries[i].dataOffset = offset;
+			offset += indexEntries[i].dataLength;
 		}
 	}
 
 	// Write file into the Clm Archive by using the fixed memory size of CLM_WRITE_SIZE.
-	bool ClmFile::PackFile(HANDLE outFile, const IndexEntry& entry, HANDLE fileHandle)
+	void ClmFile::PackFile(FileStreamWriter& clmFileWriter, const IndexEntry& indexEntry, FileStreamReader& fileToPackReader)
 	{
-		unsigned long numBytesRead;
-		unsigned long numBytesToRead;
+		uint32_t numBytesToRead;
+		uint32_t offset = 0; // Max size of CLM IndexEntry::dataLength is 32 bits.
 		std::array<char, CLM_WRITE_SIZE> buffer;
-		int offset = 0;
 
 		do
 		{
 			numBytesToRead = CLM_WRITE_SIZE;
 
 			// Check if less than CLM_WRITE_SIZE of data remains for writing to disk.
-			if (offset + numBytesToRead > entry.dataLength) {
-				numBytesToRead = entry.dataLength - offset;
+			if (offset + numBytesToRead > indexEntry.dataLength) {
+				numBytesToRead = indexEntry.dataLength - offset;
 			}
 
 			// Read the input file
-			if (ReadFile(fileHandle, buffer.data(), numBytesToRead, &numBytesRead, nullptr) == 0) {
-				return false;
-			}
-			offset += numBytesRead;
+			fileToPackReader.Read(buffer.data(), numBytesToRead);
+			offset += numBytesToRead;
 
-			// Write file to the output
-			if (WriteFile(outFile, buffer.data(), numBytesRead, &numBytesToRead, nullptr) == 0) {
-				return false;
-			}
-		} while (numBytesRead); // End loop when numBytesRead/Written is equal to 0
-
-		return true;
+			clmFileWriter.Write(buffer.data(), numBytesToRead);
+		} while (numBytesToRead); // End loop when numBytesRead/Written is equal to 0
 	}
 
 	std::vector<std::string> ClmFile::StripFileNameExtensions(std::vector<std::string> paths)

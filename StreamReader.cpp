@@ -11,7 +11,7 @@ FileStreamReader::FileStreamReader(std::string filename) {
 	file = std::ifstream(filename, std::ios::in | std::ios::binary);
 
 	if (!file.is_open()) {
-		throw std::runtime_error("File could not be opened.");
+		throw std::runtime_error("The following file could not be opened: " + filename + ".");
 	}
 }
 
@@ -21,6 +21,20 @@ FileStreamReader::~FileStreamReader() {
 
 void FileStreamReader::Read(char* buffer, size_t size) {
 	file.read(buffer, size);
+}
+
+uint64_t FileStreamReader::Length() {
+	uint64_t currentPosition = file.tellg();
+	file.seekg(0, std::ios_base::end);
+	uint64_t length = file.tellg();
+
+	file.seekg(currentPosition, std::ios_base::beg);
+
+	return length;
+}
+
+void FileStreamReader::Seek(uint64_t position) {
+	file.seekg(position, std::ios_base::beg);
 }
 
 void FileStreamReader::SeekRelative(int offset) {
