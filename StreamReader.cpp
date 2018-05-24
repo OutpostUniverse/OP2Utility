@@ -19,7 +19,7 @@ FileStreamReader::~FileStreamReader() {
 	file.close();
 }
 
-void FileStreamReader::Read(char* buffer, uint64_t size) {
+void FileStreamReader::Read(char* buffer, size_t size) {
 	file.read(buffer, size);
 }
 
@@ -42,32 +42,20 @@ void FileStreamReader::SeekRelative(int64_t offset) {
 }
 
 
-MemoryStreamReader::MemoryStreamReader(char* buffer, uint64_t size) {
+MemoryStreamReader::MemoryStreamReader(char* buffer, size_t size) {
 	streamBuffer = buffer;
 	streamSize = size;
 	position = 0;
 }
 
-void MemoryStreamReader::Read(char* buffer, uint64_t size) 
+void MemoryStreamReader::Read(char* buffer, size_t size) 
 {
 	if (position + size > streamSize) {
 		throw std::runtime_error("Size of bytes to read exceeds remaining size of buffer.");
 	}
 
-	// std::memcpy takes a _Size to copy of size_t. 
-	// Depending on the system, size_t may not be able to store the max value of uint64_t. 
-	// SIZE_MAX is the largest value that may be stored in size_t for the given system.
-	do {
-		size_t nextReadLength = SIZE_MAX;
-		// Check if remaining value of size will fit in a size_t.
-		if (size < SIZE_MAX) {
-			nextReadLength = static_cast<size_t>(size);
-		}
-
-		std::memcpy(buffer, streamBuffer + position, nextReadLength);
-		position += nextReadLength;
-		size -= nextReadLength;
-	} while (size != 0); // Continue reading in chunks until all data has been copied.
+	std::memcpy(buffer, streamBuffer + position, size);
+	position += size;
 }
 
 uint64_t MemoryStreamReader::Length() {
@@ -75,11 +63,12 @@ uint64_t MemoryStreamReader::Length() {
 }
 
 void MemoryStreamReader::Seek(uint64_t position) {
-	if (position > this->position) {
+	if (position >= streamSize) {
 		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 	}
 
-	this->position = position;
+	// position is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of size_t)
+	this->position = static_cast<size_t>(position);
 }
 
 void MemoryStreamReader::SeekRelative(int64_t offset)
@@ -90,5 +79,6 @@ void MemoryStreamReader::SeekRelative(int64_t offset)
 		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 	}
 
-	this->position += offset;
+	// offset is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of size_t)
+	this->position += static_cast<size_t>(offset); 
 }

@@ -7,7 +7,7 @@
 class StreamReader {
 public:
 	virtual ~StreamReader() = 0;
-	virtual void Read(char* buffer, uint64_t size) = 0;
+	virtual void Read(char* buffer, size_t size) = 0;
 };
 
 class SeekableStreamReader : public StreamReader {
@@ -27,7 +27,7 @@ public:
 	FileStreamReader(std::string fileName);
 	~FileStreamReader();
 
-	void Read(char* buffer, uint64_t size);
+	void Read(char* buffer, size_t size);
 	uint64_t Length();
 	void Seek(uint64_t position);
 	void SeekRelative(int64_t offset);
@@ -39,14 +39,14 @@ private:
 
 class MemoryStreamReader : public SeekableStreamReader {
 public:
-	MemoryStreamReader(char* buffer, uint64_t size);
-	void Read(char* buffer, uint64_t size);
+	MemoryStreamReader(char* buffer, size_t size);
+	void Read(char* buffer, size_t size);
 	uint64_t Length();
 	void Seek(uint64_t position);
 	void SeekRelative(int64_t offset);
 
 private:
 	char* streamBuffer;
-	uint64_t streamSize;
-	uint64_t position;
+	size_t streamSize;
+	size_t position;
 };
