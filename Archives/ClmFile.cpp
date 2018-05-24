@@ -266,7 +266,7 @@ namespace Archives
 
 		std::vector<std::string> internalFileNames = GetInternalNamesFromPaths(filesToPack);
 		internalFileNames = StripFileNameExtensions(internalFileNames);
-		// Do not allow duplicate names when packing. Will cause undefined behaviour in binary search and file extraction.
+		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
 		CheckSortedContainerForDuplicateNames(internalFileNames); 
 
 		// Write the archive header and copy files into the archive
@@ -332,7 +332,7 @@ namespace Archives
 	// Searches through the wave file to find the given chunk length
 	// The current stream position is set the the first byte after the chunk header
 	// Returns the chunk length if found or -1 otherwise
-	int ClmFile::FindChunk(uint32_t chunkTag, FileStreamReader& fileStreamReader)
+	int ClmFile::FindChunk(uint32_t chunkTag, SeekableStreamReader& seekableStreamReader)
 	{
 #pragma pack(push, 1)
 		struct ChunkHeader
@@ -342,7 +342,7 @@ namespace Archives
 		};
 #pragma pack(pop)
 
-		uint64_t fileSize = fileStreamReader.Length();
+		uint64_t fileSize = seekableStreamReader.Length();
 
 		if (fileSize < 20) {
 			return -1;
@@ -350,14 +350,14 @@ namespace Archives
 
 		// Seek to beginning of first internal chunk (provided it exists)
 		// Note: this seeks past the initial format tag (such as RIFF and WAVE)
-		fileStreamReader.Seek(12);
+		uint32_t currentPosition = sizeof(RiffHeader);
+		seekableStreamReader.Seek(currentPosition);
 
 		ChunkHeader header;
-		uint32_t currentPosition = 12;
 		do
 		{
 			// Read the tag
-			fileStreamReader.Read((char*)&header, sizeof(header));
+			seekableStreamReader.Read((char*)&header, sizeof(header));
 			
 			// Check if this is the right header
 			if (header.formatTag == chunkTag) {
@@ -366,7 +366,7 @@ namespace Archives
 			
 			// If not the right header, skip to next header
 			currentPosition += header.length + 8;
-			fileStreamReader.Seek(currentPosition);
+			seekableStreamReader.Seek(currentPosition);
 		} while (currentPosition < fileSize);
 
 		return -1;	// Failed to find the tag
@@ -376,9 +376,9 @@ namespace Archives
 	// Returns true if they are all the same and false otherwise.
 	bool ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats)
 	{
-		for (WaveFormatEx waveFormat : waveFormats)
+		for (size_t i = 1; i < waveFormats.size(); i++)
 		{
-			if (memcmp(&waveFormat, &waveFormats[0], sizeof(WaveFormatEx))) {
+			if (memcmp(&waveFormats[i], &waveFormats[0], sizeof(WaveFormatEx))) {
 				return false;
 			}
 		}
@@ -417,7 +417,7 @@ namespace Archives
 		clmFileWriter.Write((char*)indexEntries.data(), header.packedFilesCount * sizeof(IndexEntry));
 
 		// Copy files into the archive
-		for (int i = 0; i < header.packedFilesCount; i++) {
+		for (size_t i = 0; i < header.packedFilesCount; i++) {
 			PackFile(clmFileWriter, indexEntries[i], *filesToPackReaders[i]);
 		}
 	}
@@ -437,7 +437,7 @@ namespace Archives
 	}
 
 	// Write file into the Clm Archive by using the fixed memory size of CLM_WRITE_SIZE.
-	void ClmFile::PackFile(FileStreamWriter& clmFileWriter, const IndexEntry& indexEntry, FileStreamReader& fileToPackReader)
+	void ClmFile::PackFile(StreamWriter& clmWriter, const IndexEntry& indexEntry, StreamReader& fileToPackReader)
 	{
 		uint32_t numBytesToRead;
 		uint32_t offset = 0; // Max size of CLM IndexEntry::dataLength is 32 bits.
@@ -456,7 +456,7 @@ namespace Archives
 			fileToPackReader.Read(buffer.data(), numBytesToRead);
 			offset += numBytesToRead;
 
-			clmFileWriter.Write(buffer.data(), numBytesToRead);
+			clmWriter.Write(buffer.data(), numBytesToRead);
 		} while (numBytesToRead); // End loop when numBytesRead/Written is equal to 0
 	}
 

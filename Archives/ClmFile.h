@@ -88,12 +88,12 @@ namespace Archives
 
 		// Private functions for packing files
 		bool ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
-		int FindChunk(uint32_t chunkTag, FileStreamReader& fileStreamReader);
+		int FindChunk(uint32_t chunkTag, SeekableStreamReader& seekableStreamReader);
 		bool CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats);
 		void WriteArchive(std::string& archiveFileName, std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
 			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& internalNames, const WaveFormatEx& waveFormat);
 		void PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries);
-		void PackFile(FileStreamWriter& clmFileWriter, const IndexEntry& entry, FileStreamReader& fileToPackReader);
+		void PackFile(StreamWriter& clmWriter, const IndexEntry& entry, StreamReader& fileToPackReader);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 
