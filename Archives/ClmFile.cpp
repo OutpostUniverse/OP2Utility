@@ -187,8 +187,8 @@ namespace Archives
 		headerOut.formatChunk.waveFormat = m_WaveFormat;
 		headerOut.formatChunk.waveFormat.cbSize = 0;
 
-		headerOut.dataChunk.dataTag = DATA;
-		headerOut.dataChunk.dataSize = m_IndexEntry[fileIndex].dataLength;
+		headerOut.dataChunk.formatTag = DATA;
+		headerOut.dataChunk.length = m_IndexEntry[fileIndex].dataLength;
 	}
 
 	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
@@ -334,17 +334,9 @@ namespace Archives
 	// Returns the chunk length if found or -1 otherwise
 	int ClmFile::FindChunk(uint32_t chunkTag, SeekableStreamReader& seekableStreamReader)
 	{
-#pragma pack(push, 1)
-		struct ChunkHeader
-		{
-			uint32_t formatTag;
-			uint32_t length;
-		};
-#pragma pack(pop)
-
 		uint64_t fileSize = seekableStreamReader.Length();
 
-		if (fileSize < 20) {
+		if (fileSize < sizeof(RiffHeader) + sizeof(ChunkHeader)) {
 			return -1;
 		}
 
@@ -365,7 +357,7 @@ namespace Archives
 			}
 			
 			// If not the right header, skip to next header
-			currentPosition += header.length + 8;
+			currentPosition += header.length + sizeof(ChunkHeader);
 			seekableStreamReader.Seek(currentPosition);
 		} while (currentPosition < fileSize);
 

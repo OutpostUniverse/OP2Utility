@@ -60,17 +60,18 @@ namespace Archives
 			WaveFormatEx waveFormat;
 		};
 
-		struct DataChunk
+		struct ChunkHeader
 		{
-			int dataTag;
-			int dataSize;
+			uint32_t formatTag;
+			uint32_t length;
 		};
 
+	    // http://soundfile.sapp.org/doc/WaveFormat/
 		struct WaveHeader
 		{
 			RiffHeader riffHeader;
 			FormatChunk formatChunk;
-			DataChunk dataChunk;
+			ChunkHeader dataChunk;
 		};
 
 		struct IndexEntry
