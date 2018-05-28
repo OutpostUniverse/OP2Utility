@@ -18,7 +18,7 @@ namespace Archives
 		int GetNumberOfPackedFiles() { return m_NumberOfPackedFiles; };
 		bool ContainsFile(const char* fileName);
 
-		virtual const char* GetInternalFileName(int index) = 0;
+		virtual std::string GetInternalFileName(int index) = 0;
 		// Returns -1 if internalFileName is not present in archive.
 		virtual int GetInternalFileIndex(const char *internalFileName) = 0;
 		virtual int GetInternalFileSize(int index) = 0;

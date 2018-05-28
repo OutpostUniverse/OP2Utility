@@ -27,18 +27,18 @@ namespace Archives
 
 
 
-	const char* VolFile::GetInternalFileName(int index)
+	std::string VolFile::GetInternalFileName(int index)
 	{
 		CheckPackedFileIndexBounds(index);
 
-		return m_StringTable + m_Index[index].fileNameOffset;
+		return std::string(m_StringTable + m_Index[index].fileNameOffset);
 	}
 
 	int VolFile::GetInternalFileIndex(const char *internalFileName)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			const char* actualInternalFileName = GetInternalFileName(i);
+			std::string actualInternalFileName = GetInternalFileName(i);
 			if (XFile::PathsAreEqual(actualInternalFileName, internalFileName)) {
 				return i;
 			}

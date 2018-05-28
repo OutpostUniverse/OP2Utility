@@ -1,12 +1,13 @@
 #pragma once
 
+#include "WaveFile.h"
 #include "ArchiveFile.h"
 #include "../StreamReader.h"
 #include "../StreamWriter.h"
-#include <windows.h>
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <array>
 #include <memory>
 
 namespace Archives
@@ -17,7 +18,7 @@ namespace Archives
 		ClmFile(const char *fileName);
 		virtual ~ClmFile();
 
-		const char* GetInternalFileName(int index);
+		std::string GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);
 		void ExtractFile(int fileIndex, const std::string& pathOut);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
@@ -30,48 +31,18 @@ namespace Archives
 
 	private:
 #pragma pack(push, 1)
-		/*
-		*  extended waveform format structure used for all non-PCM formats. this
-		*  structure is common to all non-PCM formats.
-		*  Identical to Windows.h WAVEFORMATEX typedef contained in mmeapi.h
-		*/
-		struct WaveFormatEx
+		struct ClmHeader
 		{
-			uint16_t wFormatTag;         /* format type */
-			uint16_t nChannels;          /* number of channels (i.e. mono, stereo...) */
-			uint32_t nSamplesPerSec;     /* sample rate */
-			uint32_t nAvgBytesPerSec;    /* for buffer estimation */
-			uint16_t nBlockAlign;        /* block size of data */
-			uint16_t wBitsPerSample;     /* number of bits per sample of mono data */
-			uint16_t cbSize;             /* the count in bytes of the size of extra information (after cbSize) */
-		};
+			ClmHeader() {};
+			ClmHeader(WaveFormatEx waveFormatEx, uint32_t packFileCount);
 
-		struct RiffHeader
-		{
-			int32_t riffTag;
-			uint32_t chunkSize;
-			int32_t waveTag;
-		};
-
-		struct FormatChunk
-		{
-			int fmtTag;
-			int formatSize;
+			std::array<char, 32> fileVersion;
 			WaveFormatEx waveFormat;
-		};
+			std::array<char, 6> unknown;
+			uint32_t packedFilesCount;
 
-		struct ChunkHeader
-		{
-			uint32_t formatTag;
-			uint32_t length;
-		};
-
-	    // http://soundfile.sapp.org/doc/WaveFormat/
-		struct WaveHeader
-		{
-			RiffHeader riffHeader;
-			FormatChunk formatChunk;
-			ChunkHeader dataChunk;
+			bool CheckFileVersion() const;
+			bool CheckUnknown() const;
 		};
 
 		struct IndexEntry
@@ -85,7 +56,7 @@ namespace Archives
 #pragma pack(pop)
 
 		// Private functions for reading archive
-		bool ReadHeader();
+		void ReadHeader();
 
 		// Private functions for packing files
 		bool ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
@@ -98,10 +69,8 @@ namespace Archives
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 
-		HANDLE m_FileHandle;
-		WaveFormatEx m_WaveFormat;
-		char m_Unknown[6];
-		IndexEntry *m_IndexEntry;
-		char(*m_FileName)[9];
+		std::unique_ptr<SeekableStreamReader> clmFileReader;
+		ClmHeader clmHeader;
+		std::vector<IndexEntry> indexEntries;
 	};
 }
