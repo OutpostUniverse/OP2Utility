@@ -39,11 +39,11 @@ namespace Archives
 		}
 
 		if (!clmHeader.CheckUnknown()) {
-			throw std::runtime_error("Unkown CLM header field is incorrect.");
+			throw std::runtime_error("Unknown field in CLM header is incorrect.");
 		}
 
 		if (clmHeader.packedFilesCount < 1) {
-			throw std::runtime_error("Packed files count must be 1 or greater.");
+			throw std::runtime_error("Packed file count must be 1 or greater.");
 		}
 
 		m_NumberOfPackedFiles = clmHeader.packedFilesCount;
