@@ -167,7 +167,7 @@ namespace Archives
 			filesToPack.push_back(GetInternalFileName(i));
 		}
 
-		if (!CreateVolume("Temp.vol", filesToPack)) {
+		if (!CreateArchive("Temp.vol", filesToPack)) {
 			return false;
 		}
 
@@ -178,7 +178,7 @@ namespace Archives
 		return ReplaceFileWithFile(m_VolumeFileName, "Temp.vol");
 	}
 
-	bool VolFile::CreateVolume(std::string volumeFileName, std::vector<std::string> filesToPack)
+	bool VolFile::CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack)
 	{
 		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
 
