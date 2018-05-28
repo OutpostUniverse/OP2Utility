@@ -63,7 +63,7 @@ uint64_t MemoryStreamReader::Length() {
 }
 
 void MemoryStreamReader::Seek(uint64_t position) {
-	if (position >= streamSize) {
+	if (position > streamSize) {
 		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 	}
 
@@ -73,10 +73,14 @@ void MemoryStreamReader::Seek(uint64_t position) {
 
 void MemoryStreamReader::SeekRelative(int64_t offset)
 {
-	// Checking if offset goes below 0 is unnecessary. Arithmetic on a signed and unsigned number results 
-	// in a signed number that will wraparound to a large positive and be caught.
-	if (this->position + offset > streamSize) {
-		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
+	// Cast position for testing into a uint64_t. A negative value will wrap around to a positive value.
+	uint64_t positionCast = static_cast<uint64_t>(this->position) + offset;
+
+	if (positionCast > streamSize ||
+	   (offset > 0 && positionCast < this->position) || // Check if offset wraps past max size.
+	   (offset < 0 && positionCast > this->position)) // Check if offset wraps past min size. 
+	{
+		throw std::runtime_error("Change in offset puts read position outside bounds of buffer.");
 	}
 
 	// offset is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of size_t)
