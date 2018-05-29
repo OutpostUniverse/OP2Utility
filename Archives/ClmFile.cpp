@@ -321,7 +321,7 @@ namespace Archives
 
 	// Compares wave format structures in the waveFormats container
 	// Returns true if they are all the same and false otherwise.
-	bool ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats)
+	bool ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats) const
 	{
 		for (size_t i = 1; i < waveFormats.size(); i++)
 		{
@@ -406,9 +406,8 @@ namespace Archives
 	}
 
 
-
-	const std::array<char, 32> standardFileVersion { 'O', 'P', '2', ' ', 'C', 'l', 'u', 'm', 'p', ' ',
-		'F', 'i', 'l', 'e', ' ', 'V', 'e', 'r', 's', 'i', 'o', 'n', ' ', '1', '.', '0', '\x01A', '\0', '\0', '\0', '\0' };
+	// A null terminator (\0) is automatically assigned to the end of the string when placing it within the std::array
+	const std::array<char, 32> standardFileVersion { "OP2 Clump File Version 1.0\x01A\0\0\0\0" };
 	const std::array<char, 6> standardUnknown { 0, 0, 0, 0, 1, 0 };
 
 	ClmFile::ClmHeader::ClmHeader(WaveFormatEx waveFormat, uint32_t packedFilesCount) {
