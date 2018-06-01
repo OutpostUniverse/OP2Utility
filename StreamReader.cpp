@@ -20,6 +20,11 @@ FileStreamReader::~FileStreamReader() {
 }
 
 void FileStreamReader::Read(char* buffer, size_t size) {
+	// Unable to add a std::streampos to a size_t without casting.
+	if (static_cast<size_t>(file.tellg()) + size > Length()) {
+		throw std::runtime_error("Size of bytes to read exceeds remaining size of buffer.");
+	}
+
 	file.read(buffer, size);
 }
 

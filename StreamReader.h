@@ -28,6 +28,12 @@ public:
 	~FileStreamReader();
 
 	void Read(char* buffer, size_t size);
+
+	// Inline templated convenience methods, to easily read arbitrary data types
+	template<typename T> inline void Read(T& object) {
+		Read((char*)&object, sizeof(object));
+	}
+
 	uint64_t Length();
 	void Seek(uint64_t position);
 	void SeekRelative(int64_t offset);
@@ -41,6 +47,12 @@ class MemoryStreamReader : public SeekableStreamReader {
 public:
 	MemoryStreamReader(char* buffer, size_t size);
 	void Read(char* buffer, size_t size);
+
+	// Inline templated convenience methods, to easily read arbitrary data types
+	template<typename T> inline void Read(T& object) {
+		Read((char*)&object, sizeof(object));
+	}
+
 	uint64_t Length();
 	void Seek(uint64_t position);
 	void SeekRelative(int64_t offset);
