@@ -175,7 +175,7 @@ namespace Archives
 		UnmapFile();
 
 		// Rename the output file to the desired file
-		return ReplaceFileWithFile(m_VolumeFileName, "Temp.vol");
+		return ReplaceFileWithFile(m_VolumeFileName.c_str(), "Temp.vol");
 	}
 
 	bool VolFile::CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack)

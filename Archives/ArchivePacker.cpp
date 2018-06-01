@@ -50,13 +50,14 @@ namespace Archives
 	// Returns true if successful and false otherwise
 	bool ArchivePacker::ReplaceFileWithFile(const char *fileToReplace, const char *newFile)
 	{
-		MoveFileA(fileToReplace, "Delete.vol");
+		std::string tempFileName("Temporary.vol");
+		MoveFileA(fileToReplace, tempFileName.c_str());
 		
 		if (MoveFileA(newFile, fileToReplace) == 0) {
 			return false;
 		}
 
-		DeleteFileA("Delete.vol");
+		DeleteFileA(tempFileName.c_str());
 
 		return true;
 	}
