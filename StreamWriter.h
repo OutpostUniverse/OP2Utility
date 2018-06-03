@@ -13,24 +13,38 @@ public:
 class SeekableStreamWriter : public StreamWriter
 {
 public:
-	// Change position forward or backword in buffer.
-	virtual void SeekRelative(int offset) = 0;
+	// Get the size of the stream
+	virtual uint64_t Length() = 0;
+	
+	// Get the current position of the stream
+	virtual uint64_t Position() = 0;
+	
+	// Seek to absolute position, given as offset from beginning of stream
+	virtual void Seek(uint64_t offset) = 0;
+
+	// Seek by a relative amount, given as offset from current position
+	virtual void SeekRelative(int64_t offset) = 0;
 };
 
 class FileStreamWriter : public SeekableStreamWriter
 {
 public:
 	FileStreamWriter(const std::string& filename);
-	~FileStreamWriter();
-	void Write(const char* buffer, size_t size);
+
+	// StreamWriter methods
+	~FileStreamWriter() override;
+	void Write(const char* buffer, size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Write(T& object) {
 		Write((char*)&object, sizeof(object));
 	}
 
-	// Change position forward or backword in buffer.
-	void SeekRelative(int offset);
+	// SeekableStreamWriter methods
+	uint64_t Length() override;
+	uint64_t Position() override;
+	void Seek(uint64_t offset) override;
+	void SeekRelative(int64_t offset) override;
 
 private:
 	std::fstream fileStream;
@@ -43,15 +57,19 @@ public:
 	// size: Amount of space allocated in the buffer for writing into.
 	MemoryStreamWriter(char* buffer, size_t size);
 
-	void Write(const char* buffer, size_t size);
+	// StreamWriter methods
+	void Write(const char* buffer, size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Write(T& object) {
 		Write((char*)&object, sizeof(object));
 	}
 
-	// Change position forward or backword in buffer.
-	void SeekRelative(int offset);
+	// SeekableStreamWriter methods
+	uint64_t Length() override;
+	uint64_t Position() override;
+	void Seek(uint64_t offset) override;
+	void SeekRelative(int64_t offset) override;
 
 private:
 	// Memory location to write data into.
