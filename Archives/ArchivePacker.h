@@ -25,7 +25,7 @@ namespace Archives
 		bool ReplaceFileWithFile(const char *fileToReplace, const char *newFile);
 
 		// Returns the filenames from each path stripping the rest of the path. 
-		std::vector<std::string> ArchivePacker::GetInternalNamesFromPaths(std::vector<std::string> paths);
+		std::vector<std::string> GetInternalNamesFromPaths(std::vector<std::string> paths);
 
 		// Throws an error if 2 internalNames are identical, case insensitve. 
 		// internalNames must be presorted. 

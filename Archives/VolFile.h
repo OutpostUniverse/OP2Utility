@@ -38,8 +38,8 @@ namespace Archives
 		int GetInternalFileOffset(int index);
 		int GetInternalFileNameOffset(int index);
 
-		void VolFile::ExtractFileUncompressed(size_t index, const std::string& filename);
-		void VolFile::ExtractFileLzh(size_t index, const std::string& filename);
+		void ExtractFileUncompressed(size_t index, const std::string& filename);
+		void ExtractFileLzh(size_t index, const std::string& filename);
 
 #pragma pack(push, 1)
 		struct IndexEntry
