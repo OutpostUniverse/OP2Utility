@@ -66,7 +66,7 @@ namespace Archives
 	{
 		std::vector<std::string> fileNames;
 
-		for (std::string& fileName : paths) {
+		for (const std::string& fileName : paths) {
 			fileNames.push_back(XFile::GetFilename(fileName));
 		}
 
@@ -75,13 +75,9 @@ namespace Archives
 
 	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames) 
 	{
-		if (internalNames.size() == 0) {
-			return;
-		}
-
-		for (size_t i = 0; i < internalNames.size() - 1; ++i)
+		for (size_t i = 1; i < internalNames.size(); ++i)
 		{
-			if (StringHelper::CheckIfStringsAreEqual(internalNames[i], internalNames[i + 1])) {
+			if (StringHelper::CheckIfStringsAreEqual(internalNames[i - 1], internalNames[i])) {
 				throw std::runtime_error("Unable to create an archive containing files with the same filename. Duplicate filename: " + internalNames[i]);
 			}
 		}

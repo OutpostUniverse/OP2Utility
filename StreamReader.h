@@ -40,7 +40,6 @@ public:
 
 private:
 	std::ifstream file;
-	uint64_t streamSize;
 };
 
 

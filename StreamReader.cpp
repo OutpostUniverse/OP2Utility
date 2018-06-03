@@ -13,13 +13,6 @@ FileStreamReader::FileStreamReader(std::string filename) {
 	if (!file.is_open()) {
 		throw std::runtime_error("Could not open file: " + filename);
 	}
-
-	// Determine size of file stream
-	uint64_t currentPosition = file.tellg();
-	file.seekg(0, std::ios_base::end);
-	streamSize = file.tellg();
-
-	file.seekg(currentPosition, std::ios_base::beg);
 }
 
 FileStreamReader::~FileStreamReader() {
@@ -27,15 +20,16 @@ FileStreamReader::~FileStreamReader() {
 }
 
 void FileStreamReader::Read(char* buffer, size_t size) {
-	// Unable to add a std::streampos to a size_t without casting.
-	if (static_cast<size_t>(file.tellg()) + size > Length()) {
-		throw std::runtime_error("Size of bytes to read exceeds remaining size of buffer.");
-	}
-
 	file.read(buffer, size);
 }
 
 uint64_t FileStreamReader::Length() {
+	uint64_t currentPosition = file.tellg();
+	file.seekg(0, std::ios_base::end);
+	uint64_t streamSize = file.tellg();
+
+	file.seekg(currentPosition, std::ios_base::beg);
+
 	return streamSize;
 }
 

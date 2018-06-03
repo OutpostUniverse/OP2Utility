@@ -173,7 +173,7 @@ namespace Archives
 		std::vector<std::unique_ptr<FileStreamReader>> filesToPackReaders;
 		try {
 			// Opens all files for packing. If there is a problem opening a file, an exception is raised.
-			for (std::string& fileName : filesToPack) {
+			for (const std::string& fileName : filesToPack) {
 				filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
 			}
 		}
@@ -383,7 +383,7 @@ namespace Archives
 	{
 		std::vector<std::string> strippedExtensions;
 
-		for (std::string& path : paths) {
+		for (const std::string& path : paths) {
 			strippedExtensions.push_back(XFile::ChangeFileExtension(path, ""));
 		}
 
@@ -438,9 +438,6 @@ namespace Archives
 
 	std::string ClmFile::IndexEntry::GetFileName() const {
 		// Find the first instance of the null terminator and return only this portion of the fileName.
-		// Since fileNames smaller than 8 characters will include multiple null terminators, the returned 
-		// std::string's size will include these extra null terminators. 
-		// This will display the string peroperly, but comparison checks may fail because size is different.
 		auto firstNullTerminator = std::find(fileName.begin(), fileName.end(), '\0');
 
 		return std::string(fileName.data(), firstNullTerminator - fileName.begin());
