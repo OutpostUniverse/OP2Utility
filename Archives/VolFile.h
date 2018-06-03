@@ -20,7 +20,7 @@ namespace Archives
 		~VolFile();
 
 		// Internal file status
-		const char* GetInternalFileName(int index);
+		std::string GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);
 		CompressionType GetInternalCompressionCode(int index);
 		int GetInternalFileSize(int index);

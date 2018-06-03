@@ -27,18 +27,18 @@ namespace Archives
 
 
 
-	const char* VolFile::GetInternalFileName(int index)
+	std::string VolFile::GetInternalFileName(int index)
 	{
 		CheckPackedFileIndexBounds(index);
 
-		return m_StringTable + m_Index[index].fileNameOffset;
+		return std::string(m_StringTable + m_Index[index].fileNameOffset);
 	}
 
 	int VolFile::GetInternalFileIndex(const char *internalFileName)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			const char* actualInternalFileName = GetInternalFileName(i);
+			std::string actualInternalFileName = GetInternalFileName(i);
 			if (XFile::PathsAreEqual(actualInternalFileName, internalFileName)) {
 				return i;
 			}
@@ -175,7 +175,7 @@ namespace Archives
 		UnmapFile();
 
 		// Rename the output file to the desired file
-		return ReplaceFileWithFile(m_VolumeFileName, "Temp.vol");
+		return ReplaceFileWithFile(m_VolumeFileName.c_str(), "Temp.vol");
 	}
 
 	bool VolFile::CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack)

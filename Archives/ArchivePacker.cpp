@@ -12,7 +12,9 @@ namespace Archives
 
 	ArchivePacker::~ArchivePacker()
 	{
-		if (m_OutFileHandle) CloseHandle(m_OutFileHandle);
+		if (m_OutFileHandle) {
+			CloseHandle(m_OutFileHandle);
+		}
 	}
 
 	// Opens the file for output and returns nonzero if successful
@@ -37,7 +39,10 @@ namespace Archives
 	// Closes the file whose handle is in m_OutFileHandle
 	void ArchivePacker::CloseOutputFile()
 	{
-		if (m_OutFileHandle) CloseHandle(m_OutFileHandle);
+		if (m_OutFileHandle) {
+			CloseHandle(m_OutFileHandle);
+		}
+
 		m_OutFileHandle = nullptr;
 	}
 
@@ -45,9 +50,14 @@ namespace Archives
 	// Returns true if successful and false otherwise
 	bool ArchivePacker::ReplaceFileWithFile(const char *fileToReplace, const char *newFile)
 	{
-		MoveFileA(fileToReplace, "Delete.vol");
-		if (MoveFileA(newFile, fileToReplace) == 0) return false;
-		DeleteFileA("Delete.vol");
+		std::string tempFileName("Temporary.vol");
+		MoveFileA(fileToReplace, tempFileName.c_str());
+		
+		if (MoveFileA(newFile, fileToReplace) == 0) {
+			return false;
+		}
+
+		DeleteFileA(tempFileName.c_str());
 
 		return true;
 	}
@@ -56,7 +66,7 @@ namespace Archives
 	{
 		std::vector<std::string> fileNames;
 
-		for (std::string fileName : paths) {
+		for (const std::string& fileName : paths) {
 			fileNames.push_back(XFile::GetFilename(fileName));
 		}
 
@@ -65,9 +75,9 @@ namespace Archives
 
 	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames) 
 	{
-		for (size_t i = 0; i < internalNames.size() - 1; ++i)
+		for (size_t i = 1; i < internalNames.size(); ++i)
 		{
-			if (StringHelper::CheckIfStringsAreEqual(internalNames[i], internalNames[i + 1])) {
+			if (StringHelper::CheckIfStringsAreEqual(internalNames[i - 1], internalNames[i])) {
 				throw std::runtime_error("Unable to create an archive containing files with the same filename. Duplicate filename: " + internalNames[i]);
 			}
 		}

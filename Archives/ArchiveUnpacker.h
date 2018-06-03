@@ -10,15 +10,15 @@ namespace Archives
 	class ArchiveUnpacker
 	{
 	public:
-		ArchiveUnpacker(const char *fileName);
+		ArchiveUnpacker(const std::string& fileName);
 		virtual ~ArchiveUnpacker();
 
-		const char* GetVolumeFileName() { return m_VolumeFileName; };
+		std::string GetVolumeFileName() { return m_VolumeFileName; };
 		int GetVolumeFileSize() { return m_VolumeFileSize; };
 		int GetNumberOfPackedFiles() { return m_NumberOfPackedFiles; };
 		bool ContainsFile(const char* fileName);
 
-		virtual const char* GetInternalFileName(int index) = 0;
+		virtual std::string GetInternalFileName(int index) = 0;
 		// Returns -1 if internalFileName is not present in archive.
 		virtual int GetInternalFileIndex(const char *internalFileName) = 0;
 		virtual int GetInternalFileSize(int index) = 0;
@@ -30,7 +30,7 @@ namespace Archives
 	protected:
 		void CheckPackedFileIndexBounds(int fileIndex);
 
-		char *m_VolumeFileName;
+		std::string m_VolumeFileName;
 		int m_NumberOfPackedFiles;
 		int m_VolumeFileSize;
 	};

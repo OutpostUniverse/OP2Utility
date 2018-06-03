@@ -26,11 +26,11 @@ void FileStreamReader::Read(char* buffer, size_t size) {
 uint64_t FileStreamReader::Length() {
 	uint64_t currentPosition = file.tellg();
 	file.seekg(0, std::ios_base::end);
-	uint64_t length = file.tellg();
+	uint64_t streamSize = file.tellg();
 
 	file.seekg(currentPosition, std::ios_base::beg);
 
-	return length;
+	return streamSize;
 }
 
 void FileStreamReader::Seek(uint64_t position) {

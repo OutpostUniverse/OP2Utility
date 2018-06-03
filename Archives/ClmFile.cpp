@@ -2,104 +2,49 @@
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
-#include <array>
 
 namespace Archives
 {
 	const uint32_t CLM_WRITE_SIZE = 0x00020000;
-	const uint32_t RIFF = 0x46464952;	// "RIFF" Resource Interchange File Format
-	const uint32_t WAVE = 0x45564157;	// "WAVE"
-	const uint32_t FMT  = 0x20746D66;	// "fmt "
-	const uint32_t DATA = 0x61746164;	// "data"
 
 	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName)
 	{
-		m_FileName = nullptr;
-		m_IndexEntry = nullptr;
-
-		// Open the file for reading
-		m_FileHandle = CreateFileA(fileName,					// filename
-			GENERIC_READ,				// desired access
-			FILE_SHARE_READ,			// share mode
-			nullptr,					// security attributes
-			OPEN_EXISTING,				// creation disposition
-			FILE_ATTRIBUTE_NORMAL,		// attributes
-			nullptr);					// template
-
-		if (m_FileHandle == INVALID_HANDLE_VALUE) {
-			throw std::runtime_error("Could not open clm file " + std::string(fileName) + ".");
-		}
-
-		if (ReadHeader() == false) {
-			throw std::runtime_error("Invalid clm header in " + std::string(fileName) + ".");
-		}
-
-		// Initialize the unknown data
-		memset(m_Unknown, 0, 6);
-		m_Unknown[4] = 1;
+		clmFileReader = std::make_unique<FileStreamReader>(fileName);
+		ReadHeader();
 	}
 
-	ClmFile::~ClmFile()
-	{
-		delete[] m_FileName;
-		delete[] m_IndexEntry;
-
-		if (m_FileHandle) {
-			CloseHandle(m_FileHandle);
-		}
-	}
+	ClmFile::~ClmFile() { }
 
 
 	// Reads in the header when the volume is first opened and does some
 	// basic error checking on the header.
-	// Returns nonzero if the header was read successfully and is intact
-	// Returns zero if an error occured
-	bool ClmFile::ReadHeader()
+	// Throws an error is problems encountered while reading the header.
+	void ClmFile::ReadHeader()
 	{
-		char buff[32];
-		unsigned long numBytes;
-		int i;
-
-		if (ReadFile(m_FileHandle, buff, 32, &numBytes, nullptr) == 0) return false;
-		if (memcmp(buff, "OP2 Clump File Version 1.0\x01A\0\0\0\0", 32)) return false;
-
-		// Read in the WaveFormatEx structure
-		if (ReadFile(m_FileHandle, &m_WaveFormat, sizeof(m_WaveFormat), &numBytes, nullptr) == 0) return false;
-
-		// Read remaining header info
-		if (ReadFile(m_FileHandle, m_Unknown, 6, &numBytes, nullptr) == 0) return false;
-		if (ReadFile(m_FileHandle, &m_NumberOfPackedFiles, 4, &numBytes, nullptr) == 0) return false;
-		if (m_NumberOfPackedFiles < 1) return false;
-
-		// Allocate space
-		m_IndexEntry = new IndexEntry[m_NumberOfPackedFiles];
-		m_FileName = new char[m_NumberOfPackedFiles][9];
-
-		// Read Index info
-		if (ReadFile(m_FileHandle, m_IndexEntry, m_NumberOfPackedFiles * sizeof(IndexEntry), &numBytes, nullptr) == 0)
-		{
-			delete[] m_FileName;
-			delete[] m_IndexEntry;
-			return false;
+		clmFileReader->Read((char*)&clmHeader, sizeof(ClmHeader));
+		
+		try {
+			clmHeader.VerifyFileVersion();
+			clmHeader.VerifyUnknown();
 		}
-		// Copy file names
-		for (i = 0; i < m_NumberOfPackedFiles; i++)
-		{
-			memcpy(m_FileName[i], &m_IndexEntry[i].fileName, 8);
-			m_FileName[i][8] = 0;	// NULL terminate it
+		catch (std::exception& e) {
+			throw std::runtime_error("Invalid clm header read from file " + m_VolumeFileName + ". " + e.what());
 		}
 
-		return true;
+		m_NumberOfPackedFiles = clmHeader.packedFilesCount;
+
+		indexEntries = std::vector<IndexEntry>(m_NumberOfPackedFiles);
+		clmFileReader->Read((char*)indexEntries.data(), m_NumberOfPackedFiles * sizeof(IndexEntry));
 	}
 
 
-
-	// Returns the internal file name of the internal file corresponding to index
-	const char* ClmFile::GetInternalFileName(int index)
+	// Returns the internal file name of the packed file corresponding to index.
+	// Throws an error if packed file index is not valid.
+	std::string ClmFile::GetInternalFileName(int index)
 	{
 		CheckPackedFileIndexBounds(index);
 
-		return m_FileName[index];
+		return indexEntries[index].GetFileName();
 	}
 
 	int ClmFile::GetInternalFileIndex(const char *internalFileName)
@@ -119,10 +64,9 @@ namespace Archives
 	{
 		CheckPackedFileIndexBounds(index);
 
-		return m_IndexEntry[index].dataLength;
+		return indexEntries[index].dataLength;
 	}
 
-	
 
 	// Extracts the internal file corresponding to index
 	void ClmFile::ExtractFile(int fileIndex, const std::string& pathOut)
@@ -134,41 +78,32 @@ namespace Archives
 
 		try
 		{
-			FileStreamWriter fileStreamWriter(pathOut);
+			FileStreamWriter waveFileWriter(pathOut);
 
-			fileStreamWriter.Write((char*)&header, sizeof(header));
+			waveFileWriter.Write(header);
 
-			// TODO: Replace with a non Windows specific solution
 			// Seek to the beginning of the file data (in the .clm file)
-			if (SetFilePointer(m_FileHandle, m_IndexEntry[fileIndex].dataOffset, nullptr, FILE_BEGIN) == -1) {
-				return;
-			}
+			clmFileReader->Seek(indexEntries[fileIndex].dataOffset);
 
-			// Write the Wave data
-			char buffer[CLM_WRITE_SIZE];
-			unsigned int totalSize = 0;
-			unsigned long numBytesRead = 0;
+			uint32_t numBytesToRead = 0;
+			uint32_t offset = 0; // Max size of CLM IndexEntry::dataLength is 32 bits.
+			std::array<char, CLM_WRITE_SIZE> buffer;
+
 			do
 			{
-				// Will throw an error
-				//MemoryStreamReader streamReader(buffer, CLM_WRITE_SIZE);
-				//streamReader.Read((char*)m_FileHandle, CLM_WRITE_SIZE);
+				numBytesToRead = CLM_WRITE_SIZE;
 
-				// TODO: Replace with a non-Windows specific solution
-				if (ReadFile(m_FileHandle, buffer, CLM_WRITE_SIZE, &numBytesRead, nullptr) == 0)
-				{
-					return;
+				// Check if less than CLM_WRITE_SIZE of data remains for writing to disk.
+				if (offset + numBytesToRead > indexEntries[fileIndex].dataLength) {
+					numBytesToRead = indexEntries[fileIndex].dataLength - offset;
 				}
 
-				if (totalSize + numBytesRead > m_IndexEntry[fileIndex].dataLength) {
-					numBytesRead = m_IndexEntry[fileIndex].dataLength - totalSize;
-				}
+				clmFileReader->Read(buffer.data(), numBytesToRead);
 
-				totalSize += numBytesRead;
+				offset += numBytesToRead;
 
-				fileStreamWriter.Write(buffer, numBytesRead);
-
-			} while (numBytesRead);
+				waveFileWriter.Write(buffer.data(), numBytesToRead);
+			} while (numBytesToRead); // End loop when numBytesRead/Written is equal to 0
 		}
 		catch (std::exception& e)
 		{
@@ -180,15 +115,15 @@ namespace Archives
 	{
 		headerOut.riffHeader.riffTag = RIFF;
 		headerOut.riffHeader.waveTag = WAVE;
-		headerOut.riffHeader.chunkSize = sizeof(headerOut.formatChunk) + 12 + m_IndexEntry[fileIndex].dataLength;
+		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[fileIndex].dataLength;
 
 		headerOut.formatChunk.fmtTag = FMT;
 		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
-		headerOut.formatChunk.waveFormat = m_WaveFormat;
+		headerOut.formatChunk.waveFormat = clmHeader.waveFormat;
 		headerOut.formatChunk.waveFormat.cbSize = 0;
 
 		headerOut.dataChunk.formatTag = DATA;
-		headerOut.dataChunk.length = m_IndexEntry[fileIndex].dataLength;
+		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
 	}
 
 	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
@@ -219,7 +154,7 @@ namespace Archives
 		for (int i = 0; i < m_NumberOfPackedFiles; i++)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			filesToPack[i] = std::string(GetInternalFileName(i)) + ".wav";
+			filesToPack[i] = GetInternalFileName(i) + ".wav";
 		}
 
 		return CreateArchive("temp.clm", filesToPack);
@@ -231,10 +166,6 @@ namespace Archives
 	// Returns nonzero if successful and zero otherwise.
 	bool ClmFile::CreateArchive(std::string archiveFileName, std::vector<std::string> filesToPack)
 	{
-		if (filesToPack.size() < 1) {
-			return false; //CLM files require at least one audio file present to properly write settings.
-		}
-
 		// Sort files alphabetically based on the fileName only (not including the full path).
 		// Packed files must be locatable by a binary search of their fileName.
 		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
@@ -242,7 +173,7 @@ namespace Archives
 		std::vector<std::unique_ptr<FileStreamReader>> filesToPackReaders;
 		try {
 			// Opens all files for packing. If there is a problem opening a file, an exception is raised.
-			for (std::string fileName : filesToPack) {
+			for (const std::string& fileName : filesToPack) {
 				filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
 			}
 		}
@@ -271,7 +202,16 @@ namespace Archives
 
 		// Write the archive header and copy files into the archive
 		try {
-			WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, waveFormats[0]);
+			WaveFormatEx waveFormat;
+
+			if (waveFormats.size() > 0) {
+				waveFormat = waveFormats[0];
+			}
+			else {
+				waveFormat = CreateDefaultWaveFormat();
+			}
+
+			WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, waveFormat);
 		}
 		catch (std::exception& e) {
 			return false; // Error writing CLM archive file
@@ -295,7 +235,7 @@ namespace Archives
 		for (size_t i = 0; i < filesToPackReaders.size(); i++)
 		{
 			// Read the file header
-			filesToPackReaders[i]->Read((char*)&header, sizeof(header));
+			filesToPackReaders[i]->Read(header);
 			if (header.riffTag != RIFF || header.waveTag != WAVE) {
 				return false;		// Error reading header
 			}
@@ -312,7 +252,7 @@ namespace Archives
 			}
 
 			// Read in the wave format
-			filesToPackReaders[i]->Read((char*)&waveFormats[i], sizeof(WaveFormatEx));
+			filesToPackReaders[i]->Read(waveFormats[i]);
 			waveFormats[i].cbSize = 0;
 
 			// Find the start of the data
@@ -384,25 +324,12 @@ namespace Archives
 		const std::vector<std::string>& internalNames,
 		const WaveFormatEx& waveFormat)
 	{
-#pragma pack(push, 1)
-		struct ClmHeader
-		{
-			ClmHeader() { memcpy(fileVersion.data(), "OP2 Clump File Version 1.0\x01A\0\0\0\0", 32); }
-
-			std::array<char, 32> fileVersion;
-			WaveFormatEx waveFormat;
-			std::array<char, 6> unknown { 0, 0, 0, 0, 1, 0 };
-			uint32_t packedFilesCount;
-		};
-#pragma pack(pop)
-
-		ClmHeader header;
-		header.waveFormat = waveFormat;
-		header.packedFilesCount = internalNames.size();
+		// ClmFile cannot contain more than 32 bit size internal file count.
+		ClmHeader header(waveFormat, static_cast<uint32_t>(internalNames.size()));
 
 		FileStreamWriter clmFileWriter(archiveFileName);
 
-		clmFileWriter.Write((char*)&header, sizeof(header));
+		clmFileWriter.Write(header);
 
 		// Prepare and write Archive Index
 		PrepareIndex(sizeof(header), internalNames, indexEntries);
@@ -456,10 +383,63 @@ namespace Archives
 	{
 		std::vector<std::string> strippedExtensions;
 
-		for (std::string path : paths) {
+		for (const std::string& path : paths) {
 			strippedExtensions.push_back(XFile::ChangeFileExtension(path, ""));
 		}
 
 		return strippedExtensions;
+	}
+
+	WaveFormatEx ClmFile::CreateDefaultWaveFormat()
+	{
+		return WaveFormatEx{
+			1, // WAVE_FORMAT_PCM
+			1, // mono
+			22050, // 22.05KHz
+			44100, // nSamplesPerSec * nBlockAlign
+			2, // 2 bytes/sample = nChannels * wBitsPerSample / 8
+			16,
+			0
+		};
+	}
+
+
+	// A null terminator (\0) is automatically assigned to the end of the string when placing it within the std::array
+	const std::array<char, 32> standardFileVersion { "OP2 Clump File Version 1.0\x01A\0\0\0\0" };
+	const std::array<char, 6> standardUnknown { 0, 0, 0, 0, 1, 0 };
+
+	ClmFile::ClmHeader::ClmHeader(WaveFormatEx waveFormat, uint32_t packedFilesCount) {
+		fileVersion = standardFileVersion;
+		unknown = standardUnknown;
+
+		this->waveFormat = waveFormat;
+		this->packedFilesCount = packedFilesCount;
+	}
+
+	bool ClmFile::ClmHeader::CheckFileVersion() const {
+		return fileVersion == standardFileVersion;
+	};
+
+	bool ClmFile::ClmHeader::CheckUnknown() const {
+		return unknown == standardUnknown;
+	}
+
+	void ClmFile::ClmHeader::VerifyFileVersion() const {
+		if (!CheckFileVersion()) {
+			throw std::runtime_error("CLM file version is incorrect.");
+		}
+	}
+
+	void ClmFile::ClmHeader::VerifyUnknown() const {
+		if (!CheckUnknown()) {
+			throw std::runtime_error("Unknown field in CLM header is incorrect.");
+		}
+	}
+
+	std::string ClmFile::IndexEntry::GetFileName() const {
+		// Find the first instance of the null terminator and return only this portion of the fileName.
+		auto firstNullTerminator = std::find(fileName.begin(), fileName.end(), '\0');
+
+		return std::string(fileName.data(), firstNullTerminator - fileName.begin());
 	}
 }

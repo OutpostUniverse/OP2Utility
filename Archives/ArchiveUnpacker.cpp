@@ -3,20 +3,15 @@
 
 namespace Archives
 {
-	ArchiveUnpacker::ArchiveUnpacker(const char *fileName)
+	ArchiveUnpacker::ArchiveUnpacker(const std::string& fileName)
 	{
-		// Copy the filename to class storage
-		m_VolumeFileName = new char[strlen(fileName) + 1];// Allocate space for the filename
-		strcpy(m_VolumeFileName, fileName);				  // Copy the filename to class storage
+		this->m_VolumeFileName = fileName;
 
 		m_NumberOfPackedFiles = 0;
 		m_VolumeFileSize = 0;
 	}
 
-	ArchiveUnpacker::~ArchiveUnpacker()
-	{
-		delete m_VolumeFileName;
-	}
+	ArchiveUnpacker::~ArchiveUnpacker() { }
 
 	void ArchiveUnpacker::ExtractAllFiles(const char* destDirectory)
 	{

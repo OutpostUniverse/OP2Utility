@@ -102,6 +102,9 @@
     <ClInclude Include="StreamWriter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Archives\WaveFile.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
