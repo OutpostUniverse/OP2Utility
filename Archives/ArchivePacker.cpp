@@ -75,6 +75,10 @@ namespace Archives
 
 	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames) 
 	{
+		if (internalNames.size() == 0) {
+			return;
+		}
+
 		for (size_t i = 0; i < internalNames.size() - 1; ++i)
 		{
 			if (StringHelper::CheckIfStringsAreEqual(internalNames[i], internalNames[i + 1])) {

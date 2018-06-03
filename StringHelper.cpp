@@ -19,9 +19,9 @@ string StringHelper::ConvertToUpper(const string& str)
 }
 
 // Returns a new vector with matching strings removed. Case insensitive.
-vector<string> StringHelper::RemoveMatchingStrings(const vector<string>& strings, const vector<string>& stringsToRemove)
+vector<string> StringHelper::RemoveStrings(const vector<string>& stringsToSearch, const vector<string>& stringsToRemove)
 {
-	vector<string> stringsToReturn(strings.begin(), strings.end());
+	vector<string> stringsToReturn(stringsToSearch);
 
 	auto pred = [&stringsToRemove](const std::string& key) ->bool
 	{

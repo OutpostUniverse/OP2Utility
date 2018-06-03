@@ -71,7 +71,7 @@ namespace Archives
 		void PackFile(StreamWriter& clmWriter, const IndexEntry& entry, StreamReader& fileToPackReader);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
-		WaveFormatEx CreateDefaultWaveFormat();
+		static WaveFormatEx CreateDefaultWaveFormat();
 
 		std::unique_ptr<SeekableStreamReader> clmFileReader;
 		ClmHeader clmHeader;

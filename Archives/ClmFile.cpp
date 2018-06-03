@@ -211,7 +211,7 @@ namespace Archives
 				waveFormat = CreateDefaultWaveFormat();
 			}
 
-			WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, waveFormats[0]);
+			WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, waveFormat);
 		}
 		catch (std::exception& e) {
 			return false; // Error writing CLM archive file
@@ -390,18 +390,17 @@ namespace Archives
 		return strippedExtensions;
 	}
 
-	WaveFormatEx ClmFile::CreateDefaultWaveFormat() {
-		WaveFormatEx waveFormat;
-
-		waveFormat.wFormatTag = 1; // WAVE_FORMAT_PCM
-		waveFormat.nChannels = 1; // mono
-		waveFormat.nSamplesPerSec = 22050; // 22.05KHz
-		waveFormat.nAvgBytesPerSec = 44100; // nSamplesPerSec *nBlockAlign
-		waveFormat.nBlockAlign = 2; // 2 bytes/sample = nChannels * wBitsPerSample / 8
-		waveFormat.wBitsPerSample = 16;
-		waveFormat.cbSize = 0;
-
-		return waveFormat;
+	WaveFormatEx ClmFile::CreateDefaultWaveFormat()
+	{
+		return WaveFormatEx{
+			1, // WAVE_FORMAT_PCM
+			1, // mono
+			22050, // 22.05KHz
+			44100, // nSamplesPerSec * nBlockAlign
+			2, // 2 bytes/sample = nChannels * wBitsPerSample / 8
+			16,
+			0
+		};
 	}
 
 
@@ -438,9 +437,12 @@ namespace Archives
 	}
 
 	std::string ClmFile::IndexEntry::GetFileName() const {
-		char fileNameOut[9];
-		strncpy_s(fileNameOut, fileName.data(), 8);
+		// Find the first instance of the null terminator and return only this portion of the fileName.
+		// Since fileNames smaller than 8 characters will include multiple null terminators, the returned 
+		// std::string's size will include these extra null terminators. 
+		// This will display the string peroperly, but comparison checks may fail because size is different.
+		auto firstNullTerminator = std::find(fileName.begin(), fileName.end(), '\0');
 
-		return std::string(fileNameOut);
+		return std::string(fileName.data(), firstNullTerminator - fileName.begin());
 	}
 }
