@@ -1,5 +1,6 @@
 #include "StreamWriter.h"
 #include <stdexcept>
+#include <cstring>
 
 StreamWriter::~StreamWriter() { }
 
@@ -40,7 +41,7 @@ void MemoryStreamWriter::Write(const char* buffer, size_t size)
 		throw std::runtime_error("Size of bytes to write exceeds remaining size of buffer.");
 	}
 
-	memcpy(streamBuffer + offset, buffer, size);
+	std::memcpy(streamBuffer + offset, buffer, size);
 	offset += size;
 }
 
