@@ -47,9 +47,9 @@ void FileStreamWriter::SeekRelative(int64_t offset)
 }
 
 
-MemoryStreamWriter::MemoryStreamWriter(char* buffer, size_t size)
+MemoryStreamWriter::MemoryStreamWriter(void* buffer, size_t size)
 {
-	streamBuffer = buffer;
+	streamBuffer = static_cast<char*>(buffer);
 	streamSize = size;
 	offset = 0;
 }

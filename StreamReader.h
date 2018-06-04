@@ -49,7 +49,7 @@ private:
 
 class MemoryStreamReader : public SeekableStreamReader {
 public:
-	MemoryStreamReader(char* buffer, size_t size);
+	MemoryStreamReader(void* buffer, size_t size);
 
 	// StreamReader methods
 	void Read(void* buffer, size_t size) override;

@@ -55,7 +55,7 @@ class MemoryStreamWriter : public SeekableStreamWriter
 public:
 	// buffer: where data will be written to.
 	// size: Amount of space allocated in the buffer for writing into.
-	MemoryStreamWriter(char* buffer, size_t size);
+	MemoryStreamWriter(void* buffer, size_t size);
 
 	// StreamWriter methods
 	void Write(const void* buffer, size_t size) override;

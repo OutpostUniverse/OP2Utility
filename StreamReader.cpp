@@ -44,8 +44,8 @@ void FileStreamReader::SeekRelative(int64_t offset) {
 }
 
 
-MemoryStreamReader::MemoryStreamReader(char* buffer, size_t size) {
-	streamBuffer = buffer;
+MemoryStreamReader::MemoryStreamReader(void* buffer, size_t size) {
+	streamBuffer = static_cast<char*>(buffer);
 	streamSize = size;
 	position = 0;
 }
