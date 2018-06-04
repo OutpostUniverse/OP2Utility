@@ -24,7 +24,7 @@ void FileStreamWriter::Write(const char* buffer, size_t size)
 
 void FileStreamWriter::SeekRelative(int offset)
 {
-	fileStream.seekg(offset, std::ios_base::cur);
+	fileStream.seekp(offset, std::ios_base::cur);
 }
 
 
