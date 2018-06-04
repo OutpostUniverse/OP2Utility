@@ -17,9 +17,9 @@ FileStreamWriter::~FileStreamWriter() {
 	fileStream.close();
 }
 
-void FileStreamWriter::Write(const char* buffer, size_t size)
+void FileStreamWriter::Write(const void* buffer, size_t size)
 {
-	fileStream.write(buffer, size);
+	fileStream.write(static_cast<const char*>(buffer), size);
 }
 
 uint64_t FileStreamWriter::Length()
@@ -54,7 +54,7 @@ MemoryStreamWriter::MemoryStreamWriter(char* buffer, size_t size)
 	offset = 0;
 }
 
-void MemoryStreamWriter::Write(const char* buffer, size_t size)
+void MemoryStreamWriter::Write(const void* buffer, size_t size)
 {
 	if (offset + size > streamSize) {
 		throw std::runtime_error("Size of bytes to write exceeds remaining size of buffer.");

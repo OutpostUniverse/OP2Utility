@@ -19,8 +19,8 @@ FileStreamReader::~FileStreamReader() {
 	file.close();
 }
 
-void FileStreamReader::Read(char* buffer, size_t size) {
-	file.read(buffer, size);
+void FileStreamReader::Read(void* buffer, size_t size) {
+	file.read(static_cast<char*>(buffer), size);
 }
 
 uint64_t FileStreamReader::Length() {
@@ -50,7 +50,7 @@ MemoryStreamReader::MemoryStreamReader(char* buffer, size_t size) {
 	position = 0;
 }
 
-void MemoryStreamReader::Read(char* buffer, size_t size) 
+void MemoryStreamReader::Read(void* buffer, size_t size)
 {
 	if (position + size > streamSize) {
 		throw std::runtime_error("Size of bytes to read exceeds remaining size of buffer.");

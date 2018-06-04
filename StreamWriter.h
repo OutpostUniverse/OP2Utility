@@ -7,7 +7,7 @@ class StreamWriter
 {
 public:
 	virtual ~StreamWriter() = 0;
-	virtual void Write(const char* buffer, size_t size) = 0;
+	virtual void Write(const void* buffer, size_t size) = 0;
 };
 
 class SeekableStreamWriter : public StreamWriter
@@ -33,7 +33,7 @@ public:
 
 	// StreamWriter methods
 	~FileStreamWriter() override;
-	void Write(const char* buffer, size_t size) override;
+	void Write(const void* buffer, size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Write(T& object) {
@@ -58,7 +58,7 @@ public:
 	MemoryStreamWriter(char* buffer, size_t size);
 
 	// StreamWriter methods
-	void Write(const char* buffer, size_t size) override;
+	void Write(const void* buffer, size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Write(T& object) {
