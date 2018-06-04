@@ -24,9 +24,9 @@ void FileStreamReader::Read(char* buffer, size_t size) {
 }
 
 uint64_t FileStreamReader::Length() {
-	uint64_t currentPosition = file.tellg();
+	auto currentPosition = file.tellg();
 	file.seekg(0, std::ios_base::end);
-	uint64_t streamSize = file.tellg();
+	auto streamSize = file.tellg();
 
 	file.seekg(currentPosition);
 
