@@ -28,13 +28,13 @@ uint64_t FileStreamReader::Length() {
 	file.seekg(0, std::ios_base::end);
 	uint64_t streamSize = file.tellg();
 
-	file.seekg(currentPosition, std::ios_base::beg);
+	file.seekg(currentPosition);
 
 	return streamSize;
 }
 
 void FileStreamReader::Seek(uint64_t position) {
-	file.seekg(position, std::ios_base::beg);
+	file.seekg(position);
 }
 
 void FileStreamReader::SeekRelative(int64_t offset) {
