@@ -21,7 +21,8 @@ void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData)
 
 void MapWriter::Write(const std::string& filename, const MapData& mapData)
 {
-	Write(FileStreamWriter(filename), mapData);
+	FileStreamWriter mapWriter(filename);
+	Write(mapWriter, mapData);
 }
 
 void MapWriter::WriteHeader(const MapHeader& header)
