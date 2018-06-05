@@ -10,8 +10,8 @@ class SeekableStreamReader;
 class MapReader
 {
 public:
-	MapData MapReader::Read(std::unique_ptr<SeekableStreamReader> mapStream, bool savedGame = false);
-	MapData MapReader::Read(std::string filename, bool savedGame = false);
+	MapData Read(std::unique_ptr<SeekableStreamReader> mapStream, bool savedGame = false);
+	MapData Read(std::string filename, bool savedGame = false);
 
 private:
 	std::unique_ptr<SeekableStreamReader> streamReader;
