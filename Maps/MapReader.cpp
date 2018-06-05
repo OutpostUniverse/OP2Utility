@@ -141,27 +141,12 @@ TileGroup MapReader::ReadTileGroup()
 // String must be stored in file as string length followed by char[].
 std::string MapReader::ReadString()
 {
-	size_t stringLength;
+	uint32_t stringLength;
 	streamReader->Read(&stringLength, sizeof(stringLength));
 
-	if (stringLength == 0) {
-		return std::string();
-	}
+	std::string s;
+	s.resize(stringLength);
+	streamReader->Read(&s[0], stringLength);
 
-	char* cString = new char[stringLength];
-
-	try
-	{
-		streamReader->Read(cString, stringLength);
-		std::string s(cString, stringLength);
-		delete cString;
-
-		return s;
-	}
-	catch (std::exception e)
-	{
-		delete cString;
-
-		throw e;
-	}
+	return s;
 }
