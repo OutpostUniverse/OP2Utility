@@ -6,16 +6,13 @@
 
 MapData MapReader::Read(std::string filename, bool savedGame)
 {
-	return Read(std::make_unique<FileStreamReader>(filename), savedGame);
+	FileStreamReader mapReader(filename);
+	return Read(mapReader, savedGame);
 }
 
-MapData MapReader::Read(std::unique_ptr<SeekableStreamReader> mapStream, bool savedGame)
+MapData MapReader::Read(SeekableStreamReader& mapStream, bool savedGame)
 {
-	if (!mapStream) {
-		throw std::runtime_error("Provided map or save stream does not exist or is malformed.");
-	}
-
-	streamReader = std::move(mapStream);
+	streamReader = &mapStream;
 
 	MapData mapData;
 
