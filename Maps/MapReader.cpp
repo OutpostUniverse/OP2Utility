@@ -2,6 +2,7 @@
 #include "../StreamReader.h"
 #include <iostream>
 #include <stdexcept>
+#include <cstring>
 
 MapData MapReader::Read(std::string filename, bool savedGame)
 {
@@ -61,7 +62,7 @@ void MapReader::ReadTilesetHeader()
 	char buffer[10];
 	streamReader->Read(buffer, sizeof(buffer));
 
-	if (strncmp(buffer, "TILE SET\x1a", sizeof(buffer))) {
+	if (std::strncmp(buffer, "TILE SET\x1a", sizeof(buffer))) {
 		throw std::runtime_error("'TILE SET' string not found.");
 	}
 }
