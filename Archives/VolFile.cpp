@@ -479,7 +479,7 @@ namespace Archives
 		for (temp = 0; temp < m_NumberOfIndexEntries; temp++)
 		{
 			// Make sure entry is valid
-			if (m_Index[temp].fileNameOffset == -1)
+			if (m_Index[temp].fileNameOffset == -1u)
 				break;
 		}
 		m_NumberOfPackedFiles = temp;		// Store the number of used index entries
