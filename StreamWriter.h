@@ -36,7 +36,7 @@ public:
 	void Write(const char* buffer, size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
-	template<typename T> inline void Write(T& object) {
+	template<typename T> inline void Write(const T& object) {
 		Write((char*)&object, sizeof(object));
 	}
 
@@ -61,7 +61,7 @@ public:
 	void Write(const char* buffer, size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
-	template<typename T> inline void Write(T& object) {
+	template<typename T> inline void Write(const T& object) {
 		Write((char*)&object, sizeof(object));
 	}
 
