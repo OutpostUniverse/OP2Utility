@@ -24,17 +24,19 @@ void FileStreamReader::Read(char* buffer, size_t size) {
 }
 
 uint64_t FileStreamReader::Length() {
-	uint64_t currentPosition = file.tellg();
-	file.seekg(0, std::ios_base::end);
-	uint64_t streamSize = file.tellg();
-
-	file.seekg(currentPosition, std::ios_base::beg);
-
+	auto currentPosition = file.tellg();  // Record current position
+	file.seekg(0, std::ios_base::end);    // Seek to end of file
+	auto streamSize = file.tellg();       // Record current position (length of file)
+	file.seekg(currentPosition);          // Restore position
 	return streamSize;
 }
 
+uint64_t FileStreamReader::Position() {
+	return file.tellg();  // Return the current get pointer
+}
+
 void FileStreamReader::Seek(uint64_t position) {
-	file.seekg(position, std::ios_base::beg);
+	file.seekg(position);
 }
 
 void FileStreamReader::SeekRelative(int64_t offset) {
@@ -60,6 +62,10 @@ void MemoryStreamReader::Read(char* buffer, size_t size)
 
 uint64_t MemoryStreamReader::Length() {
 	return streamSize;
+}
+
+uint64_t MemoryStreamReader::Position() {
+	return position;
 }
 
 void MemoryStreamReader::Seek(uint64_t position) {

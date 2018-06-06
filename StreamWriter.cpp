@@ -22,9 +22,28 @@ void FileStreamWriter::Write(const char* buffer, size_t size)
 	fileStream.write(buffer, size);
 }
 
-void FileStreamWriter::SeekRelative(int offset)
+uint64_t FileStreamWriter::Length()
 {
-	fileStream.seekg(offset, std::ios_base::cur);
+	auto currentPosition = fileStream.tellp();  // Record current position
+	fileStream.seekp(0, std::ios_base::end);    // Seek to end of file
+	auto length = fileStream.tellp();   // Record current position (length of file)
+	fileStream.seekp(currentPosition);  // Restore position
+	return length;
+}
+
+uint64_t FileStreamWriter::Position()
+{
+	return fileStream.tellp();  // Return the current put pointer
+}
+
+void FileStreamWriter::Seek(uint64_t offset)
+{
+	fileStream.seekp(offset);
+}
+
+void FileStreamWriter::SeekRelative(int64_t offset)
+{
+	fileStream.seekp(offset, std::ios_base::cur);
 }
 
 
@@ -45,13 +64,28 @@ void MemoryStreamWriter::Write(const char* buffer, size_t size)
 	offset += size;
 }
 
-void MemoryStreamWriter::SeekRelative(int offset)
+uint64_t MemoryStreamWriter::Length()
+{
+	return streamSize;
+}
+
+uint64_t MemoryStreamWriter::Position()
+{
+	return offset;
+}
+
+void MemoryStreamWriter::Seek(uint64_t offset)
 {
 	// Checking if offset goes below 0 is unnecessary. Arithmetic on a signed and unsigned number results 
 	// in a signed number that will wraparound to a large positive and be caught.
-	if (this->offset + offset > streamSize) {
+	if (offset > streamSize) {
 		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 	}
 
-	this->offset += offset;
+	this->offset = offset;
+}
+
+void MemoryStreamWriter::SeekRelative(int64_t offset)
+{
+	Seek(this->offset + offset);
 }
