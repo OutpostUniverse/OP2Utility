@@ -11,8 +11,8 @@ class SeekableStreamWriter;
 class MapWriter
 {
 public:
-	void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData);
-	void MapWriter::Write(const std::string& filename, const MapData& mapData);
+	void Write(SeekableStreamWriter& mapStream, const MapData& mapData);
+	void Write(const std::string& filename, const MapData& mapData);
 
 private:
 	SeekableStreamWriter* streamWriter;

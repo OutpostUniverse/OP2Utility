@@ -1,5 +1,6 @@
 x64
 Debug
 Release
+build/
 /*.user
 .vs
