@@ -4,6 +4,7 @@
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
+#include <climits>
 
 
 namespace Archives
@@ -479,7 +480,7 @@ namespace Archives
 		for (temp = 0; temp < m_NumberOfIndexEntries; temp++)
 		{
 			// Make sure entry is valid
-			if (m_Index[temp].fileNameOffset == -1u)
+			if (m_Index[temp].fileNameOffset == UINT_MAX)
 				break;
 		}
 		m_NumberOfPackedFiles = temp;		// Store the number of used index entries
