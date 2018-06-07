@@ -21,7 +21,7 @@ namespace Archives
 	// Throws an error is problems encountered while reading the header.
 	void ClmFile::ReadHeader()
 	{
-		clmFileReader->Read((char*)&clmHeader, sizeof(ClmHeader));
+		clmFileReader->Read(&clmHeader, sizeof(ClmHeader));
 		
 		try {
 			clmHeader.VerifyFileVersion();
@@ -34,7 +34,7 @@ namespace Archives
 		m_NumberOfPackedFiles = clmHeader.packedFilesCount;
 
 		indexEntries = std::vector<IndexEntry>(m_NumberOfPackedFiles);
-		clmFileReader->Read((char*)indexEntries.data(), m_NumberOfPackedFiles * sizeof(IndexEntry));
+		clmFileReader->Read(indexEntries.data(), m_NumberOfPackedFiles * sizeof(IndexEntry));
 	}
 
 
@@ -289,7 +289,7 @@ namespace Archives
 		do
 		{
 			// Read the tag
-			seekableStreamReader.Read((char*)&header, sizeof(header));
+			seekableStreamReader.Read(&header, sizeof(header));
 			
 			// Check if this is the right header
 			if (header.formatTag == chunkTag) {
@@ -333,7 +333,7 @@ namespace Archives
 
 		// Prepare and write Archive Index
 		PrepareIndex(sizeof(header), internalNames, indexEntries);
-		clmFileWriter.Write((char*)indexEntries.data(), header.packedFilesCount * sizeof(IndexEntry));
+		clmFileWriter.Write(indexEntries.data(), header.packedFilesCount * sizeof(IndexEntry));
 
 		// Copy files into the archive
 		for (size_t i = 0; i < header.packedFilesCount; i++) {

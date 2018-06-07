@@ -32,22 +32,22 @@ void MapWriter::WriteHeader(const MapHeader& header)
 		throw std::runtime_error("All instances of version tag in .map and .op2 files must be greater than 0x1010.");
 	}
 
-	streamWriter->Write((char*)&header, sizeof(header));
+	streamWriter->Write(&header, sizeof(header));
 }
 
 void MapWriter::WriteVersionTag(int versionTag)
 {
-	streamWriter->Write((char*)&versionTag, sizeof(versionTag));
+	streamWriter->Write(&versionTag, sizeof(versionTag));
 }
 
 void MapWriter::WriteTiles(const std::vector<TileData>& tiles)
 {
-	streamWriter->Write((char*)&tiles[0], tiles.size() * sizeof(TileData));
+	streamWriter->Write(&tiles[0], tiles.size() * sizeof(TileData));
 }
 
 void MapWriter::WriteClipRect(const ClipRect& clipRect)
 {
-	streamWriter->Write((char*)&clipRect, sizeof(clipRect));
+	streamWriter->Write(&clipRect, sizeof(clipRect));
 }
 
 void MapWriter::WriteTilesetSources(const std::vector<TilesetSource>& tileSetSources)
@@ -59,7 +59,7 @@ void MapWriter::WriteTilesetSources(const std::vector<TilesetSource>& tileSetSou
 		// Only include the number of tiles if the tileset contains a filename.
 		if (tilesetSource.tilesetFilename.size() > 0)
 		{
-			streamWriter->Write((char*)&tilesetSource.numTiles, sizeof(int));
+			streamWriter->Write(&tilesetSource.numTiles, sizeof(int));
 		}
 	}
 }
@@ -75,7 +75,7 @@ void MapWriter::WriteTileInfo(const std::vector<TileInfo>& tileInfos)
 
 	for (TileInfo tileInfo : tileInfos)
 	{
-		streamWriter->Write((char*)&tileInfo, sizeof(TileInfo));
+		streamWriter->Write(&tileInfo, sizeof(TileInfo));
 	}
 }
 
@@ -85,7 +85,7 @@ void MapWriter::WriteTerrainType(const std::vector<TerrainType>& terrainTypes)
 
 	for (TerrainType terrainType : terrainTypes)
 	{
-		streamWriter->Write((char*)&terrainType, sizeof(TerrainType));
+		streamWriter->Write(&terrainType, sizeof(TerrainType));
 	}
 }
 
@@ -97,12 +97,12 @@ void MapWriter::WriteTileGroups(const std::vector<TileGroup>& tileGroups)
 
 	for (TileGroup tileGroup : tileGroups)
 	{
-		streamWriter->Write((char*)&tileGroup.tileWidth, sizeof(tileGroup.tileWidth));
-		streamWriter->Write((char*)&tileGroup.tileHeight, sizeof(tileGroup.tileHeight));
+		streamWriter->Write(&tileGroup.tileWidth, sizeof(tileGroup.tileWidth));
+		streamWriter->Write(&tileGroup.tileHeight, sizeof(tileGroup.tileHeight));
 
 		for (int mappingIndex : tileGroup.mappingIndices)
 		{
-			streamWriter->Write((char*)&mappingIndex, sizeof(mappingIndex));
+			streamWriter->Write(&mappingIndex, sizeof(mappingIndex));
 		}
 
 		WriteString(tileGroup.name);
@@ -111,7 +111,7 @@ void MapWriter::WriteTileGroups(const std::vector<TileGroup>& tileGroups)
 
 void MapWriter::WriteContainerSize(size_t size)
 {
-	streamWriter->Write((char*)&size, sizeof(size));
+	streamWriter->Write(&size, sizeof(size));
 }
 
 // String must be stored in file as string length followed by char[].
