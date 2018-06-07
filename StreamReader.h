@@ -7,7 +7,7 @@
 class StreamReader {
 public:
 	virtual ~StreamReader() = 0;
-	virtual void Read(char* buffer, size_t size) = 0;
+	virtual void Read(void* buffer, size_t size) = 0;
 };
 
 class SeekableStreamReader : public StreamReader {
@@ -29,7 +29,7 @@ public:
 
 	// StreamReader methods
 	~FileStreamReader() override;
-	void Read(char* buffer, size_t size) override;
+	void Read(void* buffer, size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Read(T& object) {
@@ -49,10 +49,10 @@ private:
 
 class MemoryStreamReader : public SeekableStreamReader {
 public:
-	MemoryStreamReader(char* buffer, size_t size);
+	MemoryStreamReader(void* buffer, size_t size);
 
 	// StreamReader methods
-	void Read(char* buffer, size_t size) override;
+	void Read(void* buffer, size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Read(T& object) {
