@@ -1,5 +1,5 @@
 #include "MapWriter.h"
-#include "../StreamWriter.h"
+#include "../Streams/StreamWriter.h"
 
 void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData)
 {	

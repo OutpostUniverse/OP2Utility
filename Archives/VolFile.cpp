@@ -1,6 +1,6 @@
 #include "VolFile.h"
-#include "../StreamReader.h"
-#include "../StreamWriter.h"
+#include "../Streams/StreamReader.h"
+#include "../Streams/StreamWriter.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>

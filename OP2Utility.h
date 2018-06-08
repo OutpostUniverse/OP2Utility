@@ -1,7 +1,7 @@
 #pragma once
 
 #include "StringHelper.h"
-#include "StreamReader.h"
+#include "Streams/StreamReader.h"
 #include "XFile.h"
 #include "Maps/MapData.h"
 

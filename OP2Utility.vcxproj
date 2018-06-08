@@ -150,15 +150,14 @@
     <ClCompile Include="Archives\ClmFile.cpp" />
     <ClCompile Include="Archives\HuffLZ.cpp" />
     <ClCompile Include="Archives\VolFile.cpp" />
-    <ClCompile Include="StreamReader.cpp" />
+    <ClCompile Include="Streams\FileStreamWriter.cpp" />
+    <ClCompile Include="Streams\StreamReader.cpp" />
     <ClInclude Include="OP2Utility.h" />
-    <ClInclude Include="StreamReader.h" />
-    <ClInclude Include="StreamWriter.h" />
+    <ClInclude Include="Streams\StreamReader.h" />
+    <ClInclude Include="Streams\StreamWriter.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="XFile.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="StreamWriter.cpp" />
+    <ClCompile Include="Streams\StreamWriter.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="XFile.cpp" />
   </ItemGroup>

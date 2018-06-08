@@ -46,7 +46,6 @@ void FileStreamWriter::SeekRelative(int64_t offset)
 	fileStream.seekp(offset, std::ios_base::cur);
 }
 
-
 MemoryStreamWriter::MemoryStreamWriter(void* buffer, size_t size)
 {
 	streamBuffer = static_cast<char*>(buffer);
