@@ -49,7 +49,7 @@ void MapReader::ReadTiles(MapData& mapData)
 	streamReader->Read(&mapData.tiles[0], mapData.tiles.size() * sizeof(TileData));
 }
 
-void MapReader::ReadClipRect(const ClipRect& clipRect)
+void MapReader::ReadClipRect(ClipRect& clipRect)
 {
 	streamReader->Read(&clipRect, sizeof(clipRect));
 }

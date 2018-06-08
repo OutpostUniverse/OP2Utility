@@ -19,7 +19,7 @@ private:
 	void SkipSaveGameHeader();
 	void ReadHeader(MapData& mapData);
 	void ReadTiles(MapData& mapData);
-	void ReadClipRect(const ClipRect& clipRect);
+	void ReadClipRect(ClipRect& clipRect);
 	void ReadTilesetSources(MapData& mapData);
 	void ReadTilesetHeader();
 	void ReadTileInfo(MapData& mapData);
