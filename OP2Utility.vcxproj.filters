@@ -108,6 +108,12 @@
     <ClInclude Include="Streams\StreamWriter.h">
       <Filter>Streams</Filter>
     </ClInclude>
+    <ClInclude Include="Streams\FileStreamWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\MemoryStreamWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
@@ -159,6 +165,9 @@
       <Filter>Streams</Filter>
     </ClCompile>
     <ClCompile Include="Streams\FileStreamWriter.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="Streams\MemoryStreamWriter.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
   </ItemGroup>

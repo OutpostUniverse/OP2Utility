@@ -151,8 +151,11 @@
     <ClCompile Include="Archives\HuffLZ.cpp" />
     <ClCompile Include="Archives\VolFile.cpp" />
     <ClCompile Include="Streams\FileStreamWriter.cpp" />
+    <ClCompile Include="Streams\MemoryStreamWriter.cpp" />
     <ClCompile Include="Streams\StreamReader.cpp" />
     <ClInclude Include="OP2Utility.h" />
+    <ClInclude Include="Streams\FileStreamWriter.h" />
+    <ClInclude Include="Streams\MemoryStreamWriter.h" />
     <ClInclude Include="Streams\StreamReader.h" />
     <ClInclude Include="Streams\StreamWriter.h" />
     <ClInclude Include="StringHelper.h" />
