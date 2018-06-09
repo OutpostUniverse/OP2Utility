@@ -12,7 +12,7 @@ public:
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Read(T& object) {
-		Read((char*)&object, sizeof(object));
+		Read(&object, sizeof(object));
 	}
 
 	// SeekableStreamReader methods

@@ -15,7 +15,7 @@ public:
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Write(const T& object) {
-		Write((char*)&object, sizeof(object));
+		Write(&object, sizeof(object));
 	}
 
 	// SeekableStreamWriter methods
