@@ -40,18 +40,18 @@ void MapReader::SkipSaveGameHeader()
 
 void MapReader::ReadHeader(MapData& mapData)
 {
-	streamReader->Read((char*)&mapData.header, sizeof(mapData.header));
+	streamReader->Read(&mapData.header, sizeof(mapData.header));
 }
 
 void MapReader::ReadTiles(MapData& mapData)
 {
 	mapData.tiles.resize(mapData.header.TileCount());
-	streamReader->Read((char*)&mapData.tiles[0], mapData.tiles.size() * sizeof(TileData));
+	streamReader->Read(&mapData.tiles[0], mapData.tiles.size() * sizeof(TileData));
 }
 
-void MapReader::ReadClipRect(const ClipRect& clipRect)
+void MapReader::ReadClipRect(ClipRect& clipRect)
 {
-	streamReader->Read((char*)&clipRect, sizeof(clipRect));
+	streamReader->Read(&clipRect, sizeof(clipRect));
 }
 
 void MapReader::ReadTilesetHeader()
@@ -77,7 +77,7 @@ void MapReader::ReadTilesetSources(MapData& mapData)
 		}
 
 		if (mapData.tilesetSources[i].tilesetFilename.size() > 0) {
-			streamReader->Read((char*)&mapData.tilesetSources[i].numTiles, sizeof(int));
+			streamReader->Read(&mapData.tilesetSources[i].numTiles, sizeof(int));
 		}
 	}
 }
@@ -85,21 +85,21 @@ void MapReader::ReadTilesetSources(MapData& mapData)
 void MapReader::ReadTileInfo(MapData& mapData)
 {
 	size_t numTileInfo;
-	streamReader->Read((char*)&numTileInfo, sizeof(numTileInfo));
+	streamReader->Read(&numTileInfo, sizeof(numTileInfo));
 
 	mapData.tileInfos.resize(numTileInfo);
-	streamReader->Read((char*)&mapData.tileInfos[0], numTileInfo * sizeof(TileInfo));
+	streamReader->Read(&mapData.tileInfos[0], numTileInfo * sizeof(TileInfo));
 
 	size_t numTerrainTypes;
-	streamReader->Read((char*)&numTerrainTypes, sizeof(numTerrainTypes));
+	streamReader->Read(&numTerrainTypes, sizeof(numTerrainTypes));
 	mapData.terrainTypes.resize(numTerrainTypes);
-	streamReader->Read((char*)&mapData.terrainTypes[0], numTerrainTypes * sizeof(TerrainType));
+	streamReader->Read(&mapData.terrainTypes[0], numTerrainTypes * sizeof(TerrainType));
 }
 
 void MapReader::ReadVersionTag()
 {
 	int versionTag;
-	streamReader->Read((char*)&versionTag, sizeof(versionTag));
+	streamReader->Read(&versionTag, sizeof(versionTag));
 
 	if (versionTag < 0x1010)
 	{
@@ -110,7 +110,7 @@ void MapReader::ReadVersionTag()
 void MapReader::ReadTileGroups(MapData& mapData)
 {
 	int numTileGroups;
-	streamReader->Read((char*)&numTileGroups, sizeof(numTileGroups));
+	streamReader->Read(&numTileGroups, sizeof(numTileGroups));
 	streamReader->SeekRelative(4);
 
 	for (int i = 0; i < numTileGroups; ++i)
@@ -123,13 +123,13 @@ TileGroup MapReader::ReadTileGroup()
 {
 	TileGroup tileGroup;
 
-	streamReader->Read((char*)&tileGroup.tileWidth, sizeof(tileGroup.tileWidth));
-	streamReader->Read((char*)&tileGroup.tileHeight, sizeof(tileGroup.tileHeight));
+	streamReader->Read(&tileGroup.tileWidth, sizeof(tileGroup.tileWidth));
+	streamReader->Read(&tileGroup.tileHeight, sizeof(tileGroup.tileHeight));
 
 	int mappingIndex;
 	for (int i = 0; i < tileGroup.tileHeight * tileGroup.tileWidth; ++i)
 	{
-		streamReader->Read((char*)&mappingIndex, sizeof(mappingIndex));
+		streamReader->Read(&mappingIndex, sizeof(mappingIndex));
 		tileGroup.mappingIndices.push_back(mappingIndex);
 	}
 
@@ -142,7 +142,7 @@ TileGroup MapReader::ReadTileGroup()
 std::string MapReader::ReadString()
 {
 	size_t stringLength;
-	streamReader->Read((char*)&stringLength, sizeof(stringLength));
+	streamReader->Read(&stringLength, sizeof(stringLength));
 
 	if (stringLength == 0) {
 		return std::string();
