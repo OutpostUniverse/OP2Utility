@@ -1,6 +1,5 @@
 #include "VolFile.h"
 #include "../StreamReader.h"
-#include "../StreamWriter.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
@@ -181,34 +180,27 @@ namespace Archives
 
 	bool VolFile::CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack)
 	{
+		// Sort files alphabetically based on the fileName only (not including the full path).
+		// Packed files must be locatable by a binary search of their fileName.
 		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
 
 		CreateVolumeInfo volInfo;
 
 		volInfo.filesToPack = filesToPack;
 		volInfo.internalNames = GetInternalNamesFromPaths(filesToPack);
-		CheckSortedContainerForDuplicateNames(volInfo.internalNames);
 
-		if (OpenOutputFile(volumeFileName.c_str()) == 0) {
-			return false;
-		}
+		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
+		CheckSortedContainerForDuplicateNames(volInfo.internalNames);
 
 		// Open input files and prepare header and indexing info
 		if (!PrepareHeader(volInfo)) {
-			CloseOutputFile();
 			return false;
 		}
 
-
-		// Write volume contents
-		// ---------------------
-		// Write the header
-		if (!WriteHeader(volInfo)) {
-			CleanUpVolumeCreate(volInfo);
-			return false;
+		try {
+			WriteVolume(volumeFileName, volInfo);
 		}
-		
-		if (!WriteFiles(volInfo)) {
+		catch (std::exception& e) {
 			CleanUpVolumeCreate(volInfo);
 			return false;
 		}
@@ -216,6 +208,14 @@ namespace Archives
 		CleanUpVolumeCreate(volInfo);
 
 		return true;
+	}
+
+	void VolFile::WriteVolume(const std::string& fileName, const CreateVolumeInfo& volInfo) 
+	{
+		FileStreamWriter volWriter(fileName);
+
+		WriteHeader(volWriter, volInfo);
+		WriteFiles(volWriter, volInfo);
 	}
 
 	void VolFile::CleanUpVolumeCreate(CreateVolumeInfo &volInfo)
@@ -226,85 +226,56 @@ namespace Archives
 			CloseHandle(volInfo.fileHandle[i]);
 		}
 
-		CloseOutputFile();
-
 		// Release memory used to create the index
 		delete[] volInfo.indexEntry;
 		delete[] volInfo.fileHandle;
 		delete[] volInfo.fileNameLength;
 	}
 
-	bool VolFile::WriteFiles(CreateVolumeInfo &volInfo)
+	void VolFile::WriteFiles(SeekableStreamWriter& volWriter, const CreateVolumeInfo &volInfo)
 	{
-		unsigned long numBytesWritten;
-		int temp;
-
 		// Write each file header and contents
 		for (size_t i = 0; i < volInfo.fileCount(); i++)
 		{
-			if (WriteTag(volInfo.indexEntry[i].fileSize, "VBLK") == false) {
-				return false;
+			WriteTag(volWriter, volInfo.indexEntry[i].fileSize, "VBLK");
+
+			try {
+				CopyFileIntoVolume(volWriter, volInfo.fileHandle[i], volInfo.indexEntry[i].fileSize);
+				int temp = 0; // Pad with 0 bytes
+				volWriter.Write(&temp, (-volInfo.indexEntry[i].fileSize) & 3);
 			}
-
-			if (CopyFileIntoVolume(volInfo.fileHandle[i], volInfo.indexEntry[i].fileSize) == false) {
-				return false;
-			}
-
-			temp = 0; // Pad with 0 bytes
-
-			if (WriteFile(m_OutFileHandle, &temp, (-volInfo.indexEntry[i].fileSize) & 3,
-				&numBytesWritten, nullptr) == false) {
-				return false;
+			catch (std::exception& e) {
+				throw std::runtime_error("Unable to pack file " + volInfo.internalNames[i] + ". Internal error: " + e.what());
 			}
 		}
-
-		return true;
 	}
 
-	bool VolFile::WriteHeader(CreateVolumeInfo &volInfo)
+	void VolFile::WriteHeader(SeekableStreamWriter& volWriter, const CreateVolumeInfo &volInfo)
 	{
-		unsigned long numBytesWritten;
-
 		// Write the header
-		if (WriteTag(volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24, "VOL ") == false) {
-			return false;
-		}
+		WriteTag(volWriter, volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24, "VOL ");
 
-		if (WriteTag(0, "volh") == false) {
-			return false;
-		}
+		WriteTag(volWriter, 0, "volh");
 
 		// Write the string table
-		if (WriteTag(volInfo.paddedStringTableLength, "vols") == false) {
-			return false;
-		}
+		WriteTag(volWriter, volInfo.paddedStringTableLength, "vols");
 
-		if (WriteFile(m_OutFileHandle, &volInfo.stringTableLength, 4, &numBytesWritten, nullptr) == 0) {
-			return false;
-		}
+		volWriter.Write(&volInfo.stringTableLength, sizeof(int));
 
 		// Write out all internal file name strings (including NULL terminator)
 		for (size_t i = 0; i < volInfo.fileCount(); i++) {
-			if (WriteFile(m_OutFileHandle, volInfo.internalNames[i].c_str(), volInfo.fileNameLength[i], &numBytesWritten, nullptr) == 0) return false;
+			volWriter.Write(volInfo.internalNames[i].c_str(), volInfo.fileNameLength[i]);
 		}
 
-		int i = 0; // Pad with 0 bytes
-		if (WriteFile(m_OutFileHandle, &i, volInfo.paddedStringTableLength - (volInfo.stringTableLength + 4), &numBytesWritten, nullptr) == 0) return false;
+		int padding = 0; // Pad with 0 bytes
+		volWriter.Write(&padding, volInfo.paddedStringTableLength - (volInfo.stringTableLength + 4));
 
 		// Write the index table
-		if (WriteTag(volInfo.indexTableLength, "voli") == false) {
-			return false;
-		}
+		WriteTag(volWriter, volInfo.indexTableLength, "voli");
 
-		if (WriteFile(m_OutFileHandle, volInfo.indexEntry, volInfo.indexTableLength, &numBytesWritten, nullptr) == 0) {
-			return false;
-		}
+		volWriter.Write(volInfo.indexEntry, volInfo.indexTableLength);
 
-		if (WriteFile(m_OutFileHandle, &i, volInfo.paddedIndexTableLength - volInfo.indexTableLength, &numBytesWritten, nullptr) == 0) {
-			return false;
-		}
-
-		return true;
+		volWriter.Write(&padding, volInfo.paddedIndexTableLength - volInfo.indexTableLength);
 	}
 
 	bool VolFile::OpenAllInputFiles(CreateVolumeInfo &volInfo)
@@ -378,32 +349,37 @@ namespace Archives
 		return true;
 	}
 
-	bool VolFile::CopyFileIntoVolume(HANDLE inputFile, int size)
+	void VolFile::CopyFileIntoVolume(SeekableStreamWriter& volWriter, HANDLE inputFile, int size)
 	{
 		char buffer[VOL_WRITE_SIZE];
 		unsigned long numBytesRead;
-		unsigned long numBytesWritten;
 
 		do
 		{
 			// Read a chunk from the input file
-			if (ReadFile(inputFile, buffer, VOL_WRITE_SIZE, &numBytesRead, nullptr) == 0) return false;
-			if (WriteFile(m_OutFileHandle, buffer, numBytesRead, &numBytesWritten, nullptr) == 0) return false;
-		} while (numBytesRead != 0 && numBytesWritten != 0);
+			if (ReadFile(inputFile, buffer, VOL_WRITE_SIZE, &numBytesRead, nullptr) == 0) {
+				throw std::runtime_error("Error attempting to read from file for packing");
+			}
 
-		return true;
+			volWriter.Write(buffer, numBytesRead);
+
+		} while (numBytesRead != 0);
 	}
 
 	// Writes a section tag to the open output file.
-	bool VolFile::WriteTag(int length, const char *tagText)
+	void VolFile::WriteTag(SeekableStreamWriter& volWriter, int length, const char *tagText)
 	{
-		unsigned long numBytesWritten;
 		int buffer[2];
 
 		buffer[0] = *(int*)tagText;
 		buffer[1] = length | 0x80000000;
 
-		return WriteFile(m_OutFileHandle, buffer, 8, &numBytesWritten, nullptr) != 0;
+		try {
+			volWriter.Write(buffer, sizeof(buffer));
+		}
+		catch (std::exception& e) {
+			throw std::runtime_error("Unable to write tag " + std::string(tagText) + ". Internal Error: " + e.what());
+		}
 	}
 
 

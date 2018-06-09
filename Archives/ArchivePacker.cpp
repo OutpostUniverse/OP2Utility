@@ -1,50 +1,13 @@
 #include "ArchivePacker.h"
 #include "../XFile.h"
 #include "../StringHelper.h"
+#include <windows.h>
 #include <stdexcept>
 
 namespace Archives
 {
-	ArchivePacker::ArchivePacker()
-	{
-		m_OutFileHandle = nullptr;
-	}
-
-	ArchivePacker::~ArchivePacker()
-	{
-		if (m_OutFileHandle) {
-			CloseHandle(m_OutFileHandle);
-		}
-	}
-
-	// Opens the file for output and returns nonzero if successful
-	int ArchivePacker::OpenOutputFile(const char *fileName)
-	{
-		m_OutFileHandle = CreateFileA(fileName,		// filename
-			GENERIC_WRITE,			// desired access
-			0,						// share mode
-			nullptr,				// security attributes
-			CREATE_ALWAYS,			// creation disposition
-			FILE_ATTRIBUTE_NORMAL,	// attributes
-			nullptr);				// template
-
-		if (m_OutFileHandle == INVALID_HANDLE_VALUE) {
-			return 0;
-		}
-		else {
-			return 1;
-		}
-	}
-
-	// Closes the file whose handle is in m_OutFileHandle
-	void ArchivePacker::CloseOutputFile()
-	{
-		if (m_OutFileHandle) {
-			CloseHandle(m_OutFileHandle);
-		}
-
-		m_OutFileHandle = nullptr;
-	}
+	ArchivePacker::ArchivePacker() { }
+	ArchivePacker::~ArchivePacker() { }
 
 	// newFile has it's name changed to that of fileToReplace and the old file is deleted.
 	// Returns true if successful and false otherwise
