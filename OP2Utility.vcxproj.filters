@@ -19,6 +19,9 @@
     <Filter Include="Maps">
       <UniqueIdentifier>{60765cf0-2ed7-4327-8d32-801355cab8ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Streams">
+      <UniqueIdentifier>{1bc74f38-2bb9-4094-bd00-6593f6efffca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XFile.h">
@@ -28,9 +31,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StringHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StreamReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
@@ -99,11 +99,32 @@
     <ClInclude Include="Maps\CellType.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="StreamWriter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Archives\WaveFile.h">
       <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\StreamReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\StreamWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\FileStreamWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\MemoryStreamWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\SeekableStreamWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\SeekableStreamReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\FileStreamReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\MemoryStreamReader.h">
+      <Filter>Streams</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,9 +132,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StringHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StreamReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
@@ -152,8 +170,17 @@
     <ClCompile Include="Maps\MapReader.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
-    <ClCompile Include="StreamWriter.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Streams\FileStreamWriter.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="Streams\MemoryStreamWriter.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="Streams\FileStreamReader.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="Streams\MemoryStreamReader.cpp">
+      <Filter>Streams</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
