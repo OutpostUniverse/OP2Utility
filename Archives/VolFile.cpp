@@ -152,7 +152,7 @@ namespace Archives
 		}
 		catch (std::exception e)
 		{
-			throw std::runtime_error("Error attempting to extracted LZH compressed file " + pathOut + ". Internal Error Message: " + e.what());
+			throw std::runtime_error("Error attempting to extract LZH compressed file " + pathOut + ". Internal Error Message: " + e.what());
 		}
 	}
 
