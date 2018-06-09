@@ -1,7 +1,6 @@
 #pragma once
 
-#include "StreamWriter.h"
-#include <string>
+#include "SeekableStreamWriter.h"
 #include <cstdint>
 
 class MemoryStreamWriter : public SeekableStreamWriter

@@ -1,6 +1,6 @@
-#include "StreamWriter.h"
+#include "MemoryStreamWriter.h"
+#include <cstring> //memcpy
 #include <stdexcept>
-#include <cstring>
 
 MemoryStreamWriter::MemoryStreamWriter(void* buffer, size_t size)
 {

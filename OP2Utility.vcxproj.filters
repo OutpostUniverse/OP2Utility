@@ -114,6 +114,18 @@
     <ClInclude Include="Streams\MemoryStreamWriter.h">
       <Filter>Streams</Filter>
     </ClInclude>
+    <ClInclude Include="Streams\SeekableStreamWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\SeekableStreamReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\FileStreamReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams\MemoryStreamReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
@@ -158,16 +170,16 @@
     <ClCompile Include="Maps\MapReader.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
-    <ClCompile Include="Streams\StreamReader.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="Streams\StreamWriter.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
     <ClCompile Include="Streams\FileStreamWriter.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
     <ClCompile Include="Streams\MemoryStreamWriter.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="Streams\FileStreamReader.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="Streams\MemoryStreamReader.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
   </ItemGroup>
