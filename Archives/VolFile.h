@@ -4,6 +4,7 @@
 #include "MemoryMappedFile.h"
 #include "ArchiveFile.h"
 #include "CompressionType.h"
+#include "../StreamWriter.h"
 #include <windows.h>
 #include <string>
 #include <vector>
@@ -63,18 +64,19 @@ namespace Archives
 			int paddedStringTableLength;
 			int paddedIndexTableLength;
 
-			size_t fileCount()
+			size_t fileCount() const
 			{
 				return filesToPack.size();
 			}
 		};
 
 		int ReadTag(int offset, const char *tagText);
-		bool WriteTag(int length, const char *tagText);
-		bool CopyFileIntoVolume(HANDLE inputFile, int size);
+		void WriteTag(StreamWriter& volWriter, int length, const char *tagText);
+		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int size);
 		bool ReadVolHeader();
-		bool WriteFiles(CreateVolumeInfo &volInfo);
-		bool WriteHeader(CreateVolumeInfo &volInfo);
+		void WriteVolume(const std::string& fileName, const CreateVolumeInfo& volInfo);
+		void WriteFiles(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
+		void WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
 		bool PrepareHeader(CreateVolumeInfo &volInfo);
 		bool OpenAllInputFiles(CreateVolumeInfo &volInfo);
 		void CleanUpVolumeCreate(CreateVolumeInfo &volInfo);
