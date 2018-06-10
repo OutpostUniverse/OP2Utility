@@ -243,8 +243,8 @@ namespace Archives
 			try {
 				CopyFileIntoVolume(volWriter, volInfo.fileHandle[i], volInfo.indexEntry[i].fileSize);
 				int padding = 0;
-				
-				// Pad the end of the packed file to ensure the length is a multiple of 4 bytes
+
+				// Add padding after the file, ensuring it ends on a 4 byte boundary
 				// Use a bitmask to quickly calculate the modulo 4 (remainder) of fileSize
 				volWriter.Write(&padding, (-volInfo.indexEntry[i].fileSize) & 3);
 			}
@@ -376,7 +376,7 @@ namespace Archives
 		int buffer[2];
 
 		buffer[0] = *(int*)tagText;
-		// Use a bitmask to increase tag size to a multiple of 4 bytes
+		// Set padding bit to indicate 4 byte padding
 		buffer[1] = length | 0x80000000;
 
 		try {
