@@ -4,7 +4,7 @@
 #include "MemoryMappedFile.h"
 #include "ArchiveFile.h"
 #include "CompressionType.h"
-#include "../StreamWriter.h"
+#include "../Streams/StreamWriter.h"
 #include <windows.h>
 #include <string>
 #include <vector>
