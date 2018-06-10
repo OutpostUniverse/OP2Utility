@@ -71,12 +71,12 @@ namespace Archives
 		};
 
 		int ReadTag(int offset, const char *tagText);
-		void WriteTag(SeekableStreamWriter& volWriter, int length, const char *tagText);
-		void CopyFileIntoVolume(SeekableStreamWriter& volWriter, HANDLE inputFile, int size);
+		void WriteTag(StreamWriter& volWriter, int length, const char *tagText);
+		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int size);
 		bool ReadVolHeader();
 		void WriteVolume(const std::string& fileName, const CreateVolumeInfo& volInfo);
-		void WriteFiles(SeekableStreamWriter& volWriter, const CreateVolumeInfo &volInfo);
-		void WriteHeader(SeekableStreamWriter& volWriter, const CreateVolumeInfo &volInfo);
+		void WriteFiles(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
+		void WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
 		bool PrepareHeader(CreateVolumeInfo &volInfo);
 		bool OpenAllInputFiles(CreateVolumeInfo &volInfo);
 		void CleanUpVolumeCreate(CreateVolumeInfo &volInfo);

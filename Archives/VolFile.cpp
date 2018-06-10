@@ -232,7 +232,7 @@ namespace Archives
 		delete[] volInfo.fileNameLength;
 	}
 
-	void VolFile::WriteFiles(SeekableStreamWriter& volWriter, const CreateVolumeInfo &volInfo)
+	void VolFile::WriteFiles(StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
 	{
 		// Write each file header and contents
 		for (size_t i = 0; i < volInfo.fileCount(); i++)
@@ -241,8 +241,11 @@ namespace Archives
 
 			try {
 				CopyFileIntoVolume(volWriter, volInfo.fileHandle[i], volInfo.indexEntry[i].fileSize);
-				int temp = 0; // Pad with 0 bytes
-				volWriter.Write(&temp, (-volInfo.indexEntry[i].fileSize) & 3);
+				int padding = 0;
+				
+				// Pad the end of the packed file to ensure the length is a multiple of 4 bytes
+				// Use a bitmask to quickly calculate the modulo 4 (remainder) of fileSize
+				volWriter.Write(&padding, (-volInfo.indexEntry[i].fileSize) & 3);
 			}
 			catch (std::exception& e) {
 				throw std::runtime_error("Unable to pack file " + volInfo.internalNames[i] + ". Internal error: " + e.what());
@@ -250,7 +253,7 @@ namespace Archives
 		}
 	}
 
-	void VolFile::WriteHeader(SeekableStreamWriter& volWriter, const CreateVolumeInfo &volInfo)
+	void VolFile::WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
 	{
 		// Write the header
 		WriteTag(volWriter, volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24, "VOL ");
@@ -260,7 +263,7 @@ namespace Archives
 		// Write the string table
 		WriteTag(volWriter, volInfo.paddedStringTableLength, "vols");
 
-		volWriter.Write(&volInfo.stringTableLength, sizeof(int));
+		volWriter.Write(&volInfo.stringTableLength, sizeof(volInfo.stringTableLength));
 
 		// Write out all internal file name strings (including NULL terminator)
 		for (size_t i = 0; i < volInfo.fileCount(); i++) {
@@ -349,7 +352,7 @@ namespace Archives
 		return true;
 	}
 
-	void VolFile::CopyFileIntoVolume(SeekableStreamWriter& volWriter, HANDLE inputFile, int size)
+	void VolFile::CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int size)
 	{
 		char buffer[VOL_WRITE_SIZE];
 		unsigned long numBytesRead;
@@ -367,11 +370,12 @@ namespace Archives
 	}
 
 	// Writes a section tag to the open output file.
-	void VolFile::WriteTag(SeekableStreamWriter& volWriter, int length, const char *tagText)
+	void VolFile::WriteTag(StreamWriter& volWriter, int length, const char *tagText)
 	{
 		int buffer[2];
 
 		buffer[0] = *(int*)tagText;
+		// Use a bitmask to increase tag size to a multiple of 4 bytes
 		buffer[1] = length | 0x80000000;
 
 		try {
