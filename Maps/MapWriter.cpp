@@ -1,6 +1,12 @@
 #include "MapWriter.h"
 #include "../Streams/FileStreamWriter.h"
 
+void MapWriter::Write(const std::string& filename, const MapData& mapData)
+{
+	FileStreamWriter mapWriter(filename);
+	Write(mapWriter, mapData);
+}
+
 void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData)
 {	
 	streamWriter = &mapStream;
@@ -17,12 +23,6 @@ void MapWriter::Write(SeekableStreamWriter& mapStream, const MapData& mapData)
 	WriteVersionTag(mapData.header.versionTag);
 
 	WriteTileGroups(mapData.tileGroups);
-}
-
-void MapWriter::Write(const std::string& filename, const MapData& mapData)
-{
-	FileStreamWriter mapWriter(filename);
-	Write(mapWriter, mapData);
 }
 
 void MapWriter::WriteHeader(const MapHeader& header)
