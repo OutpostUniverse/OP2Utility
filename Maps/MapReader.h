@@ -14,7 +14,7 @@ public:
 	MapData Read(SeekableStreamReader& mapStream, bool savedGame = false);
 
 private:
-	SeekableStreamReader* streamReader;
+	SeekableStreamReader& streamReader;
 
 	void SkipSaveGameHeader();
 	void ReadHeader(MapData& mapData);

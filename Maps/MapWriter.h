@@ -15,7 +15,7 @@ public:
 	void Write(SeekableStreamWriter& mapStream, const MapData& mapData);
 
 private:
-	SeekableStreamWriter* streamWriter;
+	SeekableStreamWriter& streamWriter;
 
 	void WriteHeader(const MapHeader& header);
 	void WriteTiles(const std::vector<TileData>& tiles);
