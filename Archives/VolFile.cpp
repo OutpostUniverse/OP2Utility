@@ -15,7 +15,7 @@ namespace Archives
 			throw std::runtime_error("Could not open vol file " + std::string(fileName) + ".");
 		}
 
-		m_VolumeFileSize = m_MappedFileSize;
+		m_ArchiveFileSize = m_MappedFileSize;
 
 		if (!ReadVolHeader()) {
 			throw std::runtime_error("Invalid vol header in " + std::string(fileName) + ".");
@@ -168,7 +168,8 @@ namespace Archives
 			filesToPack.push_back(GetInternalFileName(i));
 		}
 
-		if (!CreateArchive("Temp.vol", filesToPack)) {
+		const std::string tempFileName("Temp.vol");
+		if (!CreateArchive(tempFileName, filesToPack)) {
 			return false;
 		}
 
@@ -176,7 +177,13 @@ namespace Archives
 		UnmapFile();
 
 		// Rename the output file to the desired file
-		return ReplaceFileWithFile(m_VolumeFileName.c_str(), "Temp.vol");
+		try {
+			ReplaceFileWithFile(m_ArchiveFileName, tempFileName);
+			return true;
+		}
+		catch (std::exception& e) {
+			return false;
+		}
 	}
 
 	bool VolFile::CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack)

@@ -28,7 +28,7 @@ namespace Archives
 			clmHeader.VerifyUnknown();
 		}
 		catch (std::exception& e) {
-			throw std::runtime_error("Invalid clm header read from file " + m_VolumeFileName + ". " + e.what());
+			throw std::runtime_error("Invalid clm header read from file " + m_ArchiveFileName + ". " + e.what());
 		}
 
 		m_NumberOfPackedFiles = clmHeader.packedFilesCount;
@@ -157,7 +157,19 @@ namespace Archives
 			filesToPack[i] = GetInternalFileName(i) + ".wav";
 		}
 
-		return CreateArchive("temp.clm", filesToPack);
+		std::string tempFileName = "temp.clm";
+		if (!CreateArchive(tempFileName, filesToPack)) {
+			return false;
+		}
+
+		// Rename the output file to the desired file
+		try {
+			ReplaceFileWithFile(m_ArchiveFileName, tempFileName);
+			return true;
+		}
+		catch (std::exception& e) {
+			return false;
+		}
 	}
 
 	// Creates a new Archive file with the file name archiveFileName. The

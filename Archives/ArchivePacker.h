@@ -19,7 +19,7 @@ namespace Archives
 		virtual bool CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack) = 0;
 
 	protected:
-		bool ReplaceFileWithFile(const char *fileToReplace, const char *newFile);
+		void ReplaceFileWithFile(const std::string& fileToReplace, const std::string& newFile);
 
 		// Returns the filenames from each path stripping the rest of the path. 
 		std::vector<std::string> GetInternalNamesFromPaths(std::vector<std::string> paths);
