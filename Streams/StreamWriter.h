@@ -4,6 +4,6 @@
 
 class StreamWriter {
 public:
-	virtual ~StreamWriter();
+	virtual ~StreamWriter() = default;
 	virtual void Write(const void* buffer, size_t size) = 0;
 };
