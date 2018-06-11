@@ -2,6 +2,7 @@
 #include "../Streams/FileStreamReader.h"
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 #include <cstring>
 
 

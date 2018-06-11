@@ -2,8 +2,6 @@
 
 #include "MapData.h"
 #include <string>
-#include <vector>
-#include <memory>
 
 class SeekableStreamWriter;
 

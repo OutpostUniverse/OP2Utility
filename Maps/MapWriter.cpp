@@ -1,5 +1,7 @@
 #include "MapWriter.h"
 #include "../Streams/FileStreamWriter.h"
+#include <stdexcept>
+#include <vector>
 
 
 namespace MapWriter {
