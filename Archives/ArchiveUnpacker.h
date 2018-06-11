@@ -13,8 +13,8 @@ namespace Archives
 		ArchiveUnpacker(const std::string& fileName);
 		virtual ~ArchiveUnpacker();
 
-		std::string GetVolumeFileName() { return m_VolumeFileName; };
-		int GetVolumeFileSize() { return m_VolumeFileSize; };
+		std::string GetVolumeFileName() { return m_ArchiveFileName; };
+		int GetVolumeFileSize() { return m_ArchiveFileSize; };
 		int GetNumberOfPackedFiles() { return m_NumberOfPackedFiles; };
 		bool ContainsFile(const char* fileName);
 
@@ -30,8 +30,8 @@ namespace Archives
 	protected:
 		void CheckPackedFileIndexBounds(int fileIndex);
 
-		std::string m_VolumeFileName;
+		std::string m_ArchiveFileName;
 		int m_NumberOfPackedFiles;
-		int m_VolumeFileSize;
+		int m_ArchiveFileSize;
 	};
 }
