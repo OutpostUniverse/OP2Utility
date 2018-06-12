@@ -157,14 +157,14 @@ namespace Archives
 			filesToPack[i] = GetInternalFileName(i) + ".wav";
 		}
 
-		std::string tempFileName = "temp.clm";
+		const std::string tempFileName = "temp.clm";
 		if (!CreateArchive(tempFileName, filesToPack)) {
 			return false;
 		}
 
 		// Rename the output file to the desired file
 		try {
-			ReplaceFileWithFile(m_ArchiveFileName, tempFileName);
+			XFile::RenameFile(tempFileName, m_ArchiveFileName);
 			return true;
 		}
 		catch (std::exception& e) {
