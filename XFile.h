@@ -51,4 +51,6 @@ namespace XFile
 	std::string GetDirectory(const std::string& pathStr);
 
 	void DeletePath(const std::string& pathStr);
+
+	void RenameFile(const std::string& oldPath, const std::string& newPath);
 }

@@ -168,7 +168,7 @@ namespace Archives
 			filesToPack.push_back(GetInternalFileName(i));
 		}
 
-		const std::string tempFileName("Temp.vol");
+		const std::string tempFileName("temp.vol");
 		if (!CreateArchive(tempFileName, filesToPack)) {
 			return false;
 		}
@@ -178,7 +178,7 @@ namespace Archives
 
 		// Rename the output file to the desired file
 		try {
-			ReplaceFileWithFile(m_ArchiveFileName, tempFileName);
+			XFile::RenameFile(tempFileName, m_ArchiveFileName);
 			return true;
 		}
 		catch (std::exception& e) {

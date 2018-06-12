@@ -201,3 +201,8 @@ void XFile::DeletePath(const string& pathStr)
 {
 	remove_all(pathStr);
 }
+
+void XFile::RenameFile(const std::string& oldPath, const std::string& newPath) 
+{
+	rename(oldPath, newPath);
+}
