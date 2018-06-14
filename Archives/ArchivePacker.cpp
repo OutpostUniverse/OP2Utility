@@ -1,6 +1,7 @@
 #include "ArchivePacker.h"
 #include "../XFile.h"
 #include "../StringHelper.h"
+#include <cstddef>
 #include <stdexcept>
 
 namespace Archives
@@ -21,7 +22,7 @@ namespace Archives
 
 	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames) 
 	{
-		for (size_t i = 1; i < internalNames.size(); ++i)
+		for (std::size_t i = 1; i < internalNames.size(); ++i)
 		{
 			if (StringHelper::CheckIfStringsAreEqual(internalNames[i - 1], internalNames[i])) {
 				throw std::runtime_error("Unable to create an archive containing files with the same filename. Duplicate filename: " + internalNames[i]);

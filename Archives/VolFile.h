@@ -6,6 +6,7 @@
 #include "CompressionType.h"
 #include "../Streams/StreamWriter.h"
 #include <windows.h>
+#include <cstddef>
 #include <string>
 #include <vector>
 #include <memory>
@@ -39,8 +40,8 @@ namespace Archives
 		int GetInternalFileOffset(int index);
 		int GetInternalFileNameOffset(int index);
 
-		void ExtractFileUncompressed(size_t index, const std::string& filename);
-		void ExtractFileLzh(size_t index, const std::string& filename);
+		void ExtractFileUncompressed(std::size_t index, const std::string& filename);
+		void ExtractFileLzh(std::size_t index, const std::string& filename);
 
 #pragma pack(push, 1)
 		struct IndexEntry
@@ -64,7 +65,7 @@ namespace Archives
 			int paddedStringTableLength;
 			int paddedIndexTableLength;
 
-			size_t fileCount() const
+			std::size_t fileCount() const
 			{
 				return filesToPack.size();
 			}

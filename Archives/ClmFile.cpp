@@ -185,7 +185,7 @@ namespace Archives
 		std::vector<std::unique_ptr<FileStreamReader>> filesToPackReaders;
 		try {
 			// Opens all files for packing. If there is a problem opening a file, an exception is raised.
-			for (const std::string& fileName : filesToPack) {
+			for (const auto& fileName : filesToPack) {
 				filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
 			}
 		}
@@ -244,7 +244,7 @@ namespace Archives
 		RiffHeader header;
 
 		// Read in all the headers and find start of data
-		for (size_t i = 0; i < filesToPackReaders.size(); i++)
+		for (std::size_t i = 0; i < filesToPackReaders.size(); i++)
 		{
 			// Read the file header
 			filesToPackReaders[i]->Read(header);
@@ -320,7 +320,7 @@ namespace Archives
 	// Returns true if they are all the same and false otherwise.
 	bool ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats)
 	{
-		for (size_t i = 1; i < waveFormats.size(); i++)
+		for (std::size_t i = 1; i < waveFormats.size(); i++)
 		{
 			if (memcmp(&waveFormats[i], &waveFormats[0], sizeof(WaveFormatEx))) {
 				return false;
@@ -348,7 +348,7 @@ namespace Archives
 		clmFileWriter.Write(indexEntries.data(), header.packedFilesCount * sizeof(IndexEntry));
 
 		// Copy files into the archive
-		for (size_t i = 0; i < header.packedFilesCount; i++) {
+		for (std::size_t i = 0; i < header.packedFilesCount; i++) {
 			PackFile(clmFileWriter, indexEntries[i], *filesToPackReaders[i]);
 		}
 	}
@@ -356,7 +356,7 @@ namespace Archives
 	void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries)
 	{
 		uint32_t offset = headerSize + internalNames.size() * sizeof(IndexEntry);
-		for (size_t i = 0; i < internalNames.size(); i++)
+		for (std::size_t i = 0; i < internalNames.size(); i++)
 		{
 			// Copy the filename into the entry
 			strncpy((char*)&indexEntries[i].fileName, internalNames[i].c_str(), 8);
@@ -395,7 +395,7 @@ namespace Archives
 	{
 		std::vector<std::string> strippedExtensions;
 
-		for (const std::string& path : paths) {
+		for (const auto& path : paths) {
 			strippedExtensions.push_back(XFile::ChangeFileExtension(path, ""));
 		}
 
