@@ -90,7 +90,7 @@ namespace Archives
 		CheckPackedFileIndexBounds(fileIndex);
 
 		char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
-		size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
+		std::size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
 		offset += 8;
 
 		return std::make_unique<MemoryStreamReader>(offset, length);
@@ -114,7 +114,7 @@ namespace Archives
 		}
 	}
 
-	void VolFile::ExtractFileUncompressed(size_t fileIndex, const std::string& pathOut)
+	void VolFile::ExtractFileUncompressed(std::size_t fileIndex, const std::string& pathOut)
 	{
 		try
 		{
@@ -131,7 +131,7 @@ namespace Archives
 		}
 	}
 
-	void VolFile::ExtractFileLzh(size_t fileIndex, const std::string& pathOut)
+	void VolFile::ExtractFileLzh(std::size_t fileIndex, const std::string& pathOut)
 	{
 		try
 		{
@@ -229,7 +229,7 @@ namespace Archives
 	void VolFile::CleanUpVolumeCreate(CreateVolumeInfo &volInfo)
 	{
 		// Close all input files
-		for (size_t i = 0; i < volInfo.fileCount(); i++)
+		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
 		{
 			CloseHandle(volInfo.fileHandle[i]);
 		}
@@ -243,7 +243,7 @@ namespace Archives
 	void VolFile::WriteFiles(StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
 	{
 		// Write each file header and contents
-		for (size_t i = 0; i < volInfo.fileCount(); i++)
+		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
 		{
 			WriteTag(volWriter, volInfo.indexEntry[i].fileSize, "VBLK");
 
@@ -274,7 +274,7 @@ namespace Archives
 		volWriter.Write(&volInfo.stringTableLength, sizeof(volInfo.stringTableLength));
 
 		// Write out all internal file name strings (including NULL terminator)
-		for (size_t i = 0; i < volInfo.fileCount(); i++) {
+		for (std::size_t i = 0; i < volInfo.fileCount(); i++) {
 			volWriter.Write(volInfo.internalNames[i].c_str(), volInfo.fileNameLength[i]);
 		}
 
@@ -298,7 +298,7 @@ namespace Archives
 		volInfo.stringTableLength = 0;
 
 		// Open all the input files and store indexing info
-		for (size_t i = 0; i < volInfo.fileCount(); i++)
+		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
 		{
 			volInfo.fileHandle[i] = CreateFileA(
 				volInfo.filesToPack[i].c_str(),	// fileName
@@ -312,8 +312,10 @@ namespace Archives
 			if (volInfo.fileHandle[i] == INVALID_HANDLE_VALUE)// Check for errors
 			{
 				// Error opening file. Close already opened files and return error
-				for (i--; i >= 0; i--)
+				for (i--; i >= 0; i--) {
 					CloseHandle(volInfo.fileHandle[i]);
+				}
+
 				delete[] volInfo.indexEntry;
 				delete[] volInfo.fileHandle;
 				delete[] volInfo.fileNameLength;
@@ -329,10 +331,12 @@ namespace Archives
 	{
 		IndexEntry *tempPtr;
 
-		if (OpenAllInputFiles(volInfo) == false) return false;// Verify input files can be read
+		if (OpenAllInputFiles(volInfo) == false) {
+			return false;// Verify input files can be read
+		}
 
 		// Get files sizes and calculate length of string table
-		for (size_t i = 0; i < volInfo.fileCount(); i++)
+		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
 		{
 			// Store the indexing info into the index struct
 			volInfo.indexEntry[i].fileSize = GetFileSize(volInfo.fileHandle[i], 0);
@@ -351,7 +355,7 @@ namespace Archives
 		volInfo.indexEntry[0].dataBlockOffset = volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 32;
 		
 		// Calculate offsets to the files
-		for (size_t i = 1; i < volInfo.fileCount(); i++)
+		for (std::size_t i = 1; i < volInfo.fileCount(); i++)
 		{
 			tempPtr = &volInfo.indexEntry[i - 1];
 			volInfo.indexEntry[i].dataBlockOffset = (tempPtr->dataBlockOffset + tempPtr->fileSize + 11) & ~3;
@@ -405,14 +409,15 @@ namespace Archives
 	int VolFile::ReadTag(int offset, const char *tagText)
 	{
 		char *addr = (char*)m_BaseOfFile + offset;
-		int length;
 
-		if (*(int*)addr != *(int*)tagText)		// Make sure the tag matches
+		if (*(int*)addr != *(int*)tagText) { 	   // Make sure the tag matches
 			return -1;
+		}
 
-		length = *(int*)(addr + 4);				// Get the length (and length tag)
-		if ((length & 0x80000000) != 0x80000000)// Check for the tag (MSB set)
+		int length = *(int*)(addr + 4);			   // Get the length (and length tag)
+		if ((length & 0x80000000) != 0x80000000) { // Check for the tag (MSB set)
 			return -1;
+		}
 
 		return length & 0x7FFFFFFF;				// Return the length (mask out the tag)
 	}
@@ -424,8 +429,9 @@ namespace Archives
 		int temp;
 
 		// Make sure file is big enough to contain header tag
-		if (m_MappedFileSize < 8) return false;
-
+		if (m_MappedFileSize < 8) {
+			return false;
+		}
 
 		// Make sure the header is structured properly
 		// -------------------------------------------
@@ -433,33 +439,49 @@ namespace Archives
 
 		// Check opening header tag ("VOL " tag)
 		// -------------------------------------
-		if ((m_HeaderLength = ReadTag(0, "VOL ")) == -1) return false;
+		if ((m_HeaderLength = ReadTag(0, "VOL ")) == -1) {
+			return false;
+		}
+
 		// Make sure the file is large enough to contain the header
-		if (m_MappedFileSize < m_HeaderLength + 8) return false;
+		if (m_MappedFileSize < m_HeaderLength + 8) {
+			return false;
+		}
 
 		// Check next header tag ("volh" tag)
 		// ----------------------------------
 		// Note: the size of this section must be 0
-		if (ReadTag(8, "volh") != 0) return false;
+		if (ReadTag(8, "volh") != 0) {
+			return false;
+		}
 
 		// Check for fileName string table tag ("vols" tag)
 		// ------------------------------------------------
-		if ((m_StringTableLength = ReadTag(16, "vols")) == -1) return false;
+		if ((m_StringTableLength = ReadTag(16, "vols")) == -1) {
+			return false;
+		}
+
 		m_ActualStringTableLength = *((int*)m_BaseOfFile + 6);	// Store actual length
 		m_StringTable = (char*)m_BaseOfFile + 28;				// Store pointer to table
 
 		// Make sure the string table fits in the header (and next header fits too)
-		if (m_HeaderLength < m_StringTableLength + 20)
+		if (m_HeaderLength < m_StringTableLength + 20) {
 			return false;
+		}
 
 		temp = m_StringTableLength + 24;			// Calculate offset to next section
 		// Check for volume index tag ("voli" tag)
 		// ---------------------------------------
 		// Store the offset to the Index table while it's still calculated
 		m_Index = (IndexEntry*)((char*)m_BaseOfFile + temp + 8);
-		if ((m_IndexTableLength = ReadTag(temp, "voli")) == -1) return false;
+		if ((m_IndexTableLength = ReadTag(temp, "voli")) == -1) {
+			return false;
+		}
+
 		// Make sure the index table fits in the header
-		if (m_HeaderLength < m_StringTableLength + m_IndexTableLength + 24) return false;
+		if (m_HeaderLength < m_StringTableLength + m_IndexTableLength + 24) {
+			return false;
+		}
 
 		// Determine the number of index entries
 		// -------------------------------------
@@ -468,8 +490,9 @@ namespace Archives
 		for (temp = 0; temp < m_NumberOfIndexEntries; temp++)
 		{
 			// Make sure entry is valid
-			if (m_Index[temp].fileNameOffset == UINT_MAX)
+			if (m_Index[temp].fileNameOffset == UINT_MAX) {
 				break;
+			}
 		}
 		m_NumberOfPackedFiles = temp;		// Store the number of used index entries
 
