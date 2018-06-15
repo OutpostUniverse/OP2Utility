@@ -55,9 +55,8 @@ namespace Archives
 
 		struct CreateVolumeInfo
 		{
-			IndexEntry *indexEntry;
-			int *fileNameLength;
-			HANDLE *fileHandle;
+			std::vector<IndexEntry> indexEntries;
+			std::vector<HANDLE> fileHandles;
 			std::vector<std::string> filesToPack;
 			std::vector<std::string> internalNames;
 			int stringTableLength;
