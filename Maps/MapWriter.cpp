@@ -1,5 +1,6 @@
 #include "MapWriter.h"
 #include "../Streams/FileStreamWriter.h"
+#include <cstdint>
 #include <stdexcept>
 #include <vector>
 
@@ -16,7 +17,7 @@ namespace MapWriter {
 		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes);
 		void WriteTileGroups(SeekableStreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups);
 		void WriteVersionTag(StreamWriter& streamWriter, int versionTag);
-		void WriteContainerSize(StreamWriter& streamWriter, size_t size);
+		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size);
 		void WriteString(StreamWriter& streamWriter, const std::string& s);
 	}
 
@@ -135,7 +136,7 @@ namespace MapWriter {
 			}
 		}
 
-		void WriteContainerSize(StreamWriter& streamWriter, size_t size)
+		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size)
 		{
 			streamWriter.Write(&size, sizeof(size));
 		}
