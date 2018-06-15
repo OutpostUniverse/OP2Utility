@@ -2,14 +2,14 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-MemoryStreamWriter::MemoryStreamWriter(void* buffer, size_t size)
+MemoryStreamWriter::MemoryStreamWriter(void* buffer, std::size_t size)
 {
 	streamBuffer = static_cast<char*>(buffer);
 	streamSize = size;
 	offset = 0;
 }
 
-void MemoryStreamWriter::Write(const void* buffer, size_t size)
+void MemoryStreamWriter::Write(const void* buffer, std::size_t size)
 {
 	if (offset + size > streamSize) {
 		throw std::runtime_error("Size of bytes to write exceeds remaining size of buffer.");

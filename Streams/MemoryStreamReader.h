@@ -5,10 +5,10 @@
 
 class MemoryStreamReader : public SeekableStreamReader {
 public:
-	MemoryStreamReader(void* buffer, size_t size);
+	MemoryStreamReader(void* buffer, std::size_t size);
 
 	// StreamReader methods
-	void Read(void* buffer, size_t size) override;
+	void Read(void* buffer, std::size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Read(T& object) {

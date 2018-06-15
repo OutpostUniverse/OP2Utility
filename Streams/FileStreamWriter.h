@@ -12,7 +12,7 @@ public:
 
 	// StreamWriter methods
 	~FileStreamWriter() override;
-	void Write(const void* buffer, size_t size) override;
+	void Write(const void* buffer, std::size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Write(const T& object) {

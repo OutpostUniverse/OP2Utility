@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cstdint>
+#include <cstddef>
 
 class StreamWriter {
 public:
 	virtual ~StreamWriter() = default;
-	virtual void Write(const void* buffer, size_t size) = 0;
+	virtual void Write(const void* buffer, std::size_t size) = 0;
 };

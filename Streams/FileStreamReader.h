@@ -11,7 +11,7 @@ public:
 
 	// StreamReader methods
 	~FileStreamReader() override;
-	void Read(void* buffer, size_t size) override;
+	void Read(void* buffer, std::size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Read(T& object) {

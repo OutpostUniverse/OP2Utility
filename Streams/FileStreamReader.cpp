@@ -14,7 +14,7 @@ FileStreamReader::~FileStreamReader() {
 	file.close();
 }
 
-void FileStreamReader::Read(void* buffer, size_t size) {
+void FileStreamReader::Read(void* buffer, std::size_t size) {
 	file.read(static_cast<char*>(buffer), size);
 }
 
