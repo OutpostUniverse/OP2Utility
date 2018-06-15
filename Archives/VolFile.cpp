@@ -347,7 +347,7 @@ namespace Archives
 		// Calculate offsets to the files
 		for (std::size_t i = 1; i < volInfo.fileCount(); i++)
 		{
-			IndexEntry previousIndex = volInfo.indexEntries[i - 1];
+			const IndexEntry& previousIndex = volInfo.indexEntries[i - 1];
 			volInfo.indexEntries[i].dataBlockOffset = (previousIndex.dataBlockOffset + previousIndex.fileSize + 11) & ~3;
 		}
 
