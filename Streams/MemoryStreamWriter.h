@@ -8,10 +8,10 @@ class MemoryStreamWriter : public SeekableStreamWriter
 public:
 	// buffer: where data will be written to.
 	// size: Amount of space allocated in the buffer for writing into.
-	MemoryStreamWriter(void* buffer, size_t size);
+	MemoryStreamWriter(void* buffer, std::size_t size);
 
 	// StreamWriter methods
-	void Write(const void* buffer, size_t size) override;
+	void Write(const void* buffer, std::size_t size) override;
 
 	// Inline templated convenience methods, to easily read arbitrary data types
 	template<typename T> inline void Write(const T& object) {

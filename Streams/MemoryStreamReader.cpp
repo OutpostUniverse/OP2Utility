@@ -3,13 +3,13 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-MemoryStreamReader::MemoryStreamReader(void* buffer, size_t size) {
+MemoryStreamReader::MemoryStreamReader(void* buffer, std::size_t size) {
 	streamBuffer = static_cast<char*>(buffer);
 	streamSize = size;
 	position = 0;
 }
 
-void MemoryStreamReader::Read(void* buffer, size_t size)
+void MemoryStreamReader::Read(void* buffer, std::size_t size)
 {
 	if (position + size > streamSize) {
 		throw std::runtime_error("Size of bytes to read exceeds remaining size of buffer.");
@@ -32,7 +32,7 @@ void MemoryStreamReader::Seek(uint64_t position) {
 		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 	}
 
-	// position is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of size_t)
+	// position is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
 	this->position = static_cast<size_t>(position);
 }
 
@@ -48,6 +48,6 @@ void MemoryStreamReader::SeekRelative(int64_t offset)
 		throw std::runtime_error("Change in offset puts read position outside bounds of buffer.");
 	}
 
-	// offset is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of size_t)
+	// offset is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
 	this->position += static_cast<size_t>(offset); 
 }
