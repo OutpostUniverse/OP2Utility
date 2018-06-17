@@ -16,7 +16,7 @@ namespace MapWriter {
 		void WriteTileInfo(StreamWriter& streamWriter, const std::vector<TileInfo>& tileInfos);
 		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes);
 		void WriteTileGroups(SeekableStreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups);
-		void WriteVersionTag(StreamWriter& streamWriter, int versionTag);
+		void WriteVersionTag(StreamWriter& streamWriter, uint32_t versionTag);
 		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size);
 		void WriteString(StreamWriter& streamWriter, const std::string& s);
 	}
@@ -59,12 +59,12 @@ namespace MapWriter {
 				throw std::runtime_error("All instances of version tag in .map and .op2 files must be greater than 0x1010.");
 			}
 
-			streamWriter.Write(&header, sizeof(header));
+			streamWriter.Write(header);
 		}
 
-		void WriteVersionTag(StreamWriter& streamWriter, int versionTag)
+		void WriteVersionTag(StreamWriter& streamWriter, uint32_t versionTag)
 		{
-			streamWriter.Write(&versionTag, sizeof(versionTag));
+			streamWriter.Write(versionTag);
 		}
 
 		void WriteTiles(StreamWriter& streamWriter, const std::vector<TileData>& tiles)
@@ -74,19 +74,19 @@ namespace MapWriter {
 
 		void WriteClipRect(StreamWriter& streamWriter, const ClipRect& clipRect)
 		{
-			streamWriter.Write(&clipRect, sizeof(clipRect));
+			streamWriter.Write(clipRect);
 		}
 
 		void WriteTilesetSources(StreamWriter& streamWriter, const std::vector<TilesetSource>& tileSetSources)
 		{
-			for (TilesetSource tilesetSource : tileSetSources)
+			for (const auto& tilesetSource : tileSetSources)
 			{
 				WriteString(streamWriter, tilesetSource.tilesetFilename);
 
 				// Only include the number of tiles if the tileset contains a filename.
 				if (tilesetSource.tilesetFilename.size() > 0)
 				{
-					streamWriter.Write(&tilesetSource.numTiles, sizeof(int));
+					streamWriter.Write(tilesetSource.numTiles);
 				}
 			}
 		}
@@ -100,20 +100,14 @@ namespace MapWriter {
 		{
 			WriteContainerSize(streamWriter, tileInfos.size());
 
-			for (TileInfo tileInfo : tileInfos)
-			{
-				streamWriter.Write(&tileInfo, sizeof(TileInfo));
-			}
+			streamWriter.Write(tileInfos.data(), sizeof(TileInfo) * tileInfos.size());
 		}
 
 		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes)
 		{
 			WriteContainerSize(streamWriter, terrainTypes.size());
 
-			for (TerrainType terrainType : terrainTypes)
-			{
-				streamWriter.Write(&terrainType, sizeof(TerrainType));
-			}
+			streamWriter.Write(terrainTypes.data(), sizeof(TerrainType) * terrainTypes.size());
 		}
 
 		void WriteTileGroups(SeekableStreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
@@ -122,23 +116,22 @@ namespace MapWriter {
 
 			streamWriter.SeekRelative(sizeof(int));
 
-			for (TileGroup tileGroup : tileGroups)
+			for (const auto& tileGroup : tileGroups)
 			{
-				streamWriter.Write(&tileGroup.tileWidth, sizeof(tileGroup.tileWidth));
-				streamWriter.Write(&tileGroup.tileHeight, sizeof(tileGroup.tileHeight));
+				streamWriter.Write(tileGroup.tileWidth);
+				streamWriter.Write(tileGroup.tileHeight);
 
-				for (int mappingIndex : tileGroup.mappingIndices)
-				{
-					streamWriter.Write(&mappingIndex, sizeof(mappingIndex));
-				}
+				streamWriter.Write(tileGroup.mappingIndices.data(), 
+					sizeof(int) * tileGroup.mappingIndices.size());
 
 				WriteString(streamWriter, tileGroup.name);
 			}
 		}
 
+		// Outpost 2 map files represent container sizes as 4 byte values
 		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size)
 		{
-			streamWriter.Write(&size, sizeof(size));
+			streamWriter.Write(size);
 		}
 
 		// String must be stored in file as string length followed by char[].
