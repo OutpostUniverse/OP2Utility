@@ -6,25 +6,21 @@
 #include <algorithm>
 #include <climits>
 
-
 namespace Archives
 {
 	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName)
 	{
-		if (MemoryMapFile(fileName)) {
-			throw std::runtime_error("Could not open vol file " + std::string(fileName) + ".");
-		}
+		archiveFileReader = std::make_unique<FileStreamReader>(fileName);
 
-		m_ArchiveFileSize = m_MappedFileSize;
+		// Archive file size is limited to unsigned 4 bytes in length
+		m_ArchiveFileSize = static_cast<uint32_t>(archiveFileReader->Length());
 
 		if (!ReadVolHeader()) {
 			throw std::runtime_error("Invalid vol header in " + std::string(fileName) + ".");
 		}
 	}
 
-	VolFile::~VolFile()
-	{
-	}
+	VolFile::~VolFile() { }
 
 
 
@@ -32,7 +28,7 @@ namespace Archives
 	{
 		CheckPackedFileIndexBounds(index);
 
-		return std::string(m_StringTable + m_Index[index].fileNameOffset);
+		return m_StringTable[index];
 	}
 
 	int VolFile::GetInternalFileIndex(const char *internalFileName)
@@ -52,26 +48,26 @@ namespace Archives
 	{
 		CheckPackedFileIndexBounds(index);
 
-		return m_Index[index].compressionType;
+		return m_IndexEntries[index].compressionType;
 	}
 
 	int VolFile::GetInternalFileSize(int index)
 	{
 		CheckPackedFileIndexBounds(index);
 
-		return m_Index[index].fileSize;
+		return m_IndexEntries[index].fileSize;
 	}
 
 
 
 	int VolFile::GetInternalFileOffset(int index)
 	{
-		return m_Index[index].dataBlockOffset + 8;
+		return m_IndexEntries[index].dataBlockOffset + 8;
 	}
 
 	int VolFile::GetInternalFileNameOffset(int index)
 	{
-		return m_Index[index].fileNameOffset;
+		return m_IndexEntries[index].fileNameOffset;
 	}
 
 	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const char* internalFileName)
@@ -89,7 +85,7 @@ namespace Archives
 	{
 		CheckPackedFileIndexBounds(fileIndex);
 
-		char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
+		char* offset = (char*)m_IndexEntries[fileIndex].dataBlockOffset;
 		std::size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
 		offset += 8;
 
@@ -101,11 +97,11 @@ namespace Archives
 	{
 		CheckPackedFileIndexBounds(fileIndex);
 
-		if (m_Index[fileIndex].compressionType == CompressionType::Uncompressed)
+		if (m_IndexEntries[fileIndex].compressionType == CompressionType::Uncompressed)
 		{
 			ExtractFileUncompressed(fileIndex, pathOut);
 		}
-		else if (m_Index[fileIndex].compressionType == CompressionType::LZH)
+		else if (m_IndexEntries[fileIndex].compressionType == CompressionType::LZH)
 		{
 			ExtractFileLzh(fileIndex, pathOut);
 		}
@@ -118,7 +114,7 @@ namespace Archives
 	{
 		try
 		{
-			char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
+			char* offset = (char*)m_IndexEntries[fileIndex].dataBlockOffset;
 			int length = *(int*)(offset + 4) & 0x7FFFFFFF;
 			offset += 8;
 			
@@ -135,7 +131,7 @@ namespace Archives
 	{
 		try
 		{
-			char* offset = (char*)m_BaseOfFile + m_Index[fileIndex].dataBlockOffset;
+			char* offset = (char*)m_IndexEntries[fileIndex].dataBlockOffset;
 			int length = *(int*)(offset + 4) & 0x7FFFFFFF;
 			offset += 8;
 
@@ -172,9 +168,6 @@ namespace Archives
 		if (!CreateArchive(tempFileName, filesToPack)) {
 			return false;
 		}
-
-		// Close the currently opened file so it can be replaced
-		UnmapFile();
 
 		// Rename the output file to the desired file
 		try {
@@ -354,7 +347,7 @@ namespace Archives
 		return true;
 	}
 
-	void VolFile::CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int size)
+	void VolFile::CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int32_t size)
 	{
 		char buffer[VOL_WRITE_SIZE];
 		unsigned long numBytesRead;
@@ -372,7 +365,7 @@ namespace Archives
 	}
 
 	// Writes a section tag to the open output file.
-	void VolFile::WriteTag(StreamWriter& volWriter, int length, const char *tagText)
+	void VolFile::WriteTag(StreamWriter& volWriter, uint32_t length, const char *tagText)
 	{
 		int buffer[2];
 
@@ -389,83 +382,55 @@ namespace Archives
 	}
 
 
-
-
-
 	// Reads a tag in the .vol file and returns the length of that section.
 	// If tagText does not match what is in the file or if the length is 
-	// invalid then this function returns -1.
-	// Note: tagText is a 4 byte field
-	int VolFile::ReadTag(int offset, const char *tagText)
+	// invalid then an error is thrown.
+	uint32_t VolFile::ReadTag(const std::array<char, 4>& tagName)
 	{
-		char *addr = (char*)m_BaseOfFile + offset;
+		// Tags are 4 chars in length and do not include a null terminator
+		std::array<char, 4> tagFromFile;
+		archiveFileReader->Read(tagFromFile.data(), tagFromFile.size());
 
-		if (*(int*)addr != *(int*)tagText) { 	   // Make sure the tag matches
-			return -1;
+		if (tagFromFile != tagName) {
+			throw std::runtime_error("Tag " + std::string(tagFromFile.data(), tagFromFile.size()) + " does not match requested tag of " + std::string(tagName.data(), tagName.size()));
 		}
 
-		int length = *(int*)(addr + 4);			   // Get the length (and length tag)
-		if ((length & 0x80000000) != 0x80000000) { // Check for the tag (MSB set)
-			return -1;
+		uint32_t length = 0;
+		archiveFileReader->Read(&length, sizeof(length));
+
+		// Check for the tag (MSB set)
+		if ((length & 0x80000000) != 0x80000000) {
+			throw std::runtime_error("Tag " + std::string(tagName.data()) + " contains an invalid length.");
 		}
 
-		return length & 0x7FFFFFFF;				// Return the length (mask out the tag)
+		// Mask out the tag and return the length.
+		return length & 0x7FFFFFFF;					
 	}
 
 	// Reads the header structure of the .vol file and sets up indexing/structure variables
 	// Returns true is the header structure is valid and false otherwise
 	bool VolFile::ReadVolHeader()
 	{
-		int temp;
+		m_HeaderLength = ReadTag(std::array<char, 4> { 'V', 'O', 'L', ' ' });
 
-		// Make sure file is big enough to contain header tag
-		if (m_MappedFileSize < 8) {
-			return false;
+		uint32_t volhSize = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 'h' });
+		if (volhSize != 0) {
+			return false; //the size of this section must be 0
 		}
 
-		// Make sure the header is structured properly
-		// -------------------------------------------
-		// -------------------------------------------
+		m_StringTableLength = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 's' });
 
-		// Check opening header tag ("VOL " tag)
-		// -------------------------------------
-		if ((m_HeaderLength = ReadTag(0, "VOL ")) == -1) {
-			return false;
-		}
-
-		// Make sure the file is large enough to contain the header
-		if (m_MappedFileSize < m_HeaderLength + 8) {
-			return false;
-		}
-
-		// Check next header tag ("volh" tag)
-		// ----------------------------------
-		// Note: the size of this section must be 0
-		if (ReadTag(8, "volh") != 0) {
-			return false;
-		}
-
-		// Check for fileName string table tag ("vols" tag)
-		// ------------------------------------------------
-		if ((m_StringTableLength = ReadTag(16, "vols")) == -1) {
-			return false;
-		}
-
-		m_ActualStringTableLength = *((int*)m_BaseOfFile + 6);	// Store actual length
-		m_StringTable = (char*)m_BaseOfFile + 28;				// Store pointer to table
+		ReadStringTable();
 
 		// Make sure the string table fits in the header (and next header fits too)
 		if (m_HeaderLength < m_StringTableLength + 20) {
 			return false;
 		}
 
-		temp = m_StringTableLength + 24;			// Calculate offset to next section
-		// Check for volume index tag ("voli" tag)
-		// ---------------------------------------
-		// Store the offset to the Index table while it's still calculated
-		m_Index = (IndexEntry*)((char*)m_BaseOfFile + temp + 8);
-		if ((m_IndexTableLength = ReadTag(temp, "voli")) == -1) {
-			return false;
+		m_IndexTableLength = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 'i' });
+		if (m_IndexTableLength > 0) {
+			m_IndexEntries.resize(m_IndexTableLength / sizeof(IndexEntry));
+			archiveFileReader->Read(m_IndexEntries.data(), m_IndexTableLength);
 		}
 
 		// Make sure the index table fits in the header
@@ -473,19 +438,46 @@ namespace Archives
 			return false;
 		}
 
-		// Determine the number of index entries
-		// -------------------------------------
 		m_NumberOfIndexEntries = m_IndexTableLength / 14;
+		ReadPackedFileCount();
+
+		return true;
+	}
+
+	void VolFile::ReadStringTable()
+	{
+		uint32_t actualStringTableLength;
+		archiveFileReader->Read(&actualStringTableLength, sizeof(actualStringTableLength));
+
+		std::string charBuffer;
+		charBuffer.resize(actualStringTableLength);
+		archiveFileReader->Read(&charBuffer[0], actualStringTableLength);
+
+		m_StringTable.push_back("");
+		for (std::size_t i = 0; i < charBuffer.size(); i++)
+		{
+			if (charBuffer[i] == '\0') {
+				m_StringTable.push_back("");
+				continue;
+			}
+
+			m_StringTable[m_StringTable.size() - 1].push_back(charBuffer[i]);
+		}
+
+		m_StringTable.erase(m_StringTable.begin() + m_StringTable.size() - 1);
+	}
+
+	void VolFile::ReadPackedFileCount()
+	{
 		// Count the number of valid entries
-		for (temp = 0; temp < m_NumberOfIndexEntries; temp++)
+		uint32_t packedFileCount = 0;
+		for (packedFileCount; packedFileCount < m_NumberOfIndexEntries; packedFileCount++)
 		{
 			// Make sure entry is valid
-			if (m_Index[temp].fileNameOffset == UINT_MAX) {
+			if (m_IndexEntries[packedFileCount].fileNameOffset == UINT_MAX) {
 				break;
 			}
 		}
-		m_NumberOfPackedFiles = temp;		// Store the number of used index entries
-
-		return true;						// Header read successfully
+		m_NumberOfPackedFiles = packedFileCount;
 	}
 }
