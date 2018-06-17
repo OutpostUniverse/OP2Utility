@@ -21,7 +21,7 @@ namespace Archives
 	// Throws an error is problems encountered while reading the header.
 	void ClmFile::ReadHeader()
 	{
-		clmFileReader->Read(&clmHeader, sizeof(ClmHeader));
+		clmFileReader->Read(clmHeader);
 		
 		try {
 			clmHeader.VerifyFileVersion();
@@ -301,7 +301,7 @@ namespace Archives
 		do
 		{
 			// Read the tag
-			seekableStreamReader.Read(&header, sizeof(header));
+			seekableStreamReader.Read(header);
 			
 			// Check if this is the right header
 			if (header.formatTag == chunkTag) {
