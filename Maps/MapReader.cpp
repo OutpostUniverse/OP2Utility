@@ -65,7 +65,7 @@ namespace MapReader {
 
 		void ReadHeader(StreamReader& streamReader, MapData& mapData)
 		{
-			streamReader.Read(&mapData.header, sizeof(mapData.header));
+			streamReader.Read(mapData.header);
 		}
 
 		void ReadTiles(StreamReader& streamReader, MapData& mapData)
@@ -76,7 +76,7 @@ namespace MapReader {
 
 		void ReadClipRect(StreamReader& streamReader, ClipRect& clipRect)
 		{
-			streamReader.Read(&clipRect, sizeof(clipRect));
+			streamReader.Read(clipRect);
 		}
 
 		void ReadTilesetHeader(StreamReader& streamReader)
@@ -102,29 +102,29 @@ namespace MapReader {
 				}
 
 				if (mapData.tilesetSources[i].tilesetFilename.size() > 0) {
-					streamReader.Read(&mapData.tilesetSources[i].numTiles, sizeof(int));
+					streamReader.Read(mapData.tilesetSources[i].numTiles);
 				}
 			}
 		}
 
 		void ReadTileInfo(StreamReader& streamReader, MapData& mapData)
 		{
-			size_t numTileInfo;
-			streamReader.Read(&numTileInfo, sizeof(numTileInfo));
+			std::size_t numTileInfo;
+			streamReader.Read(numTileInfo);
 
 			mapData.tileInfos.resize(numTileInfo);
 			streamReader.Read(&mapData.tileInfos[0], numTileInfo * sizeof(TileInfo));
 
-			size_t numTerrainTypes;
-			streamReader.Read(&numTerrainTypes, sizeof(numTerrainTypes));
+			std::size_t numTerrainTypes;
+			streamReader.Read(numTerrainTypes);
 			mapData.terrainTypes.resize(numTerrainTypes);
 			streamReader.Read(&mapData.terrainTypes[0], numTerrainTypes * sizeof(TerrainType));
 		}
 
 		void ReadVersionTag(StreamReader& streamReader)
 		{
-			int versionTag;
-			streamReader.Read(&versionTag, sizeof(versionTag));
+			uint32_t versionTag;
+			streamReader.Read(versionTag);
 
 			if (versionTag < 0x1010)
 			{
@@ -134,11 +134,11 @@ namespace MapReader {
 
 		void ReadTileGroups(SeekableStreamReader& streamReader, MapData& mapData)
 		{
-			int numTileGroups;
-			streamReader.Read(&numTileGroups, sizeof(numTileGroups));
+			uint32_t numTileGroups;
+			streamReader.Read(numTileGroups);
 			streamReader.SeekRelative(4);
 
-			for (int i = 0; i < numTileGroups; ++i)
+			for (uint32_t i = 0; i < numTileGroups; ++i)
 			{
 				mapData.tileGroups.push_back(ReadTileGroup(streamReader));
 			}
@@ -148,13 +148,13 @@ namespace MapReader {
 		{
 			TileGroup tileGroup;
 
-			streamReader.Read(&tileGroup.tileWidth, sizeof(tileGroup.tileWidth));
-			streamReader.Read(&tileGroup.tileHeight, sizeof(tileGroup.tileHeight));
+			streamReader.Read(tileGroup.tileWidth);
+			streamReader.Read(tileGroup.tileHeight);
 
 			int mappingIndex;
 			for (int i = 0; i < tileGroup.tileHeight * tileGroup.tileWidth; ++i)
 			{
-				streamReader.Read(&mappingIndex, sizeof(mappingIndex));
+				streamReader.Read(mappingIndex);
 				tileGroup.mappingIndices.push_back(mappingIndex);
 			}
 
@@ -167,7 +167,7 @@ namespace MapReader {
 		std::string ReadString(StreamReader& streamReader)
 		{
 			uint32_t stringLength;
-			streamReader.Read(&stringLength, sizeof(stringLength));
+			streamReader.Read(stringLength);
 
 			std::string s;
 			s.resize(stringLength);

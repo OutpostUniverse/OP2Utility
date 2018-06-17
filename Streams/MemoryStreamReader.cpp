@@ -9,7 +9,7 @@ MemoryStreamReader::MemoryStreamReader(void* buffer, std::size_t size) {
 	position = 0;
 }
 
-void MemoryStreamReader::Read(void* buffer, std::size_t size)
+void MemoryStreamReader::ReadImplementation(void* buffer, std::size_t size)
 {
 	if (position + size > streamSize) {
 		throw std::runtime_error("Size of bytes to read exceeds remaining size of buffer.");

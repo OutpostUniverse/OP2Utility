@@ -14,7 +14,7 @@ FileStreamWriter::~FileStreamWriter() {
 	fileStream.close();
 }
 
-void FileStreamWriter::Write(const void* buffer, std::size_t size)
+void FileStreamWriter::WriteImplementation(const void* buffer, std::size_t size)
 {
 	fileStream.write(static_cast<const char*>(buffer), size);
 }

@@ -25,8 +25,9 @@ namespace Archives
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::PathsAreEqual(GetInternalFileName(i), fileName))
+			if (XFile::PathsAreEqual(GetInternalFileName(i), fileName)) {
 				return true;
+			}
 		}
 
 		return false;
