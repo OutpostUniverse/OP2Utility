@@ -1,21 +1,22 @@
 #pragma once
 
 #include "HuffLZ.h"
-#include "MemoryMappedFile.h"
 #include "ArchiveFile.h"
 #include "CompressionType.h"
 #include "../Streams/StreamWriter.h"
+#include "../Streams/FileStreamReader.h"
 #include <windows.h>
 #include <cstddef>
 #include <string>
 #include <vector>
+#include <array>
 #include <memory>
 
 namespace Archives
 {
 #define VOL_WRITE_SIZE 65536
 
-	class VolFile : public ArchiveFile, public MemoryMappedFile
+	class VolFile : public ArchiveFile
 	{
 	public:
 		VolFile(const char *filename);
@@ -46,9 +47,9 @@ namespace Archives
 #pragma pack(push, 1)
 		struct IndexEntry
 		{
-			unsigned int fileNameOffset;
-			unsigned int dataBlockOffset;
-			int fileSize;
+			uint32_t fileNameOffset;
+			uint32_t dataBlockOffset;
+			int32_t fileSize;
 			CompressionType compressionType;
 		};
 #pragma pack(pop)
@@ -59,10 +60,10 @@ namespace Archives
 			std::vector<HANDLE> fileHandles;
 			std::vector<std::string> filesToPack;
 			std::vector<std::string> internalNames;
-			int stringTableLength;
-			int indexTableLength;
-			int paddedStringTableLength;
-			int paddedIndexTableLength;
+			uint32_t stringTableLength;
+			uint32_t indexTableLength;
+			uint32_t paddedStringTableLength;
+			uint32_t paddedIndexTableLength;
 
 			std::size_t fileCount() const
 			{
@@ -70,10 +71,12 @@ namespace Archives
 			}
 		};
 
-		int ReadTag(int offset, const char *tagText);
-		void WriteTag(StreamWriter& volWriter, int length, const char *tagText);
-		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int size);
+		uint32_t ReadTag(const std::array<char, 4>& tagName);
+		void WriteTag(StreamWriter& volWriter, uint32_t length, const char *tagText);
+		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int32_t size);
 		bool ReadVolHeader();
+		void ReadStringTable();
+		void ReadPackedFileCount();
 		void WriteVolume(const std::string& fileName, const CreateVolumeInfo& volInfo);
 		void WriteFiles(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
 		void WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
@@ -81,12 +84,13 @@ namespace Archives
 		bool OpenAllInputFiles(CreateVolumeInfo &volInfo);
 		void CleanUpVolumeCreate(CreateVolumeInfo &volInfo);
 
-		int m_NumberOfIndexEntries;
-		char *m_StringTable;
-		int m_HeaderLength;
-		int m_StringTableLength;
-		int m_ActualStringTableLength;
-		int m_IndexTableLength;
-		IndexEntry *m_Index;
+		std::unique_ptr<SeekableStreamReader> archiveFileReader;
+		uint32_t m_NumberOfIndexEntries;
+		//char *m_StringTable;
+		std::vector<std::string> m_StringTable;
+		uint32_t m_HeaderLength;
+		uint32_t m_StringTableLength;
+		uint32_t m_IndexTableLength;
+		std::vector<IndexEntry> m_IndexEntries;
 	};
 }

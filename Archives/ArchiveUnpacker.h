@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <cstdint>
 
 class SeekableStreamReader;
 
@@ -14,7 +15,7 @@ namespace Archives
 		virtual ~ArchiveUnpacker();
 
 		std::string GetVolumeFileName() { return m_ArchiveFileName; };
-		int GetVolumeFileSize() { return m_ArchiveFileSize; };
+		uint32_t GetVolumeFileSize() { return m_ArchiveFileSize; };
 		int GetNumberOfPackedFiles() { return m_NumberOfPackedFiles; };
 		bool ContainsFile(const char* fileName);
 

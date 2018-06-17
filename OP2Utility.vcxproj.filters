@@ -63,9 +63,6 @@
     <ClInclude Include="Archives\ArchivePacker.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\MemoryMappedFile.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
     <ClInclude Include="Maps\MapData.h">
       <Filter>Maps</Filter>
     </ClInclude>
@@ -156,9 +153,6 @@
       <Filter>Archives</Filter>
     </ClCompile>
     <ClCompile Include="Archives\ArchivePacker.cpp">
-      <Filter>Archives</Filter>
-    </ClCompile>
-    <ClCompile Include="Archives\MemoryMappedFile.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
     <ClCompile Include="Maps\MapData.cpp">

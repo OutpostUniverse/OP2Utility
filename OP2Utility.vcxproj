@@ -118,7 +118,6 @@
     <ClInclude Include="Archives\ArchivePacker.h" />
     <ClInclude Include="Archives\ArchiveUnpacker.h" />
     <ClInclude Include="Archives\CompressionType.h" />
-    <ClInclude Include="Archives\MemoryMappedFile.h" />
     <ClInclude Include="Archives\WaveFile.h" />
     <ClInclude Include="Maps\CellType.h" />
     <ClInclude Include="Maps\ClipRect.h" />
@@ -145,7 +144,6 @@
     <ClCompile Include="Maps\MapWriter.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Archives\AdaptHuffTree.cpp" />
-    <ClCompile Include="Archives\MemoryMappedFile.cpp" />
     <ClCompile Include="Archives\BitStream.cpp" />
     <ClCompile Include="Archives\ClmFile.cpp" />
     <ClCompile Include="Archives\HuffLZ.cpp" />
