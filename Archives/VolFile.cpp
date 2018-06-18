@@ -15,9 +15,7 @@ namespace Archives
 		// Archive file size is limited to unsigned 4 bytes in length
 		m_ArchiveFileSize = static_cast<uint32_t>(archiveFileReader->Length());
 
-		if (!ReadVolHeader()) {
-			throw std::runtime_error("Invalid vol header in " + std::string(fileName) + ".");
-		}
+		ReadVolHeader();
 	}
 
 	VolFile::~VolFile() { }
@@ -115,11 +113,11 @@ namespace Archives
 		try
 		{
 			char* offset = (char*)m_IndexEntries[fileIndex].dataBlockOffset;
-			int length = *(int*)(offset + 4) & 0x7FFFFFFF;
+			std::size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
 			offset += 8;
 			
 			FileStreamWriter fileStreamWriter(pathOut);
-			fileStreamWriter.Write(offset, length);
+			fileStreamWriter.Write(&offset, length);
 		}
 		catch (std::exception e)
 		{
@@ -174,7 +172,7 @@ namespace Archives
 			XFile::RenameFile(tempFileName, m_ArchiveFileName);
 			return true;
 		}
-		catch (std::exception& e) {
+		catch (std::exception&) {
 			return false;
 		}
 	}
@@ -201,7 +199,7 @@ namespace Archives
 		try {
 			WriteVolume(volumeFileName, volInfo);
 		}
-		catch (std::exception& e) {
+		catch (std::exception&) {
 			CleanUpVolumeCreate(volInfo);
 			return false;
 		}
@@ -392,7 +390,8 @@ namespace Archives
 		archiveFileReader->Read(tagFromFile.data(), tagFromFile.size());
 
 		if (tagFromFile != tagName) {
-			throw std::runtime_error("Tag " + std::string(tagFromFile.data(), tagFromFile.size()) + " does not match requested tag of " + std::string(tagName.data(), tagName.size()));
+			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + 
+				" was not found in the proper position in volume " + m_ArchiveFileName);
 		}
 
 		uint32_t length = 0;
@@ -400,7 +399,7 @@ namespace Archives
 
 		// Check for the tag (MSB set)
 		if ((length & 0x80000000) != 0x80000000) {
-			throw std::runtime_error("Tag " + std::string(tagName.data()) + " contains an invalid length.");
+			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + " from volume " + m_ArchiveFileName + " contains an invalid length.");
 		}
 
 		// Mask out the tag and return the length.
@@ -409,39 +408,36 @@ namespace Archives
 
 	// Reads the header structure of the .vol file and sets up indexing/structure variables
 	// Returns true is the header structure is valid and false otherwise
-	bool VolFile::ReadVolHeader()
+	void VolFile::ReadVolHeader()
 	{
 		m_HeaderLength = ReadTag(std::array<char, 4> { 'V', 'O', 'L', ' ' });
 
 		uint32_t volhSize = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 'h' });
 		if (volhSize != 0) {
-			return false; //the size of this section must be 0
+			throw std::runtime_error("The length associated with tag volh is not zero in volume " + m_ArchiveFileName);
 		}
 
 		m_StringTableLength = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 's' });
 
 		ReadStringTable();
 
-		// Make sure the string table fits in the header (and next header fits too)
 		if (m_HeaderLength < m_StringTableLength + 20) {
-			return false;
+			throw std::runtime_error("The string table does not fit in the header of volume " + m_ArchiveFileName);
 		}
 
 		m_IndexTableLength = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 'i' });
+		m_NumberOfIndexEntries = m_IndexTableLength / sizeof(IndexEntry);
+
 		if (m_IndexTableLength > 0) {
-			m_IndexEntries.resize(m_IndexTableLength / sizeof(IndexEntry));
+			m_IndexEntries.resize(m_NumberOfIndexEntries);
 			archiveFileReader->Read(m_IndexEntries.data(), m_IndexTableLength);
 		}
 
-		// Make sure the index table fits in the header
 		if (m_HeaderLength < m_StringTableLength + m_IndexTableLength + 24) {
-			return false;
+			throw std::runtime_error("The index table does not fit in the header of volume " + m_ArchiveFileName);
 		}
 
-		m_NumberOfIndexEntries = m_IndexTableLength / 14;
 		ReadPackedFileCount();
-
-		return true;
 	}
 
 	void VolFile::ReadStringTable()
@@ -465,6 +461,9 @@ namespace Archives
 		}
 
 		m_StringTable.erase(m_StringTable.begin() + m_StringTable.size() - 1);
+
+		// Seek to the end of padding at end of StringTable
+		archiveFileReader->SeekRelative(m_StringTableLength - actualStringTableLength - 4);
 	}
 
 	void VolFile::ReadPackedFileCount()

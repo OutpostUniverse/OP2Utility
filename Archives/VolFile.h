@@ -74,7 +74,7 @@ namespace Archives
 		uint32_t ReadTag(const std::array<char, 4>& tagName);
 		void WriteTag(StreamWriter& volWriter, uint32_t length, const char *tagText);
 		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int32_t size);
-		bool ReadVolHeader();
+		void ReadVolHeader();
 		void ReadStringTable();
 		void ReadPackedFileCount();
 		void WriteVolume(const std::string& fileName, const CreateVolumeInfo& volInfo);

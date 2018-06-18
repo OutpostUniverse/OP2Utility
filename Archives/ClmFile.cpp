@@ -167,7 +167,7 @@ namespace Archives
 			XFile::RenameFile(tempFileName, m_ArchiveFileName);
 			return true;
 		}
-		catch (std::exception& e) {
+		catch (std::exception&) {
 			return false;
 		}
 	}
@@ -189,7 +189,7 @@ namespace Archives
 				filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
 			}
 		}
-		catch (std::exception& e) {
+		catch (std::exception&) {
 			return false;
 		}
 
@@ -225,7 +225,7 @@ namespace Archives
 
 			WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, waveFormat);
 		}
-		catch (std::exception& e) {
+		catch (std::exception&) {
 			return false; // Error writing CLM archive file
 		}
 
