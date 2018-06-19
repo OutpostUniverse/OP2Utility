@@ -1,6 +1,7 @@
 #include "VolFile.h"
 #include "../Streams/MemoryStreamReader.h"
 #include "../Streams/FileStreamWriter.h"
+#include "../Streams/FileSliceReader.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
@@ -81,13 +82,28 @@ namespace Archives
 
 	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(int fileIndex)
 	{
-		CheckPackedFileIndexBounds(fileIndex);
+		SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
-		char* offset = (char*)m_IndexEntries[fileIndex].dataBlockOffset;
-		std::size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
-		offset += 8;
+		return std::make_unique<FileSliceReader>(m_ArchiveFileName, 
+			archiveFileReader->Position(), static_cast<uint64_t>(sectionHeader.length));
+	}
 
-		return std::make_unique<MemoryStreamReader>(offset, length);
+	VolFile::SectionHeader VolFile::GetSectionHeader(int index)
+	{
+		CheckPackedFileIndexBounds(index);
+
+		archiveFileReader->Seek(m_IndexEntries[index].dataBlockOffset);
+
+		SectionHeader sectionHeader;
+		archiveFileReader->Read(sectionHeader);
+
+		//Volume Block
+		if (sectionHeader.tag != std::array<char, 4>{'V', 'B', 'L', 'K'}) {
+			throw std::runtime_error("Archive file " + m_ArchiveFileName +
+				" is missing VBLK tag for requested file at index " + std::to_string(index));
+		}
+
+		return sectionHeader;
 	}
 
 	// Extracts the internal file at the given index to the fileName.
@@ -112,12 +128,14 @@ namespace Archives
 	{
 		try
 		{
-			char* offset = (char*)m_IndexEntries[fileIndex].dataBlockOffset;
-			std::size_t length = *(int*)(offset + 4) & 0x7FFFFFFF;
-			offset += 8;
+			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 			
+			std::vector<void*> packedFileBuffer;
+			packedFileBuffer.resize(sectionHeader.length);
+			archiveFileReader->Read(packedFileBuffer.data(), sectionHeader.length);
+
 			FileStreamWriter fileStreamWriter(pathOut);
-			fileStreamWriter.Write(&offset, length);
+			fileStreamWriter.Write(packedFileBuffer.data(), packedFileBuffer.size());
 		}
 		catch (std::exception e)
 		{

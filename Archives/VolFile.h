@@ -52,6 +52,13 @@ namespace Archives
 			int32_t fileSize;
 			CompressionType compressionType;
 		};
+
+		struct SectionHeader
+		{
+			std::array<char, 4> tag;
+			uint32_t length : 31;
+			uint32_t padding : 1; // 0 = 4-byte boundary padding, 1 = 2-byte boundary padding
+		};
 #pragma pack(pop)
 
 		struct CreateVolumeInfo
@@ -83,6 +90,7 @@ namespace Archives
 		bool PrepareHeader(CreateVolumeInfo &volInfo);
 		bool OpenAllInputFiles(CreateVolumeInfo &volInfo);
 		void CleanUpVolumeCreate(CreateVolumeInfo &volInfo);
+		SectionHeader GetSectionHeader(int index);
 
 		std::unique_ptr<SeekableStreamReader> archiveFileReader;
 		uint32_t m_NumberOfIndexEntries;

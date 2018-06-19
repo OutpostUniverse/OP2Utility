@@ -148,11 +148,13 @@
     <ClCompile Include="Archives\ClmFile.cpp" />
     <ClCompile Include="Archives\HuffLZ.cpp" />
     <ClCompile Include="Archives\VolFile.cpp" />
+    <ClCompile Include="Streams\FileSliceReader.cpp" />
     <ClCompile Include="Streams\FileStreamReader.cpp" />
     <ClCompile Include="Streams\FileStreamWriter.cpp" />
     <ClCompile Include="Streams\MemoryStreamWriter.cpp" />
     <ClCompile Include="Streams\MemoryStreamReader.cpp" />
     <ClInclude Include="OP2Utility.h" />
+    <ClInclude Include="Streams\FileSliceReader.h" />
     <ClInclude Include="Streams\FileStreamReader.h" />
     <ClInclude Include="Streams\FileStreamWriter.h" />
     <ClInclude Include="Streams\MemoryStreamReader.h" />
