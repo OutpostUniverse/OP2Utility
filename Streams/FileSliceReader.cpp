@@ -1,15 +1,13 @@
 #include "FileSliceReader.h"
 #include <stdexcept>
 
-FileSliceReader::FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength) : fileStreamReader(filename)
+FileSliceReader::FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength) : 
+	fileStreamReader(filename), startingOffset(startingOffset), sliceLength(sliceLength)
 {
 	if (startingOffset + sliceLength < startingOffset) {
 		throw std::runtime_error("The supplied starting offset & length cause the ending offset to wrap past the largest allowed value in the FileSliceReader created on file " + 
 			fileStreamReader.GetFilename());
 	}
-
-	this->startingOffset = startingOffset;
-	this->sliceLength = sliceLength;
 
 	if (startingOffset + sliceLength > fileStreamReader.Length()) {
 		throw std::runtime_error("The ending offset of the FileSliceReader created on " + 

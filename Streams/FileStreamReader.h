@@ -3,6 +3,7 @@
 #include "SeekableStreamReader.h"
 #include <string>
 #include <fstream>
+#include <cstddef>
 #include <cstdint>
 
 class FileStreamReader : public SeekableStreamReader {
@@ -25,5 +26,5 @@ protected:
 
 private:
 	std::ifstream file;
-	std::string filename;
+	const std::string filename;
 };
