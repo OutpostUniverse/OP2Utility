@@ -3,13 +3,8 @@
 
 namespace Archives
 {
-	ArchiveUnpacker::ArchiveUnpacker(const std::string& fileName)
-	{
-		this->m_ArchiveFileName = fileName;
-
-		m_NumberOfPackedFiles = 0;
-		m_ArchiveFileSize = 0;
-	}
+	ArchiveUnpacker::ArchiveUnpacker(const std::string& fileName) : 
+		m_ArchiveFileName(fileName), m_NumberOfPackedFiles(0), m_ArchiveFileSize(0) { }
 
 	ArchiveUnpacker::~ArchiveUnpacker() { }
 
