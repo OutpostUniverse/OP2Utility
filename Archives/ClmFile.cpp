@@ -7,9 +7,9 @@ namespace Archives
 {
 	const uint32_t CLM_WRITE_SIZE = 0x00020000;
 
-	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName)
+	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName), clmFileReader(fileName)
 	{
-		clmFileReader = std::make_unique<FileStreamReader>(fileName);
+		m_ArchiveFileSize = clmFileReader.Length();
 		ReadHeader();
 	}
 
@@ -21,7 +21,7 @@ namespace Archives
 	// Throws an error is problems encountered while reading the header.
 	void ClmFile::ReadHeader()
 	{
-		clmFileReader->Read(clmHeader);
+		clmFileReader.Read(clmHeader);
 		
 		try {
 			clmHeader.VerifyFileVersion();
@@ -34,7 +34,7 @@ namespace Archives
 		m_NumberOfPackedFiles = clmHeader.packedFilesCount;
 
 		indexEntries = std::vector<IndexEntry>(m_NumberOfPackedFiles);
-		clmFileReader->Read(indexEntries.data(), m_NumberOfPackedFiles * sizeof(IndexEntry));
+		clmFileReader.Read(indexEntries.data(), m_NumberOfPackedFiles * sizeof(IndexEntry));
 	}
 
 
@@ -83,7 +83,7 @@ namespace Archives
 			waveFileWriter.Write(header);
 
 			// Seek to the beginning of the file data (in the .clm file)
-			clmFileReader->Seek(indexEntries[fileIndex].dataOffset);
+			clmFileReader.Seek(indexEntries[fileIndex].dataOffset);
 
 			uint32_t numBytesToRead = 0;
 			uint32_t offset = 0; // Max size of CLM IndexEntry::dataLength is 32 bits.
@@ -98,7 +98,7 @@ namespace Archives
 					numBytesToRead = indexEntries[fileIndex].dataLength - offset;
 				}
 
-				clmFileReader->Read(buffer.data(), numBytesToRead);
+				clmFileReader.Read(buffer.data(), numBytesToRead);
 
 				offset += numBytesToRead;
 

@@ -73,7 +73,7 @@ namespace Archives
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 		static WaveFormatEx CreateDefaultWaveFormat();
 
-		std::unique_ptr<SeekableStreamReader> clmFileReader;
+		FileStreamReader clmFileReader;
 		ClmHeader clmHeader;
 		std::vector<IndexEntry> indexEntries;
 	};
