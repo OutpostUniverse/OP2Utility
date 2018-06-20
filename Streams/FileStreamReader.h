@@ -17,7 +17,7 @@ public:
 	void Seek(uint64_t position) override;
 	void SeekRelative(int64_t offset) override;
 
-	inline std::string GetFilename() const {
+	inline const std::string& GetFilename() const {
 		return filename;
 	}
 
