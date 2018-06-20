@@ -1,15 +1,15 @@
 #pragma once
 
-#include "SeekableStreamReader.h"
+#include "FileStreamReader.h"
 #include <string>
-#include <fstream>
 #include <cstddef>
 #include <cstdint>
 
-class FileStreamReader : public SeekableStreamReader {
+// Opens a new file stream that is limited to reading from the provided file slice. 
+class FileSliceReader : public SeekableStreamReader
+{
 public:
-	FileStreamReader(std::string fileName);
-	~FileStreamReader() override;
+	FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength);
 
 	// SeekableStreamReader methods
 	uint64_t Length() override;
@@ -18,13 +18,14 @@ public:
 	void SeekRelative(int64_t offset) override;
 
 	inline const std::string& GetFilename() const {
-		return filename;
+		return fileStreamReader.GetFilename();
 	}
 
 protected:
 	void ReadImplementation(void* buffer, std::size_t size) override;
 
 private:
-	std::ifstream file;
-	const std::string filename;
+	FileStreamReader fileStreamReader;
+	const uint64_t startingOffset;
+	const uint64_t sliceLength;
 };

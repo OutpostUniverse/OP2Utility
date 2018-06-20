@@ -1,8 +1,9 @@
 #pragma once
 
 #include "SeekableStreamWriter.h"
-#include <fstream>
 #include <string>
+#include <fstream>
+#include <cstddef>
 #include <cstdint>
 
 class FileStreamWriter : public SeekableStreamWriter
@@ -17,9 +18,14 @@ public:
 	void Seek(uint64_t offset) override;
 	void SeekRelative(int64_t offset) override;
 
+	inline const std::string& GetFilename() const {
+		return filename;
+	}
+
 protected:
 	void WriteImplementation(const void* buffer, std::size_t size) override;
 
 private:
 	std::fstream fileStream;
+	const std::string filename;
 };

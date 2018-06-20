@@ -123,6 +123,9 @@
     <ClInclude Include="Streams\MemoryStreamReader.h">
       <Filter>Streams</Filter>
     </ClInclude>
+    <ClInclude Include="Streams\FileSliceReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XFile.cpp">
@@ -174,6 +177,9 @@
       <Filter>Streams</Filter>
     </ClCompile>
     <ClCompile Include="Streams\MemoryStreamReader.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="Streams\FileSliceReader.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
   </ItemGroup>

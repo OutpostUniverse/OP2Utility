@@ -2,7 +2,8 @@
 #include <stdexcept>
 
 // Defers calls to C++ standard library methods
-FileStreamReader::FileStreamReader(std::string filename) {
+FileStreamReader::FileStreamReader(std::string filename) : filename(filename)
+{
 	file = std::ifstream(filename, std::ios::in | std::ios::binary);
 
 	if (!file.is_open()) {
