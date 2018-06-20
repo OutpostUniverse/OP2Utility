@@ -127,7 +127,7 @@ namespace Archives
 		{
 			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 			
-			std::vector<void*> packedFileBuffer;
+			std::vector<uint8_t> packedFileBuffer;
 			packedFileBuffer.resize(sectionHeader.length);
 			archiveFileReader.Read(packedFileBuffer.data(), sectionHeader.length);
 
@@ -427,10 +427,15 @@ namespace Archives
 	// Returns true is the header structure is valid and false otherwise
 	void VolFile::ReadVolHeader()
 	{
+		// Make sure file is big enough to contain header tag
+		if (archiveFileReader.Length() < sizeof(SectionHeader)) {
+			throw std::runtime_error("The volume file " + m_ArchiveFileName + " is not large enough to contain the 'VOL ' section header");
+		}
+
 		m_HeaderLength = ReadTag(std::array<char, 4> { 'V', 'O', 'L', ' ' });
 
 		// Make sure the file is large enough to contain the header
-		if (archiveFileReader.Length() < m_HeaderLength + sizeof(SectionHeader) * 2) {
+		if (archiveFileReader.Length() < m_HeaderLength + sizeof(SectionHeader)) {
 			throw std::runtime_error("The volume file " + m_ArchiveFileName + " is not large enough to contain the volh section header");
 		}
 
