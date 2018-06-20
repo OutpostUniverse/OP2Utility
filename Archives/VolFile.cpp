@@ -9,12 +9,9 @@
 
 namespace Archives
 {
-	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName)
+	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName), archiveFileReader(fileName)
 	{
-		archiveFileReader = std::make_unique<FileStreamReader>(fileName);
-
-		// Archive file size is limited to unsigned 4 bytes in length
-		m_ArchiveFileSize = static_cast<uint32_t>(archiveFileReader->Length());
+		m_ArchiveFileSize = archiveFileReader.Length();
 
 		ReadVolHeader();
 	}
@@ -85,17 +82,17 @@ namespace Archives
 		SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
 		return std::make_unique<FileSliceReader>(m_ArchiveFileName, 
-			archiveFileReader->Position(), static_cast<uint64_t>(sectionHeader.length));
+			archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length));
 	}
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(int index)
 	{
 		CheckPackedFileIndexBounds(index);
 
-		archiveFileReader->Seek(m_IndexEntries[index].dataBlockOffset);
+		archiveFileReader.Seek(m_IndexEntries[index].dataBlockOffset);
 
 		SectionHeader sectionHeader;
-		archiveFileReader->Read(sectionHeader);
+		archiveFileReader.Read(sectionHeader);
 
 		//Volume Block
 		if (sectionHeader.tag != std::array<char, 4>{'V', 'B', 'L', 'K'}) {
@@ -132,7 +129,7 @@ namespace Archives
 			
 			std::vector<void*> packedFileBuffer;
 			packedFileBuffer.resize(sectionHeader.length);
-			archiveFileReader->Read(packedFileBuffer.data(), sectionHeader.length);
+			archiveFileReader.Read(packedFileBuffer.data(), sectionHeader.length);
 
 			FileStreamWriter fileStreamWriter(pathOut);
 			fileStreamWriter.Write(packedFileBuffer.data(), packedFileBuffer.size());
@@ -251,7 +248,7 @@ namespace Archives
 			WriteTag(volWriter, volInfo.indexEntries[i].fileSize, "VBLK");
 
 			try {
-				CopyFileIntoVolume(volWriter, volInfo.fileHandles[i], volInfo.indexEntries[i].fileSize);
+				CopyFileIntoVolume(volWriter, volInfo.fileHandles[i]);
 				int padding = 0;
 
 				// Add padding after the file, ensuring it ends on a 4 byte boundary
@@ -363,7 +360,7 @@ namespace Archives
 		return true;
 	}
 
-	void VolFile::CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int32_t size)
+	void VolFile::CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile)
 	{
 		char buffer[VOL_WRITE_SIZE];
 		unsigned long numBytesRead;
@@ -405,7 +402,7 @@ namespace Archives
 	{
 		// Tags are 4 chars in length and do not include a null terminator
 		std::array<char, 4> tagFromFile;
-		archiveFileReader->Read(tagFromFile.data(), tagFromFile.size());
+		archiveFileReader.Read(tagFromFile);
 
 		if (tagFromFile != tagName) {
 			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + 
@@ -413,11 +410,13 @@ namespace Archives
 		}
 
 		uint32_t length = 0;
-		archiveFileReader->Read(&length, sizeof(length));
+		archiveFileReader.Read(&length, sizeof(length));
 
 		// Check for the tag (MSB set)
 		if ((length & 0x80000000) != 0x80000000) {
-			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + " from volume " + m_ArchiveFileName + " contains an invalid length.");
+			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + 
+				" from volume " + m_ArchiveFileName + 
+				" uses 2 byte padding, which is not supported. Only 4 byte padding is supported.");
 		}
 
 		// Mask out the tag and return the length.
@@ -430,6 +429,11 @@ namespace Archives
 	{
 		m_HeaderLength = ReadTag(std::array<char, 4> { 'V', 'O', 'L', ' ' });
 
+		// Make sure the file is large enough to contain the header
+		if (archiveFileReader.Length() < m_HeaderLength + sizeof(SectionHeader) * 2) {
+			throw std::runtime_error("The volume file " + m_ArchiveFileName + " is not large enough to contain the volh section header");
+		}
+
 		uint32_t volhSize = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 'h' });
 		if (volhSize != 0) {
 			throw std::runtime_error("The length associated with tag volh is not zero in volume " + m_ArchiveFileName);
@@ -437,18 +441,18 @@ namespace Archives
 
 		m_StringTableLength = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 's' });
 
-		ReadStringTable();
-
-		if (m_HeaderLength < m_StringTableLength + 20) {
+		if (m_HeaderLength < m_StringTableLength + sizeof(SectionHeader) * 2 + sizeof(m_StringTableLength)) {
 			throw std::runtime_error("The string table does not fit in the header of volume " + m_ArchiveFileName);
 		}
+
+		ReadStringTable();
 
 		m_IndexTableLength = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 'i' });
 		m_NumberOfIndexEntries = m_IndexTableLength / sizeof(IndexEntry);
 
 		if (m_IndexTableLength > 0) {
 			m_IndexEntries.resize(m_NumberOfIndexEntries);
-			archiveFileReader->Read(m_IndexEntries.data(), m_IndexTableLength);
+			archiveFileReader.Read(m_IndexEntries.data(), m_IndexTableLength);
 		}
 
 		if (m_HeaderLength < m_StringTableLength + m_IndexTableLength + 24) {
@@ -461,11 +465,11 @@ namespace Archives
 	void VolFile::ReadStringTable()
 	{
 		uint32_t actualStringTableLength;
-		archiveFileReader->Read(&actualStringTableLength, sizeof(actualStringTableLength));
+		archiveFileReader.Read(&actualStringTableLength, sizeof(actualStringTableLength));
 
 		std::string charBuffer;
 		charBuffer.resize(actualStringTableLength);
-		archiveFileReader->Read(&charBuffer[0], actualStringTableLength);
+		archiveFileReader.Read(&charBuffer[0], actualStringTableLength);
 
 		m_StringTable.push_back("");
 		for (std::size_t i = 0; i < charBuffer.size(); i++)
@@ -481,14 +485,14 @@ namespace Archives
 		m_StringTable.erase(m_StringTable.begin() + m_StringTable.size() - 1);
 
 		// Seek to the end of padding at end of StringTable
-		archiveFileReader->SeekRelative(m_StringTableLength - actualStringTableLength - 4);
+		archiveFileReader.SeekRelative(m_StringTableLength - actualStringTableLength - 4);
 	}
 
 	void VolFile::ReadPackedFileCount()
 	{
 		// Count the number of valid entries
 		uint32_t packedFileCount = 0;
-		for (packedFileCount; packedFileCount < m_NumberOfIndexEntries; packedFileCount++)
+		for (; packedFileCount < m_NumberOfIndexEntries; packedFileCount++)
 		{
 			// Make sure entry is valid
 			if (m_IndexEntries[packedFileCount].fileNameOffset == UINT_MAX) {

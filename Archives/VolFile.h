@@ -80,7 +80,7 @@ namespace Archives
 
 		uint32_t ReadTag(const std::array<char, 4>& tagName);
 		void WriteTag(StreamWriter& volWriter, uint32_t length, const char *tagText);
-		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile, int32_t size);
+		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile);
 		void ReadVolHeader();
 		void ReadStringTable();
 		void ReadPackedFileCount();
@@ -92,9 +92,8 @@ namespace Archives
 		void CleanUpVolumeCreate(CreateVolumeInfo &volInfo);
 		SectionHeader GetSectionHeader(int index);
 
-		std::unique_ptr<SeekableStreamReader> archiveFileReader;
+		FileStreamReader archiveFileReader;
 		uint32_t m_NumberOfIndexEntries;
-		//char *m_StringTable;
 		std::vector<std::string> m_StringTable;
 		uint32_t m_HeaderLength;
 		uint32_t m_StringTableLength;
