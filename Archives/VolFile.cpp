@@ -19,6 +19,8 @@ namespace Archives
 
 	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName), archiveFileReader(fileName)
 	{
+		static_assert(sizeof(SectionHeader) == 8, "SectionHeader not of required size");
+
 		m_ArchiveFileSize = archiveFileReader.Length();
 
 		ReadVolHeader();
@@ -253,7 +255,7 @@ namespace Archives
 		// Write each file header and contents
 		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
 		{
-			WriteTag(volWriter, volInfo.indexEntries[i].fileSize, TagVBLK);
+			volWriter.Write(SectionHeader(TagVBLK, volInfo.indexEntries[i].fileSize));
 
 			try {
 				CopyFileIntoVolume(volWriter, volInfo.fileHandles[i]);
@@ -272,13 +274,12 @@ namespace Archives
 	void VolFile::WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
 	{
 		// Write the header
-		WriteTag(volWriter, volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24, TagVOL_);
+		volWriter.Write(SectionHeader(TagVOL_, volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24));
 
-		WriteTag(volWriter, 0, TagVOLH);
-		//WriteTag(volWriter, 0, "volh");
+		volWriter.Write(SectionHeader(TagVOLH, 0));
 
 		// Write the string table
-		WriteTag(volWriter, volInfo.paddedStringTableLength, TagVOLS);
+		volWriter.Write(SectionHeader(TagVOLS, volInfo.paddedStringTableLength));
 
 		volWriter.Write(&volInfo.stringTableLength, sizeof(volInfo.stringTableLength));
 
@@ -292,7 +293,7 @@ namespace Archives
 		volWriter.Write(&padding, volInfo.paddedStringTableLength - (volInfo.stringTableLength + 4));
 
 		// Write the index table
-		WriteTag(volWriter, volInfo.indexTableLength, TagVOLI);
+		volWriter.Write(SectionHeader(TagVOLI, volInfo.indexTableLength));
 
 		volWriter.Write(volInfo.indexEntries.data(), volInfo.indexTableLength);
 
@@ -386,22 +387,9 @@ namespace Archives
 		} while (numBytesRead != 0);
 	}
 
-	// Writes a section tag to the open output file.
-	void VolFile::WriteTag(StreamWriter& volWriter, uint32_t length, const std::array<char, 4>& tagName)
-	{
-		SectionHeader sectionHeader(tagName, length);
-
-		try {
-			volWriter.Write(sectionHeader);
-		}
-		catch (std::exception& e) {
-			throw std::runtime_error("Unable to write tag " + std::string(tagName.data(), tagName.size()) + ". Internal Error: " + e.what());
-		}
-	}
-
 	// Reads a tag in the .vol file and returns the length of that section.
 	// If tag does not match what is in the file or if the length is invalid then an error is thrown.
-	uint32_t VolFile::ReadTag(const std::array<char, 4>& tagName)
+	uint32_t VolFile::ReadTag(std::array<char, 4> tagName)
 	{
 		SectionHeader tag;
 		archiveFileReader.Read(tag);

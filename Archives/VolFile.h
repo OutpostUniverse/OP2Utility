@@ -57,7 +57,8 @@ namespace Archives
 		enum class VolPadding : uint32_t
 		{
 			TwoByte = 0,
-			FourByte = 1 // Default value
+			FourByte = 1,
+			default = FourByte
 		};
 
 		struct SectionHeader
@@ -87,9 +88,7 @@ namespace Archives
 			}
 		};
 
-		uint32_t ReadTag(const std::array<char, 4>& tagName);
-		//void WriteTag(StreamWriter& volWriter, uint32_t length, const char *tagText);
-		void VolFile::WriteTag(StreamWriter& volWriter, uint32_t length, const std::array<char, 4>& tagName);
+		uint32_t ReadTag(std::array<char, 4> tagName);
 		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile);
 		void ReadVolHeader();
 		void ReadStringTable();
