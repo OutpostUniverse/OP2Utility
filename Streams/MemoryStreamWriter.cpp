@@ -2,12 +2,8 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-MemoryStreamWriter::MemoryStreamWriter(void* buffer, std::size_t size)
-{
-	streamBuffer = static_cast<char*>(buffer);
-	streamSize = size;
-	offset = 0;
-}
+MemoryStreamWriter::MemoryStreamWriter(void* buffer, std::size_t size) :
+	streamBuffer(static_cast<char*>(buffer)), streamSize(size), offset(0) { }
 
 void MemoryStreamWriter::WriteImplementation(const void* buffer, std::size_t size)
 {

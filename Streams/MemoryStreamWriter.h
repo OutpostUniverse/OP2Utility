@@ -24,7 +24,7 @@ private:
 	char* streamBuffer;
 
 	// Size of the provided streamBuffer.
-	size_t streamSize;
+	const size_t streamSize;
 
 	// Current location in the streamBuffer.
 	size_t offset;

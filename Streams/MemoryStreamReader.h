@@ -18,7 +18,7 @@ protected:
 	void ReadImplementation(void* buffer, std::size_t size) override;
 
 private:
-	char* streamBuffer;
-	size_t streamSize;
+	const char* streamBuffer;
+	const size_t streamSize;
 	size_t position;
 };

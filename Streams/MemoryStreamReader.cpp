@@ -3,11 +3,8 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-MemoryStreamReader::MemoryStreamReader(void* buffer, std::size_t size) {
-	streamBuffer = static_cast<char*>(buffer);
-	streamSize = size;
-	position = 0;
-}
+MemoryStreamReader::MemoryStreamReader(void* buffer, std::size_t size) : 
+	streamBuffer(static_cast<char*>(buffer)), streamSize(size), position(0) { }
 
 void MemoryStreamReader::ReadImplementation(void* buffer, std::size_t size)
 {
