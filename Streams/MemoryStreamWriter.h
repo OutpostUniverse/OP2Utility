@@ -22,7 +22,7 @@ protected:
 
 private:
 	// Memory location to write data into.
-	char* streamBuffer;
+	char* const streamBuffer;
 
 	// Size of the provided streamBuffer.
 	const std::size_t streamSize;
