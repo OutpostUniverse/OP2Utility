@@ -1,13 +1,14 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 namespace Archives
 {
-	const uint32_t RIFF = 0x46464952;	// "RIFF" Resource Interchange File Format
-	const uint32_t WAVE = 0x45564157;	// "WAVE"
-	const uint32_t FMT = 0x20746D66;	// "fmt "
-	const uint32_t DATA = 0x61746164;	// "data"
+	const std::array<char, 4> tagRIFF{ 'R', 'I', 'F', 'F' };
+	const std::array<char, 4> tagWAVE{ 'W', 'A', 'V', 'E' };
+	const std::array<char, 4> tagFMT_{ 'f', 'm', 't', ' ' };
+	const std::array<char, 4> tagDATA{ 'd', 'a', 't', 'a' };
 
 #pragma pack(push, 1)
 
@@ -29,21 +30,21 @@ namespace Archives
 
 	struct RiffHeader
 	{
-		int32_t riffTag;
+		std::array<char, 4> riffTag;
 		uint32_t chunkSize;
-		int32_t waveTag;
+		std::array<char, 4> waveTag;
 	};
 
 	struct FormatChunk
 	{
-		uint32_t fmtTag;
+		std::array<char, 4> fmtTag;
 		uint32_t formatSize;
 		WaveFormatEx waveFormat;
 	};
 
 	struct ChunkHeader
 	{
-		uint32_t formatTag;
+		std::array<char, 4> formatTag;
 		uint32_t length;
 	};
 

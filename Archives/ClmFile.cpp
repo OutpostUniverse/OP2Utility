@@ -113,16 +113,16 @@ namespace Archives
 
 	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, int fileIndex)
 	{
-		headerOut.riffHeader.riffTag = RIFF;
-		headerOut.riffHeader.waveTag = WAVE;
+		headerOut.riffHeader.riffTag = tagRIFF;
+		headerOut.riffHeader.waveTag = tagWAVE;
 		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[fileIndex].dataLength;
 
-		headerOut.formatChunk.fmtTag = FMT;
+		headerOut.formatChunk.fmtTag = tagFMT_;
 		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
 		headerOut.formatChunk.waveFormat = clmHeader.waveFormat;
 		headerOut.formatChunk.waveFormat.cbSize = 0;
 
-		headerOut.dataChunk.formatTag = DATA;
+		headerOut.dataChunk.formatTag = tagDATA;
 		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
 	}
 
@@ -248,7 +248,7 @@ namespace Archives
 		{
 			// Read the file header
 			filesToPackReaders[i]->Read(header);
-			if (header.riffTag != RIFF || header.waveTag != WAVE) {
+			if (header.riffTag != tagRIFF || header.waveTag != tagWAVE) {
 				return false;		// Error reading header
 			}
 
@@ -258,7 +258,7 @@ namespace Archives
 			}
 
 			// Read the format tag
-			int fmtChunkLength = FindChunk(FMT, *filesToPackReaders[i]);
+			int fmtChunkLength = FindChunk(tagFMT_, *filesToPackReaders[i]);
 			if (fmtChunkLength == -1) {
 				return false;		// Format chunk not found
 			}
@@ -268,7 +268,7 @@ namespace Archives
 			waveFormats[i].cbSize = 0;
 
 			// Find the start of the data
-			int dataChunkLength = FindChunk(DATA, *filesToPackReaders[i]);
+			int dataChunkLength = FindChunk(tagDATA, *filesToPackReaders[i]);
 			if (dataChunkLength == -1) {
 				return false;		// Data chunk not found
 			}
@@ -284,7 +284,7 @@ namespace Archives
 	// Searches through the wave file to find the given chunk length
 	// The current stream position is set the the first byte after the chunk header
 	// Returns the chunk length if found or -1 otherwise
-	int ClmFile::FindChunk(uint32_t chunkTag, SeekableStreamReader& seekableStreamReader)
+	int ClmFile::FindChunk(std::array<char, 4> chunkTag, SeekableStreamReader& seekableStreamReader)
 	{
 		uint64_t fileSize = seekableStreamReader.Length();
 
