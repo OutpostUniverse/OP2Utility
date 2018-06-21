@@ -33,7 +33,7 @@ void MemoryStreamWriter::Seek(uint64_t offset)
 		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 	}
 
-	this->offset = static_cast<size_t>(offset);
+	this->offset = static_cast<std::size_t>(offset);
 }
 
 void MemoryStreamWriter::SeekRelative(int64_t offset)

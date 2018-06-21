@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SeekableStreamReader.h"
+#include <cstddef>
 #include <cstdint>
 
 class MemoryStreamReader : public SeekableStreamReader {
@@ -19,6 +20,6 @@ protected:
 
 private:
 	const char* streamBuffer;
-	const size_t streamSize;
-	size_t position;
+	const std::size_t streamSize;
+	std::size_t position;
 };

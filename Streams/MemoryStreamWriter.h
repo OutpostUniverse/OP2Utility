@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SeekableStreamWriter.h"
+#include <cstddef>
 #include <cstdint>
 
 class MemoryStreamWriter : public SeekableStreamWriter
@@ -24,8 +25,8 @@ private:
 	char* streamBuffer;
 
 	// Size of the provided streamBuffer.
-	const size_t streamSize;
+	const std::size_t streamSize;
 
 	// Current location in the streamBuffer.
-	size_t offset;
+	std::size_t offset;
 };
