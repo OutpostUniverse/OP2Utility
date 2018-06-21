@@ -2,12 +2,8 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-MemoryStreamWriter::MemoryStreamWriter(void* buffer, std::size_t size)
-{
-	streamBuffer = static_cast<char*>(buffer);
-	streamSize = size;
-	offset = 0;
-}
+MemoryStreamWriter::MemoryStreamWriter(void* buffer, std::size_t size) :
+	streamBuffer(static_cast<char*>(buffer)), streamSize(size), offset(0) { }
 
 void MemoryStreamWriter::WriteImplementation(const void* buffer, std::size_t size)
 {
@@ -37,7 +33,7 @@ void MemoryStreamWriter::Seek(uint64_t offset)
 		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 	}
 
-	this->offset = static_cast<size_t>(offset);
+	this->offset = static_cast<std::size_t>(offset);
 }
 
 void MemoryStreamWriter::SeekRelative(int64_t offset)

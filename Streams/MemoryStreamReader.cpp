@@ -3,11 +3,8 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-MemoryStreamReader::MemoryStreamReader(void* buffer, std::size_t size) {
-	streamBuffer = static_cast<char*>(buffer);
-	streamSize = size;
-	position = 0;
-}
+MemoryStreamReader::MemoryStreamReader(void* buffer, std::size_t size) : 
+	streamBuffer(static_cast<char*>(buffer)), streamSize(size), position(0) { }
 
 void MemoryStreamReader::ReadImplementation(void* buffer, std::size_t size)
 {
@@ -33,7 +30,7 @@ void MemoryStreamReader::Seek(uint64_t position) {
 	}
 
 	// position is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
-	this->position = static_cast<size_t>(position);
+	this->position = static_cast<std::size_t>(position);
 }
 
 void MemoryStreamReader::SeekRelative(int64_t offset)
@@ -49,5 +46,5 @@ void MemoryStreamReader::SeekRelative(int64_t offset)
 	}
 
 	// offset is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
-	this->position += static_cast<size_t>(offset); 
+	this->position += static_cast<std::size_t>(offset); 
 }
