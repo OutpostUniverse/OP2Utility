@@ -9,6 +9,14 @@
 
 namespace Archives
 {
+	// Volume section header tags
+	const std::array<char, 4> TagVOL_{ 'V', 'O', 'L', ' ' }; // Volume file tag
+	const std::array<char, 4> TagVOLH{ 'v', 'o', 'l', 'h' }; // Header tag
+	const std::array<char, 4> TagVOLS{ 'v', 'o', 'l', 's' }; // Filename table tag
+	const std::array<char, 4> TagVOLI{ 'v', 'o', 'l', 'i' }; // Index table tag
+	const std::array<char, 4> TagVBLK{ 'V', 'B', 'L', 'K' }; // Packed file tag
+
+
 	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName), archiveFileReader(fileName)
 	{
 		m_ArchiveFileSize = archiveFileReader.Length();
@@ -95,7 +103,7 @@ namespace Archives
 		archiveFileReader.Read(sectionHeader);
 
 		//Volume Block
-		if (sectionHeader.tag != std::array<char, 4>{'V', 'B', 'L', 'K'}) {
+		if (sectionHeader.tag != TagVBLK) {
 			throw std::runtime_error("Archive file " + m_ArchiveFileName +
 				" is missing VBLK tag for requested file at index " + std::to_string(index));
 		}
@@ -245,7 +253,7 @@ namespace Archives
 		// Write each file header and contents
 		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
 		{
-			WriteTag(volWriter, volInfo.indexEntries[i].fileSize, "VBLK");
+			volWriter.Write(SectionHeader(TagVBLK, volInfo.indexEntries[i].fileSize));
 
 			try {
 				CopyFileIntoVolume(volWriter, volInfo.fileHandles[i]);
@@ -264,12 +272,12 @@ namespace Archives
 	void VolFile::WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
 	{
 		// Write the header
-		WriteTag(volWriter, volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24, "VOL ");
+		volWriter.Write(SectionHeader(TagVOL_, volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24));
 
-		WriteTag(volWriter, 0, "volh");
+		volWriter.Write(SectionHeader(TagVOLH, 0));
 
 		// Write the string table
-		WriteTag(volWriter, volInfo.paddedStringTableLength, "vols");
+		volWriter.Write(SectionHeader(TagVOLS, volInfo.paddedStringTableLength));
 
 		volWriter.Write(&volInfo.stringTableLength, sizeof(volInfo.stringTableLength));
 
@@ -283,7 +291,7 @@ namespace Archives
 		volWriter.Write(&padding, volInfo.paddedStringTableLength - (volInfo.stringTableLength + 4));
 
 		// Write the index table
-		WriteTag(volWriter, volInfo.indexTableLength, "voli");
+		volWriter.Write(SectionHeader(TagVOLI, volInfo.indexTableLength));
 
 		volWriter.Write(volInfo.indexEntries.data(), volInfo.indexTableLength);
 
@@ -377,50 +385,25 @@ namespace Archives
 		} while (numBytesRead != 0);
 	}
 
-	// Writes a section tag to the open output file.
-	void VolFile::WriteTag(StreamWriter& volWriter, uint32_t length, const char *tagText)
-	{
-		int buffer[2];
-
-		buffer[0] = *(int*)tagText;
-		// Set padding bit to indicate 4 byte padding
-		buffer[1] = length | 0x80000000;
-
-		try {
-			volWriter.Write(buffer, sizeof(buffer));
-		}
-		catch (std::exception& e) {
-			throw std::runtime_error("Unable to write tag " + std::string(tagText) + ". Internal Error: " + e.what());
-		}
-	}
-
-
 	// Reads a tag in the .vol file and returns the length of that section.
-	// If tagText does not match what is in the file or if the length is 
-	// invalid then an error is thrown.
-	uint32_t VolFile::ReadTag(const std::array<char, 4>& tagName)
+	// If tag does not match what is in the file or if the length is invalid then an error is thrown.
+	uint32_t VolFile::ReadTag(std::array<char, 4> tagName)
 	{
-		// Tags are 4 chars in length and do not include a null terminator
-		std::array<char, 4> tagFromFile;
-		archiveFileReader.Read(tagFromFile);
+		SectionHeader tag;
+		archiveFileReader.Read(tag);
 
-		if (tagFromFile != tagName) {
+		if (tag.tag != tagName) {
 			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + 
 				" was not found in the proper position in volume " + m_ArchiveFileName);
 		}
 
-		uint32_t length = 0;
-		archiveFileReader.Read(&length, sizeof(length));
-
-		// Check for the tag (MSB set)
-		if ((length & 0x80000000) != 0x80000000) {
+		if (tag.padding == VolPadding::TwoByte) {
 			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + 
 				" from volume " + m_ArchiveFileName + 
 				" uses 2 byte padding, which is not supported. Only 4 byte padding is supported.");
 		}
 
-		// Mask out the tag and return the length.
-		return length & 0x7FFFFFFF;					
+		return tag.length;
 	}
 
 	// Reads the header structure of the .vol file and sets up indexing/structure variables
@@ -432,19 +415,19 @@ namespace Archives
 			throw std::runtime_error("The volume file " + m_ArchiveFileName + " is not large enough to contain the 'VOL ' section header");
 		}
 
-		m_HeaderLength = ReadTag(std::array<char, 4> { 'V', 'O', 'L', ' ' });
+		m_HeaderLength = ReadTag(TagVOL_);
 
 		// Make sure the file is large enough to contain the header
 		if (archiveFileReader.Length() < m_HeaderLength + sizeof(SectionHeader)) {
 			throw std::runtime_error("The volume file " + m_ArchiveFileName + " is not large enough to contain the volh section header");
 		}
 
-		uint32_t volhSize = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 'h' });
+		uint32_t volhSize = ReadTag(TagVOLH);
 		if (volhSize != 0) {
 			throw std::runtime_error("The length associated with tag volh is not zero in volume " + m_ArchiveFileName);
 		}
 
-		m_StringTableLength = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 's' });
+		m_StringTableLength = ReadTag(TagVOLS);
 
 		if (m_HeaderLength < m_StringTableLength + sizeof(SectionHeader) * 2 + sizeof(m_StringTableLength)) {
 			throw std::runtime_error("The string table does not fit in the header of volume " + m_ArchiveFileName);
@@ -452,7 +435,7 @@ namespace Archives
 
 		ReadStringTable();
 
-		m_IndexTableLength = ReadTag(std::array<char, 4> { 'v', 'o', 'l', 'i' });
+		m_IndexTableLength = ReadTag(TagVOLI);
 		m_NumberOfIndexEntries = m_IndexTableLength / sizeof(IndexEntry);
 
 		if (m_IndexTableLength > 0) {
@@ -506,4 +489,8 @@ namespace Archives
 		}
 		m_NumberOfPackedFiles = packedFileCount;
 	}
+
+	VolFile::SectionHeader::SectionHeader() {}
+	VolFile::SectionHeader::SectionHeader(std::array<char, 4> tag, uint32_t length, VolPadding padding) 
+		: tag(tag), length(length), padding(padding) {}
 }

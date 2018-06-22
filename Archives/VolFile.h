@@ -53,13 +53,24 @@ namespace Archives
 			CompressionType compressionType;
 		};
 
+		// Specify boundary padding for a volume file section
+		enum class VolPadding : uint32_t
+		{
+			TwoByte = 0,
+			FourByte = 1
+		};
+
 		struct SectionHeader
 		{
+			SectionHeader();
+			SectionHeader(std::array<char, 4> tag, uint32_t length, VolPadding padding = VolPadding::FourByte);
 			std::array<char, 4> tag;
 			uint32_t length : 31;
-			uint32_t padding : 1; // 0 = 4-byte boundary padding, 1 = 2-byte boundary padding
+			VolPadding padding : 1;
 		};
 #pragma pack(pop)
+
+		static_assert(sizeof(SectionHeader) == 8, "SectionHeader not of required size");
 
 		struct CreateVolumeInfo
 		{
@@ -78,8 +89,7 @@ namespace Archives
 			}
 		};
 
-		uint32_t ReadTag(const std::array<char, 4>& tagName);
-		void WriteTag(StreamWriter& volWriter, uint32_t length, const char *tagText);
+		uint32_t ReadTag(std::array<char, 4> tagName);
 		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile);
 		void ReadVolHeader();
 		void ReadStringTable();
