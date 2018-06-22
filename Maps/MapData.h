@@ -9,6 +9,7 @@
 #include "TileGroup.h"
 #include <string>
 #include <vector>
+#include <cstddef>
 
 enum class CellType;
 
@@ -47,5 +48,5 @@ public:
 	short GetImageIndex(unsigned int x, unsigned int y) const;
 
 private:
-	size_t GetCellIndex(unsigned int x, unsigned int y) const;
+	std::size_t GetCellIndex(unsigned int x, unsigned int y) const;
 };

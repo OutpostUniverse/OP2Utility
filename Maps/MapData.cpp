@@ -3,7 +3,7 @@
 
 unsigned int MapData::GetTileInfoIndex(unsigned int x, unsigned int y) const
 {
-	size_t cellIndex = GetCellIndex(x, y);
+	std::size_t cellIndex = GetCellIndex(x, y);
 	return tiles[cellIndex].tileIndex;
 }
 
@@ -29,7 +29,7 @@ short MapData::GetImageIndex(unsigned int x, unsigned int y) const
 	return tileInfos[tileInfoIndex].tileIndex;
 }
 
-size_t MapData::GetCellIndex(unsigned int x, unsigned int y) const
+std::size_t MapData::GetCellIndex(unsigned int x, unsigned int y) const
 {
 	unsigned int lowerX = x & 0x1F; // ... 0001 1111
 	unsigned int upperX = x >> 5;   // ... 1110 0000

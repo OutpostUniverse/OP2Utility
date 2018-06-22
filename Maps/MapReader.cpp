@@ -91,7 +91,7 @@ namespace MapReader {
 
 		void ReadTilesetSources(StreamReader& streamReader, MapData& mapData)
 		{
-			mapData.tilesetSources.resize(static_cast<size_t>(mapData.header.numTilesets));
+			mapData.tilesetSources.resize(static_cast<std::size_t>(mapData.header.numTilesets));
 
 			for (unsigned int i = 0; i < mapData.header.numTilesets; ++i)
 			{
