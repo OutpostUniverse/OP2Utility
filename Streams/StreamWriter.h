@@ -16,7 +16,7 @@ public:
 	}
 
 protected:
-	// When creating child classes, override this function to implement new write functionality
-	// This function is required because to allow the base class to contain the Write template function.
+	// WriteImplementation is named differently from Write to prevent name hiding of the 
+	// Write template helpers in derived classes.
 	virtual void WriteImplementation(const void* buffer, std::size_t size) = 0;
 };
