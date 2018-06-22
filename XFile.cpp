@@ -73,7 +73,7 @@ std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directo
 	auto pathStr = directory.length() > 0 ? directory : "./";
 
 	std::vector<std::string> filenames;
-	for (auto& entry : fs::directory_iterator(pathStr)) {
+	for (const auto& entry : fs::directory_iterator(pathStr)) {
 		filenames.push_back(entry.path().string());
 	}
 

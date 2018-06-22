@@ -24,7 +24,7 @@ std::vector<std::string> StringHelper::RemoveStrings(const std::vector<std::stri
 
 	// i will wrap around to SIZE_MAX  when loop is completed
 	for (std::size_t i = stringsToSearch.size() - 1; i < stringsToSearch.size(); ++i) {
-		for (const std::string& stringToRemove : stringsToRemove) {
+		for (const auto& stringToRemove : stringsToRemove) {
 			if (CheckIfStringsAreEqual(stringsToSearch[i], stringToRemove)) {
 				stringsToReturn.erase(stringsToReturn.begin() + i);
 				break;
