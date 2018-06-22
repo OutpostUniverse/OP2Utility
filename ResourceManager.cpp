@@ -1,7 +1,7 @@
 #include "ResourceManager.h"
 #include "Archives/VolFile.h"
 #include "Archives/ClmFile.h"
-//#include "Streams/StreamReader.h"
+#include "Streams/SeekableStreamReader.h"
 #include "XFile.h"
 
 using namespace std;
@@ -91,7 +91,7 @@ vector<string> ResourceManager::GetAllFilenamesOfType(const string& directory, c
 
 bool ResourceManager::ExistsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut)
 {
-	for (size_t i = 0; i < ArchiveFiles.size(); ++i)
+	for (std::size_t i = 0; i < ArchiveFiles.size(); ++i)
 	{
 		for (int j = 0; j < ArchiveFiles[i]->GetNumberOfPackedFiles(); ++j)
 		{
@@ -143,7 +143,7 @@ bool ResourceManager::DuplicateFilename(vector<string>& currentFilenames, string
 
 	string filename = XFile::GetFilename(pathToCheck);
 
-	for (size_t i = 0; i < currentFilenames.size(); ++i) {
+	for (std::size_t i = 0; i < currentFilenames.size(); ++i) {
 		if (XFile::PathsAreEqual(XFile::GetFilename(currentFilenames[i]), filename)) {
 			return true;
 		}

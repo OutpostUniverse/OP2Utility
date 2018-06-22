@@ -1,5 +1,6 @@
 #include "XFile.h"
 #include "StringHelper.h"
+#include <cstddef>
 
 #include <filesystem>
 #include <experimental/filesystem>
@@ -84,7 +85,7 @@ vector<string> XFile::GetFilesFromDirectory(const string& directory, const regex
 {
 	vector<string> filenames = GetFilesFromDirectory(directory);
 
-	for (size_t i = filenames.size() - 1; i >= 0; i--) 
+	for (std::size_t i = filenames.size() - 1; i >= 0; i--) 
 	{
 		if (!regex_search(filenames[i], filenameRegex)) {
 			filenames.erase(filenames.begin() + i);
@@ -102,7 +103,7 @@ vector<string> XFile::GetFilesFromDirectory(const string& directory, const strin
 {
 	vector<string> filenames = GetFilesFromDirectory(directory);
 
-	for (size_t i = filenames.size() - 1; i >= 0; --i)
+	for (std::size_t i = filenames.size() - 1; i >= 0; --i)
 	{
 		if (filenames.size() == 0) {
 			return filenames;

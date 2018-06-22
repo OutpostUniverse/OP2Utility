@@ -1,5 +1,6 @@
 #include "StringHelper.h"
 #include <algorithm>
+#include <cstddef>
 
 using namespace std;
 
@@ -24,7 +25,7 @@ vector<string> StringHelper::RemoveStrings(const vector<string>& stringsToSearch
 	vector<string> stringsToReturn(stringsToSearch);
 
 	// i will wrap around to SIZE_MAX  when loop is completed
-	for (size_t i = stringsToSearch.size() - 1; i < stringsToSearch.size(); ++i) {
+	for (std::size_t i = stringsToSearch.size() - 1; i < stringsToSearch.size(); ++i) {
 		for (const std::string& stringToRemove : stringsToRemove) {
 			if (CheckIfStringsAreEqual(stringsToSearch[i], stringToRemove)) {
 				stringsToReturn.erase(stringsToReturn.begin() + i);
@@ -42,7 +43,7 @@ bool StringHelper::CheckIfStringsAreEqual(const std::string& string1, const std:
 		return false;
 	}
 
-	for (size_t i = 0; i < string1.size(); ++i) {
+	for (std::size_t i = 0; i < string1.size(); ++i) {
 		if (::tolower(string1[i]) != ::tolower(string2[i])) {
 			return false;
 		}
@@ -61,7 +62,7 @@ bool StringHelper::ContainsStringCaseInsensitive(vector<string> stringsToSearch,
 			return false;
 		}
 
-		for (size_t i = 0; i < s.size(); ++i) {
+		for (std::size_t i = 0; i < s.size(); ++i) {
 			if (::tolower(s[i]) != ::tolower(stringToFind[i])) {
 				return false;
 			}
