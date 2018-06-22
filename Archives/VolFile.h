@@ -57,8 +57,7 @@ namespace Archives
 		enum class VolPadding : uint32_t
 		{
 			TwoByte = 0,
-			FourByte = 1,
-			default = FourByte
+			FourByte = 1
 		};
 
 		struct SectionHeader
@@ -70,6 +69,8 @@ namespace Archives
 			VolPadding padding : 1;
 		};
 #pragma pack(pop)
+
+		static_assert(sizeof(SectionHeader) == 8, "SectionHeader not of required size");
 
 		struct CreateVolumeInfo
 		{

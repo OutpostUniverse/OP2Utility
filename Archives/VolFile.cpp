@@ -19,8 +19,6 @@ namespace Archives
 
 	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName), archiveFileReader(fileName)
 	{
-		static_assert(sizeof(SectionHeader) == 8, "SectionHeader not of required size");
-
 		m_ArchiveFileSize = archiveFileReader.Length();
 
 		ReadVolHeader();
