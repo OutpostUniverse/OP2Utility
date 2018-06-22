@@ -19,6 +19,8 @@ namespace MapReader {
 		void ReadTileGroups(SeekableStreamReader& streamReader, MapData& mapData);
 		TileGroup ReadTileGroup(StreamReader& streamReader);
 		std::string ReadString(StreamReader& streamReader);
+
+		const std::array<char, 10> tilesetHeader{ "TILE SET\x1a" };
 	}
 
 
@@ -73,7 +75,7 @@ namespace MapReader {
 			std::array<char, 10> buffer;
 			streamReader.Read(buffer);
 
-			if (buffer != std::array<char, 10>{ "TILE SET\x1a" }) {
+			if (buffer != tilesetHeader) {
 				throw std::runtime_error("'TILE SET' string not found.");
 			}
 		}
