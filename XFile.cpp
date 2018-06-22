@@ -5,15 +5,14 @@
 #include <filesystem>
 #include <experimental/filesystem>
 
-using namespace std;
 using namespace std::experimental::filesystem;
 
-string XFile::GetFileExtension(const string& pathStr)
+std::string XFile::GetFileExtension(const std::string& pathStr)
 {
 	return path(pathStr).extension().string();
 }
 
-bool XFile::IsDirectory(const string& pathStr)
+bool XFile::IsDirectory(const std::string& pathStr)
 {
 	if (pathStr.length() == 0) {
 		return true;
@@ -22,17 +21,17 @@ bool XFile::IsDirectory(const string& pathStr)
 	return is_directory(pathStr);
 }
 
-bool XFile::IsFile(const string& path)
+bool XFile::IsFile(const std::string& path)
 {
 	return is_regular_file(path);
 }
 
-bool XFile::ExtensionMatches(const string& pathStr, const string& extension)
+bool XFile::ExtensionMatches(const std::string& pathStr, const std::string& extension)
 {
-	string pathExtension = GetFileExtension(pathStr);
+	std::string pathExtension = GetFileExtension(pathStr);
 	StringHelper::ConvertToUpper(pathExtension);
 
-	string extensionUpper = StringHelper::ConvertToUpper(extension);
+	std::string extensionUpper = StringHelper::ConvertToUpper(extension);
 
 	if (extensionUpper.length() > 0 && extensionUpper[0] != '.') {
 		extensionUpper.insert(0, ".");
@@ -41,22 +40,22 @@ bool XFile::ExtensionMatches(const string& pathStr, const string& extension)
 	return pathExtension == extensionUpper;
 }
 
-string XFile::ChangeFileExtension(const string& filename, const string& newExtension)
+std::string XFile::ChangeFileExtension(const std::string& filename, const std::string& newExtension)
 {
 	return path(filename).replace_extension(newExtension).string();
 }
 
-void XFile::NewDirectory(const string& newPath)
+void XFile::NewDirectory(const std::string& newPath)
 {
 	create_directory(path(newPath));
 }
 
-bool XFile::PathExists(const string& pathStr)
+bool XFile::PathExists(const std::string& pathStr)
 {
 	return exists(path(pathStr));
 }
 
-string XFile::AppendToFilename(const string& filename, const string& valueToAppend)
+std::string XFile::AppendToFilename(const std::string& filename, const std::string& valueToAppend)
 {
 	path newPath(filename);
 	
@@ -68,12 +67,12 @@ string XFile::AppendToFilename(const string& filename, const string& valueToAppe
 	return newPath.string();
 }
 
-vector<string> XFile::GetFilesFromDirectory(const string& directory)
+std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directory)
 {
 	// Brett208 6Aug17: Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
 	auto pathStr = directory.length() > 0 ? directory : "./";
 
-	vector<string> filenames;
+	std::vector<std::string> filenames;
 	for (auto& entry : directory_iterator(pathStr)) {
 		filenames.push_back(entry.path().string());
 	}
@@ -81,13 +80,13 @@ vector<string> XFile::GetFilesFromDirectory(const string& directory)
 	return filenames;
 }
 
-vector<string> XFile::GetFilesFromDirectory(const string& directory, const regex& filenameRegex)
+std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
 {
-	vector<string> filenames = GetFilesFromDirectory(directory);
+	std::vector<std::string> filenames = GetFilesFromDirectory(directory);
 
 	for (std::size_t i = filenames.size() - 1; i >= 0; i--) 
 	{
-		if (!regex_search(filenames[i], filenameRegex)) {
+		if (!std::regex_search(filenames[i], filenameRegex)) {
 			filenames.erase(filenames.begin() + i);
 		}
 
@@ -99,9 +98,9 @@ vector<string> XFile::GetFilesFromDirectory(const string& directory, const regex
 	return filenames;
 }
 
-vector<string> XFile::GetFilesFromDirectory(const string& directory, const string& fileType)
+std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directory, const std::string& fileType)
 {
-	vector<string> filenames = GetFilesFromDirectory(directory);
+	std::vector<std::string> filenames = GetFilesFromDirectory(directory);
 
 	for (std::size_t i = filenames.size() - 1; i >= 0; --i)
 	{
@@ -109,7 +108,7 @@ vector<string> XFile::GetFilesFromDirectory(const string& directory, const strin
 			return filenames;
 		}
 
-		string extension = path(filenames[i]).extension().string();
+		std::string extension = path(filenames[i]).extension().string();
 		if (extension != fileType) {
 			filenames.erase(filenames.begin() + i);
 		}
@@ -122,12 +121,12 @@ vector<string> XFile::GetFilesFromDirectory(const string& directory, const strin
 	return filenames;
 }
 
-bool XFile::IsRootPath(const string& pathStr)
+bool XFile::IsRootPath(const std::string& pathStr)
 {
 	return path(pathStr).has_root_path();
 }
 
-string XFile::ReplaceFilename(const string& pathStr, const string& filenameStr)
+std::string XFile::ReplaceFilename(const std::string& pathStr, const std::string& filenameStr)
 {
 	path p(pathStr);
 	path filename = path(filenameStr).filename();
@@ -137,7 +136,7 @@ string XFile::ReplaceFilename(const string& pathStr, const string& filenameStr)
 	return p.string() + "/" + filename.string();
 }
 
-string XFile::AppendSubDirectory(const string& pathStr, const string& subDirectory)
+std::string XFile::AppendSubDirectory(const std::string& pathStr, const std::string& subDirectory)
 {
 	path p(pathStr);
 	path filename(p.filename());
@@ -150,17 +149,17 @@ string XFile::AppendSubDirectory(const string& pathStr, const string& subDirecto
 	return p.append(subDirectory).append(filename).string();
 }
 
-string XFile::GetFilename(const string& pathStr)
+std::string XFile::GetFilename(const std::string& pathStr)
 {
 	return path(pathStr).filename().string();
 }
 
-string XFile::RemoveFilename(const string& pathStr)
+std::string XFile::RemoveFilename(const std::string& pathStr)
 {
 	return path(pathStr).remove_filename().string();
 }
 
-bool XFile::PathsAreEqual(string pathStr1, string pathStr2)
+bool XFile::PathsAreEqual(std::string pathStr1, std::string pathStr2)
 {
 	StringHelper::ConvertToUpper(pathStr1);
 	StringHelper::ConvertToUpper(pathStr2);
@@ -178,7 +177,7 @@ bool XFile::PathsAreEqual(string pathStr1, string pathStr2)
 	return path1 == path2;
 }
 
-string XFile::GetDirectory(const string& pathStr)
+std::string XFile::GetDirectory(const std::string& pathStr)
 {
 	path p(pathStr);
 
@@ -198,7 +197,7 @@ string XFile::GetDirectory(const string& pathStr)
 	return "./";
 }
 
-void XFile::DeletePath(const string& pathStr)
+void XFile::DeletePath(const std::string& pathStr)
 {
 	remove_all(pathStr);
 }
