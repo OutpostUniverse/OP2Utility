@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+#include <array>
 #include <cstring>
 
 
@@ -10,9 +11,7 @@ namespace MapReader {
 	// Anonymous namespace to hold private methods
 	namespace {
 		void SkipSaveGameHeader(SeekableStreamReader& streamReader);
-		void ReadHeader(StreamReader& streamReader, MapData& mapData);
 		void ReadTiles(StreamReader& streamReader, MapData& mapData);
-		void ReadClipRect(StreamReader& streamReader, ClipRect& clipRect);
 		void ReadTilesetSources(StreamReader& streamReader, MapData& mapData);
 		void ReadTilesetHeader(StreamReader& streamReader);
 		void ReadTileInfo(StreamReader& streamReader, MapData& mapData);
@@ -40,9 +39,9 @@ namespace MapReader {
 			SkipSaveGameHeader(streamReader);
 		}
 
-		ReadHeader(streamReader, mapData);
+		streamReader.Read(mapData.header);
 		ReadTiles(streamReader, mapData);
-		ReadClipRect(streamReader, mapData.clipRect);
+		streamReader.Read(mapData.clipRect);
 		ReadTilesetSources(streamReader, mapData);
 		ReadTilesetHeader(streamReader);
 		ReadTileInfo(streamReader, mapData);
@@ -63,28 +62,18 @@ namespace MapReader {
 			streamReader.SeekRelative(0x1E025);
 		}
 
-		void ReadHeader(StreamReader& streamReader, MapData& mapData)
-		{
-			streamReader.Read(mapData.header);
-		}
-
 		void ReadTiles(StreamReader& streamReader, MapData& mapData)
 		{
 			mapData.tiles.resize(mapData.header.TileCount());
 			streamReader.Read(&mapData.tiles[0], mapData.tiles.size() * sizeof(TileData));
 		}
 
-		void ReadClipRect(StreamReader& streamReader, ClipRect& clipRect)
-		{
-			streamReader.Read(clipRect);
-		}
-
 		void ReadTilesetHeader(StreamReader& streamReader)
 		{
-			char buffer[10];
-			streamReader.Read(buffer, sizeof(buffer));
+			std::array<char, 10> buffer;
+			streamReader.Read(buffer);
 
-			if (std::strncmp(buffer, "TILE SET\x1a", sizeof(buffer))) {
+			if (buffer != std::array<char, 10>{ "TILE SET\x1a" }) {
 				throw std::runtime_error("'TILE SET' string not found.");
 			}
 		}
