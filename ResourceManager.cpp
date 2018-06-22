@@ -138,7 +138,7 @@ void ResourceManager::ExtractAllOfFileType(const std::string& directory, const s
 
 bool ResourceManager::DuplicateFilename(std::vector<std::string>& currentFilenames, std::string pathToCheck)
 {
-	// Brett: When called on a large loop of filenames (60 more more) this function, this will create a bottleneck.
+	// Brett: When called on a large loop of filenames (60 or more), this function will create a bottleneck.
 
 	std::string filename = XFile::GetFilename(pathToCheck);
 
