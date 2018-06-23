@@ -133,14 +133,10 @@ namespace Archives
 	{
 		try
 		{
+			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
 			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
-			
-			std::vector<uint8_t> packedFileBuffer;
-			packedFileBuffer.resize(sectionHeader.length);
-			archiveFileReader.Read(packedFileBuffer.data(), sectionHeader.length);
 
-			FileStreamWriter fileStreamWriter(pathOut);
-			fileStreamWriter.Write(packedFileBuffer.data(), packedFileBuffer.size());
+			WriteFromStream(pathOut, archiveFileReader, sectionHeader.length);
 		}
 		catch (std::exception e)
 		{
