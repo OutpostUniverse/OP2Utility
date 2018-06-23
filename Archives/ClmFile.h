@@ -68,7 +68,6 @@ namespace Archives
 		void WriteArchive(std::string& archiveFileName, std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
 			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& internalNames, const WaveFormatEx& waveFormat);
 		void PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries);
-		void PackFile(StreamWriter& clmWriter, const IndexEntry& entry, StreamReader& fileToPackReader);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
 		static WaveFormatEx CreateDefaultWaveFormat();
