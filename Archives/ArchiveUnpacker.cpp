@@ -3,10 +3,11 @@
 #include "../Streams/SeekableStreamReader.h"
 #include "../Streams/FileStreamWriter.h"
 #include <array>
+#include <cstddef>
 
 namespace Archives
 {
-	const uint32_t ARCHIVE_WRITE_SIZE = 0x00020000;
+	const std::size_t ARCHIVE_WRITE_SIZE = 0x00020000;
 
 	ArchiveUnpacker::ArchiveUnpacker(const std::string& fileName) :
 		m_ArchiveFileName(fileName), m_NumberOfPackedFiles(0), m_ArchiveFileSize(0) { }
