@@ -8,13 +8,13 @@ using namespace Archives;
 
 ResourceManager::ResourceManager(const std::string& archiveDirectory)
 {
-	std::vector<std::string> volFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".vol");
+	auto volFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".vol");
 
 	for (const auto& volFilename : volFilenames) {
 		ArchiveFiles.push_back(std::make_unique<VolFile>(volFilename.c_str()));
 	}
 
-	std::vector<std::string> clmFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".clm");
+	auto clmFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".clm");
 
 	for (const auto& clmFilename : clmFilenames) {
 		ArchiveFiles.push_back(std::make_unique<ClmFile>(clmFilename.c_str()));
@@ -33,7 +33,7 @@ std::unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const s
 		return nullptr;
 	}
 
-	for (auto& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
 		std::string internalArchiveFilename = XFile::GetFilename(filename);
 		int internalArchiveIndex = archiveFile->GetInternalFileIndex(internalArchiveFilename.c_str());
@@ -52,7 +52,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& dir
 
 	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(directory, filenameRegex);
 
-	for (auto& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
@@ -73,7 +73,7 @@ std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::strin
 		return filenames;
 	}
 
-	for (std::unique_ptr<ArchiveFile>& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
@@ -125,7 +125,7 @@ bool ResourceManager::ExtractSpecificFile(const std::string& filename, bool over
 
 void ResourceManager::ExtractAllOfFileType(const std::string& directory, const std::string& extension, bool overwrite)
 {
-	for (auto& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
@@ -153,7 +153,7 @@ bool ResourceManager::DuplicateFilename(std::vector<std::string>& currentFilenam
 
 std::string ResourceManager::FindContainingArchiveFile(const std::string& filename)
 {
-	for (auto& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
 		int internalFileIndex = archiveFile->GetInternalFileIndex(filename.c_str());
 
