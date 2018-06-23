@@ -32,6 +32,6 @@ namespace Archives
 		// Does not compare the entire path, but only the filename.
 		static bool ComparePathFilenames(const std::string path1, const std::string path2);
 
-		void ArchivePacker::PackFile(StreamWriter& streamWriter, StreamReader& fileToPackReader, const uint64_t fileToPackSize);
+		void WriteFromStream(StreamWriter& streamWriter, StreamReader& streamReader, const uint64_t writeLength);
 	};
 }
