@@ -349,7 +349,7 @@ namespace Archives
 
 		// Copy files into the archive
 		for (std::size_t i = 0; i < header.packedFilesCount; i++) {
-			PackFile(clmFileWriter, *filesToPackReaders[i], indexEntries[i].dataLength);
+			WriteFromStream(clmFileWriter, *filesToPackReaders[i], indexEntries[i].dataLength);
 		}
 	}
 

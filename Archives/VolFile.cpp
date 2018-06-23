@@ -212,8 +212,6 @@ namespace Archives
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
 		CheckSortedContainerForDuplicateNames(volInfo.internalNames);
 
-		volInfo.stringTableLength = 0;
-
 		// Open input files and prepare header and indexing info
 		PrepareHeader(volInfo);
 
@@ -243,7 +241,7 @@ namespace Archives
 			volWriter.Write(SectionHeader(TagVBLK, volInfo.indexEntries[i].fileSize));
 
 			try {
-				PackFile(volWriter, *volInfo.fileStreamReaders[i], volInfo.indexEntries[i].fileSize);
+				WriteFromStream(volWriter, *volInfo.fileStreamReaders[i], volInfo.indexEntries[i].fileSize);
 				int padding = 0;
 
 				// Add padding after the file, ensuring it ends on a 4 byte boundary
@@ -287,6 +285,8 @@ namespace Archives
 
 	void VolFile::OpenAllInputFiles(CreateVolumeInfo &volInfo)
 	{
+		volInfo.fileStreamReaders.clear();
+
 		for (const auto& filename : volInfo.filesToPack) {
 			try {
 				volInfo.fileStreamReaders.push_back(std::make_unique<FileStreamReader>(filename));
@@ -302,12 +302,18 @@ namespace Archives
 	{
 		OpenAllInputFiles(volInfo);
 
+		volInfo.stringTableLength = 0;
+
 		// Get file sizes and calculate length of string table
 		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
 		{
 			IndexEntry indexEntry;
 
-			// A packed volume cannot be larger than uint32_t
+			uint64_t fileSize = volInfo.fileStreamReaders[i]->Length();
+			if (fileSize > UINT32_MAX) {
+				throw std::runtime_error("File " + volInfo.filesToPack[i] + " is too large to fit inside a volume archive.");
+			}
+
 			indexEntry.fileSize = static_cast<uint32_t>(volInfo.fileStreamReaders[i]->Length());
 			indexEntry.fileNameOffset = volInfo.stringTableLength;
 			indexEntry.compressionType = CompressionType::Uncompressed;

@@ -38,7 +38,7 @@ namespace Archives
 		return StringHelper::StringCompareCaseInsensitive(XFile::GetFilename(path1), XFile::GetFilename(path2));
 	}
 
-	void ArchivePacker::PackFile(StreamWriter& streamWriter, StreamReader& fileToPackReader, const uint64_t fileToPackSize)
+	void ArchivePacker::WriteFromStream(StreamWriter& streamWriter, StreamReader& streamReader, const uint64_t writeLength)
 	{
 		uint32_t numBytesToRead;
 		uint32_t offset = 0;
@@ -49,12 +49,12 @@ namespace Archives
 			numBytesToRead = ARCHIVE_WRITE_SIZE;
 
 			// Check if less than ARCHIVE_WRITE_SIZE of data remains for writing to disk.
-			if (offset + numBytesToRead > fileToPackSize) {
-				numBytesToRead = fileToPackSize - offset;
+			if (offset + numBytesToRead > writeLength) {
+				numBytesToRead = writeLength - offset;
 			}
 
 			// Read the input file
-			fileToPackReader.Read(buffer.data(), numBytesToRead);
+			streamReader.Read(buffer.data(), numBytesToRead);
 			offset += numBytesToRead;
 
 			streamWriter.Write(buffer.data(), numBytesToRead);
