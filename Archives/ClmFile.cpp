@@ -349,7 +349,7 @@ namespace Archives
 
 		// Copy files into the archive
 		for (std::size_t i = 0; i < header.packedFilesCount; i++) {
-			PackFile(clmFileWriter, indexEntries[i], *filesToPackReaders[i]);
+			PackFile(clmFileWriter, *filesToPackReaders[i], indexEntries[i].dataLength);
 		}
 	}
 
@@ -365,30 +365,6 @@ namespace Archives
 			indexEntries[i].dataOffset = offset;
 			offset += indexEntries[i].dataLength;
 		}
-	}
-
-	// Write file into the Clm Archive by using the fixed memory size of CLM_WRITE_SIZE.
-	void ClmFile::PackFile(StreamWriter& clmWriter, const IndexEntry& indexEntry, StreamReader& fileToPackReader)
-	{
-		uint32_t numBytesToRead;
-		uint32_t offset = 0; // Max size of CLM IndexEntry::dataLength is 32 bits.
-		std::array<char, CLM_WRITE_SIZE> buffer;
-
-		do
-		{
-			numBytesToRead = CLM_WRITE_SIZE;
-
-			// Check if less than CLM_WRITE_SIZE of data remains for writing to disk.
-			if (offset + numBytesToRead > indexEntry.dataLength) {
-				numBytesToRead = indexEntry.dataLength - offset;
-			}
-
-			// Read the input file
-			fileToPackReader.Read(buffer.data(), numBytesToRead);
-			offset += numBytesToRead;
-
-			clmWriter.Write(buffer.data(), numBytesToRead);
-		} while (numBytesToRead); // End loop when numBytesRead/Written is equal to 0
 	}
 
 	std::vector<std::string> ClmFile::StripFileNameExtensions(std::vector<std::string> paths)

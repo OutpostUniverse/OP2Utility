@@ -3,9 +3,8 @@
 #include "HuffLZ.h"
 #include "ArchiveFile.h"
 #include "CompressionType.h"
-#include "../Streams/StreamWriter.h"
+#include "../Streams/FileStreamWriter.h"
 #include "../Streams/FileStreamReader.h"
-#include <windows.h>
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -75,7 +74,7 @@ namespace Archives
 		struct CreateVolumeInfo
 		{
 			std::vector<IndexEntry> indexEntries;
-			std::vector<HANDLE> fileHandles;
+			std::vector<std::unique_ptr<SeekableStreamReader>> fileStreamReaders;
 			std::vector<std::string> filesToPack;
 			std::vector<std::string> internalNames;
 			uint32_t stringTableLength;
@@ -90,16 +89,14 @@ namespace Archives
 		};
 
 		uint32_t ReadTag(std::array<char, 4> tagName);
-		void CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile);
 		void ReadVolHeader();
 		void ReadStringTable();
 		void ReadPackedFileCount();
-		void WriteVolume(const std::string& fileName, const CreateVolumeInfo& volInfo);
-		void WriteFiles(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
+		void WriteVolume(const std::string& fileName, CreateVolumeInfo& volInfo);
+		void WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo);
 		void WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
-		bool PrepareHeader(CreateVolumeInfo &volInfo);
-		bool OpenAllInputFiles(CreateVolumeInfo &volInfo);
-		void CleanUpVolumeCreate(CreateVolumeInfo &volInfo);
+		void PrepareHeader(CreateVolumeInfo &volInfo);
+		void OpenAllInputFiles(CreateVolumeInfo &volInfo);
 		SectionHeader GetSectionHeader(int index);
 
 		FileStreamReader archiveFileReader;

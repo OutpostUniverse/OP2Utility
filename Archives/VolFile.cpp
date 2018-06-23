@@ -1,6 +1,4 @@
 #include "VolFile.h"
-#include "../Streams/MemoryStreamReader.h"
-#include "../Streams/FileStreamWriter.h"
 #include "../Streams/FileSliceReader.h"
 #include "../XFile.h"
 #include <stdexcept>
@@ -214,25 +212,22 @@ namespace Archives
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
 		CheckSortedContainerForDuplicateNames(volInfo.internalNames);
 
+		volInfo.stringTableLength = 0;
+
 		// Open input files and prepare header and indexing info
-		if (!PrepareHeader(volInfo)) {
-			return false;
-		}
+		PrepareHeader(volInfo);
 
 		try {
 			WriteVolume(volumeFileName, volInfo);
 		}
 		catch (std::exception&) {
-			CleanUpVolumeCreate(volInfo);
 			return false;
 		}
-
-		CleanUpVolumeCreate(volInfo);
 
 		return true;
 	}
 
-	void VolFile::WriteVolume(const std::string& fileName, const CreateVolumeInfo& volInfo) 
+	void VolFile::WriteVolume(const std::string& fileName, CreateVolumeInfo& volInfo) 
 	{
 		FileStreamWriter volWriter(fileName);
 
@@ -240,15 +235,7 @@ namespace Archives
 		WriteFiles(volWriter, volInfo);
 	}
 
-	void VolFile::CleanUpVolumeCreate(CreateVolumeInfo &volInfo)
-	{
-		// Close all input files
-		for (auto& fileHandle : volInfo.fileHandles) {
-			CloseHandle(fileHandle);
-		}
-	}
-
-	void VolFile::WriteFiles(StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
+	void VolFile::WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo)
 	{
 		// Write each file header and contents
 		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
@@ -256,7 +243,7 @@ namespace Archives
 			volWriter.Write(SectionHeader(TagVBLK, volInfo.indexEntries[i].fileSize));
 
 			try {
-				CopyFileIntoVolume(volWriter, volInfo.fileHandles[i]);
+				PackFile(volWriter, *volInfo.fileStreamReaders[i], volInfo.indexEntries[i].fileSize);
 				int padding = 0;
 
 				// Add padding after the file, ensuring it ends on a 4 byte boundary
@@ -298,50 +285,30 @@ namespace Archives
 		volWriter.Write(&padding, volInfo.paddedIndexTableLength - volInfo.indexTableLength);
 	}
 
-	bool VolFile::OpenAllInputFiles(CreateVolumeInfo &volInfo)
+	void VolFile::OpenAllInputFiles(CreateVolumeInfo &volInfo)
 	{
-		volInfo.stringTableLength = 0;
-
-		// Open all the input files and store indexing info
-		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
-		{
-			HANDLE fileHandle = CreateFileA(
-				volInfo.filesToPack[i].c_str(),	// fileName
-				GENERIC_READ,			// access mode
-				0,						// share mode
-				nullptr,				// security attributes
-				OPEN_EXISTING,			// creation disposition
-				FILE_ATTRIBUTE_NORMAL,	// file attributes
-				nullptr);				// template
-			
-			volInfo.fileHandles.push_back(fileHandle);
-
-			if (fileHandle == INVALID_HANDLE_VALUE)// Check for errors
-			{
-				// Error opening file. Close already opened files and return error
-				for (i--; i >= 0; i--) {
-					CloseHandle(volInfo.fileHandles[i]);
-				}
-
-				return false;
+		for (const auto& filename : volInfo.filesToPack) {
+			try {
+				volInfo.fileStreamReaders.push_back(std::make_unique<FileStreamReader>(filename));
+			}
+			catch (const std::exception& e) {
+				throw std::runtime_error("Error attempting to open " + filename + 
+					" for reading into volume " + m_ArchiveFileName + ". Internal Error: " + e.what());
 			}
 		}
-
-		return true;
 	}
 
-	bool VolFile::PrepareHeader(CreateVolumeInfo &volInfo)
+	void VolFile::PrepareHeader(CreateVolumeInfo &volInfo)
 	{
-		if (!OpenAllInputFiles(volInfo)) {
-			return false;
-		}
+		OpenAllInputFiles(volInfo);
 
 		// Get file sizes and calculate length of string table
 		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
 		{
 			IndexEntry indexEntry;
 
-			indexEntry.fileSize = GetFileSize(volInfo.fileHandles[i], 0);
+			// A packed volume cannot be larger than uint32_t
+			indexEntry.fileSize = static_cast<uint32_t>(volInfo.fileStreamReaders[i]->Length());
 			indexEntry.fileNameOffset = volInfo.stringTableLength;
 			indexEntry.compressionType = CompressionType::Uncompressed;
 
@@ -364,25 +331,6 @@ namespace Archives
 			const IndexEntry& previousIndex = volInfo.indexEntries[i - 1];
 			volInfo.indexEntries[i].dataBlockOffset = (previousIndex.dataBlockOffset + previousIndex.fileSize + 11) & ~3;
 		}
-
-		return true;
-	}
-
-	void VolFile::CopyFileIntoVolume(StreamWriter& volWriter, HANDLE inputFile)
-	{
-		char buffer[VOL_WRITE_SIZE];
-		unsigned long numBytesRead;
-
-		do
-		{
-			// Read a chunk from the input file
-			if (ReadFile(inputFile, buffer, VOL_WRITE_SIZE, &numBytesRead, nullptr) == 0) {
-				throw std::runtime_error("Error attempting to read from file for packing");
-			}
-
-			volWriter.Write(buffer, numBytesRead);
-
-		} while (numBytesRead != 0);
 	}
 
 	// Reads a tag in the .vol file and returns the length of that section.
