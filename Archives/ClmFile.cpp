@@ -85,27 +85,9 @@ namespace Archives
 			// Seek to the beginning of the file data (in the .clm file)
 			clmFileReader.Seek(indexEntries[fileIndex].dataOffset);
 
-			uint32_t numBytesToRead = 0;
-			uint32_t offset = 0; // Max size of CLM IndexEntry::dataLength is 32 bits.
-			std::array<char, CLM_WRITE_SIZE> buffer;
-
-			do
-			{
-				numBytesToRead = CLM_WRITE_SIZE;
-
-				// Check if less than CLM_WRITE_SIZE of data remains for writing to disk.
-				if (offset + numBytesToRead > indexEntries[fileIndex].dataLength) {
-					numBytesToRead = indexEntries[fileIndex].dataLength - offset;
-				}
-
-				clmFileReader.Read(buffer.data(), numBytesToRead);
-
-				offset += numBytesToRead;
-
-				waveFileWriter.Write(buffer.data(), numBytesToRead);
-			} while (numBytesToRead); // End loop when numBytesRead/Written is equal to 0
+			WriteFromStream(waveFileWriter, clmFileReader, indexEntries[fileIndex].dataLength);
 		}
-		catch (std::exception& e)
+		catch (const std::exception& e)
 		{
 			throw std::runtime_error("Error attempting to extracted uncompressed file " + pathOut + ". Internal Error Message: " + e.what());
 		}
