@@ -85,7 +85,7 @@ namespace Archives
 			// Seek to the beginning of the file data (in the .clm file)
 			clmFileReader.Seek(indexEntries[fileIndex].dataOffset);
 
-			WriteFromStream(waveFileWriter, clmFileReader, indexEntries[fileIndex].dataLength);
+			ArchiveUnpacker::WriteFromStream(waveFileWriter, clmFileReader, indexEntries[fileIndex].dataLength);
 		}
 		catch (const std::exception& e)
 		{
@@ -331,7 +331,7 @@ namespace Archives
 
 		// Copy files into the archive
 		for (std::size_t i = 0; i < header.packedFilesCount; i++) {
-			WriteFromStream(clmFileWriter, *filesToPackReaders[i], indexEntries[i].dataLength);
+			ArchivePacker::WriteFromStream(clmFileWriter, *filesToPackReaders[i], indexEntries[i].dataLength);
 		}
 	}
 
