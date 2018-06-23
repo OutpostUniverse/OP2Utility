@@ -1,42 +1,41 @@
 #include "ResourceManager.h"
 #include "Archives/VolFile.h"
 #include "Archives/ClmFile.h"
-//#include "Streams/StreamReader.h"
+#include "Streams/SeekableStreamReader.h"
 #include "XFile.h"
 
-using namespace std;
 using namespace Archives;
 
-ResourceManager::ResourceManager(const string& archiveDirectory)
+ResourceManager::ResourceManager(const std::string& archiveDirectory)
 {
-	vector<string> volFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".vol");
+	auto volFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".vol");
 
-	for (const string& volFilename : volFilenames) {
-		ArchiveFiles.push_back(make_unique<VolFile>(volFilename.c_str()));
+	for (const auto& volFilename : volFilenames) {
+		ArchiveFiles.push_back(std::make_unique<VolFile>(volFilename.c_str()));
 	}
 
-	vector<string> clmFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".clm");
+	auto clmFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".clm");
 
-	for (const string& clmFilename : clmFilenames) {
-		ArchiveFiles.push_back(make_unique<ClmFile>(clmFilename.c_str()));
+	for (const auto& clmFilename : clmFilenames) {
+		ArchiveFiles.push_back(std::make_unique<ClmFile>(clmFilename.c_str()));
 	}
 }
 
 // First searches for resources loosely in provided directory. 
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
-unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const string& filename, bool accessArchives)
+std::unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
 {
 	if (XFile::PathExists(filename)) {
-		return make_unique<FileStreamReader>(filename);
+		return std::make_unique<FileStreamReader>(filename);
 	}
 
 	if (!accessArchives) {
 		return nullptr;
 	}
 
-	for (unique_ptr<ArchiveFile>& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
-		string internalArchiveFilename = XFile::GetFilename(filename);
+		std::string internalArchiveFilename = XFile::GetFilename(filename);
 		int internalArchiveIndex = archiveFile->GetInternalFileIndex(internalArchiveFilename.c_str());
 
 		if (internalArchiveIndex > -1) {
@@ -47,17 +46,17 @@ unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const string
 	return nullptr;
 }
 
-vector<string> ResourceManager::GetAllFilenames(const string& directory, const string& filenameRegexStr, bool accessArcives)
+std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArcives)
 {
-	regex filenameRegex(filenameRegexStr, regex_constants::icase);
+	std::regex filenameRegex(filenameRegexStr, std::regex_constants::icase);
 
-	vector<string> filenames = XFile::GetFilesFromDirectory(directory, filenameRegex);
+	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(directory, filenameRegex);
 
-	for (unique_ptr<ArchiveFile>& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
-			if (regex_search(archiveFile->GetInternalFileName(i), filenameRegex)) {
+			if (std::regex_search(archiveFile->GetInternalFileName(i), filenameRegex)) {
 				filenames.push_back(archiveFile->GetInternalFileName(i));
 			}
 		}
@@ -66,19 +65,19 @@ vector<string> ResourceManager::GetAllFilenames(const string& directory, const s
 	return filenames;
 }
 
-vector<string> ResourceManager::GetAllFilenamesOfType(const string& directory, const string& extension, bool accessArchives)
+std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::string& directory, const std::string& extension, bool accessArchives)
 {
-	vector<string> filenames = XFile::GetFilesFromDirectory(directory, extension);
+	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(directory, extension);
 
 	if (!accessArchives) {
 		return filenames;
 	}
 
-	for (unique_ptr<ArchiveFile>& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
-			string internalFilename = archiveFile->GetInternalFileName(i);
+			std::string internalFilename = archiveFile->GetInternalFileName(i);
 
 			if (XFile::ExtensionMatches(internalFilename, extension) && !DuplicateFilename(filenames, internalFilename)) {
 				filenames.push_back(internalFilename);
@@ -89,9 +88,9 @@ vector<string> ResourceManager::GetAllFilenamesOfType(const string& directory, c
 	return filenames;
 }
 
-bool ResourceManager::ExistsInArchives(const string& filename, int& volFileIndexOut, int& internalVolIndexOut)
+bool ResourceManager::ExistsInArchives(const std::string& filename, int& volFileIndexOut, int& internalVolIndexOut)
 {
-	for (size_t i = 0; i < ArchiveFiles.size(); ++i)
+	for (std::size_t i = 0; i < ArchiveFiles.size(); ++i)
 	{
 		for (int j = 0; j < ArchiveFiles[i]->GetNumberOfPackedFiles(); ++j)
 		{
@@ -107,7 +106,7 @@ bool ResourceManager::ExistsInArchives(const string& filename, int& volFileIndex
 	return false;
 }
 
-bool ResourceManager::ExtractSpecificFile(const string& filename, bool overwrite)
+bool ResourceManager::ExtractSpecificFile(const std::string& filename, bool overwrite)
 {
 	if (!overwrite && XFile::PathExists(filename)) {
 		return true;
@@ -124,9 +123,9 @@ bool ResourceManager::ExtractSpecificFile(const string& filename, bool overwrite
 	return false;
 }
 
-void ResourceManager::ExtractAllOfFileType(const string& directory, const string& extension, bool overwrite)
+void ResourceManager::ExtractAllOfFileType(const std::string& directory, const std::string& extension, bool overwrite)
 {
-	for (unique_ptr<ArchiveFile>& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
@@ -137,13 +136,13 @@ void ResourceManager::ExtractAllOfFileType(const string& directory, const string
 	}
 }
 
-bool ResourceManager::DuplicateFilename(vector<string>& currentFilenames, string pathToCheck)
+bool ResourceManager::DuplicateFilename(std::vector<std::string>& currentFilenames, std::string pathToCheck)
 {
-	// Brett: When called on a large loop of filenames (60 more more) this function, this will create a bottleneck.
+	// Brett: When called on a large loop of filenames (60 or more), this function will create a bottleneck.
 
-	string filename = XFile::GetFilename(pathToCheck);
+	std::string filename = XFile::GetFilename(pathToCheck);
 
-	for (size_t i = 0; i < currentFilenames.size(); ++i) {
+	for (std::size_t i = 0; i < currentFilenames.size(); ++i) {
 		if (XFile::PathsAreEqual(XFile::GetFilename(currentFilenames[i]), filename)) {
 			return true;
 		}
@@ -152,9 +151,9 @@ bool ResourceManager::DuplicateFilename(vector<string>& currentFilenames, string
 	return false;
 }
 
-string ResourceManager::FindContainingArchiveFile(const string& filename)
+std::string ResourceManager::FindContainingArchiveFile(const std::string& filename)
 {
-	for (unique_ptr<ArchiveFile>& archiveFile : ArchiveFiles)
+	for (const auto& archiveFile : ArchiveFiles)
 	{
 		int internalFileIndex = archiveFile->GetInternalFileIndex(filename.c_str());
 
@@ -163,5 +162,5 @@ string ResourceManager::FindContainingArchiveFile(const string& filename)
 		}
 	}
 
-	return string();
+	return std::string();
 }

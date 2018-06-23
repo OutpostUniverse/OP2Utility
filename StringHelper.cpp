@@ -1,31 +1,30 @@
 #include "StringHelper.h"
 #include <algorithm>
+#include <cstddef>
 
-using namespace std;
-
-void StringHelper::ConvertToUpper(string& str)
+void StringHelper::ConvertToUpper(std::string& str)
 {
 	for (auto & c : str) {
 		c = toupper(c);
 	}
 }
 
-string StringHelper::ConvertToUpper(const string& str)
+std::string StringHelper::ConvertToUpper(const std::string& str)
 {
-	string newString = str;
+	std::string newString = str;
 	ConvertToUpper(newString);
 
 	return newString;
 }
 
 // Returns a new vector with matching strings removed. Case insensitive.
-vector<string> StringHelper::RemoveStrings(const vector<string>& stringsToSearch, const vector<string>& stringsToRemove)
+std::vector<std::string> StringHelper::RemoveStrings(const std::vector<std::string>& stringsToSearch, const std::vector<std::string>& stringsToRemove)
 {
-	vector<string> stringsToReturn(stringsToSearch);
+	std::vector<std::string> stringsToReturn(stringsToSearch);
 
 	// i will wrap around to SIZE_MAX  when loop is completed
-	for (size_t i = stringsToSearch.size() - 1; i < stringsToSearch.size(); ++i) {
-		for (const std::string& stringToRemove : stringsToRemove) {
+	for (std::size_t i = stringsToSearch.size() - 1; i < stringsToSearch.size(); ++i) {
+		for (const auto& stringToRemove : stringsToRemove) {
 			if (CheckIfStringsAreEqual(stringsToSearch[i], stringToRemove)) {
 				stringsToReturn.erase(stringsToReturn.begin() + i);
 				break;
@@ -42,7 +41,7 @@ bool StringHelper::CheckIfStringsAreEqual(const std::string& string1, const std:
 		return false;
 	}
 
-	for (size_t i = 0; i < string1.size(); ++i) {
+	for (std::size_t i = 0; i < string1.size(); ++i) {
 		if (::tolower(string1[i]) != ::tolower(string2[i])) {
 			return false;
 		}
@@ -52,7 +51,7 @@ bool StringHelper::CheckIfStringsAreEqual(const std::string& string1, const std:
 }
 
 // Returns true if the vector contains the given string, ignoring letter casing.
-bool StringHelper::ContainsStringCaseInsensitive(vector<string> stringsToSearch, string stringToFind)
+bool StringHelper::ContainsStringCaseInsensitive(std::vector<std::string> stringsToSearch, std::string stringToFind)
 {
 	auto itr = std::find_if(stringsToSearch.begin(), stringsToSearch.end(),
 		[&](auto &s) {
@@ -61,7 +60,7 @@ bool StringHelper::ContainsStringCaseInsensitive(vector<string> stringsToSearch,
 			return false;
 		}
 
-		for (size_t i = 0; i < s.size(); ++i) {
+		for (std::size_t i = 0; i < s.size(); ++i) {
 			if (::tolower(s[i]) != ::tolower(stringToFind[i])) {
 				return false;
 			}
@@ -94,7 +93,7 @@ bool StringHelper::StringCompareCaseInsensitive(const std::string& string1, cons
 	return (string1.length() < string2.length());
 }
 
-bool StringHelper::ContainsNonAsciiChars(string str)
+bool StringHelper::ContainsNonAsciiChars(std::string str)
 {
 	return std::any_of(str.begin(), str.end(), [](unsigned char i) { return (static_cast<unsigned char>(i) > 127); });
 }
