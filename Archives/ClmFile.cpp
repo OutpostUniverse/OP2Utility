@@ -5,8 +5,6 @@
 
 namespace Archives
 {
-	const uint32_t CLM_WRITE_SIZE = 0x00020000;
-
 	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName), clmFileReader(fileName)
 	{
 		m_ArchiveFileSize = clmFileReader.Length();
