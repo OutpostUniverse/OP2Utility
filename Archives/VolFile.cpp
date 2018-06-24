@@ -146,18 +146,21 @@ namespace Archives
 	{
 		try
 		{
-			char* offset = (char*)m_IndexEntries[fileIndex].dataBlockOffset;
-			int length = *(int*)(offset + 4) & 0x7FFFFFFF;
-			offset += 8;
+			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
+			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
-			HuffLZ decompressor(length, offset);
-			const char *buffer = 0;
+			// Load data into temporary memory buffer
+			int length = sectionHeader.length;
+			std::vector<char> buffer(length);
+			archiveFileReader.Read(buffer.data(), length);
+
+			HuffLZ decompressor(length, buffer.data());
 
 			FileStreamWriter fileStreamWriter(pathOut);
 
 			do
 			{
-				buffer = decompressor.GetInternalBuffer(&length);
+				const char *buffer = decompressor.GetInternalBuffer(&length);
 				fileStreamWriter.Write(buffer, length);
 			} while (length);
 		}
