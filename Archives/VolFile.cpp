@@ -150,7 +150,7 @@ namespace Archives
 			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
 			// Load data into temporary memory buffer
-			int length = sectionHeader.length;
+			std::size_t length = sectionHeader.length;
 			std::vector<char> buffer(length);
 			archiveFileReader.Read(buffer.data(), length);
 

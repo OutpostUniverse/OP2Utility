@@ -3,6 +3,7 @@
 
 #include "AdaptHuffTree.h"
 #include "BitStream.h"
+#include <cstddef>
 
 namespace Archives
 {
@@ -10,17 +11,17 @@ namespace Archives
 	{
 	public:
 		HuffLZ(BitStream *bitStream);
-		HuffLZ(int bufferSize, char *buffer);
+		HuffLZ(std::size_t bufferSize, char *buffer);
 		~HuffLZ();
 
-		int GetData(int bufferSize, char *buffer);	// Copy decoded data into given buffer.
+		std::size_t GetData(std::size_t bufferSize, char *buffer);	// Copy decoded data into given buffer.
 													// Returns number of bytes copied
-		const char* GetInternalBuffer(int *sizeAvailableData);
+		const char* GetInternalBuffer(std::size_t *sizeAvailableData);
 		// Give access to internal decompress
 		// buffer (no memory copy required)
 	private:
 		void FillDecompressBuffer();				// Decompress until buffer is near full
-		int CopyAvailableData(int size, char *buff);// Copies already decompressed data
+		std::size_t CopyAvailableData(std::size_t size, char *buff);// Copies already decompressed data
 		bool DecompressCode();	// Decompresses a code and returns false at end of stream
 		int GetNextCode();
 		int GetRepeatOffset();
