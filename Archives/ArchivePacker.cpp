@@ -40,7 +40,7 @@ namespace Archives
 
 	void ArchivePacker::WriteFromStream(StreamWriter& streamWriter, StreamReader& streamReader, const uint64_t writeLength)
 	{
-		uint32_t numBytesToRead;
+		std::size_t numBytesToRead;
 		uint32_t offset = 0;
 		std::array<char, ARCHIVE_WRITE_SIZE> buffer;
 
@@ -50,7 +50,7 @@ namespace Archives
 
 			// Check if less than ARCHIVE_WRITE_SIZE of data remains for writing to disk.
 			if (offset + numBytesToRead > writeLength) {
-				numBytesToRead = writeLength - offset;
+				numBytesToRead = static_cast<std::size_t>(writeLength - offset);
 			}
 
 			// Read the input file

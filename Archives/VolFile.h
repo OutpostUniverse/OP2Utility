@@ -25,7 +25,7 @@ namespace Archives
 		std::string GetInternalFileName(int index);
 		int GetInternalFileIndex(const char *internalFileName);
 		CompressionType GetInternalCompressionCode(int index);
-		int GetInternalFileSize(int index);
+		uint32_t GetInternalFileSize(int index);
 
 		// Extraction
 		void ExtractFile(int fileIndex, const std::string& pathOut);

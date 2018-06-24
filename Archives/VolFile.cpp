@@ -53,7 +53,7 @@ namespace Archives
 		return m_IndexEntries[index].compressionType;
 	}
 
-	int VolFile::GetInternalFileSize(int index)
+	uint32_t VolFile::GetInternalFileSize(int index)
 	{
 		CheckPackedFileIndexBounds(index);
 
