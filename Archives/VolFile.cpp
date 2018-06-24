@@ -136,7 +136,7 @@ namespace Archives
 
 			ArchiveUnpacker::WriteFromStream(pathOut, archiveFileReader, sectionHeader.length);
 		}
-		catch (std::exception e)
+		catch (std::exception& e)
 		{
 			throw std::runtime_error("Error attempting to extracted uncompressed file " + pathOut + ". Internal Error Message: " + e.what());
 		}
@@ -161,7 +161,7 @@ namespace Archives
 				fileStreamWriter.Write(buffer, length);
 			} while (length);
 		}
-		catch (std::exception e)
+		catch (const std::exception& e)
 		{
 			throw std::runtime_error("Error attempting to extract LZH compressed file " + pathOut + ". Internal Error Message: " + e.what());
 		}
