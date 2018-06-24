@@ -2,7 +2,7 @@
 # Set compiler default to mingw
 # Can still override from command line or environment variables
 ifeq ($(origin CXX),default)
-	CXX := i686-w64-mingw32-g++
+	CXX := clang-6.0
 endif
 
 SRCDIR := .
