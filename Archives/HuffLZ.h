@@ -11,7 +11,7 @@ namespace Archives
 	{
 	public:
 		HuffLZ(BitStream *bitStream);
-		HuffLZ(std::size_t bufferSize, char *buffer);
+		HuffLZ(std::size_t bufferSize, void *buffer);
 		~HuffLZ();
 
 		std::size_t GetData(std::size_t bufferSize, char *buffer);	// Copy decoded data into given buffer.

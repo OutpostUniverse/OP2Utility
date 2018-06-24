@@ -151,7 +151,7 @@ namespace Archives
 
 			// Load data into temporary memory buffer
 			std::size_t length = sectionHeader.length;
-			std::vector<char> buffer(length);
+			std::vector<uint8_t> buffer(length);
 			archiveFileReader.Read(buffer.data(), length);
 
 			HuffLZ decompressor(length, buffer.data());
@@ -160,7 +160,7 @@ namespace Archives
 
 			do
 			{
-				const char *buffer = decompressor.GetInternalBuffer(&length);
+				const void *buffer = decompressor.GetInternalBuffer(&length);
 				fileStreamWriter.Write(buffer, length);
 			} while (length);
 		}

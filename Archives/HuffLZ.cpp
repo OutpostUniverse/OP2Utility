@@ -18,7 +18,7 @@ namespace Archives
 	}
 
 	// Creates an internal bit stream for the buffer
-	HuffLZ::HuffLZ(std::size_t bufferSize, char *buffer)
+	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer)
 	{
 		// Construct the BitStream object
 		m_BitStream = new BitStream(bufferSize, buffer);
