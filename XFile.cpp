@@ -141,11 +141,11 @@ std::string XFile::AppendSubDirectory(const std::string& pathStr, const std::str
 	fs::path filename(p.filename());
 
 	if (p == filename) {
-		return fs::path().append(subDirectory).append(filename).string();
+		return (fs::path() / subDirectory / filename).string();
 	}
 
 	p = p.remove_filename();
-	return p.append(subDirectory).append(filename).string();
+	return (p / subDirectory / filename).string();
 }
 
 std::string XFile::GetFilename(const std::string& pathStr)
