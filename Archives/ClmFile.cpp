@@ -25,7 +25,7 @@ namespace Archives
 			clmHeader.VerifyFileVersion();
 			clmHeader.VerifyUnknown();
 		}
-		catch (std::exception& e) {
+		catch (const std::exception& e) {
 			throw std::runtime_error("Invalid clm header read from file " + m_ArchiveFileName + ". " + e.what());
 		}
 
@@ -147,7 +147,7 @@ namespace Archives
 			XFile::RenameFile(tempFileName, m_ArchiveFileName);
 			return true;
 		}
-		catch (std::exception&) {
+		catch (const std::exception&) {
 			return false;
 		}
 	}
@@ -169,7 +169,7 @@ namespace Archives
 				filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
 			}
 		}
-		catch (std::exception&) {
+		catch (const std::exception&) {
 			return false;
 		}
 
@@ -203,7 +203,7 @@ namespace Archives
 
 			WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, waveFormat);
 		}
-		catch (std::exception&) {
+		catch (const std::exception&) {
 			return false; // Error writing CLM archive file
 		}
 
