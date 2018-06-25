@@ -3,7 +3,8 @@
 
 // Defers calls to C++ standard library methods
 FileStreamReader::FileStreamReader(std::string filename) : 
-	filename(filename), file(filename, std::ios::in | std::ios::binary)
+	filename(filename),
+	file(filename, std::ios::in | std::ios::binary)
 {
 	if (!file.is_open()) {
 		throw std::runtime_error("Could not open file: " + filename);
