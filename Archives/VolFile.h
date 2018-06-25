@@ -33,8 +33,8 @@ namespace Archives
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		// Volume Creation
-		bool Repack();
-		bool CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack);
+		void Repack();
+		void CreateArchive(const std::string& volumeFileName, std::vector<std::string> filesToPack);
 
 	private:
 		int GetInternalFileOffset(int index);

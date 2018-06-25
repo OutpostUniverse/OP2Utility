@@ -15,10 +15,11 @@ namespace Archives
 
 		// Repack is used to replace the old volume with a new volume created from the
 		// files (in the current directory) that match the internal file names
-		virtual bool Repack() = 0;
+		virtual void Repack() = 0;
+
 		// Create volume is used to create a new volume file with the files specified in filesToPack.
 		// Returns true if successful and false otherwise
-		virtual bool CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack) = 0;
+		virtual void CreateArchive(const std::string& volumeFileName, std::vector<std::string> filesToPack) = 0;
 
 	protected:
 		// Returns the filenames from each path stripping the rest of the path. 

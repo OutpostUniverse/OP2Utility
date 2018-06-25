@@ -169,7 +169,7 @@ namespace Archives
 
 
 
-	bool VolFile::Repack()
+	void VolFile::Repack()
 	{
 		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
 
@@ -180,21 +180,13 @@ namespace Archives
 		}
 
 		const std::string tempFileName("temp.vol");
-		if (!CreateArchive(tempFileName, filesToPack)) {
-			return false;
-		}
+		CreateArchive(tempFileName, filesToPack);
 
 		// Rename the output file to the desired file
-		try {
-			XFile::RenameFile(tempFileName, m_ArchiveFileName);
-			return true;
-		}
-		catch (std::exception&) {
-			return false;
-		}
+		XFile::RenameFile(tempFileName, m_ArchiveFileName);
 	}
 
-	bool VolFile::CreateArchive(std::string volumeFileName, std::vector<std::string> filesToPack)
+	void VolFile::CreateArchive(const std::string& volumeFileName, std::vector<std::string> filesToPack)
 	{
 		// Sort files alphabetically based on the fileName only (not including the full path).
 		// Packed files must be locatable by a binary search of their fileName.
@@ -211,14 +203,7 @@ namespace Archives
 		// Open input files and prepare header and indexing info
 		PrepareHeader(volInfo);
 
-		try {
-			WriteVolume(volumeFileName, volInfo);
-		}
-		catch (std::exception&) {
-			return false;
-		}
-
-		return true;
+		WriteVolume(volumeFileName, volInfo);
 	}
 
 	void VolFile::WriteVolume(const std::string& fileName, CreateVolumeInfo& volInfo) 
