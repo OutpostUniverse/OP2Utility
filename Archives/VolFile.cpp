@@ -136,7 +136,7 @@ namespace Archives
 
 			ArchiveUnpacker::WriteFromStream(pathOut, archiveFileReader, sectionHeader.length);
 		}
-		catch (std::exception& e)
+		catch (const std::exception& e)
 		{
 			throw std::runtime_error("Error attempting to extracted uncompressed file " + pathOut + ". Internal Error Message: " + e.what());
 		}
@@ -189,7 +189,7 @@ namespace Archives
 			XFile::RenameFile(tempFileName, m_ArchiveFileName);
 			return true;
 		}
-		catch (std::exception&) {
+		catch (const std::exception&) {
 			return false;
 		}
 	}
@@ -214,7 +214,7 @@ namespace Archives
 		try {
 			WriteVolume(volumeFileName, volInfo);
 		}
-		catch (std::exception&) {
+		catch (const std::exception&) {
 			return false;
 		}
 
@@ -244,7 +244,7 @@ namespace Archives
 				// Use a bitmask to quickly calculate the modulo 4 (remainder) of fileSize
 				volWriter.Write(&padding, (-volInfo.indexEntries[i].fileSize) & 3);
 			}
-			catch (std::exception& e) {
+			catch (const std::exception& e) {
 				throw std::runtime_error("Unable to pack file " + volInfo.internalNames[i] + ". Internal error: " + e.what());
 			}
 		}
