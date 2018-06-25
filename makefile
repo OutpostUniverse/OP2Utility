@@ -2,7 +2,7 @@
 # Set compiler default to mingw
 # Can still override from command line or environment variables
 ifeq ($(origin CXX),default)
-	CXX := i686-w64-mingw32-g++
+	CXX := clang-6.0
 endif
 
 SRCDIR := .
@@ -10,7 +10,7 @@ BUILDDIR := build
 BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/deps
-EXE := $(BINDIR)/op2utility
+OUTPUT := $(BINDIR)/op2utility.a
 
 CFLAGS := -std=c++14 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -lstdc++ -lm
@@ -24,11 +24,12 @@ SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
-all: $(EXE)
+all: $(OUTPUT)
 
-$(EXE): $(OBJS)
+$(OUTPUT): $(OBJS)
 	@mkdir -p ${@D}
-	$(CXX) $^ $(LDFLAGS) -o $@
+	#$(CXX) $^ $(LDFLAGS) -o $@
+	ar rcs $@ $^
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d | build-folder
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
