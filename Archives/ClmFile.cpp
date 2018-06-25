@@ -5,8 +5,6 @@
 
 namespace Archives
 {
-	const uint32_t CLM_WRITE_SIZE = 0x00020000;
-
 	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName), clmFileReader(fileName)
 	{
 		m_ArchiveFileSize = clmFileReader.Length();
@@ -27,7 +25,7 @@ namespace Archives
 			clmHeader.VerifyFileVersion();
 			clmHeader.VerifyUnknown();
 		}
-		catch (std::exception& e) {
+		catch (const std::exception& e) {
 			throw std::runtime_error("Invalid clm header read from file " + m_ArchiveFileName + ". " + e.what());
 		}
 
@@ -60,7 +58,7 @@ namespace Archives
 	}
 
 	// Returns the size of the internal file corresponding to index
-	int ClmFile::GetInternalFileSize(int index)
+	uint32_t ClmFile::GetInternalFileSize(int index)
 	{
 		CheckPackedFileIndexBounds(index);
 
@@ -149,7 +147,7 @@ namespace Archives
 			XFile::RenameFile(tempFileName, m_ArchiveFileName);
 			return true;
 		}
-		catch (std::exception&) {
+		catch (const std::exception&) {
 			return false;
 		}
 	}
@@ -171,7 +169,7 @@ namespace Archives
 				filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
 			}
 		}
-		catch (std::exception&) {
+		catch (const std::exception&) {
 			return false;
 		}
 
@@ -180,9 +178,7 @@ namespace Archives
 		std::vector<WaveFormatEx> waveFormats(filesToPack.size());
 		std::vector<IndexEntry> indexEntries(filesToPack.size());
 
-		if (!ReadAllWaveHeaders(filesToPackReaders, waveFormats, indexEntries)) {	
-			return false; // Error reading in wave headers. Abort.
-		}
+		ReadAllWaveHeaders(filesToPackReaders, waveFormats, indexEntries);
 
 		// Check if all wave formats are the same
 		if (!CompareWaveFormats(waveFormats)) {	
@@ -207,7 +203,7 @@ namespace Archives
 
 			WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, waveFormat);
 		}
-		catch (std::exception&) {
+		catch (const std::exception&) {
 			return false; // Error writing CLM archive file
 		}
 
@@ -218,10 +214,9 @@ namespace Archives
 	// Reads the beginning of each file and verifies it is formatted as a WAVE file. Locates
 	// the WaveFormatEx structure and start of data. The WaveFormat is stored in the waveFormats container.
 	// The current stream position is set to the start of the data chunk.
-	// Returns nonzero if successful and zero otherwise.
 	// Note: This function assumes that all stream positions are initially set to the beginning
 	//  of the file. When reading the wave file header, it does not seek to the file start.
-	bool ClmFile::ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries)
+	void ClmFile::ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries)
 	{
 		RiffHeader header;
 
@@ -231,47 +226,39 @@ namespace Archives
 			// Read the file header
 			filesToPackReaders[i]->Read(header);
 			if (header.riffTag != tagRIFF || header.waveTag != tagWAVE) {
-				return false;		// Error reading header
+				throw std::runtime_error("Error reading header from file " + indexEntries[i].GetFileName());		
 			}
 
 			// Check that the file size makes sense (matches with header chunk length + 8)
 			if (header.chunkSize + 8 != filesToPackReaders[i]->Length()) {
-				return false;
+				throw std::runtime_error("Chunk size does not match file length in " + indexEntries[i].GetFileName());
 			}
 
 			// Read the format tag
-			int fmtChunkLength = FindChunk(tagFMT_, *filesToPackReaders[i]);
-			if (fmtChunkLength == -1) {
-				return false;		// Format chunk not found
-			}
+			uint32_t fmtChunkLength = FindChunk(tagFMT_, *filesToPackReaders[i]);
 
 			// Read in the wave format
 			filesToPackReaders[i]->Read(waveFormats[i]);
 			waveFormats[i].cbSize = 0;
 
 			// Find the start of the data
-			int dataChunkLength = FindChunk(tagDATA, *filesToPackReaders[i]);
-			if (dataChunkLength == -1) {
-				return false;		// Data chunk not found
-			}
+			uint32_t dataChunkLength = FindChunk(tagDATA, *filesToPackReaders[i]);
 
 			// Store the length of the wave data
 			indexEntries[i].dataLength = dataChunkLength;
 			// Note: Current stream position is set to the start of the wave data
 		}
-
-		return true;
 	}
 
 	// Searches through the wave file to find the given chunk length
 	// The current stream position is set the the first byte after the chunk header
 	// Returns the chunk length if found or -1 otherwise
-	int ClmFile::FindChunk(std::array<char, 4> chunkTag, SeekableStreamReader& seekableStreamReader)
+	uint32_t ClmFile::FindChunk(std::array<char, 4> chunkTag, SeekableStreamReader& seekableStreamReader)
 	{
 		uint64_t fileSize = seekableStreamReader.Length();
 
 		if (fileSize < sizeof(RiffHeader) + sizeof(ChunkHeader)) {
-			return -1;
+			throw std::runtime_error("There is not enough space in the file to represent the Riff Header and Chunk Header");
 		}
 
 		// Seek to beginning of first internal chunk (provided it exists)
@@ -282,7 +269,6 @@ namespace Archives
 		ChunkHeader header;
 		do
 		{
-			// Read the tag
 			seekableStreamReader.Read(header);
 			
 			// Check if this is the right header
@@ -295,7 +281,7 @@ namespace Archives
 			seekableStreamReader.Seek(currentPosition);
 		} while (currentPosition < fileSize);
 
-		return -1;	// Failed to find the tag
+		throw std::runtime_error("Unable to find the tag " + std::string(chunkTag.data(), chunkTag.size()));
 	}
 
 	// Compares wave format structures in the waveFormats container

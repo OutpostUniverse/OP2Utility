@@ -24,7 +24,7 @@ namespace Archives
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
-		int GetInternalFileSize(int index);
+		uint32_t GetInternalFileSize(int index);
 
 		bool Repack();
 		bool CreateArchive(std::string archiveFileName, std::vector<std::string> filesToPack);
@@ -51,8 +51,8 @@ namespace Archives
 		struct IndexEntry
 		{
 			std::array<char, 8> fileName;
-			unsigned int dataOffset;
-			unsigned int dataLength;
+			uint32_t dataOffset;
+			uint32_t dataLength;
 
 			std::string GetFileName() const;
 		};
@@ -62,8 +62,8 @@ namespace Archives
 		void ReadHeader();
 
 		// Private functions for packing files
-		bool ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
-		int FindChunk(std::array<char, 4> chunkTag, SeekableStreamReader& seekableStreamReader);
+		void ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
+		uint32_t FindChunk(std::array<char, 4> chunkTag, SeekableStreamReader& seekableStreamReader);
 		static bool CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats);
 		void WriteArchive(std::string& archiveFileName, std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
 			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& internalNames, const WaveFormatEx& waveFormat);
