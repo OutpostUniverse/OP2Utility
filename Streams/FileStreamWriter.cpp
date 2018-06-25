@@ -1,10 +1,10 @@
 #include "FileStreamWriter.h"
 #include <stdexcept>
 
-FileStreamWriter::FileStreamWriter(const std::string& filename) : filename(filename)
+FileStreamWriter::FileStreamWriter(const std::string& filename) : 
+	filename(filename),
+	fileStream(filename.c_str(), std::ios::trunc | std::ios::out | std::ios::binary)
 {
-	fileStream.open(filename.c_str(), std::ios::trunc | std::ios::out | std::ios::binary);
-
 	if (!fileStream.is_open()) {
 		throw std::runtime_error("File could not be opened.");
 	}

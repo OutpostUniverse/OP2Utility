@@ -26,6 +26,6 @@ protected:
 	void WriteImplementation(const void* buffer, std::size_t size) override;
 
 private:
-	std::fstream fileStream;
 	const std::string filename;
+	std::fstream fileStream;
 };
