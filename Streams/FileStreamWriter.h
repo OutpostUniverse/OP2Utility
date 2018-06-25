@@ -27,5 +27,5 @@ protected:
 
 private:
 	const std::string filename;
-	std::fstream fileStream;
+	std::fstream file;
 };
