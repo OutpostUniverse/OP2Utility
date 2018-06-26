@@ -5,7 +5,7 @@ namespace Archives
 	{
 	public:
 		BitStream();				// Construct empty stream
-		BitStream(int bufferSize, char *buffer);// Construct stream around given buffer
+		BitStream(int bufferSize, void *buffer);// Construct stream around given buffer
 
 		bool ReadNextBit();			// Get bit at Read index and advance index
 		int  ReadNext8Bits();		// Get next 8 bits at Read index and advance index

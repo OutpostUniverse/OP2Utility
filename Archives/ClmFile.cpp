@@ -25,7 +25,7 @@ namespace Archives
 			clmHeader.VerifyFileVersion();
 			clmHeader.VerifyUnknown();
 		}
-		catch (std::exception& e) {
+		catch (const std::exception& e) {
 			throw std::runtime_error("Invalid clm header read from file " + m_ArchiveFileName + ". " + e.what());
 		}
 
@@ -203,18 +203,14 @@ namespace Archives
 				throw std::runtime_error("Chunk size does not match file length in " + indexEntries[i].GetFileName());
 			}
 
-			// Read the format tag
-			uint32_t fmtChunkLength = FindChunk(tagFMT_, *filesToPackReaders[i]);
-
+			// Find the format tag
+			FindChunk(tagFMT_, *filesToPackReaders[i]);
 			// Read in the wave format
 			filesToPackReaders[i]->Read(waveFormats[i]);
 			waveFormats[i].cbSize = 0;
 
-			// Find the start of the data
-			uint32_t dataChunkLength = FindChunk(tagDATA, *filesToPackReaders[i]);
-
-			// Store the length of the wave data
-			indexEntries[i].dataLength = dataChunkLength;
+			// Find the start of the data and record length
+			indexEntries[i].dataLength = FindChunk(tagDATA, *filesToPackReaders[i]);
 			// Note: Current stream position is set to the start of the wave data
 		}
 	}

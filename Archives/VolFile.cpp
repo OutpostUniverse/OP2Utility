@@ -136,7 +136,7 @@ namespace Archives
 
 			ArchiveUnpacker::WriteFromStream(pathOut, archiveFileReader, sectionHeader.length);
 		}
-		catch (std::exception& e)
+		catch (const std::exception& e)
 		{
 			throw std::runtime_error("Error attempting to extracted uncompressed file " + pathOut + ". Internal Error Message: " + e.what());
 		}
@@ -146,18 +146,21 @@ namespace Archives
 	{
 		try
 		{
-			char* offset = (char*)m_IndexEntries[fileIndex].dataBlockOffset;
-			int length = *(int*)(offset + 4) & 0x7FFFFFFF;
-			offset += 8;
+			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
+			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
-			HuffLZ decompressor(length, offset);
-			const char *buffer = 0;
+			// Load data into temporary memory buffer
+			std::size_t length = sectionHeader.length;
+			std::vector<uint8_t> buffer(length);
+			archiveFileReader.Read(buffer.data(), length);
+
+			HuffLZ decompressor(length, buffer.data());
 
 			FileStreamWriter fileStreamWriter(pathOut);
 
 			do
 			{
-				buffer = decompressor.GetInternalBuffer(&length);
+				const void *buffer = decompressor.GetInternalBuffer(&length);
 				fileStreamWriter.Write(buffer, length);
 			} while (length);
 		}
@@ -229,7 +232,7 @@ namespace Archives
 				// Use a bitmask to quickly calculate the modulo 4 (remainder) of fileSize
 				volWriter.Write(&padding, (-volInfo.indexEntries[i].fileSize) & 3);
 			}
-			catch (std::exception& e) {
+			catch (const std::exception& e) {
 				throw std::runtime_error("Unable to pack file " + volInfo.internalNames[i] + ". Internal error: " + e.what());
 			}
 		}

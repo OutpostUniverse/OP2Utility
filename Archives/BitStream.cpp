@@ -15,7 +15,7 @@ namespace Archives
 		m_WriteBuff = 0;
 	}
 
-	BitStream::BitStream(int bufferSize, char *buffer)
+	BitStream::BitStream(int bufferSize, void *buffer)
 	{
 		// Initialize class variables
 		m_BufferSize = bufferSize;

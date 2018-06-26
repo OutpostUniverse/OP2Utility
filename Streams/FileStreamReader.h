@@ -25,6 +25,6 @@ protected:
 	void ReadImplementation(void* buffer, std::size_t size) override;
 
 private:
-	std::ifstream file;
 	const std::string filename;
+	std::ifstream file;
 };
