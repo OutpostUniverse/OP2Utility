@@ -169,7 +169,7 @@ namespace Archives
 		ReadAllWaveHeaders(filesToPackReaders, waveFormats, indexEntries);
 
 		// Check if all wave formats are the same
-		CompareWaveFormats(waveFormats);
+		CompareWaveFormats(waveFormats, filesToPack);
 
 		std::vector<std::string> internalFileNames = GetInternalNamesFromPaths(filesToPack);
 		internalFileNames = StripFileNameExtensions(internalFileNames);
@@ -255,12 +255,13 @@ namespace Archives
 
 	// Compares wave format structures in the waveFormats container
 	// If 2 wave formats are discovered of different type, an error is thrown.
-	void ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats)
+	void ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats, const std::vector<std::string>& filesToPack)
 	{
-		for (const auto& waveFormat : waveFormats)
+		for (std::size_t i = 0; i < waveFormats.size(); i++)
 		{
-			if (memcmp(&waveFormat, &waveFormats[0], sizeof(WaveFormatEx))) {
-				throw std::runtime_error("Operation aborted. Two files contain separate wave file formats.");
+			if (memcmp(&waveFormats[0], &waveFormats[i], sizeof(WaveFormatEx))) {
+				throw std::runtime_error("Files " + filesToPack[0] + " and " + filesToPack[i] + 
+					" contain differnt wave formats. Clm files cannot contain 2 wave files with different formats.");
 			}
 		}
 	}
