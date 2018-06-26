@@ -26,8 +26,8 @@ namespace Archives
 
 		uint32_t GetInternalFileSize(int index);
 
-		bool Repack();
-		bool CreateArchive(std::string archiveFileName, std::vector<std::string> filesToPack);
+		void Repack();
+		void CreateArchive(const std::string& archiveFileName, std::vector<std::string> filesToPack);
 
 	private:
 #pragma pack(push, 1)
@@ -64,13 +64,13 @@ namespace Archives
 		// Private functions for packing files
 		void ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
 		uint32_t FindChunk(std::array<char, 4> chunkTag, SeekableStreamReader& seekableStreamReader);
-		static bool CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats);
-		void WriteArchive(std::string& archiveFileName, std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
+		static void CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormatsconst, const std::vector<std::string>& filesToPack);
+		void WriteArchive(const std::string& archiveFileName, const std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
 			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& internalNames, const WaveFormatEx& waveFormat);
 		void PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries);
 		std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
 		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
-		static WaveFormatEx CreateDefaultWaveFormat();
+		static WaveFormatEx PrepareWaveFormat(const std::vector<WaveFormatEx>& waveFormats);
 
 		FileStreamReader clmFileReader;
 		ClmHeader clmHeader;

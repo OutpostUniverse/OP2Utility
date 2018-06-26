@@ -126,7 +126,7 @@ namespace Archives
 
 	// Repacks the volume using the same files as are specified by the internal file names
 	// Returns nonzero if successful and zero otherwise
-	bool ClmFile::Repack()
+	void ClmFile::Repack()
 	{
 		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
 		std::vector<std::string> internalNames(m_NumberOfPackedFiles);
@@ -138,39 +138,27 @@ namespace Archives
 		}
 
 		const std::string tempFileName = "temp.clm";
-		if (!CreateArchive(tempFileName, filesToPack)) {
-			return false;
-		}
+		CreateArchive(tempFileName, filesToPack);
 
 		// Rename the output file to the desired file
-		try {
-			XFile::RenameFile(tempFileName, m_ArchiveFileName);
-			return true;
-		}
-		catch (const std::exception&) {
-			return false;
-		}
+		XFile::RenameFile(tempFileName, m_ArchiveFileName);
 	}
 
 	// Creates a new Archive file with the file name archiveFileName. The
 	// files listed in the container filesToPack are packed into the archive.
 	// Automatically strips file name extensions from filesToPack. 
 	// Returns nonzero if successful and zero otherwise.
-	bool ClmFile::CreateArchive(std::string archiveFileName, std::vector<std::string> filesToPack)
+	void ClmFile::CreateArchive(const std::string& archiveFileName, std::vector<std::string> filesToPack)
 	{
 		// Sort files alphabetically based on the fileName only (not including the full path).
 		// Packed files must be locatable by a binary search of their fileName.
 		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
 
 		std::vector<std::unique_ptr<FileStreamReader>> filesToPackReaders;
-		try {
-			// Opens all files for packing. If there is a problem opening a file, an exception is raised.
-			for (const auto& fileName : filesToPack) {
-				filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
-			}
-		}
-		catch (const std::exception&) {
-			return false;
+
+		// Opens all files for packing. If there is a problem opening a file, an exception is raised.
+		for (const auto& fileName : filesToPack) {
+			filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
 		}
 
 		// Initialize vectors with default values for the number of files to pack. 
@@ -181,35 +169,16 @@ namespace Archives
 		ReadAllWaveHeaders(filesToPackReaders, waveFormats, indexEntries);
 
 		// Check if all wave formats are the same
-		if (!CompareWaveFormats(waveFormats)) {	
-			return false; // Not all wave formats match
-		}
+		CompareWaveFormats(waveFormats, filesToPack);
 
 		std::vector<std::string> internalFileNames = GetInternalNamesFromPaths(filesToPack);
 		internalFileNames = StripFileNameExtensions(internalFileNames);
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
-		CheckSortedContainerForDuplicateNames(internalFileNames); 
+		CheckSortedContainerForDuplicateNames(internalFileNames);
 
 		// Write the archive header and copy files into the archive
-		try {
-			WaveFormatEx waveFormat;
-
-			if (waveFormats.size() > 0) {
-				waveFormat = waveFormats[0];
-			}
-			else {
-				waveFormat = CreateDefaultWaveFormat();
-			}
-
-			WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, waveFormat);
-		}
-		catch (const std::exception&) {
-			return false; // Error writing CLM archive file
-		}
-
-		return true;
+		WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, PrepareWaveFormat(waveFormats));
 	}
-
 
 	// Reads the beginning of each file and verifies it is formatted as a WAVE file. Locates
 	// the WaveFormatEx structure and start of data. The WaveFormat is stored in the waveFormats container.
@@ -281,21 +250,20 @@ namespace Archives
 	}
 
 	// Compares wave format structures in the waveFormats container
-	// Returns true if they are all the same and false otherwise.
-	bool ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats)
+	// If 2 wave formats are discovered of different type, an error is thrown.
+	void ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats, const std::vector<std::string>& filesToPack)
 	{
-		for (std::size_t i = 1; i < waveFormats.size(); i++)
+		for (std::size_t i = 0; i < waveFormats.size(); i++)
 		{
-			if (memcmp(&waveFormats[i], &waveFormats[0], sizeof(WaveFormatEx))) {
-				return false;
+			if (memcmp(&waveFormats[0], &waveFormats[i], sizeof(WaveFormatEx))) {
+				throw std::runtime_error("Files " + filesToPack[0] + " and " + filesToPack[i] + 
+					" contain differnt wave formats. Clm files cannot contain 2 wave files with different formats.");
 			}
 		}
-
-		return true;
 	}
 
-	void ClmFile::WriteArchive(std::string& archiveFileName,
-		std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
+	void ClmFile::WriteArchive(const std::string& archiveFileName,
+		const std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
 		std::vector<IndexEntry>& indexEntries,
 		const std::vector<std::string>& internalNames,
 		const WaveFormatEx& waveFormat)
@@ -342,17 +310,21 @@ namespace Archives
 		return strippedExtensions;
 	}
 
-	WaveFormatEx ClmFile::CreateDefaultWaveFormat()
+	WaveFormatEx ClmFile::PrepareWaveFormat(const std::vector<WaveFormatEx>& waveFormats) 
 	{
-		return WaveFormatEx{
-			1, // WAVE_FORMAT_PCM
-			1, // mono
-			22050, // 22.05KHz
-			44100, // nSamplesPerSec * nBlockAlign
-			2, // 2 bytes/sample = nChannels * wBitsPerSample / 8
-			16,
-			0
-		};
+		if (waveFormats.empty()) {
+			return WaveFormatEx{
+				1, // WAVE_FORMAT_PCM
+				1, // mono
+				22050, // 22.05KHz
+				44100, // nSamplesPerSec * nBlockAlign
+				2, // 2 bytes/sample = nChannels * wBitsPerSample / 8
+				16,
+				0
+			};
+		}
+
+		return waveFormats.front();
 	}
 
 
