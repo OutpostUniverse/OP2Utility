@@ -80,7 +80,7 @@ namespace Archives
 			throw std::runtime_error("Index out of range");
 		}
 
-		// Return weather or not this is a terminal node
+		// Return whether or not this is a terminal node
 		return m_Data[nodeIndex] >= m_NumNodes;
 	}
 
@@ -93,7 +93,8 @@ namespace Archives
 			throw std::runtime_error("Index out of range");
 		}
 
-		// Return weather or not this is a terminal node
+		// Return data stored in node translated back to normal form
+		// Note: This assumes the node is a terminal node
 		return m_Data[nodeIndex] - m_NumNodes;
 	}
 

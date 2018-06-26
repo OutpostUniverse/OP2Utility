@@ -18,7 +18,7 @@ namespace Archives
 	}
 
 	// Creates an internal bit stream for the buffer
-	HuffLZ::HuffLZ(int bufferSize, char *buffer)
+	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer)
 	{
 		// Construct the BitStream object
 		m_BitStream = new BitStream(bufferSize, buffer);
@@ -45,10 +45,10 @@ namespace Archives
 	// data is available to fill the buffer, more of the input is decompressed up to
 	// the end of the input stream or until the buffer is filled. Returns the total
 	// number of bytes that were copied.
-	int HuffLZ::GetData(int bufferSize, char *buffer)
+	std::size_t HuffLZ::GetData(std::size_t bufferSize, char *buffer)
 	{
-		int numBytesCopied;
-		int numBytesTotal = 0;
+		std::size_t numBytesCopied;
+		std::size_t numBytesTotal = 0;
 
 		// Try to keep the buffer largely full
 		// This allows allows more memory to be copied at once
@@ -77,7 +77,7 @@ namespace Archives
 	// Note: If the buffer wraps around, the remaining data before the wrap around 
 	//  is returned. A subsequent call will get the data after the wrap around.
 	// Note: If sizeAvailableData == 0 then the end of the stream has been reached
-	const char* HuffLZ::GetInternalBuffer(int *sizeAvailableData)
+	const char* HuffLZ::GetInternalBuffer(std::size_t *sizeAvailableData)
 	{
 		const char* currentPos;
 
@@ -118,10 +118,10 @@ namespace Archives
 
 	// Copies all available data into buff up to a maximum of size bytes
 	// This routine handles the case when the copy must wrap around the circular buffer
-	int HuffLZ::CopyAvailableData(int size, char *buff)
+	std::size_t HuffLZ::CopyAvailableData(std::size_t size, char *buff)
 	{
-		int numBytesToCopy;
-		int numBytesTotal = 0;
+		std::size_t numBytesToCopy;
+		std::size_t numBytesTotal = 0;
 
 		// Check if buffer is empty
 		// Note: This isn't really needed but should speed things up
