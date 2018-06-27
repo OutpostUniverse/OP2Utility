@@ -34,7 +34,9 @@ namespace Archives
 
 		// Volume Creation
 		void Repack();
-		void CreateArchive(const std::string& volumeFileName, std::vector<std::string> filesToPack);
+
+		// Create a new archive with the files specified in filesToPack
+		static void CreateArchive(const std::string& volumeFileName, std::vector<std::string> filesToPack);
 
 	private:
 		int GetInternalFileOffset(int index);
@@ -92,12 +94,13 @@ namespace Archives
 		void ReadVolHeader();
 		void ReadStringTable();
 		void ReadPackedFileCount();
-		void WriteVolume(const std::string& fileName, CreateVolumeInfo& volInfo);
-		void WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo);
-		void WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
-		void PrepareHeader(CreateVolumeInfo &volInfo);
-		void OpenAllInputFiles(CreateVolumeInfo &volInfo);
 		SectionHeader GetSectionHeader(int index);
+
+		static void WriteVolume(const std::string& fileName, CreateVolumeInfo& volInfo);
+		static void WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo);
+		static void WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
+		static void PrepareHeader(CreateVolumeInfo &volInfo, const std::string& volumeFileName);
+		static void OpenAllInputFiles(CreateVolumeInfo &volInfo, const std::string& volumeFileName);
 
 		FileStreamReader archiveFileReader;
 		uint32_t m_NumberOfIndexEntries;

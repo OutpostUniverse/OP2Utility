@@ -204,7 +204,7 @@ namespace Archives
 		CheckSortedContainerForDuplicateNames(volInfo.internalNames);
 
 		// Open input files and prepare header and indexing info
-		PrepareHeader(volInfo);
+		PrepareHeader(volInfo, volumeFileName);
 
 		WriteVolume(volumeFileName, volInfo);
 	}
@@ -267,7 +267,7 @@ namespace Archives
 		volWriter.Write(&padding, volInfo.paddedIndexTableLength - volInfo.indexTableLength);
 	}
 
-	void VolFile::OpenAllInputFiles(CreateVolumeInfo &volInfo)
+	void VolFile::OpenAllInputFiles(CreateVolumeInfo &volInfo, const std::string& volumeFileName)
 	{
 		volInfo.fileStreamReaders.clear();
 
@@ -277,14 +277,14 @@ namespace Archives
 			}
 			catch (const std::exception& e) {
 				throw std::runtime_error("Error attempting to open " + filename + 
-					" for reading into volume " + m_ArchiveFileName + ". Internal Error: " + e.what());
+					" for reading into volume " + volumeFileName + ". Internal Error: " + e.what());
 			}
 		}
 	}
 
-	void VolFile::PrepareHeader(CreateVolumeInfo &volInfo)
+	void VolFile::PrepareHeader(CreateVolumeInfo &volInfo, const std::string& volumeFileName)
 	{
-		OpenAllInputFiles(volInfo);
+		OpenAllInputFiles(volInfo, volumeFileName);
 
 		volInfo.stringTableLength = 0;
 
@@ -295,7 +295,8 @@ namespace Archives
 
 			uint64_t fileSize = volInfo.fileStreamReaders[i]->Length();
 			if (fileSize > UINT32_MAX) {
-				throw std::runtime_error("File " + volInfo.filesToPack[i] + " is too large to fit inside a volume archive.");
+				throw std::runtime_error("File " + volInfo.filesToPack[i] + 
+					" is too large to fit inside a volume archive. Writing volume " + volumeFileName + " aborted.");
 			}
 
 			indexEntry.fileSize = static_cast<uint32_t>(volInfo.fileStreamReaders[i]->Length());
