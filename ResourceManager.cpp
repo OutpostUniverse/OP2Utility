@@ -151,6 +151,8 @@ bool ResourceManager::DuplicateFilename(std::vector<std::string>& currentFilenam
 	return false;
 }
 
+#error "Oh no! An error!"
+
 std::string ResourceManager::FindContainingArchiveFile(const std::string& filename)
 {
 	for (const auto& archiveFile : ArchiveFiles)
