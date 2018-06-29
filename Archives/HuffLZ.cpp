@@ -189,8 +189,9 @@ namespace Archives
 			start = (m_BuffWriteIndex - offset - 1) & 0x0FFF;
 
 			// Copy for length = (code - 253) bytes
-			for (code -= 253; code; code--, start = (start + 1) & 0x0FFF)
+			for (code -= 253; code; code--, start = (start + 1) & 0x0FFF) {
 				WriteCharToBuffer(m_DecompressBuffer[start]);
+			}
 		}
 
 		// Check for the end of the stream
@@ -242,8 +243,9 @@ namespace Archives
 		else mod = (offset - 0xC0);
 
 		// Read in the extra bits
-		for (; numExtraBits; numExtraBits--)
+		for (; numExtraBits; numExtraBits--) {
 			offset = (offset << 1) + m_BitStream->ReadNextBit();
+		}
 		offset &= 0x3F;			// Mask upper bits (keep lower 6)
 
 		// Apply the modifier

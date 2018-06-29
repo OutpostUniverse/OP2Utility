@@ -33,7 +33,7 @@ namespace Archives
 		return m_StringTable[index];
 	}
 
-	int VolFile::GetInternalFileIndex(const char *internalFileName)
+	int VolFile::GetInternalFileIndex(const std::string& internalFileName)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
@@ -176,7 +176,7 @@ namespace Archives
 	{
 		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
 
-		for (int i = 0; i < m_NumberOfPackedFiles; i++)
+		for (int i = 0; i < m_NumberOfPackedFiles; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
 			filesToPack.push_back(GetInternalFileName(i));
@@ -220,7 +220,7 @@ namespace Archives
 	void VolFile::WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo)
 	{
 		// Write each file header and contents
-		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
+		for (std::size_t i = 0; i < volInfo.fileCount(); ++i)
 		{
 			volWriter.Write(SectionHeader(TagVBLK, volInfo.indexEntries[i].fileSize));
 
@@ -251,7 +251,7 @@ namespace Archives
 		volWriter.Write(&volInfo.stringTableLength, sizeof(volInfo.stringTableLength));
 
 		// Write out all internal file name strings (including NULL terminator)
-		for (std::size_t i = 0; i < volInfo.fileCount(); i++) {
+		for (std::size_t i = 0; i < volInfo.fileCount(); ++i) {
 			// Account for the null terminator in the size.
 			volWriter.Write(volInfo.internalNames[i].c_str(), volInfo.internalNames[i].size() + 1);
 		}
@@ -289,7 +289,7 @@ namespace Archives
 		volInfo.stringTableLength = 0;
 
 		// Get file sizes and calculate length of string table
-		for (std::size_t i = 0; i < volInfo.fileCount(); i++)
+		for (std::size_t i = 0; i < volInfo.fileCount(); ++i)
 		{
 			IndexEntry indexEntry;
 
@@ -317,7 +317,7 @@ namespace Archives
 		volInfo.indexEntries[0].dataBlockOffset = volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 32;
 		
 		// Calculate offsets to the files
-		for (std::size_t i = 1; i < volInfo.fileCount(); i++)
+		for (std::size_t i = 1; i < volInfo.fileCount(); ++i)
 		{
 			const IndexEntry& previousIndex = volInfo.indexEntries[i - 1];
 			volInfo.indexEntries[i].dataBlockOffset = (previousIndex.dataBlockOffset + previousIndex.fileSize + 11) & ~3;
@@ -399,7 +399,7 @@ namespace Archives
 		archiveFileReader.Read(&charBuffer[0], actualStringTableLength);
 
 		m_StringTable.push_back("");
-		for (std::size_t i = 0; i < charBuffer.size(); i++)
+		for (std::size_t i = 0; i < charBuffer.size(); ++i)
 		{
 			if (charBuffer[i] == '\0') {
 				m_StringTable.push_back("");
@@ -419,7 +419,7 @@ namespace Archives
 	{
 		// Count the number of valid entries
 		uint32_t packedFileCount = 0;
-		for (; packedFileCount < m_NumberOfIndexEntries; packedFileCount++)
+		for (; packedFileCount < m_NumberOfIndexEntries; ++packedFileCount)
 		{
 			// Make sure entry is valid
 			if (m_IndexEntries[packedFileCount].fileNameOffset == UINT_MAX) {

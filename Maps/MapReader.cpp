@@ -84,16 +84,16 @@ namespace MapReader {
 		{
 			mapData.tilesetSources.resize(static_cast<std::size_t>(mapData.header.numTilesets));
 
-			for (unsigned int i = 0; i < mapData.header.numTilesets; ++i)
+			for (auto& tilesetSource : mapData.tilesetSources)
 			{
-				mapData.tilesetSources[i].tilesetFilename = ReadString(streamReader);
+				tilesetSource.tilesetFilename = ReadString(streamReader);
 
-				if (mapData.tilesetSources[i].tilesetFilename.size() > 8) {
+				if (tilesetSource.tilesetFilename.size() > 8) {
 					throw std::runtime_error("Tileset name may not be greater than 8 characters in length.");
 				}
 
-				if (mapData.tilesetSources[i].tilesetFilename.size() > 0) {
-					streamReader.Read(mapData.tilesetSources[i].numTiles);
+				if (tilesetSource.tilesetFilename.size() > 0) {
+					streamReader.Read(tilesetSource.numTiles);
 				}
 			}
 		}

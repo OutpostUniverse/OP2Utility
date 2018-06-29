@@ -142,8 +142,8 @@ bool ResourceManager::DuplicateFilename(std::vector<std::string>& currentFilenam
 
 	std::string filename = XFile::GetFilename(pathToCheck);
 
-	for (std::size_t i = 0; i < currentFilenames.size(); ++i) {
-		if (XFile::PathsAreEqual(XFile::GetFilename(currentFilenames[i]), filename)) {
+	for (const auto& currentFilename : currentFilenames) {
+		if (XFile::PathsAreEqual(XFile::GetFilename(currentFilename), filename)) {
 			return true;
 		}
 	}

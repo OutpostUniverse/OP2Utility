@@ -23,7 +23,7 @@ namespace Archives
 
 		// Internal file status
 		std::string GetInternalFileName(int index);
-		int GetInternalFileIndex(const char *internalFileName);
+		int GetInternalFileIndex(const std::string& internalFileName);
 		CompressionType GetInternalCompressionCode(int index);
 		uint32_t GetInternalFileSize(int index);
 

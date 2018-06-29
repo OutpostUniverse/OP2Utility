@@ -45,7 +45,7 @@ namespace Archives
 		return indexEntries[index].GetFileName();
 	}
 
-	int ClmFile::GetInternalFileIndex(const char *internalFileName)
+	int ClmFile::GetInternalFileIndex(const std::string& internalFileName)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
@@ -131,7 +131,7 @@ namespace Archives
 		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
 		std::vector<std::string> internalNames(m_NumberOfPackedFiles);
 
-		for (int i = 0; i < m_NumberOfPackedFiles; i++)
+		for (int i = 0; i < m_NumberOfPackedFiles; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
 			filesToPack[i] = GetInternalFileName(i) + ".wav";
@@ -190,7 +190,7 @@ namespace Archives
 		RiffHeader header;
 
 		// Read in all the headers and find start of data
-		for (std::size_t i = 0; i < filesToPackReaders.size(); i++)
+		for (std::size_t i = 0; i < filesToPackReaders.size(); ++i)
 		{
 			// Read the file header
 			filesToPackReaders[i]->Read(header);
@@ -253,7 +253,7 @@ namespace Archives
 	// If 2 wave formats are discovered of different type, an error is thrown.
 	void ClmFile::CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormats, const std::vector<std::string>& filesToPack)
 	{
-		for (std::size_t i = 0; i < waveFormats.size(); i++)
+		for (std::size_t i = 0; i < waveFormats.size(); ++i)
 		{
 			if (memcmp(&waveFormats[0], &waveFormats[i], sizeof(WaveFormatEx))) {
 				throw std::runtime_error("Files " + filesToPack[0] + " and " + filesToPack[i] + 
@@ -280,7 +280,7 @@ namespace Archives
 		clmFileWriter.Write(indexEntries.data(), header.packedFilesCount * sizeof(IndexEntry));
 
 		// Copy files into the archive
-		for (std::size_t i = 0; i < header.packedFilesCount; i++) {
+		for (std::size_t i = 0; i < header.packedFilesCount; ++i) {
 			ArchivePacker::WriteFromStream(clmFileWriter, *filesToPackReaders[i], indexEntries[i].dataLength);
 		}
 	}
@@ -288,7 +288,7 @@ namespace Archives
 	void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries)
 	{
 		uint32_t offset = headerSize + internalNames.size() * sizeof(IndexEntry);
-		for (std::size_t i = 0; i < internalNames.size(); i++)
+		for (std::size_t i = 0; i < internalNames.size(); ++i)
 		{
 			// Copy the filename into the entry
 			strncpy((char*)&indexEntries[i].fileName, internalNames[i].c_str(), 8);

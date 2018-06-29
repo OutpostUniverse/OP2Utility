@@ -21,7 +21,7 @@ namespace Archives
 
 		// Initialize the tree
 		// Initialize terminal nodes
-		for (i = 0; i < m_NumTerminalNodes; i++)
+		for (i = 0; i < m_NumTerminalNodes; ++i)
 		{
 			m_Data[i] = i + m_NumNodes;						// Initilize data values
 			m_Count[i] = 1;
@@ -30,7 +30,7 @@ namespace Archives
 		}
 		// Initialize non terminal nodes
 		left = 0;
-		for (i = m_NumTerminalNodes; i < m_NumNodes; i++)
+		for (i = m_NumTerminalNodes; i < m_NumNodes; ++i)
 		{
 			m_Data[i] = left;								// Initialize link values
 			m_Count[i] = m_Count[left] + m_Count[left + 1];	// Count is sum of two subtrees
