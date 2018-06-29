@@ -19,7 +19,7 @@ namespace Archives
 		virtual ~ClmFile();
 
 		std::string GetInternalFileName(int index);
-		int GetInternalFileIndex(const char *internalFileName);
+		int GetInternalFileIndex(const std::string& internalFileName);
 		void ExtractFile(int fileIndex, const std::string& pathOut);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);

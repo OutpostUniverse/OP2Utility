@@ -18,21 +18,19 @@ std::string StringHelper::ConvertToUpper(const std::string& str)
 }
 
 // Returns a new vector with matching strings removed. Case insensitive.
-std::vector<std::string> StringHelper::RemoveStrings(const std::vector<std::string>& stringsToSearch, const std::vector<std::string>& stringsToRemove)
+std::vector<std::string> StringHelper::RemoveStrings(std::vector<std::string> stringsToSearch, const std::vector<std::string>& stringsForRemoval)
 {
-	std::vector<std::string> stringsToReturn(stringsToSearch);
-
-	// i will wrap around to SIZE_MAX  when loop is completed
-	for (std::size_t i = stringsToSearch.size() - 1; i < stringsToSearch.size(); ++i) {
-		for (const auto& stringToRemove : stringsToRemove) {
+	// Loop starts at index size - 1 and ends after index 0 executes
+	for (std::size_t i = stringsToSearch.size(); i-- > 0; ) {
+		for (const auto& stringToRemove : stringsForRemoval) {
 			if (CheckIfStringsAreEqual(stringsToSearch[i], stringToRemove)) {
-				stringsToReturn.erase(stringsToReturn.begin() + i);
+				stringsToSearch.erase(stringsToSearch.begin() + i);
 				break;
 			}
 		}
 	}
 
-	return stringsToReturn;
+	return stringsToSearch;
 }
 
 bool StringHelper::CheckIfStringsAreEqual(const std::string& string1, const std::string& string2)

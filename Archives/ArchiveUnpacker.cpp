@@ -14,15 +14,15 @@ namespace Archives
 
 	ArchiveUnpacker::~ArchiveUnpacker() { }
 
-	void ArchiveUnpacker::ExtractAllFiles(const char* destDirectory)
+	void ArchiveUnpacker::ExtractAllFiles(const std::string& destDirectory)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFileName(i)).c_str());
+			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFileName(i)));
 		}
 	}
 
-	bool ArchiveUnpacker::ContainsFile(const char* fileName)
+	bool ArchiveUnpacker::ContainsFile(const std::string& fileName)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
