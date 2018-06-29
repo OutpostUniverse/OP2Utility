@@ -22,7 +22,7 @@ namespace Archives
 		}
 	}
 
-	bool ArchiveUnpacker::ContainsFile(const char* fileName)
+	bool ArchiveUnpacker::ContainsFile(const std::string& fileName)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{

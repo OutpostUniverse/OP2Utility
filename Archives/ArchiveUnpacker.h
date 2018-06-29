@@ -19,7 +19,7 @@ namespace Archives
 		std::string GetVolumeFileName() { return m_ArchiveFileName; };
 		uint64_t GetVolumeFileSize() { return m_ArchiveFileSize; };
 		int GetNumberOfPackedFiles() { return m_NumberOfPackedFiles; };
-		bool ContainsFile(const char* fileName);
+		bool ContainsFile(const std::string& fileName);
 
 		virtual std::string GetInternalFileName(int index) = 0;
 		// Returns -1 if internalFileName is not present in archive.
