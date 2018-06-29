@@ -89,10 +89,6 @@ std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directo
 		if (!std::regex_search(filenames[i], filenameRegex)) {
 			filenames.erase(filenames.begin() + i);
 		}
-
-		if (i == 0) {
-			break;
-		}
 	}
 
 	return filenames;
@@ -112,10 +108,6 @@ std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directo
 		std::string extension = fs::path(filenames[i]).extension().string();
 		if (extension != fileType) {
 			filenames.erase(filenames.begin() + i);
-		}
-
-		if (i == 0) {
-			break;
 		}
 	}
 
