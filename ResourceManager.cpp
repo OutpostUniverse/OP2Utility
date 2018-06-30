@@ -11,13 +11,13 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory)
 	auto volFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".vol");
 
 	for (const auto& volFilename : volFilenames) {
-		ArchiveFiles.push_back(std::make_unique<VolFile>(volFilename.c_str()));
+		ArchiveFiles.push_back(std::make_unique<VolFile>(volFilename));
 	}
 
 	auto clmFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".clm");
 
 	for (const auto& clmFilename : clmFilenames) {
-		ArchiveFiles.push_back(std::make_unique<ClmFile>(clmFilename.c_str()));
+		ArchiveFiles.push_back(std::make_unique<ClmFile>(clmFilename));
 	}
 }
 
@@ -36,7 +36,7 @@ std::unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const s
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 		std::string internalArchiveFilename = XFile::GetFilename(filename);
-		int internalArchiveIndex = archiveFile->GetInternalFileIndex(internalArchiveFilename.c_str());
+		int internalArchiveIndex = archiveFile->GetInternalFileIndex(internalArchiveFilename);
 
 		if (internalArchiveIndex > -1) {
 			return archiveFile->OpenSeekableStreamReader(internalArchiveIndex);
@@ -116,7 +116,7 @@ bool ResourceManager::ExtractSpecificFile(const std::string& filename, bool over
 	int internalArchiveIndex;
 	if (ExistsInArchives(filename, fileIndex, internalArchiveIndex))
 	{
-		ArchiveFiles[fileIndex]->ExtractFile(internalArchiveIndex, filename.c_str());
+		ArchiveFiles[fileIndex]->ExtractFile(internalArchiveIndex, filename);
 		return true;
 	}
 
@@ -155,7 +155,7 @@ std::string ResourceManager::FindContainingArchiveFile(const std::string& filena
 {
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		int internalFileIndex = archiveFile->GetInternalFileIndex(filename.c_str());
+		int internalFileIndex = archiveFile->GetInternalFileIndex(filename);
 
 		if (internalFileIndex != -1) {
 			return XFile::GetFilename(archiveFile->GetVolumeFileName());

@@ -5,7 +5,7 @@
 
 namespace Archives
 {
-	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName), clmFileReader(fileName)
+	ClmFile::ClmFile(const std::string& fileName) : ArchiveFile(fileName), clmFileReader(fileName)
 	{
 		m_ArchiveFileSize = clmFileReader.Length();
 		ReadHeader();
@@ -106,7 +106,7 @@ namespace Archives
 		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
 	}
 
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const std::string& internalFileName)
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 

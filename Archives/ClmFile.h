@@ -15,13 +15,13 @@ namespace Archives
 	class ClmFile : public ArchiveFile
 	{
 	public:
-		ClmFile(const char *fileName);
+		ClmFile(const std::string& fileName);
 		virtual ~ClmFile();
 
 		std::string GetInternalFileName(int index);
 		int GetInternalFileIndex(const std::string& internalFileName);
 		void ExtractFile(int fileIndex, const std::string& pathOut);
-		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
+		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const std::string& internalFileName);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		uint32_t GetInternalFileSize(int index);

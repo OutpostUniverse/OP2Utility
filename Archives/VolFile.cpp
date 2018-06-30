@@ -15,7 +15,7 @@ namespace Archives
 	const std::array<char, 4> TagVBLK{ 'V', 'B', 'L', 'K' }; // Packed file tag
 
 
-	VolFile::VolFile(const char *fileName) : ArchiveFile(fileName), archiveFileReader(fileName)
+	VolFile::VolFile(const std::string& fileName) : ArchiveFile(fileName), archiveFileReader(fileName)
 	{
 		m_ArchiveFileSize = archiveFileReader.Length();
 
@@ -72,7 +72,7 @@ namespace Archives
 		return m_IndexEntries[index].fileNameOffset;
 	}
 
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const char* internalFileName)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const std::string& internalFileName)
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
