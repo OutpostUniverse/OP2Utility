@@ -18,7 +18,7 @@ namespace Archives
 	class VolFile : public ArchiveFile
 	{
 	public:
-		VolFile(const char *filename);
+		VolFile(const std::string& fileName);
 		~VolFile();
 
 		// Internal file status
@@ -29,7 +29,7 @@ namespace Archives
 
 		// Extraction
 		void ExtractFile(int fileIndex, const std::string& pathOut);
-		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const char *internalFileName);
+		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const std::string& internalFileName);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		// Volume Creation

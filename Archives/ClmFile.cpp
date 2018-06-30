@@ -2,10 +2,11 @@
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
+#include <cstring>
 
 namespace Archives
 {
-	ClmFile::ClmFile(const char *fileName) : ArchiveFile(fileName), clmFileReader(fileName)
+	ClmFile::ClmFile(const std::string& fileName) : ArchiveFile(fileName), clmFileReader(fileName)
 	{
 		m_ArchiveFileSize = clmFileReader.Length();
 		ReadHeader();
@@ -106,7 +107,7 @@ namespace Archives
 		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
 	}
 
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const char* internalFileName)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const std::string& internalFileName)
 	{
 		int fileIndex = GetInternalFileIndex(internalFileName);
 
@@ -291,7 +292,7 @@ namespace Archives
 		for (std::size_t i = 0; i < internalNames.size(); ++i)
 		{
 			// Copy the filename into the entry
-			strncpy((char*)&indexEntries[i].fileName, internalNames[i].c_str(), 8);
+			std::strncpy(indexEntries[i].fileName.data(), internalNames[i].data(), sizeof(IndexEntry::fileName));
 
 			// Set the offset of the file
 			indexEntries[i].dataOffset = offset;
