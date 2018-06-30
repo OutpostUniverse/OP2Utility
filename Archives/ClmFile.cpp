@@ -292,7 +292,7 @@ namespace Archives
 		for (std::size_t i = 0; i < internalNames.size(); ++i)
 		{
 			// Copy the filename into the entry
-			std::memcpy(indexEntries[i].fileName.data(), internalNames[i].data(), sizeof(IndexEntry::fileName));
+			std::strncpy(indexEntries[i].fileName.data(), internalNames[i].data(), sizeof(IndexEntry::fileName));
 
 			// Set the offset of the file
 			indexEntries[i].dataOffset = offset;
