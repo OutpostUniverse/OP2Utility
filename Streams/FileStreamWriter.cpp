@@ -3,7 +3,7 @@
 
 FileStreamWriter::FileStreamWriter(const std::string& filename) : 
 	filename(filename),
-	file(filename.c_str(), std::ios::trunc | std::ios::out | std::ios::binary)
+	file(filename, std::ios::trunc | std::ios::out | std::ios::binary)
 {
 	if (!file.is_open()) {
 		throw std::runtime_error("File could not be opened.");
