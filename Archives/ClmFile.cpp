@@ -2,6 +2,7 @@
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
+#include <cstring>
 
 namespace Archives
 {
@@ -291,7 +292,7 @@ namespace Archives
 		for (std::size_t i = 0; i < internalNames.size(); ++i)
 		{
 			// Copy the filename into the entry
-			strncpy((char*)&indexEntries[i].fileName, internalNames[i].c_str(), 8);
+			std::memcpy(indexEntries[i].fileName.data(), internalNames[i].data(), sizeof(IndexEntry::fileName));
 
 			// Set the offset of the file
 			indexEntries[i].dataOffset = offset;
