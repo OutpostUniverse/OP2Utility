@@ -6,7 +6,7 @@ ifeq ($(origin CXX),default)
 endif
 
 SRCDIR := .
-BUILDDIR := build
+BUILDDIR := .build
 BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/deps
