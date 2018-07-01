@@ -1,5 +1,4 @@
 #include "VolFile.h"
-#include "../Streams/FileSliceReader.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
@@ -87,8 +86,7 @@ namespace Archives
 	{
 		SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
-		return std::make_unique<FileSliceReader>(m_ArchiveFileName, 
-			archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length));
+		return archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length));
 	}
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(int index)
@@ -134,7 +132,9 @@ namespace Archives
 			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
 			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
-			ArchiveUnpacker::WriteFromStream(pathOut, archiveFileReader, sectionHeader.length);
+			std::unique_ptr<SeekableStreamReader> slice = archiveFileReader.Slice(sectionHeader.length);
+
+			ArchiveUnpacker::WriteFromStream(pathOut, *slice, slice->Length());
 		}
 		catch (const std::exception& e)
 		{

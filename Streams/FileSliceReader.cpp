@@ -58,3 +58,24 @@ void FileSliceReader::SeekRelative(int64_t offset)
 
 	fileStreamReader.SeekRelative(offset);
 }
+
+std::unique_ptr<SeekableStreamReader> FileSliceReader::Slice(uint64_t sliceLength) 
+{
+	auto slice = Slice(startingOffset + Position(), sliceLength);
+
+	// Wait until slice is successfully created before seeking forward.
+	SeekRelative(sliceLength);
+
+	return slice;
+}
+
+std::unique_ptr<SeekableStreamReader> FileSliceReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) 
+{
+	if (sliceStartPosition + sliceLength > Length() ||
+		sliceStartPosition + sliceLength < sliceStartPosition) // Check if length wraps past max size of uint64_t
+	{
+		throw std::runtime_error("Unable to create a slice of an existing file stream slice. Requested slice is outside bounds of underlying stream slice.");
+	}
+
+	return std::make_unique<FileSliceReader>(GetFilename(), sliceStartPosition, sliceLength);
+}

@@ -48,3 +48,28 @@ void MemoryStreamReader::SeekRelative(int64_t offset)
 	// offset is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
 	this->position += static_cast<std::size_t>(offset); 
 }
+
+std::unique_ptr<SeekableStreamReader> MemoryStreamReader::Slice(uint64_t sliceLength) 
+{
+	auto slice = Slice(Position(), sliceLength);
+
+	// Wait until slice is successfully created before seeking forward.
+	SeekRelative(sliceLength);
+
+	return slice;
+}
+
+std::unique_ptr<SeekableStreamReader> MemoryStreamReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) 
+{
+	if (sliceStartPosition > SIZE_MAX || sliceLength > SIZE_MAX) {
+		throw std::runtime_error("Slice starting position and Slice length for creating a new memory stream slice must be smaller values.");
+	}
+
+	if (sliceStartPosition + sliceLength > Length() ||
+		sliceStartPosition + sliceLength < sliceStartPosition) // Check if length wraps past max size of uint64_t
+	{ 
+		throw std::runtime_error("Unable to create a slice of memory stream. Requested slice is outside bounds of underlying stream.");
+	}
+
+	return std::make_unique<MemoryStreamReader>((void*)&streamBuffer[sliceStartPosition], static_cast<std::size_t>(sliceLength));
+}

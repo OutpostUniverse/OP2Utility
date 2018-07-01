@@ -80,10 +80,11 @@ namespace Archives
 
 			waveFileWriter.Write(header);
 
-			// Seek to the beginning of the file data (in the .clm file)
-			clmFileReader.Seek(indexEntries[fileIndex].dataOffset);
+			std::unique_ptr<SeekableStreamReader> reader = clmFileReader.Slice(
+				indexEntries[fileIndex].dataOffset, 
+				indexEntries[fileIndex].dataLength);
 
-			ArchiveUnpacker::WriteFromStream(waveFileWriter, clmFileReader, indexEntries[fileIndex].dataLength);
+			ArchiveUnpacker::WriteFromStream(waveFileWriter, *reader, reader->Length());
 		}
 		catch (const std::exception& e)
 		{

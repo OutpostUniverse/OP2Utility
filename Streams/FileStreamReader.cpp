@@ -1,4 +1,5 @@
 #include "FileStreamReader.h"
+#include "FileSliceReader.h"
 #include <stdexcept>
 
 // Defers calls to C++ standard library methods
@@ -37,4 +38,18 @@ void FileStreamReader::Seek(uint64_t position) {
 
 void FileStreamReader::SeekRelative(int64_t offset) {
 	file.seekg(offset, std::ios_base::cur);
+}
+
+std::unique_ptr<SeekableStreamReader> FileStreamReader::Slice(uint64_t sliceLength) 
+{
+	auto slice = Slice(Position(), sliceLength);
+
+	// Wait until slice is successfully created before seeking forward.
+	SeekRelative(sliceLength);
+
+	return slice;
+}
+
+std::unique_ptr<SeekableStreamReader> FileStreamReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) {
+	return std::make_unique<FileSliceReader>(filename, sliceStartPosition, sliceLength);
 }

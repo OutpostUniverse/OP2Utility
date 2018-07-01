@@ -17,6 +17,9 @@ public:
 	void Seek(uint64_t position) override;
 	void SeekRelative(int64_t offset) override;
 
+	std::unique_ptr<SeekableStreamReader> Slice(uint64_t sliceLength) override;
+	std::unique_ptr<SeekableStreamReader> Slice(uint64_t sliceStartPosition, uint64_t sliceLength) override;
+
 	inline const std::string& GetFilename() const {
 		return fileStreamReader.GetFilename();
 	}
