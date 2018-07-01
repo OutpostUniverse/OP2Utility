@@ -59,13 +59,13 @@ std::unique_ptr<SeekableStreamReader> MemoryStreamReader::Slice(uint64_t sliceLe
 	return slice;
 }
 
-std::unique_ptr<SeekableStreamReader> MemoryStreamReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) 
+std::unique_ptr<SeekableStreamReader> MemoryStreamReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength)  const
 {
 	if (sliceStartPosition > SIZE_MAX || sliceLength > SIZE_MAX) {
 		throw std::runtime_error("Slice starting position and Slice length for creating a new memory stream slice must be smaller values.");
 	}
 
-	if (sliceStartPosition + sliceLength > Length() ||
+	if (sliceStartPosition + sliceLength > streamSize ||
 		sliceStartPosition + sliceLength < sliceStartPosition) // Check if length wraps past max size of uint64_t
 	{ 
 		throw std::runtime_error("Unable to create a slice of memory stream. Requested slice is outside bounds of underlying stream.");
