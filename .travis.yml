@@ -21,6 +21,10 @@ matrix:
           packages:
             - clang-6.0
             - libstdc++-6-dev
+    - os: osx
+      env: CXX=g++ CC=gcc
+    - os: osx
+      env: CXX=clang++ CC=clang
 
 script:
   # Use -k to continue after errors, ensuring full build log with all errors
