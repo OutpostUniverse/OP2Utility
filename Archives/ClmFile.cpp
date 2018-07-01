@@ -2,7 +2,6 @@
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
-#include <cstring>
 
 namespace Archives
 {
