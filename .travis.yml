@@ -1,0 +1,15 @@
+
+language: cpp
+sudo: false
+os:
+  - linux
+  - osx
+compiler:
+  - gcc
+  - clang
+script:
+  # Use -k to continue after errors, ensuring full build log with all errors
+  - make -k
+notifications:
+  email: false
+
