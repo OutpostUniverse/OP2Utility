@@ -1,0 +1,30 @@
+
+language: generic
+sudo: false
+matrix:
+  include:
+    - os: linux
+      env: CXX=g++-6 CC=gcc-6
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+    - os: linux
+      env: CXX=clang++-6.0 CC=clang-6.0
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-6.0
+          packages:
+            - clang-6.0
+            - libstdc++-6-dev
+
+script:
+  # Use -k to continue after errors, ensuring full build log with all errors
+  - make -k
+notifications:
+  email: false
+
