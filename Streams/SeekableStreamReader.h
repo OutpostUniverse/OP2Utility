@@ -2,7 +2,6 @@
 
 #include "StreamReader.h"
 #include <cstdint>
-#include <memory>
 
 class SeekableStreamReader : public StreamReader {
 public:

@@ -10,6 +10,7 @@ class FileSliceReader : public SeekableStreamReader
 {
 public:
 	FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength);
+	FileSliceReader(const FileSliceReader& fileSliceReader);
 
 	// SeekableStreamReader methods
 	uint64_t Length() override;
@@ -17,8 +18,8 @@ public:
 	void Seek(uint64_t position) override;
 	void SeekRelative(int64_t offset) override;
 
-	std::unique_ptr<SeekableStreamReader> Slice(uint64_t sliceLength);
-	std::unique_ptr<SeekableStreamReader> Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const;
+	FileSliceReader Slice(uint64_t sliceLength);
+	FileSliceReader Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const;
 
 	inline const std::string& GetFilename() const {
 		return fileStreamReader.GetFilename();
@@ -28,6 +29,8 @@ protected:
 	void ReadImplementation(void* buffer, std::size_t size) override;
 
 private:
+	void Initialize();
+
 	FileStreamReader fileStreamReader;
 	const uint64_t startingOffset;
 	const uint64_t sliceLength;

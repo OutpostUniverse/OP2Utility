@@ -11,6 +11,7 @@ class FileSliceReader;
 class FileStreamReader : public SeekableStreamReader {
 public:
 	FileStreamReader(std::string fileName);
+	FileStreamReader(const FileStreamReader& fileStreamReader);
 	~FileStreamReader() override;
 
 	// SeekableStreamReader methods
@@ -34,6 +35,8 @@ protected:
 	void ReadImplementation(void* buffer, std::size_t size) override;
 
 private:
+	void FileStreamReader::Initialize();
+
 	const std::string filename;
 	std::ifstream file;
 };

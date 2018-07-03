@@ -7,6 +7,18 @@ FileStreamReader::FileStreamReader(std::string filename) :
 	filename(filename),
 	file(filename, std::ios::in | std::ios::binary)
 {
+	Initialize();
+}
+
+FileStreamReader::FileStreamReader(const FileStreamReader& fileStreamReader) :
+	filename(fileStreamReader.filename),
+	file(fileStreamReader.filename, std::ios::in | std::ios::binary)
+{
+	Initialize();
+}
+
+void FileStreamReader::Initialize()
+{
 	if (!file.is_open()) {
 		throw std::runtime_error("Could not open file: " + filename);
 	}
@@ -42,12 +54,12 @@ void FileStreamReader::SeekRelative(int64_t offset) {
 
 FileSliceReader FileStreamReader::Slice(uint64_t sliceLength) 
 {
-	return Slice(Position(), sliceLength);
+	FileSliceReader slice = Slice(Position(), sliceLength);
 
 	// Wait until slice is successfully created before seeking forward.
 	SeekRelative(sliceLength);
 
-	//return sliceOut;
+	return slice;
 }
 
 FileSliceReader FileStreamReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const {
