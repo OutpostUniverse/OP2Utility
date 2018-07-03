@@ -35,7 +35,7 @@ protected:
 	void ReadImplementation(void* buffer, std::size_t size) override;
 
 private:
-	void FileStreamReader::Initialize();
+	void Initialize();
 
 	const std::string filename;
 	std::ifstream file;
