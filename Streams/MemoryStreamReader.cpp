@@ -3,8 +3,8 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-MemoryStreamReader::MemoryStreamReader(void* buffer, std::size_t size) : 
-	streamBuffer(static_cast<char*>(buffer)), streamSize(size), position(0) { }
+MemoryStreamReader::MemoryStreamReader(const void* const buffer, std::size_t size) : 
+	streamBuffer(static_cast<const char* const>(buffer)), streamSize(size), position(0) { }
 
 void MemoryStreamReader::ReadImplementation(void* buffer, std::size_t size)
 {
@@ -71,5 +71,5 @@ MemoryStreamReader MemoryStreamReader::Slice(uint64_t sliceStartPosition, uint64
 		throw std::runtime_error("Unable to create a slice of memory stream. Requested slice is outside bounds of underlying stream.");
 	}
 
-	return MemoryStreamReader((void*)(&streamBuffer[sliceStartPosition]), static_cast<std::size_t>(sliceLength));
+	return MemoryStreamReader(&streamBuffer[sliceStartPosition], static_cast<std::size_t>(sliceLength));
 }

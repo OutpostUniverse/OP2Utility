@@ -6,7 +6,7 @@
 
 class MemoryStreamReader : public SeekableStreamReader {
 public:
-	MemoryStreamReader(void* buffer, std::size_t size);
+	MemoryStreamReader(const void* const buffer, std::size_t size);
 
 	// SeekableStreamReader methods
 	uint64_t Length() override;
