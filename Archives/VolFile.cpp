@@ -87,8 +87,7 @@ namespace Archives
 	{
 		SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
-		return std::make_unique<FileSliceReader>(m_ArchiveFileName, 
-			archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length));
+		return std::make_unique<FileSliceReader>(archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length)));
 	}
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(int index)
@@ -134,7 +133,9 @@ namespace Archives
 			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
 			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
-			ArchiveUnpacker::WriteFromStream(pathOut, archiveFileReader, sectionHeader.length);
+			FileSliceReader slice = archiveFileReader.Slice(sectionHeader.length);
+
+			ArchiveUnpacker::WriteFromStream(pathOut, slice, slice.Length());
 		}
 		catch (const std::exception& e)
 		{

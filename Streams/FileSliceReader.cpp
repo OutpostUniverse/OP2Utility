@@ -2,15 +2,30 @@
 #include <stdexcept>
 
 FileSliceReader::FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength) : 
-	fileStreamReader(filename), startingOffset(startingOffset), sliceLength(sliceLength)
+	fileStreamReader(filename), 
+	startingOffset(startingOffset), 
+	sliceLength(sliceLength)
+{
+	Initialize();
+}
+
+FileSliceReader::FileSliceReader(const FileSliceReader& fileSliceReader) :  
+	fileStreamReader(fileSliceReader.GetFilename()), 
+	startingOffset(fileSliceReader.startingOffset), 
+	sliceLength(fileSliceReader.sliceLength)
+{
+	Initialize();
+}
+
+void FileSliceReader::Initialize() 
 {
 	if (startingOffset + sliceLength < startingOffset) {
-		throw std::runtime_error("The supplied starting offset & length cause the ending offset to wrap past the largest allowed value in the FileSliceReader created on file " + 
+		throw std::runtime_error("The supplied starting offset & length cause the ending offset to wrap past the largest allowed value in the FileSliceReader created on file " +
 			fileStreamReader.GetFilename());
 	}
 
 	if (startingOffset + sliceLength > fileStreamReader.Length()) {
-		throw std::runtime_error("The ending offset of the FileSliceReader created on " + 
+		throw std::runtime_error("The ending offset of the FileSliceReader created on " +
 			fileStreamReader.GetFilename() + "is greater than the file's length");
 	}
 
@@ -57,4 +72,25 @@ void FileSliceReader::SeekRelative(int64_t offset)
 	}
 
 	fileStreamReader.SeekRelative(offset);
+}
+
+FileSliceReader FileSliceReader::Slice(uint64_t sliceLength) 
+{
+	FileSliceReader slice = Slice(startingOffset + Position(), sliceLength);
+
+	// Wait until slice is successfully created before seeking forward.
+	SeekRelative(sliceLength);
+
+	return slice;
+}
+
+FileSliceReader FileSliceReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const
+{
+	if (sliceStartPosition + sliceLength > this->sliceLength ||
+		sliceStartPosition + sliceLength < sliceStartPosition) // Check if length wraps past max size of uint64_t
+	{
+		throw std::runtime_error("Unable to create a slice of an existing file stream slice. Requested slice is outside bounds of underlying stream slice.");
+	}
+
+	return FileSliceReader(GetFilename(), sliceStartPosition, sliceLength);
 }

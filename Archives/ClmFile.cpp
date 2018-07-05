@@ -1,4 +1,5 @@
 #include "ClmFile.h"
+#include "../Streams/FileSliceReader.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
@@ -80,10 +81,11 @@ namespace Archives
 
 			waveFileWriter.Write(header);
 
-			// Seek to the beginning of the file data (in the .clm file)
-			clmFileReader.Seek(indexEntries[fileIndex].dataOffset);
+			FileSliceReader reader = clmFileReader.Slice(
+				indexEntries[fileIndex].dataOffset, 
+				indexEntries[fileIndex].dataLength);
 
-			ArchiveUnpacker::WriteFromStream(waveFileWriter, clmFileReader, indexEntries[fileIndex].dataLength);
+			ArchiveUnpacker::WriteFromStream(waveFileWriter, reader, reader.Length());
 		}
 		catch (const std::exception& e)
 		{

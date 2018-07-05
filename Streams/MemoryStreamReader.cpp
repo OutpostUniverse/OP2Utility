@@ -3,8 +3,8 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-MemoryStreamReader::MemoryStreamReader(void* buffer, std::size_t size) : 
-	streamBuffer(static_cast<char*>(buffer)), streamSize(size), position(0) { }
+MemoryStreamReader::MemoryStreamReader(const void* const buffer, std::size_t size) : 
+	streamBuffer(static_cast<const char* const>(buffer)), streamSize(size), position(0) { }
 
 void MemoryStreamReader::ReadImplementation(void* buffer, std::size_t size)
 {
@@ -47,4 +47,29 @@ void MemoryStreamReader::SeekRelative(int64_t offset)
 
 	// offset is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
 	this->position += static_cast<std::size_t>(offset); 
+}
+
+MemoryStreamReader MemoryStreamReader::Slice(uint64_t sliceLength) 
+{
+	auto slice = Slice(Position(), sliceLength);
+
+	// Wait until slice is successfully created before seeking forward.
+	SeekRelative(sliceLength);
+
+	return slice;
+}
+
+MemoryStreamReader MemoryStreamReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength)  const
+{
+	if (sliceStartPosition > SIZE_MAX || sliceLength > SIZE_MAX) {
+		throw std::runtime_error("Slice starting position and Slice length for creating a new memory stream slice must be smaller values.");
+	}
+
+	if (sliceStartPosition + sliceLength > streamSize ||
+		sliceStartPosition + sliceLength < sliceStartPosition) // Check if length wraps past max size of uint64_t
+	{ 
+		throw std::runtime_error("Unable to create a slice of memory stream. Requested slice is outside bounds of underlying stream.");
+	}
+
+	return MemoryStreamReader(&streamBuffer[sliceStartPosition], static_cast<std::size_t>(sliceLength));
 }

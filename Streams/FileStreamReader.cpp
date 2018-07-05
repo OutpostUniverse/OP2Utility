@@ -1,10 +1,23 @@
 #include "FileStreamReader.h"
+#include "FileSliceReader.h"
 #include <stdexcept>
 
 // Defers calls to C++ standard library methods
 FileStreamReader::FileStreamReader(std::string filename) : 
 	filename(filename),
 	file(filename, std::ios::in | std::ios::binary)
+{
+	Initialize();
+}
+
+FileStreamReader::FileStreamReader(const FileStreamReader& fileStreamReader) :
+	filename(fileStreamReader.filename),
+	file(fileStreamReader.filename, std::ios::in | std::ios::binary)
+{
+	Initialize();
+}
+
+void FileStreamReader::Initialize()
 {
 	if (!file.is_open()) {
 		throw std::runtime_error("Could not open file: " + filename);
@@ -37,4 +50,18 @@ void FileStreamReader::Seek(uint64_t position) {
 
 void FileStreamReader::SeekRelative(int64_t offset) {
 	file.seekg(offset, std::ios_base::cur);
+}
+
+FileSliceReader FileStreamReader::Slice(uint64_t sliceLength) 
+{
+	FileSliceReader slice = Slice(Position(), sliceLength);
+
+	// Wait until slice is successfully created before seeking forward.
+	SeekRelative(sliceLength);
+
+	return slice;
+}
+
+FileSliceReader FileStreamReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const {
+	return FileSliceReader(filename, sliceStartPosition, sliceLength);
 }
