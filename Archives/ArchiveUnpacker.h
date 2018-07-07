@@ -5,8 +5,6 @@
 #include <cstdint>
 
 class SeekableStreamReader;
-class StreamReader;
-class StreamWriter;
 
 namespace Archives
 {
@@ -32,8 +30,6 @@ namespace Archives
 
 	protected:
 		void CheckPackedFileIndexBounds(int fileIndex);
-		void WriteFromStream(const std::string& filenameOut, StreamReader& streamReader, uint64_t writeLength);
-		void WriteFromStream(StreamWriter& streamWriter, StreamReader& streamReader, uint64_t writeLength);
 
 		const std::string m_ArchiveFileName;
 		int m_NumberOfPackedFiles;

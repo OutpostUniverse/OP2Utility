@@ -130,12 +130,12 @@ namespace Archives
 	{
 		try
 		{
+			FileStreamWriter archiveWriter(pathOut);
+
 			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
 			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
-			FileSliceReader slice = archiveFileReader.Slice(sectionHeader.length);
-
-			ArchiveUnpacker::WriteFromStream(pathOut, slice, slice.Length());
+			archiveWriter.Write(archiveFileReader.Slice(sectionHeader.length));
 		}
 		catch (const std::exception& e)
 		{
@@ -226,7 +226,8 @@ namespace Archives
 			volWriter.Write(SectionHeader(TagVBLK, volInfo.indexEntries[i].fileSize));
 
 			try {
-				ArchivePacker::WriteFromStream(volWriter, *volInfo.fileStreamReaders[i], volInfo.indexEntries[i].fileSize);
+				volWriter.Write(*volInfo.fileStreamReaders[i]);
+				//ArchivePacker::WriteFromStream(volWriter, *volInfo.fileStreamReaders[i], volInfo.indexEntries[i].fileSize);
 				int padding = 0;
 
 				// Add padding after the file, ensuring it ends on a 4 byte boundary

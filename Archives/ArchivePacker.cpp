@@ -3,12 +3,9 @@
 #include "../StringHelper.h"
 #include <cstddef>
 #include <stdexcept>
-#include <array>
 
 namespace Archives
 {
-	const uint32_t ARCHIVE_WRITE_SIZE = 0x00020000;
-
 	ArchivePacker::ArchivePacker() { }
 	ArchivePacker::~ArchivePacker() { }
 
@@ -36,28 +33,5 @@ namespace Archives
 	bool ArchivePacker::ComparePathFilenames(const std::string path1, const std::string path2)
 	{
 		return StringHelper::StringCompareCaseInsensitive(XFile::GetFilename(path1), XFile::GetFilename(path2));
-	}
-
-	void ArchivePacker::WriteFromStream(StreamWriter& streamWriter, StreamReader& streamReader, const uint64_t writeLength)
-	{
-		std::size_t numBytesToRead;
-		uint32_t offset = 0;
-		std::array<char, ARCHIVE_WRITE_SIZE> buffer;
-
-		do
-		{
-			numBytesToRead = ARCHIVE_WRITE_SIZE;
-
-			// Check if less than ARCHIVE_WRITE_SIZE of data remains for writing to disk.
-			if (offset + numBytesToRead > writeLength) {
-				numBytesToRead = static_cast<std::size_t>(writeLength - offset);
-			}
-
-			// Read the input file
-			streamReader.Read(buffer.data(), numBytesToRead);
-			offset += numBytesToRead;
-
-			streamWriter.Write(buffer.data(), numBytesToRead);
-		} while (numBytesToRead); // End loop when numBytesRead/Written is equal to 0
 	}
 }

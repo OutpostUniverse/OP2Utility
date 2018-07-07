@@ -182,5 +182,8 @@
     <ClCompile Include="Streams\FileSliceReader.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
+    <ClCompile Include="Streams\StreamWriter.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
