@@ -1,5 +1,17 @@
 #pragma once
 
+// OP2 Utility Library Header
+
+// OP2Utility is a cross platform C++ utility library to aid in Outpost 2 functions not
+// directly related to programming new scenarios. 
+
+/*This includes
+ - Handling Outpost 2 Archvies (both CLM and VOL)
+ - Handling Outpost 2 map files
+ - File and Memory Stream manipulation
+ - Cross platform file system support
+*/
+
 #include "Archives/ArchiveFile.h"
 #include "Archives/ClmFile.h"
 #include "Archives/VolFile.h"
@@ -17,12 +29,3 @@
 #include "ResourceManager.h"
 #include "StringHelper.h"
 #include "XFile.h"
-
-// OP2Utility is a utility library to aid in Outpost 2 functions typically not
-// directly related to programming new scenarios. 
-
-/*This includes
-    Loading an Outpost 2 Map file into memory.
-	Handling Outpost 2 Archive files (clm and vol).
-	Cross platform file system support.
-*/
