@@ -119,6 +119,7 @@
     <ClInclude Include="Archives\ArchiveUnpacker.h" />
     <ClInclude Include="Archives\CompressionType.h" />
     <ClInclude Include="Archives\WaveFile.h" />
+    <ClInclude Include="include\OP2Utility.h" />
     <ClInclude Include="Maps\CellType.h" />
     <ClInclude Include="Maps\ClipRect.h" />
     <ClInclude Include="Maps\MapData.h" />
@@ -153,7 +154,6 @@
     <ClCompile Include="Streams\FileStreamWriter.cpp" />
     <ClCompile Include="Streams\MemoryStreamWriter.cpp" />
     <ClCompile Include="Streams\MemoryStreamReader.cpp" />
-    <ClInclude Include="OP2Utility.h" />
     <ClInclude Include="Streams\FileSliceReader.h" />
     <ClInclude Include="Streams\FileStreamReader.h" />
     <ClInclude Include="Streams\FileStreamWriter.h" />
