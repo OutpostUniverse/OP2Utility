@@ -44,9 +44,9 @@ void FileSliceReader::ReadImplementation(void* buffer, std::size_t size)
 
 std::size_t FileSliceReader::ReadPartial(void* buffer, std::size_t size) {
 	auto bytesLeft = sliceLength - Position();
-	std::size_t bytesTransferred = (size < bytesLeft) ? size : bytesLeft;
+	std::size_t readSize = (size < bytesLeft) ? size : bytesLeft;
 
-	return fileStreamReader.ReadPartial(buffer, bytesTransferred);
+	return fileStreamReader.ReadPartial(buffer, readSize);
 }
 
 uint64_t FileSliceReader::Length()
