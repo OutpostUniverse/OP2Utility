@@ -165,6 +165,7 @@
     <ClInclude Include="Streams\StreamWriter.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="XFile.h" />
+    <ClCompile Include="Streams\StreamWriter.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="XFile.cpp" />
   </ItemGroup>
