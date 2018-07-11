@@ -14,6 +14,8 @@ public:
 	FileStreamReader(const FileStreamReader& fileStreamReader);
 	~FileStreamReader() override;
 
+	std::size_t ReadPartial(void* buffer, std::size_t size) override;
+
 	// SeekableStreamReader methods
 	uint64_t Length() override;
 	uint64_t Position() override;

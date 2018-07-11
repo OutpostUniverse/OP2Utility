@@ -9,6 +9,9 @@ protected:
 	virtual void ReadImplementation(void* buffer, std::size_t size) = 0;
 
 public:
+	// Returns number of bytes actually transferred
+	virtual std::size_t ReadPartial(void* buffer, std::size_t size) = 0;
+
 	virtual ~StreamReader() = default;
 
 	// Helper methods, which depend only on the above interface
