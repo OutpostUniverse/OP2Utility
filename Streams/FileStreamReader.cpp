@@ -32,6 +32,11 @@ void FileStreamReader::ReadImplementation(void* buffer, std::size_t size) {
 	file.read(static_cast<char*>(buffer), size);
 }
 
+std::size_t FileStreamReader::ReadPartial(void* buffer, std::size_t size) {
+	file.read(static_cast<char*>(buffer), size);
+	return file.gcount();
+}
+
 uint64_t FileStreamReader::Length() {
 	auto currentPosition = file.tellg();  // Record current position
 	file.seekg(0, std::ios_base::end);    // Seek to end of file
