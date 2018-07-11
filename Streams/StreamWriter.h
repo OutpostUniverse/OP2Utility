@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <vector>
 
 class StreamWriter {
 public:
@@ -11,10 +12,19 @@ public:
 		WriteImplementation(buffer, size);
 	}
 
-	// Inline templated convenience methods, to easily write arbitrary data types
+	// Inline templated convenience methods to easily write more complex types
+	// ====
+
+	// Trivially copyable data types
 	template<typename T>
 	inline std::enable_if_t<std::is_trivially_copyable<T>::value> Write(const T& object) {
 		WriteImplementation(&object, sizeof(object));
+	}
+
+	// Vector data types
+	template<typename T, typename A>
+	inline void Write(const std::vector<T, A>& vector) {
+		WriteImplementation(vector.data(), vector.size() * sizeof(T));
 	}
 
 protected:
