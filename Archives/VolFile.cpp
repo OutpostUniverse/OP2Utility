@@ -135,7 +135,7 @@ namespace Archives
 			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
 			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
-			archiveWriter.Write(archiveFileReader.Slice(sectionHeader.length));
+			archiveWriter.Write(static_cast<SeekableStreamReader&>(archiveFileReader.Slice(sectionHeader.length)));
 		}
 		catch (const std::exception& e)
 		{

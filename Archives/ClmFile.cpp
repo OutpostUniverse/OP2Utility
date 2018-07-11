@@ -81,7 +81,7 @@ namespace Archives
 
 			waveFileWriter.Write(header);
 
-			waveFileWriter.Write(clmFileReader.Slice(indexEntries[fileIndex].dataOffset, indexEntries[fileIndex].dataLength));
+			waveFileWriter.Write(static_cast<SeekableStreamReader&>(clmFileReader.Slice(indexEntries[fileIndex].dataOffset, indexEntries[fileIndex].dataLength)));
 		}
 		catch (const std::exception& e)
 		{
