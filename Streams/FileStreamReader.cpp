@@ -32,7 +32,7 @@ void FileStreamReader::ReadImplementation(void* buffer, std::size_t size) {
 	file.read(static_cast<char*>(buffer), size);
 }
 
-std::size_t FileStreamReader::ReadPartial(void* buffer, std::size_t size) {
+std::size_t FileStreamReader::ReadPartial(void* buffer, std::size_t size) noexcept {
 	file.read(static_cast<char*>(buffer), size);
 	// Note: number of unformatted bytes read, up to size, must fit within a size_t
 	return static_cast<std::size_t>(file.gcount());

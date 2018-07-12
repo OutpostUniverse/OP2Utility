@@ -12,7 +12,7 @@ protected:
 public:
 	// Generic read method, which returns the number of bytes transferred
 	// This method is similar to Read, except it does not raise an exception if the buffer can not be filled
-	virtual std::size_t ReadPartial(void* buffer, std::size_t size) = 0;
+	virtual std::size_t ReadPartial(void* buffer, std::size_t size) noexcept = 0;
 
 	virtual ~StreamReader() = default;
 

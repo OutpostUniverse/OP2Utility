@@ -8,7 +8,7 @@ class MemoryStreamReader : public SeekableStreamReader {
 public:
 	MemoryStreamReader(const void* const buffer, std::size_t size);
 
-	std::size_t ReadPartial(void* buffer, std::size_t size) override;
+	std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
 
 	// SeekableStreamReader methods
 	uint64_t Length() override;

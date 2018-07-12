@@ -12,7 +12,7 @@ public:
 	FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength);
 	FileSliceReader(const FileSliceReader& fileSliceReader);
 
-	std::size_t ReadPartial(void* buffer, std::size_t size) override;
+	std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
 
 	// SeekableStreamReader methods
 	uint64_t Length() override;
