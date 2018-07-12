@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <type_traits>
 
 class StreamWriter {
 protected:
@@ -12,15 +13,13 @@ protected:
 public:
 	virtual ~StreamWriter() = default;
 
-	// Helper methods, which depend only on the above interface
-	// ====
-
 	inline void Write(const void* buffer, std::size_t size) {
 		WriteImplementation(buffer, size);
 	}
 
 	// Inline templated convenience methods, to easily write arbitrary data types
-	template<typename T> inline void Write(const T& object) {
+	template<typename T>
+	inline std::enable_if_t<std::is_trivially_copyable<T>::value> Write(const T& object) {
 		WriteImplementation(&object, sizeof(object));
 	}
 };

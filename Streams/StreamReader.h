@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <type_traits>
 
 class StreamReader {
 protected:
@@ -24,7 +25,8 @@ public:
 	}
 
 	// Inline templated convenience methods, to easily read arbitrary data types
-	template<typename T> inline void Read(T& object) {
+	template<typename T>
+	inline std::enable_if_t<std::is_trivially_copyable<T>::value> Read(T& object) {
 		ReadImplementation(&object, sizeof(object));
 	}
 };

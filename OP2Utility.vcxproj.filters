@@ -22,12 +22,12 @@
     <Filter Include="Streams">
       <UniqueIdentifier>{1bc74f38-2bb9-4094-bd00-6593f6efffca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{bbe3dfd0-4ce7-4087-811f-d9560e6c074d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OP2Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StringHelper.h">
@@ -125,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="Streams\FileSliceReader.h">
       <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OP2Utility.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
