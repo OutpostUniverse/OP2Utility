@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <type_traits>
 
 class StreamWriter {
 public:
@@ -11,7 +12,8 @@ public:
 	}
 
 	// Inline templated convenience methods, to easily write arbitrary data types
-	template<typename T> inline void Write(const T& object) {
+	template<typename T>
+	inline std::enable_if_t<std::is_trivially_copyable<T>::value> Write(const T& object) {
 		WriteImplementation(&object, sizeof(object));
 	}
 
