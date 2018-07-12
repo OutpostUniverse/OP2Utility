@@ -16,6 +16,16 @@ void MemoryStreamReader::ReadImplementation(void* buffer, std::size_t size)
 	position += size;
 }
 
+std::size_t MemoryStreamReader::ReadPartial(void* buffer, std::size_t size) noexcept {
+	auto bytesLeft = streamSize - position;
+	std::size_t bytesTransferred = (size < bytesLeft) ? size : bytesLeft;
+
+	std::memcpy(buffer, streamBuffer + position, bytesTransferred);
+	position += size;
+
+	return bytesTransferred;
+}
+
 uint64_t MemoryStreamReader::Length() {
 	return streamSize;
 }

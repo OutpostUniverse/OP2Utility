@@ -4,6 +4,12 @@
 #include <type_traits>
 
 class StreamWriter {
+protected:
+	// Generic write method, which raises an exception if the full data can not be written
+	// Note: This is named separately from Write to prevent name hiding in derived classes
+	// All Write methods are syntax sugar which delegate to this method
+	virtual void WriteImplementation(const void* buffer, std::size_t size) = 0;
+
 public:
 	virtual ~StreamWriter() = default;
 
@@ -16,9 +22,4 @@ public:
 	inline std::enable_if_t<std::is_trivially_copyable<T>::value> Write(const T& object) {
 		WriteImplementation(&object, sizeof(object));
 	}
-
-protected:
-	// WriteImplementation is named differently from Write to prevent name hiding of the 
-	// Write template helpers in derived classes.
-	virtual void WriteImplementation(const void* buffer, std::size_t size) = 0;
 };
