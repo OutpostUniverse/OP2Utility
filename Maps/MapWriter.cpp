@@ -75,14 +75,14 @@ namespace MapWriter {
 		{
 			WriteContainerSize(streamWriter, tileInfos.size());
 
-			streamWriter.Write(tileInfos.data(), tileInfos.size() * sizeof(TileInfo));
+			streamWriter.Write(tileInfos);
 		}
 
 		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes)
 		{
 			WriteContainerSize(streamWriter, terrainTypes.size());
 
-			streamWriter.Write(terrainTypes.data(), terrainTypes.size() * sizeof(TerrainType));
+			streamWriter.Write(terrainTypes);
 		}
 
 		void WriteTileGroups(SeekableStreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
@@ -96,8 +96,7 @@ namespace MapWriter {
 				streamWriter.Write(tileGroup.tileWidth);
 				streamWriter.Write(tileGroup.tileHeight);
 
-				streamWriter.Write(tileGroup.mappingIndices.data(), 
-					tileGroup.mappingIndices.size()* sizeof(int));
+				streamWriter.Write(tileGroup.mappingIndices);
 
 				WriteString(streamWriter, tileGroup.name);
 			}
