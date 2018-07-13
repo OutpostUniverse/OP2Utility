@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <vector>
 
 class StreamReader {
 protected:
@@ -24,9 +25,18 @@ public:
 		ReadImplementation(buffer, size);
 	}
 
-	// Inline templated convenience methods, to easily read arbitrary data types
+	// Inline templated convenience methods to easily read more complex types
+	// ====
+
+	// Trivially copyable data types
 	template<typename T>
 	inline std::enable_if_t<std::is_trivially_copyable<T>::value> Read(T& object) {
 		ReadImplementation(&object, sizeof(object));
+	}
+
+	// Vector data types
+	template<typename T, typename A>
+	inline void Read(std::vector<T, A>& vector) {
+		ReadImplementation(vector.data(), vector.size() * sizeof(T));
 	}
 };
