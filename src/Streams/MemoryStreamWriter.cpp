@@ -27,7 +27,7 @@ uint64_t MemoryStreamWriter::Position()
 
 void MemoryStreamWriter::Seek(uint64_t offset)
 {
-	// Checking if offset goes below 0 is unnecessary. Arithmetic on a signed and unsigned number results 
+	// Checking if offset goes below 0 is unnecessary. Arithmetic on a signed and unsigned number results
 	// in a signed number that will wraparound to a large positive and be caught.
 	if (offset > streamSize) {
 		throw std::runtime_error("Change in offset places read position outside bounds of buffer.");

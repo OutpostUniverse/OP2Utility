@@ -57,12 +57,12 @@ bool XFile::PathExists(const std::string& pathStr)
 std::string XFile::AppendToFilename(const std::string& filename, const std::string& valueToAppend)
 {
 	fs::path newPath(filename);
-	
+
 	fs::path newFilename = newPath.filename().replace_extension("");
 	newFilename += valueToAppend + newPath.extension().string();
 
 	newPath.replace_filename(newFilename);
-	
+
 	return newPath.string();
 }
 
@@ -123,7 +123,7 @@ std::string XFile::ReplaceFilename(const std::string& pathStr, const std::string
 {
 	fs::path p(pathStr);
 	fs::path filename = fs::path(filenameStr).filename();
-	
+
 	// Brett208 22JUL17: There seems to be a bug in path.replace_filename that removes a directory if it has a space in it on MSVC.
 
 	return p.string() + "/" + filename.string();
@@ -174,7 +174,7 @@ std::string XFile::GetDirectory(const std::string& pathStr)
 {
 	fs::path p(pathStr);
 
-	if (p.has_relative_path()) 
+	if (p.has_relative_path())
 	{
 		if (p.relative_path() == p.filename()) {
 			return "./";
@@ -195,7 +195,7 @@ void XFile::DeletePath(const std::string& pathStr)
 	fs::remove_all(pathStr);
 }
 
-void XFile::RenameFile(const std::string& oldPath, const std::string& newPath) 
+void XFile::RenameFile(const std::string& oldPath, const std::string& newPath)
 {
 	fs::rename(oldPath, newPath);
 }

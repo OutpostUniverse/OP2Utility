@@ -21,7 +21,7 @@ namespace Archives
 	void ClmFile::ReadHeader()
 	{
 		clmFileReader.Read(clmHeader);
-		
+
 		try {
 			clmHeader.VerifyFileVersion();
 			clmHeader.VerifyUnknown();
@@ -82,7 +82,7 @@ namespace Archives
 			waveFileWriter.Write(header);
 
 			FileSliceReader reader = clmFileReader.Slice(
-				indexEntries[fileIndex].dataOffset, 
+				indexEntries[fileIndex].dataOffset,
 				indexEntries[fileIndex].dataLength);
 
 			ArchiveUnpacker::WriteFromStream(waveFileWriter, reader, reader.Length());
@@ -148,7 +148,7 @@ namespace Archives
 
 	// Creates a new Archive file with the file name archiveFilename. The
 	// files listed in the container filesToPack are packed into the archive.
-	// Automatically strips file name extensions from filesToPack. 
+	// Automatically strips file name extensions from filesToPack.
 	// Returns nonzero if successful and zero otherwise.
 	void ClmFile::CreateArchive(const std::string& archiveFilename, std::vector<std::string> filesToPack)
 	{
@@ -163,7 +163,7 @@ namespace Archives
 			filesToPackReaders.push_back(std::make_unique<FileStreamReader>(filename));
 		}
 
-		// Initialize vectors with default values for the number of files to pack. 
+		// Initialize vectors with default values for the number of files to pack.
 		// Allows directly reading data into the vector using a StreamReader.
 		std::vector<WaveFormatEx> waveFormats(filesToPack.size());
 		std::vector<IndexEntry> indexEntries(filesToPack.size());
@@ -197,7 +197,7 @@ namespace Archives
 			// Read the file header
 			filesToPackReaders[i]->Read(header);
 			if (header.riffTag != tagRIFF || header.waveTag != tagWAVE) {
-				throw std::runtime_error("Error reading header from file " + indexEntries[i].GetFilename());		
+				throw std::runtime_error("Error reading header from file " + indexEntries[i].GetFilename());
 			}
 
 			// Check that the file size makes sense (matches with header chunk length + 8)
@@ -237,12 +237,12 @@ namespace Archives
 		do
 		{
 			seekableStreamReader.Read(header);
-			
+
 			// Check if this is the right header
 			if (header.formatTag == chunkTag) {
 				return header.length;
 			}
-			
+
 			// If not the right header, skip to next header
 			currentPosition += header.length + sizeof(ChunkHeader);
 			seekableStreamReader.Seek(currentPosition);
@@ -258,7 +258,7 @@ namespace Archives
 		for (std::size_t i = 0; i < waveFormats.size(); ++i)
 		{
 			if (memcmp(&waveFormats[0], &waveFormats[i], sizeof(WaveFormatEx))) {
-				throw std::runtime_error("Files " + filesToPack[0] + " and " + filesToPack[i] + 
+				throw std::runtime_error("Files " + filesToPack[0] + " and " + filesToPack[i] +
 					" contain differnt wave formats. Clm files cannot contain 2 wave files with different formats.");
 			}
 		}
@@ -312,7 +312,7 @@ namespace Archives
 		return strippedExtensions;
 	}
 
-	WaveFormatEx ClmFile::PrepareWaveFormat(const std::vector<WaveFormatEx>& waveFormats) 
+	WaveFormatEx ClmFile::PrepareWaveFormat(const std::vector<WaveFormatEx>& waveFormats)
 	{
 		if (waveFormats.empty()) {
 			return WaveFormatEx{

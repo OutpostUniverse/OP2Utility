@@ -59,12 +59,12 @@ namespace Archives
 	//  terminal node and the code stored in this node is value-m_NumNodes.
 
 	// Note: Block Leader referse to the "rightmost" node whose count is equal to
-	//  the count of the current node (before the count of the current node is 
+	//  the count of the current node (before the count of the current node is
 	//  updated). When restructing the tree, the current node must be swapped with
-	//  the block leader before the count increase is propagated up the tree. The 
+	//  the block leader before the count increase is propagated up the tree. The
 	//  node to the right is considered the node with the next highest index.
 
-	// Note: Since the tree is fully formed upon initialization and all terminal nodes 
+	// Note: Since the tree is fully formed upon initialization and all terminal nodes
 	//  have a count of at least 1, there is never a case in which the block leader
 	//  is the parent of the current node (since the parent's count must be at least
 	//  1 greater than either of it's two subtress, which both exist). Thus such a check

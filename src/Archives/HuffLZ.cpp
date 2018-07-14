@@ -72,9 +72,9 @@ namespace Archives
 		return numBytesTotal;
 	}
 
-	// Returns a pointer to the internal buffer at the current read index and 
+	// Returns a pointer to the internal buffer at the current read index and
 	// updates the current read index. The amount of available data is also returned.
-	// Note: If the buffer wraps around, the remaining data before the wrap around 
+	// Note: If the buffer wraps around, the remaining data before the wrap around
 	//  is returned. A subsequent call will get the data after the wrap around.
 	// Note: If sizeAvailableData == 0 then the end of the stream has been reached
 	const char* HuffLZ::GetInternalBuffer(std::size_t *sizeAvailableData)
@@ -102,7 +102,7 @@ namespace Archives
 	{
 		const int maxFill = 4096 - (314 - 253) - 1;
 		// Decompress until the buffer is nearly full
-		// Note: The longest a run can be is (314-1) - 253 so this is 
+		// Note: The longest a run can be is (314-1) - 253 so this is
 		//  guaranteed not to overflow the buffer
 
 		// Only try to decompress if not at end of stream

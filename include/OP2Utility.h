@@ -3,7 +3,7 @@
 // OP2 Utility Library Header
 
 // OP2Utility is a cross platform C++ utility library to aid in Outpost 2 functions not
-// directly related to programming new scenarios. 
+// directly related to programming new scenarios.
 
 /*This includes
  - Handling Outpost 2 Archvies (both CLM and VOL)

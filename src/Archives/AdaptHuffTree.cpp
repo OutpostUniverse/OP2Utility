@@ -49,7 +49,7 @@ namespace Archives
 
 
 
-	// Returns the index of the root node. 
+	// Returns the index of the root node.
 	// All tree searches start at the root node.
 	unsigned short AdaptHuffTree::GetRootNodeIndex()
 	{
@@ -146,7 +146,7 @@ namespace Archives
 
 
 
-	// Private function to swap two nodes in the Huffman tree. 
+	// Private function to swap two nodes in the Huffman tree.
 	// This is used during tree restructing by UpdateCodeCount.
 	void AdaptHuffTree::SwapNodes(unsigned short node1, unsigned short node2)
 	{

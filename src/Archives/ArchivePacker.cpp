@@ -23,7 +23,7 @@ namespace Archives
 		return filenames;
 	}
 
-	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames) 
+	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames)
 	{
 		for (std::size_t i = 1; i < internalNames.size(); ++i)
 		{

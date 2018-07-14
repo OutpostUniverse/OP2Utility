@@ -5,14 +5,14 @@
 // Outpost 2 map and save file header
 struct MapHeader
 {
-	// The map's version tag. 
+	// The map's version tag.
 	// It must be >= to 0x1010 or Outpost 2 will abort loading the map.
 	int versionTag;
 
 	// True if file represents a saved game instead of a map file.
 	int bSavedGame;
 
-	// Width of map in tiles in base 2 Logarithm representation. 
+	// Width of map in tiles in base 2 Logarithm representation.
 	// Outpost 2 maps must be representable by a base 2 Logarithm.
 	// See function MapTileWidth.
 	unsigned int lgMapTileWidth;

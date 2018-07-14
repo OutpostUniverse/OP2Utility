@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 // Defers calls to C++ standard library methods
-FileStreamReader::FileStreamReader(std::string filename) : 
+FileStreamReader::FileStreamReader(std::string filename) :
 	filename(filename),
 	file(filename, std::ios::in | std::ios::binary)
 {
@@ -58,7 +58,7 @@ void FileStreamReader::SeekRelative(int64_t offset) {
 	file.seekg(offset, std::ios_base::cur);
 }
 
-FileSliceReader FileStreamReader::Slice(uint64_t sliceLength) 
+FileSliceReader FileStreamReader::Slice(uint64_t sliceLength)
 {
 	FileSliceReader slice = Slice(Position(), sliceLength);
 

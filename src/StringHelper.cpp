@@ -71,8 +71,8 @@ bool StringHelper::ContainsStringCaseInsensitive(std::vector<std::string> string
 }
 
 // Compares 2 strings without considering casing of letters. Compatible with std library sort functions.
-// This function is required because built in comparison between 2 characters defaults to an uppercase 
-// letter being higher precedent than ANY lowercase letter. 
+// This function is required because built in comparison between 2 characters defaults to an uppercase
+// letter being higher precedent than ANY lowercase letter.
 bool StringHelper::StringCompareCaseInsensitive(const std::string& string1, const std::string& string2)
 {
 	unsigned int i = 0;

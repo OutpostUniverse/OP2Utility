@@ -1,23 +1,23 @@
 #include "FileSliceReader.h"
 #include <stdexcept>
 
-FileSliceReader::FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength) : 
-	fileStreamReader(filename), 
-	startingOffset(startingOffset), 
+FileSliceReader::FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength) :
+	fileStreamReader(filename),
+	startingOffset(startingOffset),
 	sliceLength(sliceLength)
 {
 	Initialize();
 }
 
-FileSliceReader::FileSliceReader(const FileSliceReader& fileSliceReader) :  
-	fileStreamReader(fileSliceReader.GetFilename()), 
-	startingOffset(fileSliceReader.startingOffset), 
+FileSliceReader::FileSliceReader(const FileSliceReader& fileSliceReader) :
+	fileStreamReader(fileSliceReader.GetFilename()),
+	startingOffset(fileSliceReader.startingOffset),
 	sliceLength(fileSliceReader.sliceLength)
 {
 	Initialize();
 }
 
-void FileSliceReader::Initialize() 
+void FileSliceReader::Initialize()
 {
 	if (startingOffset + sliceLength < startingOffset) {
 		throw std::runtime_error("The supplied starting offset & length cause the ending offset to wrap past the largest allowed value in the FileSliceReader created on file " +
@@ -32,10 +32,10 @@ void FileSliceReader::Initialize()
 	fileStreamReader.Seek(startingOffset);
 }
 
-void FileSliceReader::ReadImplementation(void* buffer, std::size_t size) 
+void FileSliceReader::ReadImplementation(void* buffer, std::size_t size)
 {
 	if (fileStreamReader.Position() + size > startingOffset + sliceLength) {
-		throw std::runtime_error("File Read request would place the position of the FileSliceReader outside the ending offset of file " + 
+		throw std::runtime_error("File Read request would place the position of the FileSliceReader outside the ending offset of file " +
 			fileStreamReader.GetFilename());
 	}
 
@@ -54,8 +54,8 @@ uint64_t FileSliceReader::Length()
 {
 	return sliceLength;
 }
-	
-uint64_t FileSliceReader::Position() 
+
+uint64_t FileSliceReader::Position()
 {
 	return fileStreamReader.Position() - startingOffset;
 }
@@ -63,7 +63,7 @@ uint64_t FileSliceReader::Position()
 void FileSliceReader::Seek(uint64_t position)
 {
 	if (position > sliceLength) {
-		throw std::runtime_error("An absolute offset of " + std::to_string(position) + 
+		throw std::runtime_error("An absolute offset of " + std::to_string(position) +
 			" would place the position of the FileSliceReader outside the ending offset of file " + fileStreamReader.GetFilename());
 	}
 
@@ -75,14 +75,14 @@ void FileSliceReader::SeekRelative(int64_t offset)
 	if (Position() + offset < startingOffset ||
 		Position() + offset > startingOffset + sliceLength)
 	{
-		throw std::runtime_error("A relative offset of " + std::to_string(offset) + 
+		throw std::runtime_error("A relative offset of " + std::to_string(offset) +
 			" would place the position of the FileSliceReader outside the slice bounds of file " + fileStreamReader.GetFilename());
 	}
 
 	fileStreamReader.SeekRelative(offset);
 }
 
-FileSliceReader FileSliceReader::Slice(uint64_t sliceLength) 
+FileSliceReader FileSliceReader::Slice(uint64_t sliceLength)
 {
 	FileSliceReader slice = Slice(startingOffset + Position(), sliceLength);
 

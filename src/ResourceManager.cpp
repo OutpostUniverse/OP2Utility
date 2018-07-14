@@ -21,7 +21,7 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory)
 	}
 }
 
-// First searches for resources loosely in provided directory. 
+// First searches for resources loosely in provided directory.
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
 std::unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
 {

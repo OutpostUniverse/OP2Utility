@@ -7,8 +7,8 @@
 // Cross platform file system access.
 namespace XFile
 {
-	//Returns the file extension as a std::string including the leading dot (.). 
-	//If no extension is available, an empty string is returned. 
+	//Returns the file extension as a std::string including the leading dot (.).
+	//If no extension is available, an empty string is returned.
 	std::string GetFileExtension(const std::string& pathStr);
 
 	//Checks if the extension on a path matches the provided extension.

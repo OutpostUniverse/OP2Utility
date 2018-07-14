@@ -8,11 +8,11 @@ struct TileInfo
 	// The tile set the tile comes from.
 	short tilesetIndex;
 
-	// The tile index within the tile set. 
+	// The tile index within the tile set.
 	short tileIndex;
 
-	// The number of tiles following this index that may be used to represent the tile 
-	// for an animation sequence. 
+	// The number of tiles following this index that may be used to represent the tile
+	// for an animation sequence.
 	short animationCount;
 
 	// The number of cycles elapsed before cycling to the next tile in an animation.

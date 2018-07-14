@@ -122,7 +122,7 @@ namespace Archives
 			ExtractFileLzh(fileIndex, pathOut);
 		}
 		else {
-			throw std::runtime_error("Compression type is not supported."); 
+			throw std::runtime_error("Compression type is not supported.");
 		}
 	}
 
@@ -210,7 +210,7 @@ namespace Archives
 		WriteVolume(volumeFilename, volInfo);
 	}
 
-	void VolFile::WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo) 
+	void VolFile::WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo)
 	{
 		FileStreamWriter volWriter(filename);
 
@@ -277,7 +277,7 @@ namespace Archives
 				volInfo.fileStreamReaders.push_back(std::make_unique<FileStreamReader>(filename));
 			}
 			catch (const std::exception& e) {
-				throw std::runtime_error("Error attempting to open " + filename + 
+				throw std::runtime_error("Error attempting to open " + filename +
 					" for reading into volume " + volumeFilename + ". Internal Error: " + e.what());
 			}
 		}
@@ -296,7 +296,7 @@ namespace Archives
 
 			uint64_t fileSize = volInfo.fileStreamReaders[i]->Length();
 			if (fileSize > UINT32_MAX) {
-				throw std::runtime_error("File " + volInfo.filesToPack[i] + 
+				throw std::runtime_error("File " + volInfo.filesToPack[i] +
 					" is too large to fit inside a volume archive. Writing volume " + volumeFilename + " aborted.");
 			}
 
@@ -316,7 +316,7 @@ namespace Archives
 		volInfo.paddedStringTableLength = (volInfo.stringTableLength + 7) & ~3;
 		volInfo.paddedIndexTableLength = (volInfo.indexTableLength + 3) & ~3;
 		volInfo.indexEntries[0].dataBlockOffset = volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 32;
-		
+
 		// Calculate offsets to the files
 		for (std::size_t i = 1; i < volInfo.fileCount(); ++i)
 		{
@@ -333,13 +333,13 @@ namespace Archives
 		archiveFileReader.Read(tag);
 
 		if (tag.tag != tagName) {
-			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + 
+			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) +
 				" was not found in the proper position in volume " + m_ArchiveFilename);
 		}
 
 		if (tag.padding == VolPadding::TwoByte) {
-			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + 
-				" from volume " + m_ArchiveFilename + 
+			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) +
+				" from volume " + m_ArchiveFilename +
 				" uses 2 byte padding, which is not supported. Only 4 byte padding is supported.");
 		}
 
@@ -431,6 +431,6 @@ namespace Archives
 	}
 
 	VolFile::SectionHeader::SectionHeader() {}
-	VolFile::SectionHeader::SectionHeader(std::array<char, 4> tag, uint32_t length, VolPadding padding) 
+	VolFile::SectionHeader::SectionHeader(std::array<char, 4> tag, uint32_t length, VolPadding padding)
 		: tag(tag), length(length), padding(padding) {}
 }

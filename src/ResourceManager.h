@@ -19,8 +19,8 @@ public:
 	std::vector<std::string> GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArcives = true);
 	std::vector<std::string> GetAllFilenamesOfType(const std::string& directory, const std::string& extension, bool accessArchives = true);
 
-	// Searches .vol and .clm archives for file and then extracts it. 
-	// returns true if EITHER the file is extracted OR 
+	// Searches .vol and .clm archives for file and then extracts it.
+	// returns true if EITHER the file is extracted OR
 	//     if BOTH overwrite == false AND the file already exists in the directory.
 	bool ExtractSpecificFile(const std::string& filename, bool overwrite = false);
 

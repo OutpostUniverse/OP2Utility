@@ -22,7 +22,7 @@ public:
 	void Seek(uint64_t position) override;
 	void SeekRelative(int64_t offset) override;
 
-	// Create a slice of the stream for independent processing. Starts at current position of stream. 
+	// Create a slice of the stream for independent processing. Starts at current position of stream.
 	// Seeks parent stream forward the slice's length if creation is successful.
 	FileSliceReader Slice(uint64_t sliceLength);
 

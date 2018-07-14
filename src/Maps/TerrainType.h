@@ -21,7 +21,7 @@ struct TerrainType
 	// The rest of the bulldozed tiles appear consecutively after the first index.
 	short bulldozedTileIndex;
 
-	// The first tile index of rubble for the Terrain Type range. 
+	// The first tile index of rubble for the Terrain Type range.
 	// Common rubble will be the first 4 consecutive tiles after index.
 	// Rare rubble will be the next 4 consecutive tiles.
 	short rubbleTileIndex;
@@ -48,7 +48,7 @@ struct TerrainType
 	// Tube tile indices associated with Terrain Type.
 	short tube[16];
 
-	// Index for scorched tile within Terrain Type 
+	// Index for scorched tile within Terrain Type
 	// Scorch comes from meteor impact or vehicle destruction. Not all tiles may be scorched.
 	short scorchedTileIndex;
 

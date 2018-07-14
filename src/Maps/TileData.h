@@ -11,7 +11,7 @@ struct TileData
 	//int cellType : 5;
 	CellType cellType : 5;
 
-	// The tile's associated index in the TileInfo array. 
+	// The tile's associated index in the TileInfo array.
 	// TileInfo lists general properties associated with a tile.
 	unsigned int tileIndex : 11;
 

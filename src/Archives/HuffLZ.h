@@ -1,4 +1,4 @@
-// This decompressor is meant to be compatible with 
+// This decompressor is meant to be compatible with
 // the compression in .vol files.
 
 #include "AdaptHuffTree.h"

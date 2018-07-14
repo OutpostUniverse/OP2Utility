@@ -13,13 +13,13 @@
 
 enum class CellType;
 
-// FILE FORMAT DOCUMENTATION: 
+// FILE FORMAT DOCUMENTATION:
 //     Outpost2SVN\OllyDbg\InternalData\FileFormat SavedGame and Map.txt.
 
 // ALT IMPLEMENTATION (with COM support)
 //     Outpost2SVN\MapEditor\OP2Editor.
 
-//Represents the data stored in an Outpost 2 map file. 
+//Represents the data stored in an Outpost 2 map file.
 struct MapData
 {
 	MapHeader header;

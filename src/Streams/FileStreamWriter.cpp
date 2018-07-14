@@ -1,7 +1,7 @@
 #include "FileStreamWriter.h"
 #include <stdexcept>
 
-FileStreamWriter::FileStreamWriter(const std::string& filename) : 
+FileStreamWriter::FileStreamWriter(const std::string& filename) :
 	filename(filename),
 	file(filename, std::ios::trunc | std::ios::out | std::ios::binary)
 {

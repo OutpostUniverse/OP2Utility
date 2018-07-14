@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 
-// Opens a new file stream that is limited to reading from the provided file slice. 
+// Opens a new file stream that is limited to reading from the provided file slice.
 class FileSliceReader : public SeekableStreamReader
 {
 public:

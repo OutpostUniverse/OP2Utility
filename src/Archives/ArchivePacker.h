@@ -18,11 +18,11 @@ namespace Archives
 		virtual void Repack() = 0;
 
 	protected:
-		// Returns the filenames from each path stripping the rest of the path. 
+		// Returns the filenames from each path stripping the rest of the path.
 		static std::vector<std::string> GetInternalNamesFromPaths(const std::vector<std::string>& paths);
 
-		// Throws an error if 2 internalNames are identical, case insensitve. 
-		// internalNames must be presorted. 
+		// Throws an error if 2 internalNames are identical, case insensitve.
+		// internalNames must be presorted.
 		static void CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames);
 
 		// Compares 2 filenames case insensitive to determine which comes first alphabetically.
