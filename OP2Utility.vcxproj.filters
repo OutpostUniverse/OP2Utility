@@ -27,103 +27,103 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="XFile.h">
+    <ClInclude Include="src\XFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StringHelper.h">
+    <ClInclude Include="src\StringHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
+    <ClInclude Include="src\ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\CompressionType.h">
+    <ClInclude Include="src\Archives\CompressionType.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\AdaptHuffTree.h">
+    <ClInclude Include="src\Archives\AdaptHuffTree.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\ArchiveFile.h">
+    <ClInclude Include="src\Archives\ArchiveFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\BitStream.h">
+    <ClInclude Include="src\Archives\BitStream.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\ClmFile.h">
+    <ClInclude Include="src\Archives\ClmFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\HuffLZ.h">
+    <ClInclude Include="src\Archives\HuffLZ.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\VolFile.h">
+    <ClInclude Include="src\Archives\VolFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\ArchiveUnpacker.h">
+    <ClInclude Include="src\Archives\ArchiveUnpacker.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\ArchivePacker.h">
+    <ClInclude Include="src\Archives\ArchivePacker.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\MapData.h">
+    <ClInclude Include="src\Maps\MapData.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\MapHeader.h">
+    <ClInclude Include="src\Maps\MapHeader.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\TileData.h">
+    <ClInclude Include="src\Maps\TileData.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\TileSetSource.h">
+    <ClInclude Include="src\Maps\TileSetSource.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\TerrainType.h">
+    <ClInclude Include="src\Maps\TerrainType.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\TileInfo.h">
+    <ClInclude Include="src\Maps\TileInfo.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\ClipRect.h">
+    <ClInclude Include="src\Maps\ClipRect.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\MapWriter.h">
+    <ClInclude Include="src\Maps\MapWriter.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\TileGroup.h">
+    <ClInclude Include="src\Maps\TileGroup.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\MapReader.h">
+    <ClInclude Include="src\Maps\MapReader.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\CellType.h">
+    <ClInclude Include="src\Maps\CellType.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="Archives\WaveFile.h">
+    <ClInclude Include="src\Archives\WaveFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\StreamReader.h">
+    <ClInclude Include="src\Streams\StreamReader.h">
       <Filter>Streams</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\StreamWriter.h">
+    <ClInclude Include="src\Streams\StreamWriter.h">
       <Filter>Streams</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\FileStreamWriter.h">
+    <ClInclude Include="src\Streams\FileStreamWriter.h">
       <Filter>Streams</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\MemoryStreamWriter.h">
+    <ClInclude Include="src\Streams\MemoryStreamWriter.h">
       <Filter>Streams</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\SeekableStreamWriter.h">
+    <ClInclude Include="src\Streams\SeekableStreamWriter.h">
       <Filter>Streams</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\SeekableStreamReader.h">
+    <ClInclude Include="src\Streams\SeekableStreamReader.h">
       <Filter>Streams</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\FileStreamReader.h">
+    <ClInclude Include="src\Streams\FileStreamReader.h">
       <Filter>Streams</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\MemoryStreamReader.h">
+    <ClInclude Include="src\Streams\MemoryStreamReader.h">
       <Filter>Streams</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\FileSliceReader.h">
+    <ClInclude Include="src\Streams\FileSliceReader.h">
       <Filter>Streams</Filter>
     </ClInclude>
     <ClInclude Include="include\OP2Utility.h">
@@ -131,58 +131,58 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="XFile.cpp">
+    <ClCompile Include="src\XFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringHelper.cpp">
+    <ClCompile Include="src\StringHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
+    <ClCompile Include="src\ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Archives\AdaptHuffTree.cpp">
+    <ClCompile Include="src\Archives\AdaptHuffTree.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="Archives\BitStream.cpp">
+    <ClCompile Include="src\Archives\BitStream.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="Archives\ClmFile.cpp">
+    <ClCompile Include="src\Archives\ClmFile.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="Archives\HuffLZ.cpp">
+    <ClCompile Include="src\Archives\HuffLZ.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="Archives\VolFile.cpp">
+    <ClCompile Include="src\Archives\VolFile.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="Archives\ArchiveUnpacker.cpp">
+    <ClCompile Include="src\Archives\ArchiveUnpacker.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="Archives\ArchivePacker.cpp">
+    <ClCompile Include="src\Archives\ArchivePacker.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="Maps\MapData.cpp">
+    <ClCompile Include="src\Maps\MapData.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
-    <ClCompile Include="Maps\MapWriter.cpp">
+    <ClCompile Include="src\Maps\MapWriter.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
-    <ClCompile Include="Maps\MapReader.cpp">
+    <ClCompile Include="src\Maps\MapReader.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
-    <ClCompile Include="Streams\FileStreamWriter.cpp">
+    <ClCompile Include="src\Streams\FileStreamWriter.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
-    <ClCompile Include="Streams\MemoryStreamWriter.cpp">
+    <ClCompile Include="src\Streams\MemoryStreamWriter.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
-    <ClCompile Include="Streams\FileStreamReader.cpp">
+    <ClCompile Include="src\Streams\FileStreamReader.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
-    <ClCompile Include="Streams\MemoryStreamReader.cpp">
+    <ClCompile Include="src\Streams\MemoryStreamReader.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
-    <ClCompile Include="Streams\FileSliceReader.cpp">
+    <ClCompile Include="src\Streams\FileSliceReader.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
   </ItemGroup>
