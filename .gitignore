@@ -4,3 +4,4 @@ Release
 .build/
 /*.user
 .vs
+VisualStudio
