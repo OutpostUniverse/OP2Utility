@@ -6,7 +6,7 @@
 
 namespace Archives
 {
-	ClmFile::ClmFile(const std::string& fileName) : ArchiveFile(fileName), clmFileReader(fileName)
+	ClmFile::ClmFile(const std::string& filename) : ArchiveFile(filename), clmFileReader(filename)
 	{
 		m_ArchiveFileSize = clmFileReader.Length();
 		ReadHeader();
@@ -27,7 +27,7 @@ namespace Archives
 			clmHeader.VerifyUnknown();
 		}
 		catch (const std::exception& e) {
-			throw std::runtime_error("Invalid clm header read from file " + m_ArchiveFileName + ". " + e.what());
+			throw std::runtime_error("Invalid clm header read from file " + m_ArchiveFilename + ". " + e.what());
 		}
 
 		m_NumberOfPackedFiles = clmHeader.packedFilesCount;
@@ -39,18 +39,18 @@ namespace Archives
 
 	// Returns the internal file name of the packed file corresponding to index.
 	// Throws an error if packed file index is not valid.
-	std::string ClmFile::GetInternalFileName(int index)
+	std::string ClmFile::GetInternalFilename(int index)
 	{
 		CheckPackedFileIndexBounds(index);
 
-		return indexEntries[index].GetFileName();
+		return indexEntries[index].GetFilename();
 	}
 
-	int ClmFile::GetInternalFileIndex(const std::string& internalFileName)
+	int ClmFile::GetInternalFileIndex(const std::string& internalFilename)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::PathsAreEqual(GetInternalFileName(i), internalFileName)) {
+			if (XFile::PathsAreEqual(GetInternalFilename(i), internalFilename)) {
 				return i;
 			}
 		}
@@ -108,9 +108,9 @@ namespace Archives
 		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
 	}
 
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const std::string& internalFileName)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const std::string& internalFilename)
 	{
-		int fileIndex = GetInternalFileIndex(internalFileName);
+		int fileIndex = GetInternalFileIndex(internalFilename);
 
 		if (fileIndex < 0) {
 			throw std::runtime_error("File does not exist in Archive.");
@@ -136,31 +136,31 @@ namespace Archives
 		for (int i = 0; i < m_NumberOfPackedFiles; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			filesToPack[i] = GetInternalFileName(i) + ".wav";
+			filesToPack[i] = GetInternalFilename(i) + ".wav";
 		}
 
-		const std::string tempFileName = "temp.clm";
-		CreateArchive(tempFileName, filesToPack);
+		const std::string tempFilename = "temp.clm";
+		CreateArchive(tempFilename, filesToPack);
 
 		// Rename the output file to the desired file
-		XFile::RenameFile(tempFileName, m_ArchiveFileName);
+		XFile::RenameFile(tempFilename, m_ArchiveFilename);
 	}
 
-	// Creates a new Archive file with the file name archiveFileName. The
+	// Creates a new Archive file with the file name archiveFilename. The
 	// files listed in the container filesToPack are packed into the archive.
 	// Automatically strips file name extensions from filesToPack. 
 	// Returns nonzero if successful and zero otherwise.
-	void ClmFile::CreateArchive(const std::string& archiveFileName, std::vector<std::string> filesToPack)
+	void ClmFile::CreateArchive(const std::string& archiveFilename, std::vector<std::string> filesToPack)
 	{
-		// Sort files alphabetically based on the fileName only (not including the full path).
-		// Packed files must be locatable by a binary search of their fileName.
+		// Sort files alphabetically based on the filename only (not including the full path).
+		// Packed files must be locatable by a binary search of their filename.
 		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
 
 		std::vector<std::unique_ptr<FileStreamReader>> filesToPackReaders;
 
 		// Opens all files for packing. If there is a problem opening a file, an exception is raised.
-		for (const auto& fileName : filesToPack) {
-			filesToPackReaders.push_back(std::make_unique<FileStreamReader>(fileName));
+		for (const auto& filename : filesToPack) {
+			filesToPackReaders.push_back(std::make_unique<FileStreamReader>(filename));
 		}
 
 		// Initialize vectors with default values for the number of files to pack. 
@@ -173,13 +173,13 @@ namespace Archives
 		// Check if all wave formats are the same
 		CompareWaveFormats(waveFormats, filesToPack);
 
-		std::vector<std::string> internalFileNames = GetInternalNamesFromPaths(filesToPack);
-		internalFileNames = StripFileNameExtensions(internalFileNames);
+		std::vector<std::string> internalFilenames = GetInternalNamesFromPaths(filesToPack);
+		internalFilenames = StripFilenameExtensions(internalFilenames);
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
-		CheckSortedContainerForDuplicateNames(internalFileNames);
+		CheckSortedContainerForDuplicateNames(internalFilenames);
 
 		// Write the archive header and copy files into the archive
-		WriteArchive(archiveFileName, filesToPackReaders, indexEntries, internalFileNames, PrepareWaveFormat(waveFormats));
+		WriteArchive(archiveFilename, filesToPackReaders, indexEntries, internalFilenames, PrepareWaveFormat(waveFormats));
 	}
 
 	// Reads the beginning of each file and verifies it is formatted as a WAVE file. Locates
@@ -197,12 +197,12 @@ namespace Archives
 			// Read the file header
 			filesToPackReaders[i]->Read(header);
 			if (header.riffTag != tagRIFF || header.waveTag != tagWAVE) {
-				throw std::runtime_error("Error reading header from file " + indexEntries[i].GetFileName());		
+				throw std::runtime_error("Error reading header from file " + indexEntries[i].GetFilename());		
 			}
 
 			// Check that the file size makes sense (matches with header chunk length + 8)
 			if (header.chunkSize + 8 != filesToPackReaders[i]->Length()) {
-				throw std::runtime_error("Chunk size does not match file length in " + indexEntries[i].GetFileName());
+				throw std::runtime_error("Chunk size does not match file length in " + indexEntries[i].GetFilename());
 			}
 
 			// Find the format tag
@@ -264,7 +264,7 @@ namespace Archives
 		}
 	}
 
-	void ClmFile::WriteArchive(const std::string& archiveFileName,
+	void ClmFile::WriteArchive(const std::string& archiveFilename,
 		const std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
 		std::vector<IndexEntry>& indexEntries,
 		const std::vector<std::string>& internalNames,
@@ -273,7 +273,7 @@ namespace Archives
 		// ClmFile cannot contain more than 32 bit size internal file count.
 		ClmHeader header(waveFormat, static_cast<uint32_t>(internalNames.size()));
 
-		FileStreamWriter clmFileWriter(archiveFileName);
+		FileStreamWriter clmFileWriter(archiveFilename);
 
 		clmFileWriter.Write(header);
 
@@ -293,7 +293,7 @@ namespace Archives
 		for (std::size_t i = 0; i < internalNames.size(); ++i)
 		{
 			// Copy the filename into the entry
-			std::strncpy(indexEntries[i].fileName.data(), internalNames[i].data(), sizeof(IndexEntry::fileName));
+			std::strncpy(indexEntries[i].filename.data(), internalNames[i].data(), sizeof(IndexEntry::filename));
 
 			// Set the offset of the file
 			indexEntries[i].dataOffset = offset;
@@ -301,7 +301,7 @@ namespace Archives
 		}
 	}
 
-	std::vector<std::string> ClmFile::StripFileNameExtensions(std::vector<std::string> paths)
+	std::vector<std::string> ClmFile::StripFilenameExtensions(std::vector<std::string> paths)
 	{
 		std::vector<std::string> strippedExtensions;
 
@@ -362,10 +362,10 @@ namespace Archives
 		}
 	}
 
-	std::string ClmFile::IndexEntry::GetFileName() const {
-		// Find the first instance of the null terminator and return only this portion of the fileName.
-		auto firstNullTerminator = std::find(fileName.begin(), fileName.end(), '\0');
+	std::string ClmFile::IndexEntry::GetFilename() const {
+		// Find the first instance of the null terminator and return only this portion of the filename.
+		auto firstNullTerminator = std::find(filename.begin(), filename.end(), '\0');
 
-		return std::string(fileName.data(), firstNullTerminator - fileName.begin());
+		return std::string(filename.data(), firstNullTerminator - filename.begin());
 	}
 }

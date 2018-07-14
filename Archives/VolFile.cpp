@@ -15,7 +15,7 @@ namespace Archives
 	const std::array<char, 4> TagVBLK{ 'V', 'B', 'L', 'K' }; // Packed file tag
 
 
-	VolFile::VolFile(const std::string& fileName) : ArchiveFile(fileName), archiveFileReader(fileName)
+	VolFile::VolFile(const std::string& filename) : ArchiveFile(filename), archiveFileReader(filename)
 	{
 		m_ArchiveFileSize = archiveFileReader.Length();
 
@@ -26,19 +26,19 @@ namespace Archives
 
 
 
-	std::string VolFile::GetInternalFileName(int index)
+	std::string VolFile::GetInternalFilename(int index)
 	{
 		CheckPackedFileIndexBounds(index);
 
 		return m_StringTable[index];
 	}
 
-	int VolFile::GetInternalFileIndex(const std::string& internalFileName)
+	int VolFile::GetInternalFileIndex(const std::string& internalFilename)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			std::string actualInternalFileName = GetInternalFileName(i);
-			if (XFile::PathsAreEqual(actualInternalFileName, internalFileName)) {
+			std::string actualInternalFilename = GetInternalFilename(i);
+			if (XFile::PathsAreEqual(actualInternalFilename, internalFilename)) {
 				return i;
 			}
 		}
@@ -67,14 +67,14 @@ namespace Archives
 		return m_IndexEntries[index].dataBlockOffset + 8;
 	}
 
-	int VolFile::GetInternalFileNameOffset(int index)
+	int VolFile::GetInternalFilenameOffset(int index)
 	{
-		return m_IndexEntries[index].fileNameOffset;
+		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const std::string& internalFileName)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const std::string& internalFilename)
 	{
-		int fileIndex = GetInternalFileIndex(internalFileName);
+		int fileIndex = GetInternalFileIndex(internalFilename);
 
 		if (fileIndex < 0) {
 			throw std::runtime_error("File does not exist in Archive.");
@@ -101,14 +101,14 @@ namespace Archives
 
 		//Volume Block
 		if (sectionHeader.tag != TagVBLK) {
-			throw std::runtime_error("Archive file " + m_ArchiveFileName +
+			throw std::runtime_error("Archive file " + m_ArchiveFilename +
 				" is missing VBLK tag for requested file at index " + std::to_string(index));
 		}
 
 		return sectionHeader;
 	}
 
-	// Extracts the internal file at the given index to the fileName.
+	// Extracts the internal file at the given index to the filename.
 	void VolFile::ExtractFile(int fileIndex, const std::string& pathOut)
 	{
 		CheckPackedFileIndexBounds(fileIndex);
@@ -180,20 +180,20 @@ namespace Archives
 		for (int i = 0; i < m_NumberOfPackedFiles; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			filesToPack.push_back(GetInternalFileName(i));
+			filesToPack.push_back(GetInternalFilename(i));
 		}
 
-		const std::string tempFileName("temp.vol");
-		CreateArchive(tempFileName, filesToPack);
+		const std::string tempFilename("temp.vol");
+		CreateArchive(tempFilename, filesToPack);
 
 		// Rename the output file to the desired file
-		XFile::RenameFile(tempFileName, m_ArchiveFileName);
+		XFile::RenameFile(tempFilename, m_ArchiveFilename);
 	}
 
-	void VolFile::CreateArchive(const std::string& volumeFileName, std::vector<std::string> filesToPack)
+	void VolFile::CreateArchive(const std::string& volumeFilename, std::vector<std::string> filesToPack)
 	{
-		// Sort files alphabetically based on the fileName only (not including the full path).
-		// Packed files must be locatable by a binary search of their fileName.
+		// Sort files alphabetically based on the filename only (not including the full path).
+		// Packed files must be locatable by a binary search of their filename.
 		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
 
 		CreateVolumeInfo volInfo;
@@ -205,14 +205,14 @@ namespace Archives
 		CheckSortedContainerForDuplicateNames(volInfo.internalNames);
 
 		// Open input files and prepare header and indexing info
-		PrepareHeader(volInfo, volumeFileName);
+		PrepareHeader(volInfo, volumeFilename);
 
-		WriteVolume(volumeFileName, volInfo);
+		WriteVolume(volumeFilename, volInfo);
 	}
 
-	void VolFile::WriteVolume(const std::string& fileName, CreateVolumeInfo& volInfo) 
+	void VolFile::WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo) 
 	{
-		FileStreamWriter volWriter(fileName);
+		FileStreamWriter volWriter(filename);
 
 		WriteHeader(volWriter, volInfo);
 		WriteFiles(volWriter, volInfo);
@@ -268,7 +268,7 @@ namespace Archives
 		volWriter.Write(&padding, volInfo.paddedIndexTableLength - volInfo.indexTableLength);
 	}
 
-	void VolFile::OpenAllInputFiles(CreateVolumeInfo &volInfo, const std::string& volumeFileName)
+	void VolFile::OpenAllInputFiles(CreateVolumeInfo &volInfo, const std::string& volumeFilename)
 	{
 		volInfo.fileStreamReaders.clear();
 
@@ -278,14 +278,14 @@ namespace Archives
 			}
 			catch (const std::exception& e) {
 				throw std::runtime_error("Error attempting to open " + filename + 
-					" for reading into volume " + volumeFileName + ". Internal Error: " + e.what());
+					" for reading into volume " + volumeFilename + ". Internal Error: " + e.what());
 			}
 		}
 	}
 
-	void VolFile::PrepareHeader(CreateVolumeInfo &volInfo, const std::string& volumeFileName)
+	void VolFile::PrepareHeader(CreateVolumeInfo &volInfo, const std::string& volumeFilename)
 	{
-		OpenAllInputFiles(volInfo, volumeFileName);
+		OpenAllInputFiles(volInfo, volumeFilename);
 
 		volInfo.stringTableLength = 0;
 
@@ -297,16 +297,16 @@ namespace Archives
 			uint64_t fileSize = volInfo.fileStreamReaders[i]->Length();
 			if (fileSize > UINT32_MAX) {
 				throw std::runtime_error("File " + volInfo.filesToPack[i] + 
-					" is too large to fit inside a volume archive. Writing volume " + volumeFileName + " aborted.");
+					" is too large to fit inside a volume archive. Writing volume " + volumeFilename + " aborted.");
 			}
 
 			indexEntry.fileSize = static_cast<uint32_t>(volInfo.fileStreamReaders[i]->Length());
-			indexEntry.fileNameOffset = volInfo.stringTableLength;
+			indexEntry.filenameOffset = volInfo.stringTableLength;
 			indexEntry.compressionType = CompressionType::Uncompressed;
 
 			volInfo.indexEntries.push_back(indexEntry);
 
-			// Add length of internal fileName plus null terminator to string table length.
+			// Add length of internal filename plus null terminator to string table length.
 			volInfo.stringTableLength += volInfo.internalNames[i].size() + 1;
 		}
 
@@ -334,12 +334,12 @@ namespace Archives
 
 		if (tag.tag != tagName) {
 			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + 
-				" was not found in the proper position in volume " + m_ArchiveFileName);
+				" was not found in the proper position in volume " + m_ArchiveFilename);
 		}
 
 		if (tag.padding == VolPadding::TwoByte) {
 			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) + 
-				" from volume " + m_ArchiveFileName + 
+				" from volume " + m_ArchiveFilename + 
 				" uses 2 byte padding, which is not supported. Only 4 byte padding is supported.");
 		}
 
@@ -352,25 +352,25 @@ namespace Archives
 	{
 		// Make sure file is big enough to contain header tag
 		if (archiveFileReader.Length() < sizeof(SectionHeader)) {
-			throw std::runtime_error("The volume file " + m_ArchiveFileName + " is not large enough to contain the 'VOL ' section header");
+			throw std::runtime_error("The volume file " + m_ArchiveFilename + " is not large enough to contain the 'VOL ' section header");
 		}
 
 		m_HeaderLength = ReadTag(TagVOL_);
 
 		// Make sure the file is large enough to contain the header
 		if (archiveFileReader.Length() < m_HeaderLength + sizeof(SectionHeader)) {
-			throw std::runtime_error("The volume file " + m_ArchiveFileName + " is not large enough to contain the volh section header");
+			throw std::runtime_error("The volume file " + m_ArchiveFilename + " is not large enough to contain the volh section header");
 		}
 
 		uint32_t volhSize = ReadTag(TagVOLH);
 		if (volhSize != 0) {
-			throw std::runtime_error("The length associated with tag volh is not zero in volume " + m_ArchiveFileName);
+			throw std::runtime_error("The length associated with tag volh is not zero in volume " + m_ArchiveFilename);
 		}
 
 		m_StringTableLength = ReadTag(TagVOLS);
 
 		if (m_HeaderLength < m_StringTableLength + sizeof(SectionHeader) * 2 + sizeof(m_StringTableLength)) {
-			throw std::runtime_error("The string table does not fit in the header of volume " + m_ArchiveFileName);
+			throw std::runtime_error("The string table does not fit in the header of volume " + m_ArchiveFilename);
 		}
 
 		ReadStringTable();
@@ -384,7 +384,7 @@ namespace Archives
 		}
 
 		if (m_HeaderLength < m_StringTableLength + m_IndexTableLength + 24) {
-			throw std::runtime_error("The index table does not fit in the header of volume " + m_ArchiveFileName);
+			throw std::runtime_error("The index table does not fit in the header of volume " + m_ArchiveFilename);
 		}
 
 		ReadPackedFileCount();
@@ -423,7 +423,7 @@ namespace Archives
 		for (; packedFileCount < m_NumberOfIndexEntries; ++packedFileCount)
 		{
 			// Make sure entry is valid
-			if (m_IndexEntries[packedFileCount].fileNameOffset == UINT_MAX) {
+			if (m_IndexEntries[packedFileCount].filenameOffset == UINT_MAX) {
 				break;
 			}
 		}

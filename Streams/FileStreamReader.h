@@ -10,7 +10,7 @@ class FileSliceReader;
 
 class FileStreamReader : public SeekableStreamReader {
 public:
-	FileStreamReader(std::string fileName);
+	FileStreamReader(std::string filename);
 	FileStreamReader(const FileStreamReader& fileStreamReader);
 	~FileStreamReader() override;
 

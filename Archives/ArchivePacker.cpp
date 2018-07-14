@@ -14,13 +14,13 @@ namespace Archives
 
 	std::vector<std::string> ArchivePacker::GetInternalNamesFromPaths(const std::vector<std::string>& paths)
 	{
-		std::vector<std::string> fileNames;
+		std::vector<std::string> filenames;
 
-		for (const std::string& fileName : paths) {
-			fileNames.push_back(XFile::GetFilename(fileName));
+		for (const std::string& filename : paths) {
+			filenames.push_back(XFile::GetFilename(filename));
 		}
 
-		return fileNames;
+		return filenames;
 	}
 
 	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames) 

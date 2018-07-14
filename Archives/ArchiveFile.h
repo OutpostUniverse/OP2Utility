@@ -8,7 +8,7 @@ namespace Archives
 	class ArchiveFile : public ArchiveUnpacker, public ArchivePacker
 	{
 	public:
-		ArchiveFile(const std::string& fileName) : ArchiveUnpacker(fileName) {};
+		ArchiveFile(const std::string& filename) : ArchiveUnpacker(filename) {};
 		virtual ~ArchiveFile() {};
 	};
 }

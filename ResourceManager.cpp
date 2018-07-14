@@ -56,8 +56,8 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& dir
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
-			if (std::regex_search(archiveFile->GetInternalFileName(i), filenameRegex)) {
-				filenames.push_back(archiveFile->GetInternalFileName(i));
+			if (std::regex_search(archiveFile->GetInternalFilename(i), filenameRegex)) {
+				filenames.push_back(archiveFile->GetInternalFilename(i));
 			}
 		}
 	}
@@ -77,7 +77,7 @@ std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::strin
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
-			std::string internalFilename = archiveFile->GetInternalFileName(i);
+			std::string internalFilename = archiveFile->GetInternalFilename(i);
 
 			if (XFile::ExtensionMatches(internalFilename, extension) && !DuplicateFilename(filenames, internalFilename)) {
 				filenames.push_back(internalFilename);
@@ -94,7 +94,7 @@ bool ResourceManager::ExistsInArchives(const std::string& filename, int& volFile
 	{
 		for (int j = 0; j < ArchiveFiles[i]->GetNumberOfPackedFiles(); ++j)
 		{
-			if (XFile::PathsAreEqual(ArchiveFiles[i]->GetInternalFileName(j), filename))
+			if (XFile::PathsAreEqual(ArchiveFiles[i]->GetInternalFilename(j), filename))
 			{
 				volFileIndexOut = static_cast<int>(i);
 				internalVolIndexOut = j;
@@ -129,8 +129,8 @@ void ResourceManager::ExtractAllOfFileType(const std::string& directory, const s
 	{
 		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::ExtensionMatches(archiveFile->GetInternalFileName(i), extension)) {
-				archiveFile->ExtractFile(i, archiveFile->GetInternalFileName(i));
+			if (XFile::ExtensionMatches(archiveFile->GetInternalFilename(i), extension)) {
+				archiveFile->ExtractFile(i, archiveFile->GetInternalFilename(i));
 			}
 		}
 	}
@@ -158,7 +158,7 @@ std::string ResourceManager::FindContainingArchiveFile(const std::string& filena
 		int internalFileIndex = archiveFile->GetInternalFileIndex(filename);
 
 		if (internalFileIndex != -1) {
-			return XFile::GetFilename(archiveFile->GetVolumeFileName());
+			return XFile::GetFilename(archiveFile->GetVolumeFilename());
 		}
 	}
 

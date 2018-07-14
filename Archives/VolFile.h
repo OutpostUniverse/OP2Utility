@@ -18,29 +18,29 @@ namespace Archives
 	class VolFile : public ArchiveFile
 	{
 	public:
-		VolFile(const std::string& fileName);
+		VolFile(const std::string& filename);
 		~VolFile();
 
 		// Internal file status
-		std::string GetInternalFileName(int index);
-		int GetInternalFileIndex(const std::string& internalFileName);
+		std::string GetInternalFilename(int index);
+		int GetInternalFileIndex(const std::string& internalFilename);
 		CompressionType GetInternalCompressionCode(int index);
 		uint32_t GetInternalFileSize(int index);
 
 		// Extraction
 		void ExtractFile(int fileIndex, const std::string& pathOut);
-		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const std::string& internalFileName);
+		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const std::string& internalFilename);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		// Volume Creation
 		void Repack();
 
 		// Create a new archive with the files specified in filesToPack
-		static void CreateArchive(const std::string& volumeFileName, std::vector<std::string> filesToPack);
+		static void CreateArchive(const std::string& volumeFilename, std::vector<std::string> filesToPack);
 
 	private:
 		int GetInternalFileOffset(int index);
-		int GetInternalFileNameOffset(int index);
+		int GetInternalFilenameOffset(int index);
 
 		void ExtractFileUncompressed(std::size_t index, const std::string& filename);
 		void ExtractFileLzh(std::size_t index, const std::string& filename);
@@ -48,7 +48,7 @@ namespace Archives
 #pragma pack(push, 1)
 		struct IndexEntry
 		{
-			uint32_t fileNameOffset;
+			uint32_t filenameOffset;
 			uint32_t dataBlockOffset;
 			int32_t fileSize;
 			CompressionType compressionType;
@@ -96,11 +96,11 @@ namespace Archives
 		void ReadPackedFileCount();
 		SectionHeader GetSectionHeader(int index);
 
-		static void WriteVolume(const std::string& fileName, CreateVolumeInfo& volInfo);
+		static void WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo);
 		static void WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo);
 		static void WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
-		static void PrepareHeader(CreateVolumeInfo &volInfo, const std::string& volumeFileName);
-		static void OpenAllInputFiles(CreateVolumeInfo &volInfo, const std::string& volumeFileName);
+		static void PrepareHeader(CreateVolumeInfo &volInfo, const std::string& volumeFilename);
+		static void OpenAllInputFiles(CreateVolumeInfo &volInfo, const std::string& volumeFilename);
 
 		FileStreamReader archiveFileReader;
 		uint32_t m_NumberOfIndexEntries;

@@ -9,8 +9,8 @@ namespace Archives
 {
 	const std::size_t ARCHIVE_WRITE_SIZE = 0x00020000;
 
-	ArchiveUnpacker::ArchiveUnpacker(const std::string& fileName) :
-		m_ArchiveFileName(fileName), m_NumberOfPackedFiles(0), m_ArchiveFileSize(0) { }
+	ArchiveUnpacker::ArchiveUnpacker(const std::string& filename) :
+		m_ArchiveFilename(filename), m_NumberOfPackedFiles(0), m_ArchiveFileSize(0) { }
 
 	ArchiveUnpacker::~ArchiveUnpacker() { }
 
@@ -18,15 +18,15 @@ namespace Archives
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFileName(i)));
+			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFilename(i)));
 		}
 	}
 
-	bool ArchiveUnpacker::ContainsFile(const std::string& fileName)
+	bool ArchiveUnpacker::ContainsFile(const std::string& filename)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::PathsAreEqual(GetInternalFileName(i), fileName)) {
+			if (XFile::PathsAreEqual(GetInternalFilename(i), filename)) {
 				return true;
 			}
 		}

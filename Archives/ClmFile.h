@@ -15,13 +15,13 @@ namespace Archives
 	class ClmFile : public ArchiveFile
 	{
 	public:
-		ClmFile(const std::string& fileName);
+		ClmFile(const std::string& filename);
 		virtual ~ClmFile();
 
-		std::string GetInternalFileName(int index);
-		int GetInternalFileIndex(const std::string& internalFileName);
+		std::string GetInternalFilename(int index);
+		int GetInternalFileIndex(const std::string& internalFilename);
 		void ExtractFile(int fileIndex, const std::string& pathOut);
-		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const std::string& internalFileName);
+		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const std::string& internalFilename);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		uint32_t GetInternalFileSize(int index);
@@ -29,7 +29,7 @@ namespace Archives
 		void Repack();
 
 		// Create a new archive with the files specified in filesToPack
-		static void CreateArchive(const std::string& archiveFileName, std::vector<std::string> filesToPack);
+		static void CreateArchive(const std::string& archiveFilename, std::vector<std::string> filesToPack);
 
 	private:
 #pragma pack(push, 1)
@@ -52,11 +52,11 @@ namespace Archives
 
 		struct IndexEntry
 		{
-			std::array<char, 8> fileName;
+			std::array<char, 8> filename;
 			uint32_t dataOffset;
 			uint32_t dataLength;
 
-			std::string GetFileName() const;
+			std::string GetFilename() const;
 		};
 #pragma pack(pop)
 
@@ -69,10 +69,10 @@ namespace Archives
 		static void ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
 		static uint32_t FindChunk(std::array<char, 4> chunkTag, SeekableStreamReader& seekableStreamReader);
 		static void CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormatsconst, const std::vector<std::string>& filesToPack);
-		static void WriteArchive(const std::string& archiveFileName, const std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
+		static void WriteArchive(const std::string& archiveFilename, const std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
 			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& internalNames, const WaveFormatEx& waveFormat);
 		static void PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries);
-		static std::vector<std::string> StripFileNameExtensions(std::vector<std::string> paths);
+		static std::vector<std::string> StripFilenameExtensions(std::vector<std::string> paths);
 		static WaveFormatEx PrepareWaveFormat(const std::vector<WaveFormatEx>& waveFormats);
 
 		FileStreamReader clmFileReader;
