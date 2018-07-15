@@ -5,3 +5,7 @@ Release
 /*.user
 .vs
 VisualStudio
+Makefile
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
