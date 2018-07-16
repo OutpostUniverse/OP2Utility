@@ -67,6 +67,10 @@ add_library(OP2Utility STATIC "${SOURCE_CODE}" "${EXTERNAL_HEADERS}")
 
 target_include_directories(OP2Utility PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
 
+IF (NOT MSVC) #stdc++fs creates a LNK1104 on Visual Studio 2017
+target_link_libraries(${PROJECT_NAME} stdc++fs)
+ENDIF()
+
 # Set Visual Studio to using static code generation in all default Cmake generated configurations
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} /MT")
