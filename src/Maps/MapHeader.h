@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #pragma pack(push, 1) // Make sure structure is byte aligned
 
 // Outpost 2 map and save file header
@@ -7,24 +9,24 @@ struct MapHeader
 {
 	// The map's version tag.
 	// It must be >= to 0x1010 or Outpost 2 will abort loading the map.
-	int versionTag;
+	int32_t versionTag;
 
 	// True if file represents a saved game instead of a map file.
-	int bSavedGame;
+	int32_t bSavedGame;
 
 	// Width of map in tiles in base 2 Logarithm representation.
 	// Outpost 2 maps must be representable by a base 2 Logarithm.
 	// See function MapTileWidth.
-	unsigned int lgMapTileWidth;
+	uint32_t lgMapTileWidth;
 
 	// Height of map in tiles. Will be rounded to a power of 2 by Outpost 2.
-	unsigned int mapTileHeight;
+	uint32_t mapTileHeight;
 
 	// Number of tile sets on map.
-	unsigned int numTilesets;
+	uint32_t numTilesets;
 
 	// Map Width in Tiles.
-	unsigned int MapTileWidth() const
+	uint32_t MapTileWidth() const
 	{
 		return  1 << lgMapTileWidth; // Use bitwise left shift to translate base 2 logarithm.
 	}
@@ -35,7 +37,7 @@ struct MapHeader
 	}
 
 	// Total number of tiles on map.
-	unsigned int TileCount() const
+	uint32_t TileCount() const
 	{
 		return mapTileHeight << lgMapTileWidth;
 	}

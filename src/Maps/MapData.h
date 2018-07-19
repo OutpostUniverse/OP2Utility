@@ -10,8 +10,9 @@
 #include <string>
 #include <vector>
 #include <cstddef>
+#include <cstdint>
 
-enum class CellType;
+enum class CellType : uint32_t;
 
 // FILE FORMAT DOCUMENTATION:
 //     Outpost2SVN\OllyDbg\InternalData\FileFormat SavedGame and Map.txt.
@@ -44,8 +45,8 @@ public:
 	unsigned int GetTileInfoIndex(unsigned int x, unsigned int y) const;
 	CellType GetCellType(unsigned int x, unsigned int y) const;
 	int GetLavaPossible(unsigned int x, unsigned int y) const;
-	short GetTilesetIndex(unsigned int x, unsigned int y) const;
-	short GetImageIndex(unsigned int x, unsigned int y) const;
+	uint16_t GetTilesetIndex(unsigned int x, unsigned int y) const;
+	uint16_t GetImageIndex(unsigned int x, unsigned int y) const;
 
 private:
 	std::size_t GetCellIndex(unsigned int x, unsigned int y) const;

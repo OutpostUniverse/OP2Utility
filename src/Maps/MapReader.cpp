@@ -5,6 +5,7 @@
 #include <vector>
 #include <array>
 #include <cstring>
+#include <cstdint>
 
 
 namespace MapReader {
@@ -142,8 +143,8 @@ namespace MapReader {
 			streamReader.Read(tileGroup.tileWidth);
 			streamReader.Read(tileGroup.tileHeight);
 
-			int mappingIndex;
-			for (int i = 0; i < tileGroup.tileHeight * tileGroup.tileWidth; ++i)
+			uint32_t mappingIndex;
+			for (uint32_t i = 0; i < tileGroup.tileHeight * tileGroup.tileWidth; ++i)
 			{
 				streamReader.Read(mappingIndex);
 				tileGroup.mappingIndices.push_back(mappingIndex);

@@ -89,7 +89,7 @@ namespace MapWriter {
 		{
 			WriteContainerSize(streamWriter, tileGroups.size());
 
-			streamWriter.SeekRelative(sizeof(int));
+			streamWriter.SeekRelative(sizeof(int32_t));
 
 			for (const auto& tileGroup : tileGroups)
 			{

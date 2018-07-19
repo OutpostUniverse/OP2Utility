@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
 
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
@@ -13,7 +14,7 @@ struct TilesetSource
 	std::string tilesetFilename;
 
 	// Number of Tiles in set (represented on BMP).
-	int numTiles;
+	uint32_t numTiles;
 };
 
 #pragma pack(pop)
