@@ -5,6 +5,7 @@
 #include <vector>
 #include <array>
 #include <cstring>
+#include <cstdint>
 
 
 namespace MapReader {
@@ -16,7 +17,7 @@ namespace MapReader {
 		void ReadTilesetHeader(StreamReader& streamReader);
 		void ReadTileInfo(StreamReader& streamReader, MapData& mapData);
 		void ReadVersionTag(StreamReader& streamReader);
-		void ReadTileGroups(SeekableStreamReader& streamReader, MapData& mapData);
+		void ReadTileGroups(StreamReader& streamReader, MapData& mapData);
 		TileGroup ReadTileGroup(StreamReader& streamReader);
 		std::string ReadString(StreamReader& streamReader);
 
@@ -123,11 +124,12 @@ namespace MapReader {
 			}
 		}
 
-		void ReadTileGroups(SeekableStreamReader& streamReader, MapData& mapData)
+		void ReadTileGroups(StreamReader& streamReader, MapData& mapData)
 		{
 			uint32_t numTileGroups;
 			streamReader.Read(numTileGroups);
-			streamReader.SeekRelative(4);
+			uint32_t unknown;
+			streamReader.Read(unknown); // Read unknown/unused field (skip past it)
 
 			for (uint32_t i = 0; i < numTileGroups; ++i)
 			{
@@ -142,12 +144,8 @@ namespace MapReader {
 			streamReader.Read(tileGroup.tileWidth);
 			streamReader.Read(tileGroup.tileHeight);
 
-			int mappingIndex;
-			for (int i = 0; i < tileGroup.tileHeight * tileGroup.tileWidth; ++i)
-			{
-				streamReader.Read(mappingIndex);
-				tileGroup.mappingIndices.push_back(mappingIndex);
-			}
+			tileGroup.mappingIndices.resize(tileGroup.tileWidth * tileGroup.tileHeight);
+			streamReader.Read(tileGroup.mappingIndices);
 
 			tileGroup.name = ReadString(streamReader);
 

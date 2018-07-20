@@ -8,7 +8,6 @@
 struct TileData
 {
 	// Determines movement speed of tile, or if tile is bulldozed, walled, tubed, or has rubble.
-	//int cellType : 5;
 	CellType cellType : 5;
 
 	// The tile's associated index in the TileInfo array.
