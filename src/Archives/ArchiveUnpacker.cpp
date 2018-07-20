@@ -4,6 +4,7 @@
 #include "../Streams/FileStreamWriter.h"
 #include <array>
 #include <cstddef>
+#include <stdexcept>
 
 namespace Archives
 {
@@ -32,6 +33,17 @@ namespace Archives
 		}
 
 		return false;
+	}
+
+	void ArchiveUnpacker::ExtractFile(const std::string& internalFilename, const std::string& pathOut)
+	{
+		int index = GetInternalFileIndex(internalFilename);
+
+		if (index == -1) {
+			throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain a file named " + internalFilename);
+		}
+
+		ExtractFile(index, pathOut);
 	}
 
 	void ArchiveUnpacker::CheckPackedFileIndexBounds(int fileIndex)
