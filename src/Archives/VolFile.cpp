@@ -72,7 +72,7 @@ namespace Archives
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenStream(int fileIndex)
 	{
 		SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 

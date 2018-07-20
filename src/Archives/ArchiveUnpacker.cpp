@@ -46,7 +46,7 @@ namespace Archives
 		ExtractFile(index, pathOut);
 	}
 
-	std::unique_ptr<SeekableStreamReader> ArchiveUnpacker::OpenSeekableStreamReader(const std::string& internalFilename)
+	std::unique_ptr<SeekableStreamReader> ArchiveUnpacker::OpenStream(const std::string& internalFilename)
 	{
 		int fileIndex = GetInternalFileIndex(internalFilename);
 
@@ -54,7 +54,7 @@ namespace Archives
 			throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain a file named " + internalFilename);
 		}
 
-		return OpenSeekableStreamReader(fileIndex);
+		return OpenStream(fileIndex);
 	}
 
 	void ArchiveUnpacker::CheckPackedFileIndexBounds(int fileIndex)

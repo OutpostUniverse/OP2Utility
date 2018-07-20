@@ -29,7 +29,7 @@ namespace Archives
 
 		// Extraction
 		void ExtractFile(int fileIndex, const std::string& pathOut);
-		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
+		std::unique_ptr<SeekableStreamReader> OpenStream(int fileIndex);
 
 		// Volume Creation
 		void Repack();

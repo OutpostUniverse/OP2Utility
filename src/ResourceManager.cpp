@@ -39,7 +39,7 @@ std::unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const s
 		int internalArchiveIndex = archiveFile->GetInternalFileIndex(internalArchiveFilename);
 
 		if (internalArchiveIndex > -1) {
-			return archiveFile->OpenSeekableStreamReader(internalArchiveIndex);
+			return archiveFile->OpenStream(internalArchiveIndex);
 		}
 	}
 

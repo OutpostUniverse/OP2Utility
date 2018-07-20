@@ -108,11 +108,11 @@ namespace Archives
 		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
 	}
 
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenStream(int fileIndex)
 	{
 		CheckPackedFileIndexBounds(fileIndex);
 
-		throw std::logic_error("OpenSeekableStreamReader not yet implemented for Clm files.");
+		throw std::logic_error("OpenStream not yet implemented for Clm files.");
 	}
 
 	// Repacks the volume using the same files as are specified by the internal file names
