@@ -108,17 +108,6 @@ namespace Archives
 		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
 	}
 
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const std::string& internalFilename)
-	{
-		int fileIndex = GetInternalFileIndex(internalFilename);
-
-		if (fileIndex < 0) {
-			throw std::runtime_error("File does not exist in Archive.");
-		}
-
-		return OpenSeekableStreamReader(fileIndex);
-	}
-
 	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
 	{
 		CheckPackedFileIndexBounds(fileIndex);

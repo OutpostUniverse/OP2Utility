@@ -21,7 +21,6 @@ namespace Archives
 		std::string GetInternalFilename(int index);
 		int GetInternalFileIndex(const std::string& internalFilename);
 		void ExtractFile(int fileIndex, const std::string& pathOut);
-		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const std::string& internalFilename);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		uint32_t GetInternalFileSize(int index);

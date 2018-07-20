@@ -72,17 +72,6 @@ namespace Archives
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const std::string& internalFilename)
-	{
-		int fileIndex = GetInternalFileIndex(internalFilename);
-
-		if (fileIndex < 0) {
-			throw std::runtime_error("File does not exist in Archive.");
-		}
-
-		return OpenSeekableStreamReader(fileIndex);
-	}
-
 	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(int fileIndex)
 	{
 		SectionHeader sectionHeader = GetSectionHeader(fileIndex);

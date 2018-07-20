@@ -29,7 +29,6 @@ namespace Archives
 
 		// Extraction
 		void ExtractFile(int fileIndex, const std::string& pathOut);
-		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const std::string& internalFilename);
 		std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex);
 
 		// Volume Creation
