@@ -112,7 +112,11 @@ namespace Archives
 	{
 		CheckPackedFileIndexBounds(fileIndex);
 
-		throw std::logic_error("OpenStream not yet implemented for Clm files.");
+		FileSliceReader reader = clmFileReader.Slice(
+			indexEntries[fileIndex].dataOffset,
+			indexEntries[fileIndex].dataLength);
+
+		return std::make_unique<FileSliceReader>(reader);
 	}
 
 	// Repacks the volume using the same files as are specified by the internal file names

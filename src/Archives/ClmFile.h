@@ -21,6 +21,8 @@ namespace Archives
 		std::string GetInternalFilename(int index);
 		int GetInternalFileIndex(const std::string& internalFilename);
 		void ExtractFile(int fileIndex, const std::string& pathOut);
+
+		// Opens a stream containing packed audio PCM data
 		std::unique_ptr<SeekableStreamReader> OpenStream(int fileIndex);
 
 		uint32_t GetInternalFileSize(int index);
