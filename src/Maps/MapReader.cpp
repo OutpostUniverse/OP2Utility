@@ -128,7 +128,7 @@ namespace MapReader {
 		{
 			uint32_t numTileGroups;
 			streamReader.Read(numTileGroups);
-			streamReader.SeekRelative(4);
+			streamReader.SeekRelative(sizeof(uint32_t)); // Seek past unknown field
 
 			for (uint32_t i = 0; i < numTileGroups; ++i)
 			{
