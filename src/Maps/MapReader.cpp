@@ -144,7 +144,7 @@ namespace MapReader {
 			streamReader.Read(tileGroup.tileHeight);
 
 			tileGroup.mappingIndices.resize(tileGroup.tileWidth * tileGroup.tileHeight);
-			streamReader.Read(tileGroup.mappingIndices.data(), tileGroup.tileWidth * tileGroup.tileHeight * sizeof(uint32_t));
+			streamReader.Read(tileGroup.mappingIndices);
 
 			tileGroup.name = ReadString(streamReader);
 
