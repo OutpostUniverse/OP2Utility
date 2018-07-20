@@ -89,7 +89,7 @@ namespace MapWriter {
 		{
 			WriteContainerSize(streamWriter, tileGroups.size());
 
-			int32_t unknown = tileGroups.size() - 1; // Write unknown field with best guess as to what value it should hold
+			uint32_t unknown = tileGroups.size() - 1; // Write unknown field with best guess as to what value it should hold
 			streamWriter.Write(unknown);
 
 			for (const auto& tileGroup : tileGroups)
