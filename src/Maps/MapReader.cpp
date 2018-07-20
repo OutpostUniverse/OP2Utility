@@ -17,7 +17,7 @@ namespace MapReader {
 		void ReadTilesetHeader(StreamReader& streamReader);
 		void ReadTileInfo(StreamReader& streamReader, MapData& mapData);
 		void ReadVersionTag(StreamReader& streamReader);
-		void ReadTileGroups(SeekableStreamReader& streamReader, MapData& mapData);
+		void ReadTileGroups(StreamReader& streamReader, MapData& mapData);
 		TileGroup ReadTileGroup(StreamReader& streamReader);
 		std::string ReadString(StreamReader& streamReader);
 
@@ -124,11 +124,12 @@ namespace MapReader {
 			}
 		}
 
-		void ReadTileGroups(SeekableStreamReader& streamReader, MapData& mapData)
+		void ReadTileGroups(StreamReader& streamReader, MapData& mapData)
 		{
 			uint32_t numTileGroups;
 			streamReader.Read(numTileGroups);
-			streamReader.SeekRelative(sizeof(uint32_t)); // Seek past unknown field
+			uint32_t unknown;
+			streamReader.Read(unknown); // Read unknown/unused field (skip past it)
 
 			for (uint32_t i = 0; i < numTileGroups; ++i)
 			{
