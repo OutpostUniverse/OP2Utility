@@ -12,7 +12,7 @@ namespace MapWriter {
 		void WriteTilesetSources(StreamWriter& streamWriter, const std::vector<TilesetSource>& tilesetSources);
 		void WriteTileInfo(StreamWriter& streamWriter, const std::vector<TileInfo>& tileInfos);
 		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes);
-		void WriteTileGroups(SeekableStreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups);
+		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups);
 		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size);
 		void WriteString(StreamWriter& streamWriter, const std::string& s);
 	}
@@ -27,7 +27,7 @@ namespace MapWriter {
 		Write(mapWriter, mapData);
 	}
 
-	void Write(SeekableStreamWriter& streamWriter, const MapData& mapData)
+	void Write(StreamWriter& streamWriter, const MapData& mapData)
 	{
 		WriteHeader(streamWriter, mapData.header);
 		streamWriter.Write(&mapData.tiles[0], mapData.tiles.size() * sizeof(TileData));
@@ -85,11 +85,12 @@ namespace MapWriter {
 			streamWriter.Write(terrainTypes);
 		}
 
-		void WriteTileGroups(SeekableStreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
+		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
 		{
 			WriteContainerSize(streamWriter, tileGroups.size());
 
-			streamWriter.SeekRelative(sizeof(int32_t));
+			int32_t temp; // temp is used to seek forward 32 bits in stream
+			streamWriter.Write(temp);
 
 			for (const auto& tileGroup : tileGroups)
 			{
