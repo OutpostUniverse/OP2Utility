@@ -33,19 +33,6 @@ namespace Archives
 		return m_StringTable[index];
 	}
 
-	int VolFile::GetInternalFileIndex(const std::string& internalFilename)
-	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
-		{
-			std::string actualInternalFilename = GetInternalFilename(i);
-			if (XFile::PathsAreEqual(actualInternalFilename, internalFilename)) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
 	CompressionType VolFile::GetInternalCompressionCode(int index)
 	{
 		CheckPackedFileIndexBounds(index);

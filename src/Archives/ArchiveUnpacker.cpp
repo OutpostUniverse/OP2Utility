@@ -23,6 +23,18 @@ namespace Archives
 		}
 	}
 
+	int ArchiveUnpacker::GetInternalFileIndex(const std::string& internalFilename)
+	{
+		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		{
+			if (XFile::PathsAreEqual(GetInternalFilename(i), internalFilename)) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
 	bool ArchiveUnpacker::ContainsFile(const std::string& filename)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)

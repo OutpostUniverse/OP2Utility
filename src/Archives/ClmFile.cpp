@@ -46,18 +46,6 @@ namespace Archives
 		return indexEntries[index].GetFilename();
 	}
 
-	int ClmFile::GetInternalFileIndex(const std::string& internalFilename)
-	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
-		{
-			if (XFile::PathsAreEqual(GetInternalFilename(i), internalFilename)) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
 	// Returns the size of the internal file corresponding to index
 	uint32_t ClmFile::GetInternalFileSize(int index)
 	{

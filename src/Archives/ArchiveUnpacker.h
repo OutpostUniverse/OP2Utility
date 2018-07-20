@@ -23,7 +23,7 @@ namespace Archives
 
 		virtual std::string GetInternalFilename(int index) = 0;
 		// Returns -1 if internalFilename is not present in archive.
-		virtual int GetInternalFileIndex(const std::string& internalFilename) = 0;
+		int GetInternalFileIndex(const std::string& internalFilename);
 		virtual uint32_t GetInternalFileSize(int index) = 0;
 		virtual void ExtractFile(int fileIndex, const std::string& pathOut) = 0;
 		void ExtractFile(const std::string& internalFilename, const std::string& pathOut);
