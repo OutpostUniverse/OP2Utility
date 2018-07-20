@@ -89,7 +89,7 @@ namespace MapWriter {
 		{
 			WriteContainerSize(streamWriter, tileGroups.size());
 
-			int32_t temp; // temp is used to seek forward 32 bits in stream
+			int32_t temp = tileGroups.size() - 1; // temp is used to seek forward 32 bits in stream
 			streamWriter.Write(temp);
 
 			for (const auto& tileGroup : tileGroups)
