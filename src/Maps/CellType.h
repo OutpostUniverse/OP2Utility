@@ -1,7 +1,7 @@
 #pragma once
 
 // CellTypes returned and set by the GameMap class
-enum class CellType : uint32_t
+enum class CellType
 {
 	FastPassible1 = 0,	// Rock vegetation
 	Impassible2,		// Meteor craters, cracks/crevases

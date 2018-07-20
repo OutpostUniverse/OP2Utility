@@ -12,7 +12,7 @@
 #include <cstddef>
 #include <cstdint>
 
-enum class CellType : uint32_t;
+enum class CellType;
 
 // FILE FORMAT DOCUMENTATION:
 //     Outpost2SVN\OllyDbg\InternalData\FileFormat SavedGame and Map.txt.
