@@ -46,18 +46,6 @@ namespace Archives
 		return indexEntries[index].GetFilename();
 	}
 
-	int ClmFile::GetInternalFileIndex(const std::string& internalFilename)
-	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
-		{
-			if (XFile::PathsAreEqual(GetInternalFilename(i), internalFilename)) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
 	// Returns the size of the internal file corresponding to index
 	uint32_t ClmFile::GetInternalFileSize(int index)
 	{
@@ -108,22 +96,15 @@ namespace Archives
 		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
 	}
 
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(const std::string& internalFilename)
-	{
-		int fileIndex = GetInternalFileIndex(internalFilename);
-
-		if (fileIndex < 0) {
-			throw std::runtime_error("File does not exist in Archive.");
-		}
-
-		return OpenSeekableStreamReader(fileIndex);
-	}
-
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenSeekableStreamReader(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenStream(int fileIndex)
 	{
 		CheckPackedFileIndexBounds(fileIndex);
 
-		throw std::logic_error("OpenSeekableStreamReader not yet implemented for Clm files.");
+		FileSliceReader reader = clmFileReader.Slice(
+			indexEntries[fileIndex].dataOffset,
+			indexEntries[fileIndex].dataLength);
+
+		return std::make_unique<FileSliceReader>(reader);
 	}
 
 	// Repacks the volume using the same files as are specified by the internal file names

@@ -4,6 +4,7 @@
 #include "../Streams/FileStreamWriter.h"
 #include <array>
 #include <cstddef>
+#include <stdexcept>
 
 namespace Archives
 {
@@ -22,6 +23,18 @@ namespace Archives
 		}
 	}
 
+	int ArchiveUnpacker::GetInternalFileIndex(const std::string& internalFilename)
+	{
+		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		{
+			if (XFile::PathsAreEqual(GetInternalFilename(i), internalFilename)) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
 	bool ArchiveUnpacker::ContainsFile(const std::string& filename)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
@@ -32,6 +45,28 @@ namespace Archives
 		}
 
 		return false;
+	}
+
+	void ArchiveUnpacker::ExtractFile(const std::string& internalFilename, const std::string& pathOut)
+	{
+		int index = GetInternalFileIndex(internalFilename);
+
+		if (index == -1) {
+			throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain a file named " + internalFilename);
+		}
+
+		ExtractFile(index, pathOut);
+	}
+
+	std::unique_ptr<SeekableStreamReader> ArchiveUnpacker::OpenStream(const std::string& internalFilename)
+	{
+		int fileIndex = GetInternalFileIndex(internalFilename);
+
+		if (fileIndex == -1) {
+			throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain a file named " + internalFilename);
+		}
+
+		return OpenStream(fileIndex);
 	}
 
 	void ArchiveUnpacker::CheckPackedFileIndexBounds(int fileIndex)

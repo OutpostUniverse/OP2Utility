@@ -20,15 +20,16 @@ namespace Archives
 		uint64_t GetVolumeFileSize() { return m_ArchiveFileSize; };
 		int GetNumberOfPackedFiles() { return m_NumberOfPackedFiles; };
 		bool ContainsFile(const std::string& filename);
+		// Returns -1 if internalFilename is not present in archive.
+		int GetInternalFileIndex(const std::string& internalFilename);
+		void ExtractFile(const std::string& internalFilename, const std::string& pathOut);
 
 		virtual std::string GetInternalFilename(int index) = 0;
-		// Returns -1 if internalFilename is not present in archive.
-		virtual int GetInternalFileIndex(const std::string& internalFilename) = 0;
 		virtual uint32_t GetInternalFileSize(int index) = 0;
 		virtual void ExtractFile(int fileIndex, const std::string& pathOut) = 0;
 		virtual void ExtractAllFiles(const std::string& destDirectory);
-		virtual std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(const std::string& internalFilename) = 0;
-		virtual std::unique_ptr<SeekableStreamReader> OpenSeekableStreamReader(int fileIndex) = 0;
+		virtual std::unique_ptr<SeekableStreamReader> OpenStream(int fileIndex) = 0;
+		virtual std::unique_ptr<SeekableStreamReader> OpenStream(const std::string& internalFilename);
 
 	protected:
 		void CheckPackedFileIndexBounds(int fileIndex);

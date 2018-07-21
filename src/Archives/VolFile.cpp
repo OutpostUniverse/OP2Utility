@@ -33,19 +33,6 @@ namespace Archives
 		return m_StringTable[index];
 	}
 
-	int VolFile::GetInternalFileIndex(const std::string& internalFilename)
-	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
-		{
-			std::string actualInternalFilename = GetInternalFilename(i);
-			if (XFile::PathsAreEqual(actualInternalFilename, internalFilename)) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
 	CompressionType VolFile::GetInternalCompressionCode(int index)
 	{
 		CheckPackedFileIndexBounds(index);
@@ -72,18 +59,7 @@ namespace Archives
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(const std::string& internalFilename)
-	{
-		int fileIndex = GetInternalFileIndex(internalFilename);
-
-		if (fileIndex < 0) {
-			throw std::runtime_error("File does not exist in Archive.");
-		}
-
-		return OpenSeekableStreamReader(fileIndex);
-	}
-
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenSeekableStreamReader(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenStream(int fileIndex)
 	{
 		SectionHeader sectionHeader = GetSectionHeader(fileIndex);
 
