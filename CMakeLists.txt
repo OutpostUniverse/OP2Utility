@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project("OP2Utility")
 
-set (CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # https://cmake.org/cmake/help/v3.12/command/file.html
 # CMake documentation recommends not collecting all source files using a GLOB
