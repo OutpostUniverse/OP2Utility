@@ -48,7 +48,7 @@ clean:
 	-rm -fr $(OBJDIR)
 	-rm -fr $(DEPDIR)
 	-rm -fr $(BINDIR)
-	-rm $(OUTPUT)
+	-rm -f $(OUTPUT)
 clean-deps:
 	-rm -fr $(DEPDIR)
 clean-all:
