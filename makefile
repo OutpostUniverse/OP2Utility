@@ -5,7 +5,7 @@ ifeq ($(origin CXX),default)
 	CXX := clang-6.0
 endif
 
-SRCDIR := .
+SRCDIR := src
 BUILDDIR := .build
 BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
