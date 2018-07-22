@@ -5,15 +5,14 @@ ifeq ($(origin CXX),default)
 	CXX := clang-6.0
 endif
 
-SRCDIR := .
+SRCDIR := src
 BUILDDIR := .build
 BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/deps
-OUTPUT := $(BINDIR)/op2utility.a
+OUTPUT := libOP2Utility.a
 
 CFLAGS := -std=c++14 -g -Wall -Wno-unknown-pragmas
-LDFLAGS := -lstdc++ -lm
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
@@ -28,7 +27,6 @@ all: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
 	@mkdir -p ${@D}
-	#$(CXX) $^ $(LDFLAGS) -o $@
 	ar rcs $@ $^
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d | build-folder
@@ -50,6 +48,7 @@ clean:
 	-rm -fr $(OBJDIR)
 	-rm -fr $(DEPDIR)
 	-rm -fr $(BINDIR)
+	-rm -f $(OUTPUT)
 clean-deps:
 	-rm -fr $(DEPDIR)
 clean-all:
