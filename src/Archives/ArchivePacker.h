@@ -28,7 +28,5 @@ namespace Archives
 		// Compares 2 filenames case insensitive to determine which comes first alphabetically.
 		// Does not compare the entire path, but only the filename.
 		static bool ComparePathFilenames(const std::string path1, const std::string path2);
-
-		static void WriteFromStream(StreamWriter& streamWriter, StreamReader& streamReader, const uint64_t writeLength);
 	};
 }
