@@ -8,8 +8,6 @@
 
 namespace Archives
 {
-	const std::size_t ARCHIVE_WRITE_SIZE = 0x00020000;
-
 	ArchiveUnpacker::ArchiveUnpacker(const std::string& filename) :
 		m_ArchiveFilename(filename), m_NumberOfPackedFiles(0), m_ArchiveFileSize(0) { }
 
@@ -74,34 +72,5 @@ namespace Archives
 		if (fileIndex < 0 || fileIndex >= m_NumberOfPackedFiles) {
 			throw std::runtime_error("fileIndex is outside the bounds of packed files.");
 		}
-	}
-
-	void ArchiveUnpacker::WriteFromStream(const std::string& filenameOut, StreamReader& streamReader, uint64_t writeLength)
-	{
-		FileStreamWriter fileStreamWriter(filenameOut);
-		WriteFromStream(fileStreamWriter, streamReader, writeLength);
-	}
-
-	void ArchiveUnpacker::WriteFromStream(StreamWriter& streamWriter, StreamReader& streamReader, uint64_t writeLength)
-	{
-		std::size_t numBytesToRead = 0;
-		uint64_t offset = 0;
-		std::array<char, ARCHIVE_WRITE_SIZE> buffer;
-
-		do
-		{
-			numBytesToRead = ARCHIVE_WRITE_SIZE;
-
-			// Check if less than CLM_WRITE_SIZE of data remains for writing to disk.
-			if (offset + numBytesToRead > writeLength) {
-				numBytesToRead = static_cast<std::size_t>(writeLength - offset);
-			}
-
-			streamReader.Read(buffer.data(), numBytesToRead);
-
-			offset += numBytesToRead;
-
-			streamWriter.Write(buffer.data(), numBytesToRead);
-		} while (numBytesToRead); // End loop when numBytesRead/Written is equal to 0
 	}
 }

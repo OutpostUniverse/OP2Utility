@@ -33,8 +33,6 @@ namespace Archives
 
 	protected:
 		void CheckPackedFileIndexBounds(int fileIndex);
-		void WriteFromStream(const std::string& filenameOut, StreamReader& streamReader, uint64_t writeLength);
-		void WriteFromStream(StreamWriter& streamWriter, StreamReader& streamReader, uint64_t writeLength);
 
 		const std::string m_ArchiveFilename;
 		int m_NumberOfPackedFiles;

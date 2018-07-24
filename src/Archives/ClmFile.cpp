@@ -73,7 +73,7 @@ namespace Archives
 				indexEntries[fileIndex].dataOffset,
 				indexEntries[fileIndex].dataLength);
 
-			ArchiveUnpacker::WriteFromStream(waveFileWriter, reader, reader.Length());
+			waveFileWriter.Write(reader);
 		}
 		catch (const std::exception& e)
 		{
@@ -264,7 +264,7 @@ namespace Archives
 
 		// Copy files into the archive
 		for (std::size_t i = 0; i < header.packedFilesCount; ++i) {
-			ArchivePacker::WriteFromStream(clmFileWriter, *filesToPackReaders[i], indexEntries[i].dataLength);
+			clmFileWriter.Write(*filesToPackReaders[i]);
 		}
 	}
 
