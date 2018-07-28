@@ -101,7 +101,7 @@ namespace MapReader {
 
 		void ReadTileInfo(StreamReader& streamReader, MapData& mapData)
 		{
-			std::size_t numTileInfo;
+			uint32_t numTileInfo;
 			streamReader.Read(numTileInfo);
 
 			mapData.tileInfos.resize(numTileInfo);

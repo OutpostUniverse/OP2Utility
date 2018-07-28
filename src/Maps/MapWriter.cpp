@@ -73,7 +73,8 @@ namespace MapWriter {
 
 		void WriteTileInfo(StreamWriter& streamWriter, const std::vector<TileInfo>& tileInfos)
 		{
-			WriteContainerSize(streamWriter, tileInfos.size());
+			// The number of tileInfos within the map is stored in a 4 byte integer
+			WriteContainerSize(streamWriter, static_cast<uint32_t>(tileInfos.size()));
 
 			streamWriter.Write(tileInfos);
 		}
