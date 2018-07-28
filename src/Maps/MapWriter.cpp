@@ -82,14 +82,15 @@ namespace MapWriter {
 		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes)
 		{
 			// The number of terrain types within the map is stored in a 4 byte integer
-			WriteContainerSize(streamWriter, static_cast<uint32_T>(terrainTypes.size()));
+			WriteContainerSize(streamWriter, static_cast<uint32_t>(terrainTypes.size()));
 
 			streamWriter.Write(terrainTypes);
 		}
 
 		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
 		{
-			WriteContainerSize(streamWriter, tileGroups.size());
+			// The number of tile groups within the map is stored in a 4 byte integer
+			WriteContainerSize(streamWriter, static_cast<uint32_t>(tileGroups.size()));
 
 			uint32_t unknown = tileGroups.size() - 1; // Write unknown field with best guess as to what value it should hold
 			streamWriter.Write(unknown);
