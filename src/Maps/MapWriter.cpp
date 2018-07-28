@@ -81,7 +81,8 @@ namespace MapWriter {
 
 		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes)
 		{
-			WriteContainerSize(streamWriter, terrainTypes.size());
+			// The number of terrain types within the map is stored in a 4 byte integer
+			WriteContainerSize(streamWriter, static_cast<uint32_T>(terrainTypes.size()));
 
 			streamWriter.Write(terrainTypes);
 		}
