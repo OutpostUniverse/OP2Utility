@@ -22,16 +22,16 @@ namespace Archives
 		~VolFile();
 
 		// Internal file status
-		std::string GetInternalFilename(int index);
-		int GetInternalFileIndex(const std::string& internalFilename);
+		std::string GetInternalName(int index);
+		int GetInternalItemIndex(const std::string& internalFilename);
 		CompressionType GetInternalCompressionCode(int index);
-		uint32_t GetInternalFileSize(int index);
+		uint32_t GetInternalItemSize(int index);
 
 		// Extraction
-		void ExtractFile(int fileIndex, const std::string& pathOut);
+		void ExtractFile(int index, const std::string& pathOut);
 
 		// Opens a stream containing a packed file
-		std::unique_ptr<SeekableStreamReader> OpenStream(int fileIndex);
+		std::unique_ptr<SeekableStreamReader> OpenStream(int index);
 
 		// Volume Creation
 		void Repack();

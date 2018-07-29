@@ -30,38 +30,38 @@ namespace Archives
 			throw std::runtime_error("Invalid clm header read from file " + m_ArchiveFilename + ". " + e.what());
 		}
 
-		m_NumberOfPackedFiles = clmHeader.packedFilesCount;
+		m_NumberOfPackedItems = clmHeader.packedFilesCount;
 
-		indexEntries = std::vector<IndexEntry>(m_NumberOfPackedFiles);
-		clmFileReader.Read(indexEntries.data(), m_NumberOfPackedFiles * sizeof(IndexEntry));
+		indexEntries = std::vector<IndexEntry>(m_NumberOfPackedItems);
+		clmFileReader.Read(indexEntries.data(), m_NumberOfPackedItems * sizeof(IndexEntry));
 	}
 
 
 	// Returns the internal file name of the packed file corresponding to index.
 	// Throws an error if packed file index is not valid.
-	std::string ClmFile::GetInternalFilename(int index)
+	std::string ClmFile::GetInternalName(int index)
 	{
-		CheckPackedFileIndexBounds(index);
+		CheckPackedIndexBounds(index);
 
 		return indexEntries[index].GetFilename();
 	}
 
 	// Returns the size of the internal file corresponding to index
-	uint32_t ClmFile::GetInternalFileSize(int index)
+	uint32_t ClmFile::GetInternalItemSize(int index)
 	{
-		CheckPackedFileIndexBounds(index);
+		CheckPackedIndexBounds(index);
 
 		return indexEntries[index].dataLength;
 	}
 
 
 	// Extracts the internal file corresponding to index
-	void ClmFile::ExtractFile(int fileIndex, const std::string& pathOut)
+	void ClmFile::ExtractFile(int index, const std::string& pathOut)
 	{
-		CheckPackedFileIndexBounds(fileIndex);
+		CheckPackedIndexBounds(index);
 
 		WaveHeader header;
-		InitializeWaveHeader(header, fileIndex);
+		InitializeWaveHeader(header, index);
 
 		try
 		{
@@ -70,8 +70,8 @@ namespace Archives
 			waveFileWriter.Write(header);
 
 			FileSliceReader reader = clmFileReader.Slice(
-				indexEntries[fileIndex].dataOffset,
-				indexEntries[fileIndex].dataLength);
+				indexEntries[index].dataOffset,
+				indexEntries[index].dataLength);
 
 			waveFileWriter.Write(reader);
 		}
@@ -81,11 +81,11 @@ namespace Archives
 		}
 	}
 
-	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, int fileIndex)
+	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, int index)
 	{
 		headerOut.riffHeader.riffTag = tagRIFF;
 		headerOut.riffHeader.waveTag = tagWAVE;
-		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[fileIndex].dataLength;
+		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[index].dataLength;
 
 		headerOut.formatChunk.fmtTag = tagFMT_;
 		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
@@ -93,16 +93,16 @@ namespace Archives
 		headerOut.formatChunk.waveFormat.cbSize = 0;
 
 		headerOut.dataChunk.formatTag = tagDATA;
-		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
+		headerOut.dataChunk.length = indexEntries[index].dataLength;
 	}
 
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenStream(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenStream(int index)
 	{
-		CheckPackedFileIndexBounds(fileIndex);
+		CheckPackedIndexBounds(index);
 
 		FileSliceReader reader = clmFileReader.Slice(
-			indexEntries[fileIndex].dataOffset,
-			indexEntries[fileIndex].dataLength);
+			indexEntries[index].dataOffset,
+			indexEntries[index].dataLength);
 
 		return std::make_unique<FileSliceReader>(reader);
 	}
@@ -111,13 +111,13 @@ namespace Archives
 	// Returns nonzero if successful and zero otherwise
 	void ClmFile::Repack()
 	{
-		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
-		std::vector<std::string> internalNames(m_NumberOfPackedFiles);
+		std::vector<std::string> filesToPack(m_NumberOfPackedItems);
+		std::vector<std::string> internalNames(m_NumberOfPackedItems);
 
-		for (int i = 0; i < m_NumberOfPackedFiles; ++i)
+		for (int i = 0; i < m_NumberOfPackedItems; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			filesToPack[i] = GetInternalFilename(i) + ".wav";
+			filesToPack[i] = GetInternalName(i) + ".wav";
 		}
 
 		const std::string tempFilename = "temp.clm";

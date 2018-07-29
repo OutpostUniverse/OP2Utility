@@ -18,24 +18,24 @@ namespace Archives
 
 		std::string GetVolumeFilename() { return m_ArchiveFilename; };
 		uint64_t GetVolumeFileSize() { return m_ArchiveFileSize; };
-		int GetNumberOfPackedFiles() { return m_NumberOfPackedFiles; };
-		bool ContainsFile(const std::string& filename);
+		int GetNumberOfPackedFiles() { return m_NumberOfPackedItems; };
+		bool ContainsItem(const std::string& filename);
 		// Returns -1 if internalFilename is not present in archive.
-		int GetInternalFileIndex(const std::string& internalFilename);
+		int GetInternalItemIndex(const std::string& internalName);
 		void ExtractFile(const std::string& internalFilename, const std::string& pathOut);
 
-		virtual std::string GetInternalFilename(int index) = 0;
-		virtual uint32_t GetInternalFileSize(int index) = 0;
-		virtual void ExtractFile(int fileIndex, const std::string& pathOut) = 0;
+		virtual std::string GetInternalName(int index) = 0;
+		virtual uint32_t GetInternalItemSize(int index) = 0;
+		virtual void ExtractFile(int index, const std::string& pathOut) = 0;
 		virtual void ExtractAllFiles(const std::string& destDirectory);
-		virtual std::unique_ptr<SeekableStreamReader> OpenStream(int fileIndex) = 0;
-		virtual std::unique_ptr<SeekableStreamReader> OpenStream(const std::string& internalFilename);
+		virtual std::unique_ptr<SeekableStreamReader> OpenStream(int index) = 0;
+		virtual std::unique_ptr<SeekableStreamReader> OpenStream(const std::string& internalName);
 
 	protected:
-		void CheckPackedFileIndexBounds(int fileIndex);
+		void CheckPackedIndexBounds(int index);
 
 		const std::string m_ArchiveFilename;
-		int m_NumberOfPackedFiles;
+		int m_NumberOfPackedItems;
 		uint64_t m_ArchiveFileSize;
 	};
 }

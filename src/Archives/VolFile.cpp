@@ -26,23 +26,23 @@ namespace Archives
 
 
 
-	std::string VolFile::GetInternalFilename(int index)
+	std::string VolFile::GetInternalName(int index)
 	{
-		CheckPackedFileIndexBounds(index);
+		CheckPackedIndexBounds(index);
 
 		return m_StringTable[index];
 	}
 
 	CompressionType VolFile::GetInternalCompressionCode(int index)
 	{
-		CheckPackedFileIndexBounds(index);
+		CheckPackedIndexBounds(index);
 
 		return m_IndexEntries[index].compressionType;
 	}
 
-	uint32_t VolFile::GetInternalFileSize(int index)
+	uint32_t VolFile::GetInternalItemSize(int index)
 	{
-		CheckPackedFileIndexBounds(index);
+		CheckPackedIndexBounds(index);
 
 		return m_IndexEntries[index].fileSize;
 	}
@@ -59,16 +59,16 @@ namespace Archives
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenStream(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenStream(int index)
 	{
-		SectionHeader sectionHeader = GetSectionHeader(fileIndex);
+		SectionHeader sectionHeader = GetSectionHeader(index);
 
 		return std::make_unique<FileSliceReader>(archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length)));
 	}
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(int index)
 	{
-		CheckPackedFileIndexBounds(index);
+		CheckPackedIndexBounds(index);
 
 		archiveFileReader.Seek(m_IndexEntries[index].dataBlockOffset);
 
@@ -85,29 +85,29 @@ namespace Archives
 	}
 
 	// Extracts the internal file at the given index to the filename.
-	void VolFile::ExtractFile(int fileIndex, const std::string& pathOut)
+	void VolFile::ExtractFile(int index, const std::string& pathOut)
 	{
-		CheckPackedFileIndexBounds(fileIndex);
+		CheckPackedIndexBounds(index);
 
-		if (m_IndexEntries[fileIndex].compressionType == CompressionType::Uncompressed)
+		if (m_IndexEntries[index].compressionType == CompressionType::Uncompressed)
 		{
-			ExtractFileUncompressed(fileIndex, pathOut);
+			ExtractFileUncompressed(index, pathOut);
 		}
-		else if (m_IndexEntries[fileIndex].compressionType == CompressionType::LZH)
+		else if (m_IndexEntries[index].compressionType == CompressionType::LZH)
 		{
-			ExtractFileLzh(fileIndex, pathOut);
+			ExtractFileLzh(index, pathOut);
 		}
 		else {
 			throw std::runtime_error("Compression type is not supported.");
 		}
 	}
 
-	void VolFile::ExtractFileUncompressed(std::size_t fileIndex, const std::string& pathOut)
+	void VolFile::ExtractFileUncompressed(std::size_t index, const std::string& pathOut)
 	{
 		try
 		{
 			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
-			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
+			SectionHeader sectionHeader = GetSectionHeader(index);
 			FileSliceReader slice = archiveFileReader.Slice(sectionHeader.length);
 			FileStreamWriter fileStreamWriter(pathOut);
 			fileStreamWriter.Write(slice);
@@ -118,12 +118,12 @@ namespace Archives
 		}
 	}
 
-	void VolFile::ExtractFileLzh(std::size_t fileIndex, const std::string& pathOut)
+	void VolFile::ExtractFileLzh(std::size_t index, const std::string& pathOut)
 	{
 		try
 		{
 			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
-			SectionHeader sectionHeader = GetSectionHeader(fileIndex);
+			SectionHeader sectionHeader = GetSectionHeader(index);
 
 			// Load data into temporary memory buffer
 			std::size_t length = sectionHeader.length;
@@ -150,12 +150,12 @@ namespace Archives
 
 	void VolFile::Repack()
 	{
-		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
+		std::vector<std::string> filesToPack(m_NumberOfPackedItems);
 
-		for (int i = 0; i < m_NumberOfPackedFiles; ++i)
+		for (int i = 0; i < m_NumberOfPackedItems; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			filesToPack.push_back(GetInternalFilename(i));
+			filesToPack.push_back(GetInternalName(i));
 		}
 
 		const std::string tempFilename("temp.vol");
@@ -402,7 +402,7 @@ namespace Archives
 				break;
 			}
 		}
-		m_NumberOfPackedFiles = packedFileCount;
+		m_NumberOfPackedItems = packedFileCount;
 	}
 
 	VolFile::SectionHeader::SectionHeader() {}

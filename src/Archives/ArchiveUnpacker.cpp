@@ -9,7 +9,7 @@
 namespace Archives
 {
 	ArchiveUnpacker::ArchiveUnpacker(const std::string& filename) :
-		m_ArchiveFilename(filename), m_NumberOfPackedFiles(0), m_ArchiveFileSize(0) { }
+		m_ArchiveFilename(filename), m_NumberOfPackedItems(0), m_ArchiveFileSize(0) { }
 
 	ArchiveUnpacker::~ArchiveUnpacker() { }
 
@@ -17,15 +17,15 @@ namespace Archives
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFilename(i)));
+			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalName(i)));
 		}
 	}
 
-	int ArchiveUnpacker::GetInternalFileIndex(const std::string& internalFilename)
+	int ArchiveUnpacker::GetInternalItemIndex(const std::string& internalFilename)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::PathsAreEqual(GetInternalFilename(i), internalFilename)) {
+			if (XFile::PathsAreEqual(GetInternalName(i), internalFilename)) {
 				return i;
 			}
 		}
@@ -33,11 +33,11 @@ namespace Archives
 		return -1;
 	}
 
-	bool ArchiveUnpacker::ContainsFile(const std::string& filename)
+	bool ArchiveUnpacker::ContainsItem(const std::string& internalName)
 	{
 		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
-			if (XFile::PathsAreEqual(GetInternalFilename(i), filename)) {
+			if (XFile::PathsAreEqual(GetInternalName(i), internalName)) {
 				return true;
 			}
 		}
@@ -47,7 +47,7 @@ namespace Archives
 
 	void ArchiveUnpacker::ExtractFile(const std::string& internalFilename, const std::string& pathOut)
 	{
-		int index = GetInternalFileIndex(internalFilename);
+		int index = GetInternalItemIndex(internalFilename);
 
 		if (index == -1) {
 			throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain a file named " + internalFilename);
@@ -56,21 +56,21 @@ namespace Archives
 		ExtractFile(index, pathOut);
 	}
 
-	std::unique_ptr<SeekableStreamReader> ArchiveUnpacker::OpenStream(const std::string& internalFilename)
+	std::unique_ptr<SeekableStreamReader> ArchiveUnpacker::OpenStream(const std::string& internalName)
 	{
-		int fileIndex = GetInternalFileIndex(internalFilename);
+		int index = GetInternalItemIndex(internalName);
 
-		if (fileIndex == -1) {
-			throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain a file named " + internalFilename);
+		if (index == -1) {
+			throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain a file named " + internalName);
 		}
 
-		return OpenStream(fileIndex);
+		return OpenStream(index);
 	}
 
-	void ArchiveUnpacker::CheckPackedFileIndexBounds(int fileIndex)
+	void ArchiveUnpacker::CheckPackedIndexBounds(int index)
 	{
-		if (fileIndex < 0 || fileIndex >= m_NumberOfPackedFiles) {
-			throw std::runtime_error("fileIndex is outside the bounds of packed files.");
+		if (index < 0 || index >= m_NumberOfPackedItems) {
+			throw std::runtime_error("Provided index is outside the bounds of packed items in archive " + m_ArchiveFilename + ".");
 		}
 	}
 }
