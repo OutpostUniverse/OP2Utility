@@ -5,6 +5,7 @@
 #include <vector>
 #include <regex>
 #include <memory>
+#include <cstddef>
 
 class SeekableStreamReader;
 
@@ -33,6 +34,6 @@ public:
 private:
 	std::vector<std::unique_ptr<Archives::ArchiveFile>> ArchiveFiles;
 
-	bool ExistsInArchives(const std::string& filename, int& volFileIndexOut, int& internalVolIndexOut);
+	bool ExistsInArchives(const std::string& filename, int& volFileIndexOut, std::size_t& internalVolIndexOut);
 	bool DuplicateFilename(std::vector<std::string>& currentFilenames, std::string pathToCheck);
 };

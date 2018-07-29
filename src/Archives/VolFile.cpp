@@ -26,21 +26,21 @@ namespace Archives
 
 
 
-	std::string VolFile::GetInternalName(int index)
+	std::string VolFile::GetInternalName(std::size_t index)
 	{
 		CheckPackedIndexBounds(index);
 
 		return m_StringTable[index];
 	}
 
-	CompressionType VolFile::GetInternalCompressionCode(int index)
+	CompressionType VolFile::GetInternalCompressionCode(std::size_t index)
 	{
 		CheckPackedIndexBounds(index);
 
 		return m_IndexEntries[index].compressionType;
 	}
 
-	uint32_t VolFile::GetInternalItemSize(int index)
+	uint32_t VolFile::GetInternalItemSize(std::size_t index)
 	{
 		CheckPackedIndexBounds(index);
 
@@ -49,24 +49,24 @@ namespace Archives
 
 
 
-	int VolFile::GetInternalFileOffset(int index)
+	int VolFile::GetInternalFileOffset(std::size_t index)
 	{
 		return m_IndexEntries[index].dataBlockOffset + 8;
 	}
 
-	int VolFile::GetInternalFilenameOffset(int index)
+	int VolFile::GetInternalFilenameOffset(std::size_t index)
 	{
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenStream(int index)
+	std::unique_ptr<SeekableStreamReader> VolFile::OpenStream(std::size_t index)
 	{
 		SectionHeader sectionHeader = GetSectionHeader(index);
 
 		return std::make_unique<FileSliceReader>(archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length)));
 	}
 
-	VolFile::SectionHeader VolFile::GetSectionHeader(int index)
+	VolFile::SectionHeader VolFile::GetSectionHeader(std::size_t index)
 	{
 		CheckPackedIndexBounds(index);
 
@@ -85,7 +85,7 @@ namespace Archives
 	}
 
 	// Extracts the internal file at the given index to the filename.
-	void VolFile::ExtractFile(int index, const std::string& pathOut)
+	void VolFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
 		CheckPackedIndexBounds(index);
 
@@ -152,7 +152,7 @@ namespace Archives
 	{
 		std::vector<std::string> filesToPack(m_NumberOfPackedItems);
 
-		for (int i = 0; i < m_NumberOfPackedItems; ++i)
+		for (std::size_t i = 0; i < m_NumberOfPackedItems; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
 			filesToPack.push_back(GetInternalName(i));
@@ -282,11 +282,13 @@ namespace Archives
 			volInfo.indexEntries.push_back(indexEntry);
 
 			// Add length of internal filename plus null terminator to string table length.
-			volInfo.stringTableLength += volInfo.internalNames[i].size() + 1;
+			// stringTableLength cannot be greater in size than a 4 byte integer.
+			volInfo.stringTableLength += static_cast<uint32_t>(volInfo.internalNames[i].size()) + 1;
 		}
 
 		// Calculate size of index table
-		volInfo.indexTableLength = volInfo.fileCount() * sizeof(IndexEntry);
+		// indexTableLength cannot be greater in size than a 4 byte integer
+		volInfo.indexTableLength = static_cast<uint32_t>(volInfo.fileCount()) * sizeof(IndexEntry);
 		// Calculate the zero padded length of the string table and index table
 		volInfo.paddedStringTableLength = (volInfo.stringTableLength + 7) & ~3;
 		volInfo.paddedIndexTableLength = (volInfo.indexTableLength + 3) & ~3;

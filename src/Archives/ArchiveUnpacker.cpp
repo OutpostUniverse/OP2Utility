@@ -3,7 +3,6 @@
 #include "../Streams/SeekableStreamReader.h"
 #include "../Streams/FileStreamWriter.h"
 #include <array>
-#include <cstddef>
 #include <stdexcept>
 
 namespace Archives
@@ -15,7 +14,7 @@ namespace Archives
 
 	void ArchiveUnpacker::ExtractAllFiles(const std::string& destDirectory)
 	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
 			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalName(i)));
 		}
@@ -23,7 +22,7 @@ namespace Archives
 
 	int ArchiveUnpacker::GetInternalItemIndex(const std::string& internalFilename)
 	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
 			if (XFile::PathsAreEqual(GetInternalName(i), internalFilename)) {
 				return i;
@@ -35,7 +34,7 @@ namespace Archives
 
 	bool ArchiveUnpacker::ContainsItem(const std::string& internalName)
 	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < GetNumberOfPackedFiles(); ++i)
 		{
 			if (XFile::PathsAreEqual(GetInternalName(i), internalName)) {
 				return true;
@@ -67,9 +66,9 @@ namespace Archives
 		return OpenStream(index);
 	}
 
-	void ArchiveUnpacker::CheckPackedIndexBounds(int index)
+	void ArchiveUnpacker::CheckPackedIndexBounds(std::size_t index)
 	{
-		if (index < 0 || index >= m_NumberOfPackedItems) {
+		if (index >= m_NumberOfPackedItems) {
 			throw std::runtime_error("Provided index is outside the bounds of packed items in archive " + m_ArchiveFilename + ".");
 		}
 	}

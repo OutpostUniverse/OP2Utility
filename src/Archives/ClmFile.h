@@ -18,14 +18,14 @@ namespace Archives
 		ClmFile(const std::string& filename);
 		virtual ~ClmFile();
 
-		std::string GetInternalName(int index);
+		std::string GetInternalName(std::size_t index);
 		int GetInternalItemIndex(const std::string& internalFilename);
-		void ExtractFile(int index, const std::string& pathOut);
+		void ExtractFile(std::size_t index, const std::string& pathOut);
 
 		// Opens a stream containing packed audio PCM data
-		std::unique_ptr<SeekableStreamReader> OpenStream(int index);
+		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index);
 
-		uint32_t GetInternalItemSize(int index);
+		uint32_t GetInternalItemSize(std::size_t index);
 
 		void Repack();
 
@@ -64,7 +64,7 @@ namespace Archives
 		// Private functions for reading archive
 		void ReadHeader();
 
-		void InitializeWaveHeader(WaveHeader& headerOut, int index);
+		void InitializeWaveHeader(WaveHeader& headerOut, std::size_t index);
 
 		// Private functions for packing files
 		static void ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);

@@ -22,16 +22,16 @@ namespace Archives
 		~VolFile();
 
 		// Internal file status
-		std::string GetInternalName(int index);
+		std::string GetInternalName(std::size_t index);
 		int GetInternalItemIndex(const std::string& internalFilename);
-		CompressionType GetInternalCompressionCode(int index);
-		uint32_t GetInternalItemSize(int index);
+		CompressionType GetInternalCompressionCode(std::size_t index);
+		uint32_t GetInternalItemSize(std::size_t index);
 
 		// Extraction
-		void ExtractFile(int index, const std::string& pathOut);
+		void ExtractFile(std::size_t index, const std::string& pathOut);
 
 		// Opens a stream containing a packed file
-		std::unique_ptr<SeekableStreamReader> OpenStream(int index);
+		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index);
 
 		// Volume Creation
 		void Repack();
@@ -40,8 +40,8 @@ namespace Archives
 		static void CreateArchive(const std::string& volumeFilename, std::vector<std::string> filesToPack);
 
 	private:
-		int GetInternalFileOffset(int index);
-		int GetInternalFilenameOffset(int index);
+		int GetInternalFileOffset(std::size_t index);
+		int GetInternalFilenameOffset(std::size_t index);
 
 		void ExtractFileUncompressed(std::size_t index, const std::string& filename);
 		void ExtractFileLzh(std::size_t index, const std::string& filename);
@@ -95,7 +95,7 @@ namespace Archives
 		void ReadVolHeader();
 		void ReadStringTable();
 		void ReadPackedFileCount();
-		SectionHeader GetSectionHeader(int index);
+		SectionHeader GetSectionHeader(std::size_t index);
 
 		static void WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo);
 		static void WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo);

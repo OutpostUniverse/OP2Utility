@@ -54,7 +54,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& dir
 
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
 			if (std::regex_search(archiveFile->GetInternalName(i), filenameRegex)) {
 				filenames.push_back(archiveFile->GetInternalName(i));
@@ -75,7 +75,7 @@ std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::strin
 
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
 			std::string internalFilename = archiveFile->GetInternalName(i);
 
@@ -88,11 +88,11 @@ std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::strin
 	return filenames;
 }
 
-bool ResourceManager::ExistsInArchives(const std::string& filename, int& volFileIndexOut, int& internalVolIndexOut)
+bool ResourceManager::ExistsInArchives(const std::string& filename, int& volFileIndexOut, size_t& internalVolIndexOut)
 {
 	for (std::size_t i = 0; i < ArchiveFiles.size(); ++i)
 	{
-		for (int j = 0; j < ArchiveFiles[i]->GetNumberOfPackedFiles(); ++j)
+		for (std::size_t j = 0; j < ArchiveFiles[i]->GetNumberOfPackedFiles(); ++j)
 		{
 			if (XFile::PathsAreEqual(ArchiveFiles[i]->GetInternalName(j), filename))
 			{
@@ -113,7 +113,7 @@ bool ResourceManager::ExtractSpecificFile(const std::string& filename, bool over
 	}
 
 	int fileIndex;
-	int internalArchiveIndex;
+	std::size_t internalArchiveIndex;
 	if (ExistsInArchives(filename, fileIndex, internalArchiveIndex))
 	{
 		ArchiveFiles[fileIndex]->ExtractFile(internalArchiveIndex, filename);
@@ -127,7 +127,7 @@ void ResourceManager::ExtractAllOfFileType(const std::string& directory, const s
 {
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
 		{
 			if (XFile::ExtensionMatches(archiveFile->GetInternalName(i), extension)) {
 				archiveFile->ExtractFile(i, archiveFile->GetInternalName(i));

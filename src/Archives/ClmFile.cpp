@@ -39,7 +39,7 @@ namespace Archives
 
 	// Returns the internal file name of the packed file corresponding to index.
 	// Throws an error if packed file index is not valid.
-	std::string ClmFile::GetInternalName(int index)
+	std::string ClmFile::GetInternalName(std::size_t index)
 	{
 		CheckPackedIndexBounds(index);
 
@@ -47,7 +47,7 @@ namespace Archives
 	}
 
 	// Returns the size of the internal file corresponding to index
-	uint32_t ClmFile::GetInternalItemSize(int index)
+	uint32_t ClmFile::GetInternalItemSize(std::size_t index)
 	{
 		CheckPackedIndexBounds(index);
 
@@ -56,7 +56,7 @@ namespace Archives
 
 
 	// Extracts the internal file corresponding to index
-	void ClmFile::ExtractFile(int index, const std::string& pathOut)
+	void ClmFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
 		CheckPackedIndexBounds(index);
 
@@ -81,7 +81,7 @@ namespace Archives
 		}
 	}
 
-	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, int index)
+	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, std::size_t index)
 	{
 		headerOut.riffHeader.riffTag = tagRIFF;
 		headerOut.riffHeader.waveTag = tagWAVE;
@@ -96,7 +96,7 @@ namespace Archives
 		headerOut.dataChunk.length = indexEntries[index].dataLength;
 	}
 
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenStream(int index)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenStream(std::size_t index)
 	{
 		CheckPackedIndexBounds(index);
 
@@ -114,7 +114,7 @@ namespace Archives
 		std::vector<std::string> filesToPack(m_NumberOfPackedItems);
 		std::vector<std::string> internalNames(m_NumberOfPackedItems);
 
-		for (int i = 0; i < m_NumberOfPackedItems; ++i)
+		for (std::size_t i = 0; i < m_NumberOfPackedItems; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
 			filesToPack[i] = GetInternalName(i) + ".wav";
@@ -270,7 +270,7 @@ namespace Archives
 
 	void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries)
 	{
-		uint32_t offset = headerSize + internalNames.size() * sizeof(IndexEntry);
+		uint32_t offset = headerSize + static_cast<uint32_t>(internalNames.size()) * sizeof(IndexEntry);
 		for (std::size_t i = 0; i < internalNames.size(); ++i)
 		{
 			// Copy the filename into the entry
