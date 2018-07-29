@@ -55,7 +55,6 @@ namespace Archives
 
 	int BitStream::ReadNext8Bits()
 	{
-		int i;
 		int value;
 
 		// Check for end of stream
@@ -63,7 +62,7 @@ namespace Archives
 			return 0;
 		}
 
-		i = m_ReadBitIndex & 0x07;
+		int i = m_ReadBitIndex & 0x07;
 		if (i == 0)
 		{
 			// Read the next byte and return it
