@@ -19,7 +19,6 @@ namespace Archives
 		virtual ~ClmFile();
 
 		std::string GetInternalName(std::size_t index);
-		int GetInternalItemIndex(const std::string& internalFilename);
 		void ExtractFile(std::size_t index, const std::string& pathOut);
 
 		// Opens a stream containing packed audio PCM data
