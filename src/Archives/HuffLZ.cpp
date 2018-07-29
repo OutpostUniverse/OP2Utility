@@ -85,10 +85,13 @@ namespace Archives
 		FillDecompressBuffer();
 
 		// Determine how much data is available (without a wrap around)
-		if (m_BuffWriteIndex < m_BuffReadIndex)
+		if (m_BuffWriteIndex < m_BuffReadIndex) {
 			*sizeAvailableData = 4096 - m_BuffReadIndex;
-		else
+		}
+		else {
 			*sizeAvailableData = (m_BuffWriteIndex - m_BuffReadIndex);
+		}
+
 		// Get the current read pointer
 		currentPos = &m_DecompressBuffer[m_BuffReadIndex];
 		// Update the read pointer
@@ -106,13 +109,17 @@ namespace Archives
 		//  guaranteed not to overflow the buffer
 
 		// Only try to decompress if not at end of stream
-		if (m_EOS) return;
+		if (m_EOS) {
+			return;
+		}
 
 		// Try to fill the buffer (largely anyways)
 		while (((m_BuffWriteIndex - m_BuffReadIndex) & 0x0FFF) < maxFill)
 		{
 			m_EOS = DecompressCode();		// Decompress another code
-			if (m_EOS) break;				// Break on end of stream
+			if (m_EOS) {
+				break;
+			}
 		}
 	}
 
@@ -125,16 +132,21 @@ namespace Archives
 
 		// Check if buffer is empty
 		// Note: This isn't really needed but should speed things up
-		if (m_BuffWriteIndex == m_BuffReadIndex)
+		if (m_BuffWriteIndex == m_BuffReadIndex) {
 			return 0;
+		}
 
 		// Check if wrap around is required to copy (all available) data
 		if (m_BuffWriteIndex < m_BuffReadIndex)
 		{
 			// Must wrap around to copy (all available) data
 			numBytesToCopy = 4096 - m_BuffReadIndex;
+
 			// Make sure not to overflow the output buffer
-			if (numBytesToCopy > size) numBytesToCopy = size;
+			if (numBytesToCopy > size) {
+				numBytesToCopy = size;
+			}
+
 			// Copy what is already decompressed into the output buffer
 			memcpy(buff, &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
 			numBytesTotal = numBytesToCopy;	// Update number of bytes copied
@@ -145,8 +157,12 @@ namespace Archives
 
 		// Determine how much data is currently available (Note: No need to wrap around 4096)
 		numBytesToCopy = (m_BuffWriteIndex - m_BuffReadIndex);
+
 		// Make sure not to overflow the output buffer
-		if (numBytesToCopy > size) numBytesToCopy = size;
+		if (numBytesToCopy > size) {
+			numBytesToCopy = size;
+		}
+
 		if (numBytesToCopy > 0)
 		{
 			// Copy what is already decompressed into the output buffer
@@ -219,39 +235,63 @@ namespace Archives
 	// Determines the offset to the start of a repeated block. (This one is a little weird)
 	int HuffLZ::GetRepeatOffset()
 	{
-		int numExtraBits;
-		int mod;
-		int offset;
-
 		// Get the next 8 bits
-		offset = m_BitStream->ReadNext8Bits();
-
-		// Determine how many more bits to read in
-		if (offset < 0x20) numExtraBits = 1;
-		else if (offset < 0x50) numExtraBits = 2;
-		else if (offset < 0x90) numExtraBits = 3;
-		else if (offset < 0xC0) numExtraBits = 4;
-		else if (offset < 0xF0) numExtraBits = 5;
-		else numExtraBits = 6;
-
-		// Determine how to modify bits to get real offset
-		if (offset < 0x20) mod = 0;
-		else if (offset < 0x50) mod = ((offset - 0x20) >> 4) + 1;
-		else if (offset < 0x90) mod = ((offset - 0x50) >> 3) + 4;
-		else if (offset < 0xC0) mod = ((offset - 0x90) >> 2) + 0x0C;
-		else if (offset < 0xF0) mod = ((offset - 0xC0) >> 1) + 0x18;
-		else mod = (offset - 0xC0);
+		int offset = m_BitStream->ReadNext8Bits();
 
 		// Read in the extra bits
-		for (; numExtraBits; numExtraBits--) {
+		for (int numExtraBits = GetNumExtraBits(offset); numExtraBits; numExtraBits--) {
 			offset = (offset << 1) + m_BitStream->ReadNextBit();
 		}
 		offset &= 0x3F;			// Mask upper bits (keep lower 6)
 
 		// Apply the modifier
-		offset |= (mod << 6);	// Set upper 6 bits (12 bit number -> buffer size is 4096)
+		offset |= (GetOffsetBitMod(offset) << 6);	// Set upper 6 bits (12 bit number -> buffer size is 4096)
 
 		return offset;			// Return the offset to the start of the repeated block
+	}
+
+	// Determine how many more bits to read in
+	int HuffLZ::GetNumExtraBits(int offset)
+	{
+		if (offset < 0x20) {
+			return 1;
+		}
+		if (offset < 0x50) {
+			return 2;
+		}
+		if (offset < 0x90) {
+			return 3;
+		}
+		if (offset < 0xC0) {
+			return 4;
+		}
+		if (offset < 0xF0) {
+			return 5;
+		}
+
+		return 6;
+	}
+
+	// Determine how to modify bits to get real offset
+	int HuffLZ::GetOffsetBitMod(int offset)
+	{
+		if (offset < 0x20) {
+			return 0;
+		}
+		if (offset < 0x50) {
+			return ((offset - 0x20) >> 4) + 1;
+		}
+		if (offset < 0x90) {
+			return ((offset - 0x50) >> 3) + 4;
+		}
+		if (offset < 0xC0) {
+			return ((offset - 0x90) >> 2) + 0x0C;
+		}
+		if (offset < 0xF0) {
+			return ((offset - 0xC0) >> 1) + 0x18;
+		}
+
+		return offset - 0xC0;
 	}
 
 	void HuffLZ::WriteCharToBuffer(char c)
