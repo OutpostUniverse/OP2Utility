@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <limits>
 #include <vector>
 #include <array>
 
@@ -34,6 +35,18 @@ public:
 	template<typename T, typename A>
 	inline void Write(const std::vector<T, A>& vector) {
 		WriteImplementation(vector.data(), vector.size() * sizeof(T));
+	}
+
+	// Size prefixed vector data types
+	template<typename SizeType, typename T, typename A>
+	void Write(const std::vector<T, A>& vector) {
+		auto vectorSize = vector.size();
+		if (vectorSize > std::numeric_limits<SizeType>::max()) {
+			throw std::runtime_error("Vector too large to save size field");
+		}
+		auto typedSize = static_cast<SizeType>(vectorSize);
+		Write(typedSize);
+		Write(vector);
 	}
 
 	// Copy a StreamReader to a StreamWriter
