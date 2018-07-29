@@ -92,7 +92,7 @@ namespace MapWriter {
 			// The number of tile groups within the map is stored in a 4 byte integer
 			WriteContainerSize(streamWriter, static_cast<uint32_t>(tileGroups.size()));
 
-			uint32_t unknown = tileGroups.size() - 1; // Write unknown field with best guess as to what value it should hold
+			uint32_t unknown = static_cast<uint32_t>(tileGroups.size()) - 1; // Write unknown field with best guess as to what value it should hold
 			streamWriter.Write(unknown);
 
 			for (const auto& tileGroup : tileGroups)
@@ -115,7 +115,8 @@ namespace MapWriter {
 		// String must be stored in file as string length followed by char[].
 		void WriteString(StreamWriter& streamWriter, const std::string& s)
 		{
-			WriteContainerSize(streamWriter, s.size());
+			// String size must not be greater than a 4 byte integer
+			WriteContainerSize(streamWriter, static_cast<uint32_t>(s.size()));
 
 			if (s.size() > 0) {
 				streamWriter.Write(s.c_str(), s.size());
