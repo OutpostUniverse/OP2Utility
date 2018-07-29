@@ -13,8 +13,6 @@
 
 namespace Archives
 {
-#define VOL_WRITE_SIZE 65536
-
 	class VolFile : public ArchiveFile
 	{
 	public:
