@@ -15,7 +15,7 @@ namespace Archives
 		m_WriteBuff = 0;
 	}
 
-	BitStream::BitStream(int bufferSize, void *buffer)
+	BitStream::BitStream(std::size_t bufferSize, void *buffer)
 	{
 		// Initialize class variables
 		m_BufferSize = bufferSize;
@@ -93,7 +93,7 @@ namespace Archives
 		return m_ReadBitIndex >= m_BufferBitSize;
 	}
 
-	int BitStream::GetBitReadPos() const
+	std::size_t BitStream::GetBitReadPos() const
 	{
 		return m_ReadBitIndex;
 	}

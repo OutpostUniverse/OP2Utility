@@ -34,8 +34,8 @@ namespace Archives
 		BitStream *m_ContructedBitStream;
 		AdaptHuffTree *m_HuffTree;
 		char m_DecompressBuffer[4096];				// Circular decompression buffer
-		int m_BuffWriteIndex;
-		int m_BuffReadIndex;
+		std::size_t m_BuffWriteIndex;
+		std::size_t m_BuffReadIndex;
 		bool m_EOS;									// End of Stream
 	};
 }
