@@ -59,8 +59,9 @@ namespace Archives
 		int value;
 
 		// Check for end of stream
-		if (m_ReadBitIndex >= m_BufferBitSize)
+		if (m_ReadBitIndex >= m_BufferBitSize) {
 			return 0;
+		}
 
 		i = m_ReadBitIndex & 0x07;
 		if (i == 0)
@@ -73,11 +74,15 @@ namespace Archives
 
 		value = m_ReadBuff;
 		m_ReadBitIndex += 8;
+		
 		// Check for end of stream
-		if (m_ReadBitIndex >= m_BufferBitSize)
+		if (m_ReadBitIndex >= m_BufferBitSize) {
 			m_ReadBuff = 0;
-		else
+		}
+		else {
 			m_ReadBuff = m_Buffer[m_ReadBitIndex >> 3];
+		}
+
 		value |= (m_ReadBuff >> (8 - i));
 		m_ReadBuff <<= i;
 		return value;
