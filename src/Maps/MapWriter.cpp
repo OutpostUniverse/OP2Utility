@@ -1,6 +1,7 @@
 #include "MapWriter.h"
 #include "../Streams/FileStreamWriter.h"
 #include <cstdint>
+#include <cstddef>
 #include <stdexcept>
 #include <vector>
 
@@ -11,7 +12,7 @@ namespace MapWriter {
 		void WriteHeader(StreamWriter& streamWriter, const MapHeader& header);
 		void WriteTilesetSources(StreamWriter& streamWriter, const std::vector<TilesetSource>& tilesetSources);
 		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups);
-		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size);
+		void WriteContainerSize(StreamWriter& streamWriter, std::size_t size);
 		void WriteString(StreamWriter& streamWriter, const std::string& s);
 	}
 
@@ -71,9 +72,9 @@ namespace MapWriter {
 
 		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
 		{
-			// The number of tile groups within the map is stored in a 4 byte integer
-			WriteContainerSize(streamWriter, static_cast<uint32_t>(tileGroups.size()));
+			WriteContainerSize(streamWriter, tileGroups.size());
 
+			// tileGroups.size is checked to ensure it is below UINT32_MAX by previous call to WriteContainerSize.
 			uint32_t unknown = static_cast<uint32_t>(tileGroups.size()) - 1; // Write unknown field with best guess as to what value it should hold
 			streamWriter.Write(unknown);
 
@@ -89,16 +90,19 @@ namespace MapWriter {
 		}
 
 		// Outpost 2 map files represent container sizes as 4 byte values
-		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size)
+		void WriteContainerSize(StreamWriter& streamWriter, std::size_t size)
 		{
+			if (size > UINT32_MAX) {
+				throw std::runtime_error("Container size is too large for writing into an Outpost 2 maps.");
+			}
+
 			streamWriter.Write(size);
 		}
 
 		// String must be stored in file as string length followed by char[].
 		void WriteString(StreamWriter& streamWriter, const std::string& s)
 		{
-			// String size must not be greater than a 4 byte integer
-			WriteContainerSize(streamWriter, static_cast<uint32_t>(s.size()));
+			WriteContainerSize(streamWriter, s.size());
 
 			if (s.size() > 0) {
 				streamWriter.Write(s.c_str(), s.size());
