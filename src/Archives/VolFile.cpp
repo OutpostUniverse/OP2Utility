@@ -276,7 +276,7 @@ namespace Archives
 					" is too large to fit inside a volume archive. Writing volume " + volumeFilename + " aborted.");
 			}
 
-			indexEntry.fileSize = static_cast<uint32_t>(volInfo.fileStreamReaders[i]->Length());
+			indexEntry.fileSize = static_cast<uint32_t>(fileSize);
 			indexEntry.filenameOffset = volInfo.stringTableLength;
 			indexEntry.compressionType = CompressionType::Uncompressed;
 
@@ -291,8 +291,11 @@ namespace Archives
 		}
 
 		// Calculate size of index table
-		// indexTableLength cannot be greater in size than a 4 byte integer
+		if (static_cast<uint64_t>(volInfo.fileCount()) * sizeof(IndexEntry) > UINT32_MAX) {
+			throw std::runtime_error("Index table length is too long to create volume " + volumeFilename);
+		}
 		volInfo.indexTableLength = static_cast<uint32_t>(volInfo.fileCount()) * sizeof(IndexEntry);
+
 		// Calculate the zero padded length of the string table and index table
 		volInfo.paddedStringTableLength = (volInfo.stringTableLength + 7) & ~3;
 		volInfo.paddedIndexTableLength = (volInfo.indexTableLength + 3) & ~3;

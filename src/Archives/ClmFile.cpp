@@ -270,14 +270,18 @@ namespace Archives
 
 	void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries)
 	{
-		uint32_t offset = headerSize + static_cast<uint32_t>(internalNames.size()) * sizeof(IndexEntry);
+		uint64_t offset = headerSize + internalNames.size() * sizeof(IndexEntry);
 		for (std::size_t i = 0; i < internalNames.size(); ++i)
 		{
 			// Copy the filename into the entry
 			std::strncpy(indexEntries[i].filename.data(), internalNames[i].data(), sizeof(IndexEntry::filename));
 
+			if (offset + indexEntries[i].dataLength > UINT32_MAX) {
+				throw std::runtime_error("Index Entries offset is too large to create CLM file");
+			}
+
 			// Set the offset of the file
-			indexEntries[i].dataOffset = offset;
+			indexEntries[i].dataOffset = static_cast<uint32_t>(offset);
 			offset += indexEntries[i].dataLength;
 		}
 	}
