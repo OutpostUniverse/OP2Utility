@@ -36,12 +36,14 @@ namespace Archives
 		bool bNextBit;
 
 		// Check for end of stream
-		if (m_ReadBitIndex >= m_BufferBitSize)
+		if (m_ReadBitIndex >= m_BufferBitSize) {
 			return 0;
-
+		}
+		
 		// Check if a new byte needs to be buffered
-		if ((m_ReadBitIndex & 0x07) == 0)
+		if ((m_ReadBitIndex & 0x07) == 0) {
 			m_ReadBuff = m_Buffer[m_ReadBitIndex >> 3];
+		}
 
 		// Extract the uppermost bit
 		bNextBit = (m_ReadBuff & 0x80) == 0x80;	// Get the MSB
