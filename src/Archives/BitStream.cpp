@@ -1,4 +1,6 @@
 #include "BitStream.h"
+#include <stdexcept>
+#include <string>
 
 namespace Archives
 {
@@ -18,7 +20,10 @@ namespace Archives
 		m_WriteBitIndex(0),
 		m_WriteBuff(0)
 	{
-
+		// Check if storing bufferSize in bits wraps past largest value of a std::size_t
+		if (m_BufferBitSize < m_BufferSize) {
+			throw std::runtime_error("BitStream cannot support a buffer size of " + std::to_string(bufferSize));
+		}
 	}
 
 
