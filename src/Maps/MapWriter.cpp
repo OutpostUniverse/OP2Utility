@@ -10,8 +10,6 @@ namespace MapWriter {
 	namespace {
 		void WriteHeader(StreamWriter& streamWriter, const MapHeader& header);
 		void WriteTilesetSources(StreamWriter& streamWriter, const std::vector<TilesetSource>& tilesetSources);
-		void WriteTileInfo(StreamWriter& streamWriter, const std::vector<TileInfo>& tileInfos);
-		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes);
 		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups);
 		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size);
 		void WriteString(StreamWriter& streamWriter, const std::string& s);
@@ -34,8 +32,8 @@ namespace MapWriter {
 		streamWriter.Write(mapData.clipRect);
 		WriteTilesetSources(streamWriter, mapData.tilesetSources);
 		streamWriter.Write("TILE SET\x1a", 10);
-		WriteTileInfo(streamWriter, mapData.tileInfos);
-		WriteTerrainType(streamWriter, mapData.terrainTypes);
+		streamWriter.Write<uint32_t>(mapData.tileInfos);
+		streamWriter.Write<uint32_t>(mapData.terrainTypes);
 
 		streamWriter.Write(mapData.header.versionTag);
 		streamWriter.Write(mapData.header.versionTag);
@@ -69,16 +67,6 @@ namespace MapWriter {
 					streamWriter.Write(tilesetSource.numTiles);
 				}
 			}
-		}
-
-		void WriteTileInfo(StreamWriter& streamWriter, const std::vector<TileInfo>& tileInfos)
-		{
-			streamWriter.Write<uint32_t>(tileInfos);
-		}
-
-		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes)
-		{
-			streamWriter.Write<uint32_t>(terrainTypes);
 		}
 
 		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
