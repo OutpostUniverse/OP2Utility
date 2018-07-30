@@ -251,7 +251,7 @@ namespace Archives
 	}
 
 	// Determine how many more bits to read in
-	int HuffLZ::GetNumExtraBits(int offset)
+	int HuffLZ::GetNumExtraBits(int offset) const
 	{
 		if (offset < 0x20) {
 			return 1;
@@ -273,7 +273,7 @@ namespace Archives
 	}
 
 	// Determine how to modify bits to get real offset
-	int HuffLZ::GetOffsetBitMod(int offset)
+	int HuffLZ::GetOffsetBitMod(int offset) const
 	{
 		if (offset < 0x20) {
 			return 0;
