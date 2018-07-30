@@ -15,7 +15,7 @@ namespace Archives
 	BitStream::BitStream(std::size_t bufferSize, void *buffer) : 
 		m_BufferBitSize(bufferSize << 3),
 		m_BufferSize(bufferSize),
-		m_Buffer((unsigned char*)buffer),
+		m_Buffer(static_cast<unsigned char*>(buffer)),
 		m_ReadBitIndex(0),
 		m_WriteBitIndex(0),
 		m_WriteBuff(0)
