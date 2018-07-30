@@ -2,30 +2,23 @@
 
 namespace Archives
 {
-	BitStream::BitStream()
+	BitStream::BitStream() : 
+		m_BufferBitSize(0),
+		m_BufferSize(0),
+		m_Buffer(0), 
+		m_ReadBitIndex(0), 
+		m_WriteBitIndex(0),
+		m_WriteBuff(0) { }
+
+	BitStream::BitStream(std::size_t bufferSize, void *buffer) : 
+		m_BufferBitSize(bufferSize << 3),
+		m_BufferSize(bufferSize),
+		m_Buffer((unsigned char*)buffer),
+		m_ReadBitIndex(0),
+		m_WriteBitIndex(0),
+		m_WriteBuff(0)
 	{
-		// Initialize class variables
-		m_BufferSize = 0;
-		m_BufferBitSize = 0;
-		m_Buffer = 0;
 
-		m_ReadBitIndex = 0;
-		m_WriteBitIndex = 0;
-
-		m_WriteBuff = 0;
-	}
-
-	BitStream::BitStream(std::size_t bufferSize, void *buffer)
-	{
-		// Initialize class variables
-		m_BufferSize = bufferSize;
-		m_BufferBitSize = bufferSize << 3;
-		m_Buffer = (unsigned char*)buffer;
-
-		m_ReadBitIndex = 0;
-		m_WriteBitIndex = 0;
-
-		m_WriteBuff = 0;
 	}
 
 
