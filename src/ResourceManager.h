@@ -33,6 +33,6 @@ public:
 private:
 	std::vector<std::unique_ptr<Archives::ArchiveFile>> ArchiveFiles;
 
-	bool ExistsInArchives(const std::string& filename, int& volFileIndexOut, std::size_t& internalVolIndexOut);
+	bool ExistsInArchives(const std::string& filename, std::size_t& archiveIndexOut, std::size_t& internalIndexOut);
 	bool DuplicateFilename(std::vector<std::string>& currentFilenames, std::string pathToCheck);
 };

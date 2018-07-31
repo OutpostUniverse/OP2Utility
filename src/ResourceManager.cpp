@@ -37,10 +37,10 @@ std::unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const s
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 		std::string internalArchiveFilename = XFile::GetFilename(filename);
-		int internalArchiveIndex = archiveFile->GetInternalItemIndex(internalArchiveFilename);
 
-		if (internalArchiveIndex > -1) {
-			return archiveFile->OpenStream(internalArchiveIndex);
+		if (archiveFile->ContainsItem(filename)) {
+			auto index = archiveFile->GetInternalItemIndex(internalArchiveFilename);
+			return archiveFile->OpenStream(index);
 		}
 	}
 
@@ -93,7 +93,7 @@ std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::strin
 	return filenames;
 }
 
-bool ResourceManager::ExistsInArchives(const std::string& filename, int& volFileIndexOut, size_t& internalVolIndexOut)
+bool ResourceManager::ExistsInArchives(const std::string& filename, std::size_t& archiveIndexOut, std::size_t& internalIndexOut)
 {
 	for (std::size_t i = 0; i < ArchiveFiles.size(); ++i)
 	{
@@ -101,8 +101,8 @@ bool ResourceManager::ExistsInArchives(const std::string& filename, int& volFile
 		{
 			if (XFile::PathsAreEqual(ArchiveFiles[i]->GetInternalName(j), filename))
 			{
-				volFileIndexOut = static_cast<int>(i);
-				internalVolIndexOut = j;
+				archiveIndexOut = i;
+				internalIndexOut = j;
 				return true;
 			}
 		}
@@ -117,11 +117,11 @@ bool ResourceManager::ExtractSpecificFile(const std::string& filename, bool over
 		return true;
 	}
 
-	int fileIndex;
-	std::size_t internalArchiveIndex;
-	if (ExistsInArchives(filename, fileIndex, internalArchiveIndex))
+	std::size_t archiveIndex;
+	std::size_t internalIndex;
+	if (ExistsInArchives(filename, archiveIndex, internalIndex))
 	{
-		ArchiveFiles[fileIndex]->ExtractFile(internalArchiveIndex, filename);
+		ArchiveFiles[archiveIndex]->ExtractFile(internalIndex, filename);
 		return true;
 	}
 
@@ -160,9 +160,8 @@ std::string ResourceManager::FindContainingArchiveFile(const std::string& filena
 {
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		int internalFileIndex = archiveFile->GetInternalItemIndex(filename);
-
-		if (internalFileIndex != -1) {
+		if (archiveFile->ContainsItem(filename)) {
+			std::size_t index = archiveFile->GetInternalItemIndex(filename);
 			return XFile::GetFilename(archiveFile->GetVolumeFilename());
 		}
 	}
