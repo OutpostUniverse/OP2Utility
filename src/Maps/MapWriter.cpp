@@ -74,8 +74,13 @@ namespace MapWriter {
 		{
 			WriteContainerSize(streamWriter, tileGroups.size());
 
+			uint32_t unknown = 0;
+
 			// tileGroups.size is checked to ensure it is below UINT32_MAX by previous call to WriteContainerSize.
-			uint32_t unknown = static_cast<uint32_t>(tileGroups.size()) - 1; // Write unknown field with best guess as to what value it should hold
+			if (!tileGroups.empty()) {
+				unknown = static_cast<uint32_t>(tileGroups.size()) - 1; // Write unknown field with best guess as to what value it should hold
+			}
+			
 			streamWriter.Write(unknown);
 
 			for (const auto& tileGroup : tileGroups)
@@ -96,7 +101,7 @@ namespace MapWriter {
 				throw std::runtime_error("Container size is too large for writing into an Outpost 2 maps.");
 			}
 
-			streamWriter.Write(size);
+			streamWriter.Write(static_cast<uint32_t>(size));
 		}
 
 		// String must be stored in file as string length followed by char[].

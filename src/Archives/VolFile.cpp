@@ -283,7 +283,7 @@ namespace Archives
 			volInfo.indexEntries.push_back(indexEntry);
 
 			// Add length of internal filename plus null terminator to string table length.
-			if (volInfo.stringTableLength + volInfo.internalNames[i].size() + 1 > UINT32_MAX) {
+			if (static_cast<uint64_t>(volInfo.stringTableLength) + volInfo.internalNames[i].size() + 1 > UINT32_MAX) {
 				throw std::runtime_error("String table length is too long to create volume " + volumeFilename);
 			}
 
