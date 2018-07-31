@@ -3,7 +3,6 @@
 #include "Archives/ArchiveFile.h"
 #include <string>
 #include <vector>
-#include <regex>
 #include <memory>
 #include <cstddef>
 

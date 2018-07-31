@@ -3,6 +3,7 @@
 #include "Archives/ClmFile.h"
 #include "Streams/SeekableStreamReader.h"
 #include "XFile.h"
+#include <regex>
 
 using namespace Archives;
 
