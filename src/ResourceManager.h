@@ -16,7 +16,7 @@ public:
 
 	std::unique_ptr<SeekableStreamReader> GetResourceStream(const std::string& filename, bool accessArchives = true);
 
-	std::vector<std::string> GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArcives = true);
+	std::vector<std::string> GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArchives = true);
 	std::vector<std::string> GetAllFilenamesOfType(const std::string& directory, const std::string& extension, bool accessArchives = true);
 
 	// Searches .vol and .clm archives for file and then extracts it.

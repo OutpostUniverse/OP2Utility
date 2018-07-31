@@ -47,7 +47,7 @@ std::unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const s
 	return nullptr;
 }
 
-std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArcives)
+std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArchives)
 {
 	std::regex filenameRegex(filenameRegexStr, std::regex_constants::icase);
 
