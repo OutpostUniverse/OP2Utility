@@ -53,6 +53,10 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& dir
 
 	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(directory, filenameRegex);
 
+	if (!accessArchives) {
+		return filenames;
+	}
+
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 		for (std::size_t i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
