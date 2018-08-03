@@ -27,35 +27,35 @@ namespace Archives
 
 
 
-	std::string VolFile::GetInternalName(std::size_t index)
+	std::string VolFile::GetName(std::size_t index)
 	{
-		CheckPackedIndexBounds(index);
+		CheckIndexBounds(index);
 
 		return m_StringTable[index];
 	}
 
-	CompressionType VolFile::GetInternalCompressionCode(std::size_t index)
+	CompressionType VolFile::GetCompressionCode(std::size_t index)
 	{
-		CheckPackedIndexBounds(index);
+		CheckIndexBounds(index);
 
 		return m_IndexEntries[index].compressionType;
 	}
 
-	uint32_t VolFile::GetInternalItemSize(std::size_t index)
+	uint32_t VolFile::GetSize(std::size_t index)
 	{
-		CheckPackedIndexBounds(index);
+		CheckIndexBounds(index);
 
 		return m_IndexEntries[index].fileSize;
 	}
 
 
 
-	int VolFile::GetInternalFileOffset(std::size_t index)
+	int VolFile::GetFileOffset(std::size_t index)
 	{
 		return m_IndexEntries[index].dataBlockOffset + 8;
 	}
 
-	int VolFile::GetInternalFilenameOffset(std::size_t index)
+	int VolFile::GetFilenameOffset(std::size_t index)
 	{
 		return m_IndexEntries[index].filenameOffset;
 	}
@@ -69,7 +69,7 @@ namespace Archives
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(std::size_t index)
 	{
-		CheckPackedIndexBounds(index);
+		CheckIndexBounds(index);
 
 		archiveFileReader.Seek(m_IndexEntries[index].dataBlockOffset);
 
@@ -88,7 +88,7 @@ namespace Archives
 	// Extracts the internal file at the given index to the filename.
 	void VolFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
-		CheckPackedIndexBounds(index);
+		CheckIndexBounds(index);
 
 		if (m_IndexEntries[index].compressionType == CompressionType::Uncompressed)
 		{
@@ -151,12 +151,12 @@ namespace Archives
 
 	void VolFile::Repack()
 	{
-		std::vector<std::string> filesToPack(m_NumberOfPackedItems);
+		std::vector<std::string> filesToPack(m_PackedItemCount);
 
-		for (std::size_t i = 0; i < m_NumberOfPackedItems; ++i)
+		for (std::size_t i = 0; i < m_PackedItemCount; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			filesToPack.push_back(GetInternalName(i));
+			filesToPack.push_back(GetName(i));
 		}
 
 		const std::string tempFilename("temp.vol");
@@ -175,10 +175,10 @@ namespace Archives
 		CreateVolumeInfo volInfo;
 
 		volInfo.filesToPack = filesToPack;
-		volInfo.internalNames = GetInternalNamesFromPaths(filesToPack);
+		volInfo.names = GetNamesFromPaths(filesToPack);
 
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
-		CheckSortedContainerForDuplicateNames(volInfo.internalNames);
+		CheckSortedContainerForDuplicateNames(volInfo.names);
 
 		// Open input files and prepare header and indexing info
 		PrepareHeader(volInfo, volumeFilename);
@@ -210,7 +210,7 @@ namespace Archives
 				volWriter.Write(&padding, (-volInfo.indexEntries[i].fileSize) & 3);
 			}
 			catch (const std::exception& e) {
-				throw std::runtime_error("Unable to pack file " + volInfo.internalNames[i] + ". Internal error: " + e.what());
+				throw std::runtime_error("Unable to pack file " + volInfo.names[i] + ". Internal error: " + e.what());
 			}
 		}
 	}
@@ -230,7 +230,7 @@ namespace Archives
 		// Write out all internal file name strings (including NULL terminator)
 		for (std::size_t i = 0; i < volInfo.fileCount(); ++i) {
 			// Account for the null terminator in the size.
-			volWriter.Write(volInfo.internalNames[i].c_str(), volInfo.internalNames[i].size() + 1);
+			volWriter.Write(volInfo.names[i].c_str(), volInfo.names[i].size() + 1);
 		}
 
 		int padding = 0; // Pad with 0 bytes
@@ -283,11 +283,11 @@ namespace Archives
 			volInfo.indexEntries.push_back(indexEntry);
 
 			// Add length of internal filename plus null terminator to string table length.
-			if (static_cast<uint64_t>(volInfo.stringTableLength) + volInfo.internalNames[i].size() + 1 > UINT32_MAX) {
+			if (static_cast<uint64_t>(volInfo.stringTableLength) + volInfo.names[i].size() + 1 > UINT32_MAX) {
 				throw std::runtime_error("String table length is too long to create volume " + volumeFilename);
 			}
 
-			volInfo.stringTableLength += static_cast<uint32_t>(volInfo.internalNames[i].size()) + 1;
+			volInfo.stringTableLength += static_cast<uint32_t>(volInfo.names[i].size()) + 1;
 		}
 
 		// Calculate size of index table
@@ -360,10 +360,10 @@ namespace Archives
 		ReadStringTable();
 
 		m_IndexTableLength = ReadTag(TagVOLI);
-		m_NumberOfIndexEntries = m_IndexTableLength / sizeof(IndexEntry);
+		m_IndexEntryCount = m_IndexTableLength / sizeof(IndexEntry);
 
 		if (m_IndexTableLength > 0) {
-			m_IndexEntries.resize(m_NumberOfIndexEntries);
+			m_IndexEntries.resize(m_IndexEntryCount);
 			archiveFileReader.Read(m_IndexEntries.data(), m_IndexTableLength);
 		}
 
@@ -404,14 +404,14 @@ namespace Archives
 	{
 		// Count the number of valid entries
 		uint32_t packedFileCount = 0;
-		for (; packedFileCount < m_NumberOfIndexEntries; ++packedFileCount)
+		for (; packedFileCount < m_IndexEntryCount; ++packedFileCount)
 		{
 			// Make sure entry is valid
 			if (m_IndexEntries[packedFileCount].filenameOffset == UINT_MAX) {
 				break;
 			}
 		}
-		m_NumberOfPackedItems = packedFileCount;
+		m_PackedItemCount = packedFileCount;
 	}
 
 	VolFile::SectionHeader::SectionHeader() {}

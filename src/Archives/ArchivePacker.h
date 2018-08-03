@@ -19,11 +19,11 @@ namespace Archives
 
 	protected:
 		// Returns the filenames from each path stripping the rest of the path.
-		static std::vector<std::string> GetInternalNamesFromPaths(const std::vector<std::string>& paths);
+		static std::vector<std::string> GetNamesFromPaths(const std::vector<std::string>& paths);
 
-		// Throws an error if 2 internalNames are identical, case insensitve.
-		// internalNames must be presorted.
-		static void CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames);
+		// Throws an error if 2 names are identical, case insensitve.
+		// names must be presorted.
+		static void CheckSortedContainerForDuplicateNames(const std::vector<std::string>& names);
 
 		// Compares 2 filenames case insensitive to determine which comes first alphabetically.
 		// Does not compare the entire path, but only the filename.

@@ -10,7 +10,7 @@ namespace Archives
 	ArchivePacker::ArchivePacker() { }
 	ArchivePacker::~ArchivePacker() { }
 
-	std::vector<std::string> ArchivePacker::GetInternalNamesFromPaths(const std::vector<std::string>& paths)
+	std::vector<std::string> ArchivePacker::GetNamesFromPaths(const std::vector<std::string>& paths)
 	{
 		std::vector<std::string> filenames;
 
@@ -21,12 +21,12 @@ namespace Archives
 		return filenames;
 	}
 
-	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& internalNames)
+	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& names)
 	{
-		for (std::size_t i = 1; i < internalNames.size(); ++i)
+		for (std::size_t i = 1; i < names.size(); ++i)
 		{
-			if (StringHelper::CheckIfStringsAreEqual(internalNames[i - 1], internalNames[i])) {
-				throw std::runtime_error("Unable to create an archive containing files with the same filename. Duplicate filename: " + internalNames[i]);
+			if (StringHelper::CheckIfStringsAreEqual(names[i - 1], names[i])) {
+				throw std::runtime_error("Unable to create an archive containing files with the same name. Duplicate name: " + names[i]);
 			}
 		}
 	}

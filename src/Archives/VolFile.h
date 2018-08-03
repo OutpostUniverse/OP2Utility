@@ -20,9 +20,9 @@ namespace Archives
 		~VolFile();
 
 		// Internal file status
-		std::string GetInternalName(std::size_t index);
-		CompressionType GetInternalCompressionCode(std::size_t index);
-		uint32_t GetInternalItemSize(std::size_t index);
+		std::string GetName(std::size_t index);
+		CompressionType GetCompressionCode(std::size_t index);
+		uint32_t GetSize(std::size_t index);
 
 		// Extraction
 		void ExtractFile(std::size_t index, const std::string& pathOut);
@@ -37,8 +37,8 @@ namespace Archives
 		static void CreateArchive(const std::string& volumeFilename, std::vector<std::string> filesToPack);
 
 	private:
-		int GetInternalFileOffset(std::size_t index);
-		int GetInternalFilenameOffset(std::size_t index);
+		int GetFileOffset(std::size_t index);
+		int GetFilenameOffset(std::size_t index);
 
 		void ExtractFileUncompressed(std::size_t index, const std::string& filename);
 		void ExtractFileLzh(std::size_t index, const std::string& filename);
@@ -76,7 +76,7 @@ namespace Archives
 			std::vector<IndexEntry> indexEntries;
 			std::vector<std::unique_ptr<SeekableStreamReader>> fileStreamReaders;
 			std::vector<std::string> filesToPack;
-			std::vector<std::string> internalNames;
+			std::vector<std::string> names;
 			uint32_t stringTableLength;
 			uint32_t indexTableLength;
 			uint32_t paddedStringTableLength;
@@ -101,7 +101,7 @@ namespace Archives
 		static void OpenAllInputFiles(CreateVolumeInfo &volInfo, const std::string& volumeFilename);
 
 		FileStreamReader archiveFileReader;
-		uint32_t m_NumberOfIndexEntries;
+		uint32_t m_IndexEntryCount;
 		std::vector<std::string> m_StringTable;
 		uint32_t m_HeaderLength;
 		uint32_t m_StringTableLength;
