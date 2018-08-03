@@ -1,6 +1,7 @@
 #include "BitStream.h"
 #include <stdexcept>
 #include <string>
+#include <limits>
 
 namespace Archives
 {
@@ -10,6 +11,7 @@ namespace Archives
 		m_Buffer(0), 
 		m_ReadBitIndex(0), 
 		m_WriteBitIndex(0),
+		m_ReadBuff(0),
 		m_WriteBuff(0) { }
 
 	BitStream::BitStream(std::size_t bufferSize, void *buffer) : 
@@ -18,6 +20,7 @@ namespace Archives
 		m_Buffer(static_cast<unsigned char*>(buffer)),
 		m_ReadBitIndex(0),
 		m_WriteBitIndex(0),
+		m_ReadBuff(0),
 		m_WriteBuff(0)
 	{
 		// Check if storing bufferSize in bits wraps past largest value of a std::size_t
