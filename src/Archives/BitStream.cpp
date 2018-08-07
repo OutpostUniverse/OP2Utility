@@ -5,23 +5,17 @@
 
 namespace Archives
 {
-	BitStream::BitStream() : 
+	BitStream::BitStream() :
 		m_BufferBitSize(0),
-		m_BufferSize(0),
-		m_Buffer(0), 
-		m_ReadBitIndex(0), 
-		m_WriteBitIndex(0),
-		m_ReadBuff(0),
-		m_WriteBuff(0) { }
+		m_Buffer(0),
+		m_ReadBitIndex(0),
+		m_ReadBuff(0) { }
 
 	BitStream::BitStream(std::size_t bufferSize, void *buffer) : 
 		m_BufferBitSize(bufferSize << 3),
-		m_BufferSize(bufferSize),
 		m_Buffer(static_cast<unsigned char*>(buffer)),
 		m_ReadBitIndex(0),
-		m_WriteBitIndex(0),
-		m_ReadBuff(0),
-		m_WriteBuff(0)
+		m_ReadBuff(0)
 	{
 		// Check bufferSize does not exceed the max addressable bit index
 		if (bufferSize > std::numeric_limits<decltype(m_BufferBitSize)>::max() / 8) {
