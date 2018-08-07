@@ -73,14 +73,9 @@ namespace MapWriter {
 		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
 		{
 			WriteContainerSize(streamWriter, tileGroups.size());
-
-			uint32_t unknown = 0;
-
 			// tileGroups.size is checked to ensure it is below UINT32_MAX by previous call to WriteContainerSize.
-			if (!tileGroups.empty()) {
-				unknown = static_cast<uint32_t>(tileGroups.size()) - 1; // Write unknown field with best guess as to what value it should hold
-			}
-			
+			// Write unknown field with best guess as to what value it should hold
+			uint32_t unknown = !tileGroups.empty() ? static_cast<uint32_t>(tileGroups.size()) - 1 : 0;
 			streamWriter.Write(unknown);
 
 			for (const auto& tileGroup : tileGroups)
