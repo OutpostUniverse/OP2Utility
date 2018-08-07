@@ -11,7 +11,7 @@ namespace Archives
 		m_ReadBitIndex(0),
 		m_ReadBuff(0) { }
 
-	BitStream::BitStream(std::size_t bufferSize, void *buffer) : 
+	BitStream::BitStream(std::size_t bufferSize, void *buffer) :
 		m_BufferBitSize(bufferSize << 3),
 		m_Buffer(static_cast<unsigned char*>(buffer)),
 		m_ReadBitIndex(0),
@@ -34,7 +34,7 @@ namespace Archives
 		if (m_ReadBitIndex >= m_BufferBitSize) {
 			return 0;
 		}
-		
+
 		// Check if a new byte needs to be buffered
 		if ((m_ReadBitIndex & 0x07) == 0) {
 			m_ReadBuff = m_Buffer[m_ReadBitIndex >> 3];
@@ -70,7 +70,7 @@ namespace Archives
 
 		value = m_ReadBuff;
 		m_ReadBitIndex += 8;
-		
+
 		// Check for end of stream
 		if (m_ReadBitIndex >= m_BufferBitSize) {
 			m_ReadBuff = 0;
