@@ -130,7 +130,7 @@
     <ClInclude Include="src\Maps\TileData.h" />
     <ClInclude Include="src\Maps\TileGroup.h" />
     <ClInclude Include="src\Maps\TileInfo.h" />
-    <ClInclude Include="src\Maps\TileSetSource.h" />
+    <ClInclude Include="src\Maps\TilesetSource.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\Archives\AdaptHuffTree.h" />
     <ClInclude Include="src\Archives\ArchiveFile.h" />

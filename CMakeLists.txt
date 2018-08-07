@@ -45,7 +45,7 @@ file(GLOB SOURCE_CODE
 	"src/Maps/TileData.h"
 	"src/Maps/TileGroup.h"
 	"src/Maps/TileInfo.h"
-	"src/Maps/TileSetSource.h"
+	"src/Maps/TilesetSource.h"
 	
 	"src/Streams/FileSliceReader.cpp"
 	"src/Streams/FileSliceReader.h"

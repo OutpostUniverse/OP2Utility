@@ -2,7 +2,7 @@
 
 #include "MapHeader.h"
 #include "TileData.h"
-#include "TileSetSource.h"
+#include "TilesetSource.h"
 #include "TileInfo.h"
 #include "TerrainType.h"
 #include "ClipRect.h"
