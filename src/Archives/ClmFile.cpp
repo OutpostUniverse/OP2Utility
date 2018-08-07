@@ -272,17 +272,17 @@ namespace Archives
 	{
 		uint64_t offset = headerSize + names.size() * sizeof(IndexEntry);
 		for (std::size_t i = 0; i < names.size(); ++i)
-		{      
-      // Disable MSVC warning 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead.
+		{
+			// Disable MSVC warning 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead.
 			// As of 28Jul18, strncpy_s was not available on Linux.		
 			// Copy the filename into the entry
 #pragma warning( suppress : 4996 )
 			std::strncpy(indexEntries[i].filename.data(), names[i].data(), sizeof(IndexEntry::filename));
-      
-      if (offset + indexEntries[i].dataLength > UINT32_MAX) {
+
+			if (offset + indexEntries[i].dataLength > UINT32_MAX) {
 				throw std::runtime_error("Index Entry offset is too large to create CLM file");
 			}
-      
+
 			// Set the offset of the file
 			indexEntries[i].dataOffset = static_cast<uint32_t>(offset);
 			offset += indexEntries[i].dataLength;
