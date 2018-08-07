@@ -3,6 +3,7 @@
 #include "../Streams/SeekableStreamReader.h"
 #include "../Streams/FileStreamWriter.h"
 #include <array>
+#include <string>
 #include <stdexcept>
 
 namespace Archives
@@ -57,7 +58,7 @@ namespace Archives
 	void ArchiveUnpacker::CheckIndexBounds(std::size_t index)
 	{
 		if (index >= m_PackedCount) {
-			throw std::runtime_error("Provided index is outside the bounds of packed items in archive " + m_ArchiveFilename + ".");
+			throw std::runtime_error("Index " + std::to_string(index) + " is out of bounds in archive " + m_ArchiveFilename + ".");
 		}
 	}
 }
