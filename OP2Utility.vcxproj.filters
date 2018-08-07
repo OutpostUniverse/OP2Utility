@@ -72,9 +72,6 @@
     <ClInclude Include="src\Maps\TileData.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maps\TileSetSource.h">
-      <Filter>Maps</Filter>
-    </ClInclude>
     <ClInclude Include="src\Maps\TerrainType.h">
       <Filter>Maps</Filter>
     </ClInclude>
@@ -128,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="include\OP2Utility.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maps\TilesetSource.h">
+      <Filter>Maps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

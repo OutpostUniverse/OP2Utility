@@ -57,9 +57,9 @@ namespace MapWriter {
 			streamWriter.Write(header);
 		}
 
-		void WriteTilesetSources(StreamWriter& streamWriter, const std::vector<TilesetSource>& tileSetSources)
+		void WriteTilesetSources(StreamWriter& streamWriter, const std::vector<TilesetSource>& tilesetSources)
 		{
-			for (const auto& tilesetSource : tileSetSources)
+			for (const auto& tilesetSource : tilesetSources)
 			{
 				WriteString(streamWriter, tilesetSource.tilesetFilename);
 
