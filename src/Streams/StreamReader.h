@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <vector>
 #include <string>
+#include <stdexcept>
 
 class StreamReader {
 protected:

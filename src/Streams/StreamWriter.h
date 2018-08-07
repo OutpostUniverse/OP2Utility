@@ -7,6 +7,7 @@
 #include <vector>
 #include <array>
 #include <string>
+#include <stdexcept>
 
 class StreamWriter {
 protected:
