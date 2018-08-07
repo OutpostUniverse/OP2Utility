@@ -161,7 +161,6 @@ std::string ResourceManager::FindContainingArchiveFile(const std::string& filena
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 		if (archiveFile->Contains(filename)) {
-			std::size_t index = archiveFile->GetIndex(filename);
 			return XFile::GetFilename(archiveFile->GetVolumeFilename());
 		}
 	}
