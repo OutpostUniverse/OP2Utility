@@ -274,7 +274,7 @@ namespace Archives
 		for (std::size_t i = 0; i < names.size(); ++i)
 		{
 			// Disable MSVC warning 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead.
-			// As of 28Jul18, strncpy_s was not available on Linux.		
+			// As of 28Jul18, strncpy_s was not available on Linux.
 			// Copy the filename into the entry
 #pragma warning( suppress : 4996 )
 			std::strncpy(indexEntries[i].filename.data(), names[i].data(), sizeof(IndexEntry::filename));
