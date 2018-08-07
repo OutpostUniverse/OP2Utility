@@ -151,9 +151,9 @@ namespace Archives
 
 	void VolFile::Repack()
 	{
-		std::vector<std::string> filesToPack(m_PackedItemCount);
+		std::vector<std::string> filesToPack(m_PackedCount);
 
-		for (std::size_t i = 0; i < m_PackedItemCount; ++i)
+		for (std::size_t i = 0; i < m_PackedCount; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
 			filesToPack.push_back(GetName(i));
@@ -411,7 +411,7 @@ namespace Archives
 				break;
 			}
 		}
-		m_PackedItemCount = packedFileCount;
+		m_PackedCount = packedFileCount;
 	}
 
 	VolFile::SectionHeader::SectionHeader() {}

@@ -19,7 +19,7 @@ namespace Archives
 
 		std::string GetVolumeFilename() { return m_ArchiveFilename; };
 		uint64_t GetVolumeFileSize() { return m_ArchiveFileSize; };
-		std::size_t GetPackedItemCount() { return m_PackedItemCount; };
+		std::size_t GetPackedCount() { return m_PackedCount; };
 		bool Contains(const std::string& name);
 		std::size_t GetIndex(const std::string& name);
 		void ExtractFile(const std::string& name, const std::string& pathOut);
@@ -35,7 +35,7 @@ namespace Archives
 		void CheckIndexBounds(std::size_t index);
 
 		const std::string m_ArchiveFilename;
-		std::size_t m_PackedItemCount;
+		std::size_t m_PackedCount;
 		uint64_t m_ArchiveFileSize;
 	};
 }

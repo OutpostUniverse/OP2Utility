@@ -59,7 +59,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& dir
 
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		for (std::size_t i = 0; i < archiveFile->GetPackedItemCount(); ++i)
+		for (std::size_t i = 0; i < archiveFile->GetPackedCount(); ++i)
 		{
 			if (std::regex_search(archiveFile->GetName(i), filenameRegex)) {
 				filenames.push_back(archiveFile->GetName(i));
@@ -80,7 +80,7 @@ std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::strin
 
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		for (std::size_t i = 0; i < archiveFile->GetPackedItemCount(); ++i)
+		for (std::size_t i = 0; i < archiveFile->GetPackedCount(); ++i)
 		{
 			std::string internalFilename = archiveFile->GetName(i);
 
@@ -97,7 +97,7 @@ bool ResourceManager::ExistsInArchives(const std::string& filename, std::size_t&
 {
 	for (std::size_t i = 0; i < ArchiveFiles.size(); ++i)
 	{
-		for (std::size_t j = 0; j < ArchiveFiles[i]->GetPackedItemCount(); ++j)
+		for (std::size_t j = 0; j < ArchiveFiles[i]->GetPackedCount(); ++j)
 		{
 			if (XFile::PathsAreEqual(ArchiveFiles[i]->GetName(j), filename))
 			{
@@ -132,7 +132,7 @@ void ResourceManager::ExtractAllOfFileType(const std::string& directory, const s
 {
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		for (std::size_t i = 0; i < archiveFile->GetPackedItemCount(); ++i)
+		for (std::size_t i = 0; i < archiveFile->GetPackedCount(); ++i)
 		{
 			if (XFile::ExtensionMatches(archiveFile->GetName(i), extension)) {
 				archiveFile->ExtractFile(i, archiveFile->GetName(i));
