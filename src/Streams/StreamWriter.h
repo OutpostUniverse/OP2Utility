@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <limits>
 #include <vector>
 #include <array>
 #include <string>
