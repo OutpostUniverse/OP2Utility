@@ -48,7 +48,7 @@ public:
 			throw std::runtime_error("String's size is too large to write in provided size field");
 		}
 		Write(static_cast<SizeType>(stringSize));
-		Write(string.data(), string.size());
+		Write(string.data(), stringSize);
 	}
 
 	// Copy a StreamReader to a StreamWriter
