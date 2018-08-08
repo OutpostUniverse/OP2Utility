@@ -47,8 +47,7 @@ public:
 		if (stringSize > std::numeric_limits<SizeType>::max()) {
 			throw std::runtime_error("String's size is too large to write in provided size field");
 		}
-		auto typedSize = static_cast<SizeType>(stringSize);
-		Write(typedSize);
+		Write(static_cast<SizeType>(stringSize));
 		Write(string.data(), string.size());
 	}
 
