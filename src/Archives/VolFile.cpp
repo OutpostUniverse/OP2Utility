@@ -371,7 +371,7 @@ namespace Archives
 			throw std::runtime_error("The index table does not fit in the header of volume " + m_ArchiveFilename);
 		}
 
-		ReadPackedFileCount();
+		CountValidEntries();
 	}
 
 	void VolFile::ReadStringTable()
@@ -400,7 +400,7 @@ namespace Archives
 		archiveFileReader.SeekRelative(m_StringTableLength - actualStringTableLength - 4);
 	}
 
-	void VolFile::ReadPackedFileCount()
+	void VolFile::CountValidEntries()
 	{
 		// Count the number of valid entries
 		uint32_t packedFileCount = 0;

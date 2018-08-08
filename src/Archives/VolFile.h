@@ -91,7 +91,7 @@ namespace Archives
 		uint32_t ReadTag(std::array<char, 4> tagName);
 		void ReadVolHeader();
 		void ReadStringTable();
-		void ReadPackedFileCount();
+		void CountValidEntries();
 		SectionHeader GetSectionHeader(std::size_t index);
 
 		static void WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo);
