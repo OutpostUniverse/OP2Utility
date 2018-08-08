@@ -30,10 +30,10 @@ namespace Archives
 			throw std::runtime_error("Invalid clm header read from file " + m_ArchiveFilename + ". " + e.what());
 		}
 
-		m_PackedCount = clmHeader.packedFilesCount;
+		m_Count = clmHeader.packedFilesCount;
 
-		indexEntries = std::vector<IndexEntry>(m_PackedCount);
-		clmFileReader.Read(indexEntries.data(), m_PackedCount * sizeof(IndexEntry));
+		indexEntries = std::vector<IndexEntry>(m_Count);
+		clmFileReader.Read(indexEntries.data(), m_Count * sizeof(IndexEntry));
 	}
 
 
@@ -111,10 +111,10 @@ namespace Archives
 	// Returns nonzero if successful and zero otherwise
 	void ClmFile::Repack()
 	{
-		std::vector<std::string> filesToPack(m_PackedCount);
-		std::vector<std::string> names(m_PackedCount);
+		std::vector<std::string> filesToPack(m_Count);
+		std::vector<std::string> names(m_Count);
 
-		for (std::size_t i = 0; i < m_PackedCount; ++i)
+		for (std::size_t i = 0; i < m_Count; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
 			filesToPack[i] = GetName(i) + ".wav";
