@@ -4,8 +4,11 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <limits>
 #include <vector>
 #include <array>
+#include <string>
+#include <stdexcept>
 
 class StreamWriter {
 protected:
@@ -34,6 +37,18 @@ public:
 	template<typename T, typename A>
 	inline void Write(const std::vector<T, A>& vector) {
 		WriteImplementation(vector.data(), vector.size() * sizeof(T));
+	}
+
+	// std::string prefixed by the string's size. The type of integer representing the size must be provided.
+	// Does not null terminate string unless null terminator is specifcally included in passed std::string. 
+	template<typename SizeType>
+	void Write(const std::string& string) {
+		auto stringSize = string.size();
+		if (stringSize > std::numeric_limits<SizeType>::max()) {
+			throw std::runtime_error("String's size is too large to write in provided size field");
+		}
+		Write(static_cast<SizeType>(stringSize));
+		Write(string.data(), stringSize);
 	}
 
 	// Copy a StreamReader to a StreamWriter

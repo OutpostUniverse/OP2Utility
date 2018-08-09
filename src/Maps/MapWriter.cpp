@@ -14,7 +14,6 @@ namespace MapWriter {
 		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes);
 		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups);
 		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size);
-		void WriteString(StreamWriter& streamWriter, const std::string& s);
 	}
 
 
@@ -61,7 +60,7 @@ namespace MapWriter {
 		{
 			for (const auto& tilesetSource : tilesetSources)
 			{
-				WriteString(streamWriter, tilesetSource.tilesetFilename);
+				streamWriter.Write<uint32_t>(tilesetSource.tilesetFilename);
 
 				// Only include the number of tiles if the tileset contains a filename.
 				if (tilesetSource.tilesetFilename.size() > 0)
@@ -99,7 +98,7 @@ namespace MapWriter {
 
 				streamWriter.Write(tileGroup.mappingIndices);
 
-				WriteString(streamWriter, tileGroup.name);
+				streamWriter.Write<uint32_t>(tileGroup.name);
 			}
 		}
 
@@ -107,16 +106,6 @@ namespace MapWriter {
 		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size)
 		{
 			streamWriter.Write(size);
-		}
-
-		// String must be stored in file as string length followed by char[].
-		void WriteString(StreamWriter& streamWriter, const std::string& s)
-		{
-			WriteContainerSize(streamWriter, s.size());
-
-			if (s.size() > 0) {
-				streamWriter.Write(s.c_str(), s.size());
-			}
 		}
 	}
 }
