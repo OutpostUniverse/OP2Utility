@@ -55,9 +55,16 @@ public:
 		Read(vector);
 	}
 
-	// std::string prefixed by the string's size. The type of integer representing the size must be provided. 
-	template<typename SizeType>
-	void Read(std::string& string) {
+	// String data types
+	template<typename CharT, typename Traits, typename Allocator>
+	void Read(std::basic_string<CharT, Traits, Allocator>& string) {
+		Read(&string[0], string.size() * sizeof(CharT));
+	}
+
+	// Size prefixed string data types
+	// Ex: Read<uint32_t>(string); // Read 32-bit string length, allocate space, then read string data
+	template<typename SizeType, typename CharT, typename Traits, typename Allocator>
+	void Read(std::basic_string<CharT, Traits, Allocator>& string) {
 		SizeType stringSize;
 		Read(stringSize);
 		if (stringSize < 0) {
@@ -66,6 +73,6 @@ public:
 
 		string.clear();
 		string.resize(stringSize);
-		Read(&string[0], stringSize);
+		Read(string);
 	}
 };
