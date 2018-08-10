@@ -100,13 +100,13 @@ namespace MapReader {
 
 		void ReadTileInfo(StreamReader& streamReader, MapData& mapData)
 		{
-			std::size_t numTileInfo;
+			uint32_t numTileInfo;
 			streamReader.Read(numTileInfo);
 
 			mapData.tileInfos.resize(numTileInfo);
 			streamReader.Read(&mapData.tileInfos[0], numTileInfo * sizeof(TileInfo));
 
-			std::size_t numTerrainTypes;
+			uint32_t numTerrainTypes;
 			streamReader.Read(numTerrainTypes);
 			mapData.terrainTypes.resize(numTerrainTypes);
 			streamReader.Read(&mapData.terrainTypes[0], numTerrainTypes * sizeof(TerrainType));

@@ -3,8 +3,8 @@
 #include "Archives/ArchiveFile.h"
 #include <string>
 #include <vector>
-#include <regex>
 #include <memory>
+#include <cstddef>
 
 class SeekableStreamReader;
 
@@ -16,7 +16,7 @@ public:
 
 	std::unique_ptr<SeekableStreamReader> GetResourceStream(const std::string& filename, bool accessArchives = true);
 
-	std::vector<std::string> GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArcives = true);
+	std::vector<std::string> GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArchives = true);
 	std::vector<std::string> GetAllFilenamesOfType(const std::string& directory, const std::string& extension, bool accessArchives = true);
 
 	// Searches .vol and .clm archives for file and then extracts it.
@@ -33,6 +33,6 @@ public:
 private:
 	std::vector<std::unique_ptr<Archives::ArchiveFile>> ArchiveFiles;
 
-	bool ExistsInArchives(const std::string& filename, int& volFileIndexOut, int& internalVolIndexOut);
+	bool ExistsInArchives(const std::string& filename, std::size_t& archiveIndexOut, std::size_t& internalIndexOut);
 	bool DuplicateFilename(std::vector<std::string>& currentFilenames, std::string pathToCheck);
 };

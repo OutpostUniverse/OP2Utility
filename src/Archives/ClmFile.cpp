@@ -30,38 +30,38 @@ namespace Archives
 			throw std::runtime_error("Invalid clm header read from file " + m_ArchiveFilename + ". " + e.what());
 		}
 
-		m_NumberOfPackedFiles = clmHeader.packedFilesCount;
+		m_Count = clmHeader.packedFilesCount;
 
-		indexEntries = std::vector<IndexEntry>(m_NumberOfPackedFiles);
-		clmFileReader.Read(indexEntries.data(), m_NumberOfPackedFiles * sizeof(IndexEntry));
+		indexEntries = std::vector<IndexEntry>(m_Count);
+		clmFileReader.Read(indexEntries.data(), m_Count * sizeof(IndexEntry));
 	}
 
 
 	// Returns the internal file name of the packed file corresponding to index.
 	// Throws an error if packed file index is not valid.
-	std::string ClmFile::GetInternalFilename(int index)
+	std::string ClmFile::GetName(std::size_t index)
 	{
-		CheckPackedFileIndexBounds(index);
+		CheckIndexBounds(index);
 
 		return indexEntries[index].GetFilename();
 	}
 
 	// Returns the size of the internal file corresponding to index
-	uint32_t ClmFile::GetInternalFileSize(int index)
+	uint32_t ClmFile::GetSize(std::size_t index)
 	{
-		CheckPackedFileIndexBounds(index);
+		CheckIndexBounds(index);
 
 		return indexEntries[index].dataLength;
 	}
 
 
 	// Extracts the internal file corresponding to index
-	void ClmFile::ExtractFile(int fileIndex, const std::string& pathOut)
+	void ClmFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
-		CheckPackedFileIndexBounds(fileIndex);
+		CheckIndexBounds(index);
 
 		WaveHeader header;
-		InitializeWaveHeader(header, fileIndex);
+		InitializeWaveHeader(header, index);
 
 		try
 		{
@@ -70,8 +70,8 @@ namespace Archives
 			waveFileWriter.Write(header);
 
 			FileSliceReader reader = clmFileReader.Slice(
-				indexEntries[fileIndex].dataOffset,
-				indexEntries[fileIndex].dataLength);
+				indexEntries[index].dataOffset,
+				indexEntries[index].dataLength);
 
 			waveFileWriter.Write(reader);
 		}
@@ -81,11 +81,11 @@ namespace Archives
 		}
 	}
 
-	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, int fileIndex)
+	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, std::size_t index)
 	{
 		headerOut.riffHeader.riffTag = tagRIFF;
 		headerOut.riffHeader.waveTag = tagWAVE;
-		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[fileIndex].dataLength;
+		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[index].dataLength;
 
 		headerOut.formatChunk.fmtTag = tagFMT_;
 		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
@@ -93,16 +93,16 @@ namespace Archives
 		headerOut.formatChunk.waveFormat.cbSize = 0;
 
 		headerOut.dataChunk.formatTag = tagDATA;
-		headerOut.dataChunk.length = indexEntries[fileIndex].dataLength;
+		headerOut.dataChunk.length = indexEntries[index].dataLength;
 	}
 
-	std::unique_ptr<SeekableStreamReader> ClmFile::OpenStream(int fileIndex)
+	std::unique_ptr<SeekableStreamReader> ClmFile::OpenStream(std::size_t index)
 	{
-		CheckPackedFileIndexBounds(fileIndex);
+		CheckIndexBounds(index);
 
 		FileSliceReader reader = clmFileReader.Slice(
-			indexEntries[fileIndex].dataOffset,
-			indexEntries[fileIndex].dataLength);
+			indexEntries[index].dataOffset,
+			indexEntries[index].dataLength);
 
 		return std::make_unique<FileSliceReader>(reader);
 	}
@@ -111,13 +111,13 @@ namespace Archives
 	// Returns nonzero if successful and zero otherwise
 	void ClmFile::Repack()
 	{
-		std::vector<std::string> filesToPack(m_NumberOfPackedFiles);
-		std::vector<std::string> internalNames(m_NumberOfPackedFiles);
+		std::vector<std::string> filesToPack(m_Count);
+		std::vector<std::string> names(m_Count);
 
-		for (int i = 0; i < m_NumberOfPackedFiles; ++i)
+		for (std::size_t i = 0; i < m_Count; ++i)
 		{
 			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			filesToPack[i] = GetInternalFilename(i) + ".wav";
+			filesToPack[i] = GetName(i) + ".wav";
 		}
 
 		const std::string tempFilename = "temp.clm";
@@ -154,13 +154,13 @@ namespace Archives
 		// Check if all wave formats are the same
 		CompareWaveFormats(waveFormats, filesToPack);
 
-		std::vector<std::string> internalFilenames = GetInternalNamesFromPaths(filesToPack);
-		internalFilenames = StripFilenameExtensions(internalFilenames);
+		std::vector<std::string> names = GetNamesFromPaths(filesToPack);
+		names = StripFilenameExtensions(names);
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
-		CheckSortedContainerForDuplicateNames(internalFilenames);
+		CheckSortedContainerForDuplicateNames(names);
 
 		// Write the archive header and copy files into the archive
-		WriteArchive(archiveFilename, filesToPackReaders, indexEntries, internalFilenames, PrepareWaveFormat(waveFormats));
+		WriteArchive(archiveFilename, filesToPackReaders, indexEntries, names, PrepareWaveFormat(waveFormats));
 	}
 
 	// Reads the beginning of each file and verifies it is formatted as a WAVE file. Locates
@@ -248,18 +248,18 @@ namespace Archives
 	void ClmFile::WriteArchive(const std::string& archiveFilename,
 		const std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
 		std::vector<IndexEntry>& indexEntries,
-		const std::vector<std::string>& internalNames,
+		const std::vector<std::string>& names,
 		const WaveFormatEx& waveFormat)
 	{
 		// ClmFile cannot contain more than 32 bit size internal file count.
-		ClmHeader header(waveFormat, static_cast<uint32_t>(internalNames.size()));
+		ClmHeader header(waveFormat, static_cast<uint32_t>(names.size()));
 
 		FileStreamWriter clmFileWriter(archiveFilename);
 
 		clmFileWriter.Write(header);
 
 		// Prepare and write Archive Index
-		PrepareIndex(sizeof(header), internalNames, indexEntries);
+		PrepareIndex(sizeof(header), names, indexEntries);
 		clmFileWriter.Write(indexEntries.data(), header.packedFilesCount * sizeof(IndexEntry));
 
 		// Copy files into the archive
@@ -268,19 +268,23 @@ namespace Archives
 		}
 	}
 
-	void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries)
+	void ClmFile::PrepareIndex(int headerSize, const std::vector<std::string>& names, std::vector<IndexEntry>& indexEntries)
 	{
-		uint32_t offset = headerSize + internalNames.size() * sizeof(IndexEntry);
-		for (std::size_t i = 0; i < internalNames.size(); ++i)
+		uint64_t offset = headerSize + names.size() * sizeof(IndexEntry);
+		for (std::size_t i = 0; i < names.size(); ++i)
 		{
 			// Disable MSVC warning 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead.
-			// As of 28Jul18, strncpy_s was not available on Linux.		
+			// As of 28Jul18, strncpy_s was not available on Linux.
 			// Copy the filename into the entry
 #pragma warning( suppress : 4996 )
-			std::strncpy(indexEntries[i].filename.data(), internalNames[i].data(), sizeof(IndexEntry::filename));
+			std::strncpy(indexEntries[i].filename.data(), names[i].data(), sizeof(IndexEntry::filename));
+
+			if (offset + indexEntries[i].dataLength > UINT32_MAX) {
+				throw std::runtime_error("Index Entry offset is too large to create CLM file");
+			}
 
 			// Set the offset of the file
-			indexEntries[i].dataOffset = offset;
+			indexEntries[i].dataOffset = static_cast<uint32_t>(offset);
 			offset += indexEntries[i].dataLength;
 		}
 	}

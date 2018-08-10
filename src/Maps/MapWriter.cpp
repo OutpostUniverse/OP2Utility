@@ -1,6 +1,7 @@
 #include "MapWriter.h"
 #include "../Streams/FileStreamWriter.h"
 #include <cstdint>
+#include <cstddef>
 #include <stdexcept>
 #include <vector>
 
@@ -10,10 +11,8 @@ namespace MapWriter {
 	namespace {
 		void WriteHeader(StreamWriter& streamWriter, const MapHeader& header);
 		void WriteTilesetSources(StreamWriter& streamWriter, const std::vector<TilesetSource>& tilesetSources);
-		void WriteTileInfo(StreamWriter& streamWriter, const std::vector<TileInfo>& tileInfos);
-		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes);
 		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups);
-		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size);
+		void WriteContainerSize(StreamWriter& streamWriter, std::size_t size);
 	}
 
 
@@ -33,8 +32,8 @@ namespace MapWriter {
 		streamWriter.Write(mapData.clipRect);
 		WriteTilesetSources(streamWriter, mapData.tilesetSources);
 		streamWriter.Write("TILE SET\x1a", 10);
-		WriteTileInfo(streamWriter, mapData.tileInfos);
-		WriteTerrainType(streamWriter, mapData.terrainTypes);
+		streamWriter.Write<uint32_t>(mapData.tileInfos);
+		streamWriter.Write<uint32_t>(mapData.terrainTypes);
 
 		streamWriter.Write(mapData.header.versionTag);
 		streamWriter.Write(mapData.header.versionTag);
@@ -70,25 +69,12 @@ namespace MapWriter {
 			}
 		}
 
-		void WriteTileInfo(StreamWriter& streamWriter, const std::vector<TileInfo>& tileInfos)
-		{
-			WriteContainerSize(streamWriter, tileInfos.size());
-
-			streamWriter.Write(tileInfos);
-		}
-
-		void WriteTerrainType(StreamWriter& streamWriter, const std::vector<TerrainType>& terrainTypes)
-		{
-			WriteContainerSize(streamWriter, terrainTypes.size());
-
-			streamWriter.Write(terrainTypes);
-		}
-
 		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
 		{
 			WriteContainerSize(streamWriter, tileGroups.size());
-
-			uint32_t unknown = tileGroups.size() - 1; // Write unknown field with best guess as to what value it should hold
+			// tileGroups.size is checked to ensure it is below UINT32_MAX by previous call to WriteContainerSize.
+			// Write unknown field with best guess as to what value it should hold
+			uint32_t unknown = !tileGroups.empty() ? static_cast<uint32_t>(tileGroups.size()) - 1 : 0;
 			streamWriter.Write(unknown);
 
 			for (const auto& tileGroup : tileGroups)
@@ -103,9 +89,13 @@ namespace MapWriter {
 		}
 
 		// Outpost 2 map files represent container sizes as 4 byte values
-		void WriteContainerSize(StreamWriter& streamWriter, uint32_t size)
+		void WriteContainerSize(StreamWriter& streamWriter, std::size_t size)
 		{
-			streamWriter.Write(size);
+			if (size > UINT32_MAX) {
+				throw std::runtime_error("Container size is too large for writing into an Outpost 2 maps.");
+			}
+
+			streamWriter.Write(static_cast<uint32_t>(size));
 		}
 	}
 }

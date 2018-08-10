@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <cstdint>
+#include <cstddef>
 
 class SeekableStreamReader;
 class StreamReader;
@@ -18,24 +19,23 @@ namespace Archives
 
 		std::string GetVolumeFilename() { return m_ArchiveFilename; };
 		uint64_t GetVolumeFileSize() { return m_ArchiveFileSize; };
-		int GetNumberOfPackedFiles() { return m_NumberOfPackedFiles; };
-		bool ContainsFile(const std::string& filename);
-		// Returns -1 if internalFilename is not present in archive.
-		int GetInternalFileIndex(const std::string& internalFilename);
-		void ExtractFile(const std::string& internalFilename, const std::string& pathOut);
+		std::size_t GetCount() { return m_Count; };
+		bool Contains(const std::string& name);
+		std::size_t GetIndex(const std::string& name);
+		void ExtractFile(const std::string& name, const std::string& pathOut);
 
-		virtual std::string GetInternalFilename(int index) = 0;
-		virtual uint32_t GetInternalFileSize(int index) = 0;
-		virtual void ExtractFile(int fileIndex, const std::string& pathOut) = 0;
+		virtual std::string GetName(std::size_t index) = 0;
+		virtual uint32_t GetSize(std::size_t index) = 0;
+		virtual void ExtractFile(std::size_t index, const std::string& pathOut) = 0;
 		virtual void ExtractAllFiles(const std::string& destDirectory);
-		virtual std::unique_ptr<SeekableStreamReader> OpenStream(int fileIndex) = 0;
-		virtual std::unique_ptr<SeekableStreamReader> OpenStream(const std::string& internalFilename);
+		virtual std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index) = 0;
+		virtual std::unique_ptr<SeekableStreamReader> OpenStream(const std::string& name);
 
 	protected:
-		void CheckPackedFileIndexBounds(int fileIndex);
+		void CheckIndexBounds(std::size_t index);
 
 		const std::string m_ArchiveFilename;
-		int m_NumberOfPackedFiles;
+		std::size_t m_Count;
 		uint64_t m_ArchiveFileSize;
 	};
 }

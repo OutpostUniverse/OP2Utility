@@ -13,8 +13,6 @@
 
 namespace Archives
 {
-#define VOL_WRITE_SIZE 65536
-
 	class VolFile : public ArchiveFile
 	{
 	public:
@@ -22,16 +20,15 @@ namespace Archives
 		~VolFile();
 
 		// Internal file status
-		std::string GetInternalFilename(int index);
-		int GetInternalFileIndex(const std::string& internalFilename);
-		CompressionType GetInternalCompressionCode(int index);
-		uint32_t GetInternalFileSize(int index);
+		std::string GetName(std::size_t index);
+		CompressionType GetCompressionCode(std::size_t index);
+		uint32_t GetSize(std::size_t index);
 
 		// Extraction
-		void ExtractFile(int fileIndex, const std::string& pathOut);
+		void ExtractFile(std::size_t index, const std::string& pathOut);
 
 		// Opens a stream containing a packed file
-		std::unique_ptr<SeekableStreamReader> OpenStream(int fileIndex);
+		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index);
 
 		// Volume Creation
 		void Repack();
@@ -40,8 +37,8 @@ namespace Archives
 		static void CreateArchive(const std::string& volumeFilename, std::vector<std::string> filesToPack);
 
 	private:
-		int GetInternalFileOffset(int index);
-		int GetInternalFilenameOffset(int index);
+		int GetFileOffset(std::size_t index);
+		int GetFilenameOffset(std::size_t index);
 
 		void ExtractFileUncompressed(std::size_t index, const std::string& filename);
 		void ExtractFileLzh(std::size_t index, const std::string& filename);
@@ -79,7 +76,7 @@ namespace Archives
 			std::vector<IndexEntry> indexEntries;
 			std::vector<std::unique_ptr<SeekableStreamReader>> fileStreamReaders;
 			std::vector<std::string> filesToPack;
-			std::vector<std::string> internalNames;
+			std::vector<std::string> names;
 			uint32_t stringTableLength;
 			uint32_t indexTableLength;
 			uint32_t paddedStringTableLength;
@@ -94,8 +91,8 @@ namespace Archives
 		uint32_t ReadTag(std::array<char, 4> tagName);
 		void ReadVolHeader();
 		void ReadStringTable();
-		void ReadPackedFileCount();
-		SectionHeader GetSectionHeader(int index);
+		void CountValidEntries();
+		SectionHeader GetSectionHeader(std::size_t index);
 
 		static void WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo);
 		static void WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo);
@@ -104,7 +101,7 @@ namespace Archives
 		static void OpenAllInputFiles(CreateVolumeInfo &volInfo, const std::string& volumeFilename);
 
 		FileStreamReader archiveFileReader;
-		uint32_t m_NumberOfIndexEntries;
+		uint32_t m_IndexEntryCount;
 		std::vector<std::string> m_StringTable;
 		uint32_t m_HeaderLength;
 		uint32_t m_StringTableLength;

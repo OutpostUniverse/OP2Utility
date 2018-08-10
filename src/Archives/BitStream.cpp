@@ -1,31 +1,26 @@
 #include "BitStream.h"
+#include <stdexcept>
+#include <string>
+#include <limits>
 
 namespace Archives
 {
-	BitStream::BitStream()
+	BitStream::BitStream() :
+		m_BufferBitSize(0),
+		m_Buffer(0),
+		m_ReadBitIndex(0),
+		m_ReadBuff(0) { }
+
+	BitStream::BitStream(std::size_t bufferSize, void *buffer) :
+		m_BufferBitSize(bufferSize << 3),
+		m_Buffer(static_cast<unsigned char*>(buffer)),
+		m_ReadBitIndex(0),
+		m_ReadBuff(0)
 	{
-		// Initialize class variables
-		m_BufferSize = 0;
-		m_BufferBitSize = 0;
-		m_Buffer = 0;
-
-		m_ReadBitIndex = 0;
-		m_WriteBitIndex = 0;
-
-		m_WriteBuff = 0;
-	}
-
-	BitStream::BitStream(int bufferSize, void *buffer)
-	{
-		// Initialize class variables
-		m_BufferSize = bufferSize;
-		m_BufferBitSize = bufferSize << 3;
-		m_Buffer = (unsigned char*)buffer;
-
-		m_ReadBitIndex = 0;
-		m_WriteBitIndex = 0;
-
-		m_WriteBuff = 0;
+		// Check bufferSize does not exceed the max addressable bit index
+		if (bufferSize > std::numeric_limits<decltype(m_BufferBitSize)>::max() / 8) {
+			throw std::runtime_error("BitStream cannot support a buffer size of " + std::to_string(bufferSize));
+		}
 	}
 
 
@@ -36,12 +31,14 @@ namespace Archives
 		bool bNextBit;
 
 		// Check for end of stream
-		if (m_ReadBitIndex >= m_BufferBitSize)
+		if (m_ReadBitIndex >= m_BufferBitSize) {
 			return 0;
+		}
 
 		// Check if a new byte needs to be buffered
-		if ((m_ReadBitIndex & 0x07) == 0)
+		if ((m_ReadBitIndex & 0x07) == 0) {
 			m_ReadBuff = m_Buffer[m_ReadBitIndex >> 3];
+		}
 
 		// Extract the uppermost bit
 		bNextBit = (m_ReadBuff & 0x80) == 0x80;	// Get the MSB
@@ -55,14 +52,14 @@ namespace Archives
 
 	int BitStream::ReadNext8Bits()
 	{
-		int i;
 		int value;
 
 		// Check for end of stream
-		if (m_ReadBitIndex >= m_BufferBitSize)
+		if (m_ReadBitIndex >= m_BufferBitSize) {
 			return 0;
+		}
 
-		i = m_ReadBitIndex & 0x07;
+		int i = m_ReadBitIndex & 0x07;
 		if (i == 0)
 		{
 			// Read the next byte and return it
@@ -73,11 +70,15 @@ namespace Archives
 
 		value = m_ReadBuff;
 		m_ReadBitIndex += 8;
+
 		// Check for end of stream
-		if (m_ReadBitIndex >= m_BufferBitSize)
+		if (m_ReadBitIndex >= m_BufferBitSize) {
 			m_ReadBuff = 0;
-		else
+		}
+		else {
 			m_ReadBuff = m_Buffer[m_ReadBitIndex >> 3];
+		}
+
 		value |= (m_ReadBuff >> (8 - i));
 		m_ReadBuff <<= i;
 		return value;
@@ -89,7 +90,7 @@ namespace Archives
 		return m_ReadBitIndex >= m_BufferBitSize;
 	}
 
-	int BitStream::GetBitReadPos() const
+	std::size_t BitStream::GetBitReadPos() const
 	{
 		return m_ReadBitIndex;
 	}

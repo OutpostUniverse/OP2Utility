@@ -39,6 +39,19 @@ public:
 		WriteImplementation(vector.data(), vector.size() * sizeof(T));
 	}
 
+
+	// Size prefixed vector data types
+	template<typename SizeType, typename T, typename A>
+	void Write(const std::vector<T, A>& vector) {
+		auto vectorSize = vector.size();
+		if (vectorSize > std::numeric_limits<SizeType>::max()) {
+			throw std::runtime_error("Vector too large to save size field");
+		}
+		auto typedSize = static_cast<SizeType>(vectorSize);
+		Write(typedSize);
+		Write(vector);
+	}
+
 	// std::string prefixed by the string's size. The type of integer representing the size must be provided.
 	// Does not null terminate string unless null terminator is specifcally included in passed std::string. 
 	template<typename SizeType>
@@ -49,6 +62,7 @@ public:
 		}
 		Write(static_cast<SizeType>(stringSize));
 		Write(string.data(), stringSize);
+
 	}
 
 	// Copy a StreamReader to a StreamWriter

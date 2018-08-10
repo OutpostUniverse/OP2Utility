@@ -18,14 +18,13 @@ namespace Archives
 		ClmFile(const std::string& filename);
 		virtual ~ClmFile();
 
-		std::string GetInternalFilename(int index);
-		int GetInternalFileIndex(const std::string& internalFilename);
-		void ExtractFile(int fileIndex, const std::string& pathOut);
+		std::string GetName(std::size_t index);
+		void ExtractFile(std::size_t index, const std::string& pathOut);
 
 		// Opens a stream containing packed audio PCM data
-		std::unique_ptr<SeekableStreamReader> OpenStream(int fileIndex);
+		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index);
 
-		uint32_t GetInternalFileSize(int index);
+		uint32_t GetSize(std::size_t index);
 
 		void Repack();
 
@@ -64,15 +63,15 @@ namespace Archives
 		// Private functions for reading archive
 		void ReadHeader();
 
-		void InitializeWaveHeader(WaveHeader& headerOut, int fileIndex);
+		void InitializeWaveHeader(WaveHeader& headerOut, std::size_t index);
 
 		// Private functions for packing files
 		static void ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
 		static uint32_t FindChunk(std::array<char, 4> chunkTag, SeekableStreamReader& seekableStreamReader);
 		static void CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormatsconst, const std::vector<std::string>& filesToPack);
 		static void WriteArchive(const std::string& archiveFilename, const std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
-			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& internalNames, const WaveFormatEx& waveFormat);
-		static void PrepareIndex(int headerSize, const std::vector<std::string>& internalNames, std::vector<IndexEntry>& indexEntries);
+			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& names, const WaveFormatEx& waveFormat);
+		static void PrepareIndex(int headerSize, const std::vector<std::string>& names, std::vector<IndexEntry>& indexEntries);
 		static std::vector<std::string> StripFilenameExtensions(std::vector<std::string> paths);
 		static WaveFormatEx PrepareWaveFormat(const std::vector<WaveFormatEx>& waveFormats);
 

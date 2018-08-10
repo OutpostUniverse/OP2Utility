@@ -3,6 +3,7 @@
 #include "Archives/ClmFile.h"
 #include "Streams/SeekableStreamReader.h"
 #include "XFile.h"
+#include <regex>
 
 using namespace Archives;
 
@@ -36,28 +37,32 @@ std::unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const s
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 		std::string internalArchiveFilename = XFile::GetFilename(filename);
-		int internalArchiveIndex = archiveFile->GetInternalFileIndex(internalArchiveFilename);
 
-		if (internalArchiveIndex > -1) {
-			return archiveFile->OpenStream(internalArchiveIndex);
+		if (archiveFile->Contains(filename)) {
+			auto index = archiveFile->GetIndex(internalArchiveFilename);
+			return archiveFile->OpenStream(index);
 		}
 	}
 
 	return nullptr;
 }
 
-std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArcives)
+std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArchives)
 {
 	std::regex filenameRegex(filenameRegexStr, std::regex_constants::icase);
 
 	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(directory, filenameRegex);
 
+	if (!accessArchives) {
+		return filenames;
+	}
+
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < archiveFile->GetCount(); ++i)
 		{
-			if (std::regex_search(archiveFile->GetInternalFilename(i), filenameRegex)) {
-				filenames.push_back(archiveFile->GetInternalFilename(i));
+			if (std::regex_search(archiveFile->GetName(i), filenameRegex)) {
+				filenames.push_back(archiveFile->GetName(i));
 			}
 		}
 	}
@@ -75,9 +80,9 @@ std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::strin
 
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < archiveFile->GetCount(); ++i)
 		{
-			std::string internalFilename = archiveFile->GetInternalFilename(i);
+			std::string internalFilename = archiveFile->GetName(i);
 
 			if (XFile::ExtensionMatches(internalFilename, extension) && !DuplicateFilename(filenames, internalFilename)) {
 				filenames.push_back(internalFilename);
@@ -88,16 +93,16 @@ std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::strin
 	return filenames;
 }
 
-bool ResourceManager::ExistsInArchives(const std::string& filename, int& volFileIndexOut, int& internalVolIndexOut)
+bool ResourceManager::ExistsInArchives(const std::string& filename, std::size_t& archiveIndexOut, std::size_t& internalIndexOut)
 {
 	for (std::size_t i = 0; i < ArchiveFiles.size(); ++i)
 	{
-		for (int j = 0; j < ArchiveFiles[i]->GetNumberOfPackedFiles(); ++j)
+		for (std::size_t j = 0; j < ArchiveFiles[i]->GetCount(); ++j)
 		{
-			if (XFile::PathsAreEqual(ArchiveFiles[i]->GetInternalFilename(j), filename))
+			if (XFile::PathsAreEqual(ArchiveFiles[i]->GetName(j), filename))
 			{
-				volFileIndexOut = static_cast<int>(i);
-				internalVolIndexOut = j;
+				archiveIndexOut = i;
+				internalIndexOut = j;
 				return true;
 			}
 		}
@@ -112,11 +117,11 @@ bool ResourceManager::ExtractSpecificFile(const std::string& filename, bool over
 		return true;
 	}
 
-	int fileIndex;
-	int internalArchiveIndex;
-	if (ExistsInArchives(filename, fileIndex, internalArchiveIndex))
+	std::size_t archiveIndex;
+	std::size_t internalIndex;
+	if (ExistsInArchives(filename, archiveIndex, internalIndex))
 	{
-		ArchiveFiles[fileIndex]->ExtractFile(internalArchiveIndex, filename);
+		ArchiveFiles[archiveIndex]->ExtractFile(internalIndex, filename);
 		return true;
 	}
 
@@ -127,10 +132,10 @@ void ResourceManager::ExtractAllOfFileType(const std::string& directory, const s
 {
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		for (int i = 0; i < archiveFile->GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < archiveFile->GetCount(); ++i)
 		{
-			if (XFile::ExtensionMatches(archiveFile->GetInternalFilename(i), extension)) {
-				archiveFile->ExtractFile(i, archiveFile->GetInternalFilename(i));
+			if (XFile::ExtensionMatches(archiveFile->GetName(i), extension)) {
+				archiveFile->ExtractFile(i, archiveFile->GetName(i));
 			}
 		}
 	}
@@ -155,9 +160,7 @@ std::string ResourceManager::FindContainingArchiveFile(const std::string& filena
 {
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		int internalFileIndex = archiveFile->GetInternalFileIndex(filename);
-
-		if (internalFileIndex != -1) {
+		if (archiveFile->Contains(filename)) {
 			return XFile::GetFilename(archiveFile->GetVolumeFilename());
 		}
 	}

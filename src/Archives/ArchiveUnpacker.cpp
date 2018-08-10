@@ -3,41 +3,41 @@
 #include "../Streams/SeekableStreamReader.h"
 #include "../Streams/FileStreamWriter.h"
 #include <array>
-#include <cstddef>
+#include <string>
 #include <stdexcept>
 
 namespace Archives
 {
 	ArchiveUnpacker::ArchiveUnpacker(const std::string& filename) :
-		m_ArchiveFilename(filename), m_NumberOfPackedFiles(0), m_ArchiveFileSize(0) { }
+		m_ArchiveFilename(filename), m_Count(0), m_ArchiveFileSize(0) { }
 
 	ArchiveUnpacker::~ArchiveUnpacker() { }
 
 	void ArchiveUnpacker::ExtractAllFiles(const std::string& destDirectory)
 	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < GetCount(); ++i)
 		{
-			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetInternalFilename(i)));
+			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetName(i)));
 		}
 	}
 
-	int ArchiveUnpacker::GetInternalFileIndex(const std::string& internalFilename)
+	std::size_t ArchiveUnpacker::GetIndex(const std::string& name)
 	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < GetCount(); ++i)
 		{
-			if (XFile::PathsAreEqual(GetInternalFilename(i), internalFilename)) {
+			if (XFile::PathsAreEqual(GetName(i), name)) {
 				return i;
 			}
 		}
 
-		return -1;
+		throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain " + name);
 	}
 
-	bool ArchiveUnpacker::ContainsFile(const std::string& filename)
+	bool ArchiveUnpacker::Contains(const std::string& name)
 	{
-		for (int i = 0; i < GetNumberOfPackedFiles(); ++i)
+		for (std::size_t i = 0; i < GetCount(); ++i)
 		{
-			if (XFile::PathsAreEqual(GetInternalFilename(i), filename)) {
+			if (XFile::PathsAreEqual(GetName(i), name)) {
 				return true;
 			}
 		}
@@ -45,32 +45,20 @@ namespace Archives
 		return false;
 	}
 
-	void ArchiveUnpacker::ExtractFile(const std::string& internalFilename, const std::string& pathOut)
+	void ArchiveUnpacker::ExtractFile(const std::string& name, const std::string& pathOut)
 	{
-		int index = GetInternalFileIndex(internalFilename);
-
-		if (index == -1) {
-			throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain a file named " + internalFilename);
-		}
-
-		ExtractFile(index, pathOut);
+		ExtractFile(GetIndex(name), pathOut);
 	}
 
-	std::unique_ptr<SeekableStreamReader> ArchiveUnpacker::OpenStream(const std::string& internalFilename)
+	std::unique_ptr<SeekableStreamReader> ArchiveUnpacker::OpenStream(const std::string& name)
 	{
-		int fileIndex = GetInternalFileIndex(internalFilename);
-
-		if (fileIndex == -1) {
-			throw std::runtime_error("Archive " + m_ArchiveFilename + " does not contain a file named " + internalFilename);
-		}
-
-		return OpenStream(fileIndex);
+		return OpenStream(GetIndex(name));
 	}
 
-	void ArchiveUnpacker::CheckPackedFileIndexBounds(int fileIndex)
+	void ArchiveUnpacker::CheckIndexBounds(std::size_t index)
 	{
-		if (fileIndex < 0 || fileIndex >= m_NumberOfPackedFiles) {
-			throw std::runtime_error("fileIndex is outside the bounds of packed files.");
+		if (index >= m_Count) {
+			throw std::runtime_error("Index " + std::to_string(index) + " is out of bounds in archive " + m_ArchiveFilename + ".");
 		}
 	}
 }
