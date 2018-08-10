@@ -50,6 +50,7 @@ public:
 		auto typedSize = static_cast<SizeType>(vectorSize);
 		Write(typedSize);
 		Write(vector);
+	}
 
 	// std::string prefixed by the string's size. The type of integer representing the size must be provided.
 	// Does not null terminate string unless null terminator is specifcally included in passed std::string. 
