@@ -19,7 +19,6 @@ namespace MapReader {
 		void ReadVersionTag(StreamReader& streamReader);
 		void ReadTileGroups(StreamReader& streamReader, MapData& mapData);
 		TileGroup ReadTileGroup(StreamReader& streamReader);
-		std::string ReadString(StreamReader& streamReader);
 
 		const std::array<char, 10> tilesetHeader{ "TILE SET\x1a" };
 	}
@@ -87,7 +86,7 @@ namespace MapReader {
 
 			for (auto& tilesetSource : mapData.tilesetSources)
 			{
-				tilesetSource.tilesetFilename = ReadString(streamReader);
+				streamReader.Read<uint32_t>(tilesetSource.tilesetFilename);
 
 				if (tilesetSource.tilesetFilename.size() > 8) {
 					throw std::runtime_error("Tileset name may not be greater than 8 characters in length.");
@@ -147,22 +146,9 @@ namespace MapReader {
 			tileGroup.mappingIndices.resize(tileGroup.tileWidth * tileGroup.tileHeight);
 			streamReader.Read(tileGroup.mappingIndices);
 
-			tileGroup.name = ReadString(streamReader);
+			streamReader.Read<uint32_t>(tileGroup.name);
 
 			return tileGroup;
-		}
-
-		// String must be stored in file as string length followed by char[].
-		std::string ReadString(StreamReader& streamReader)
-		{
-			uint32_t stringLength;
-			streamReader.Read(stringLength);
-
-			std::string s;
-			s.resize(stringLength);
-			streamReader.Read(&s[0], stringLength);
-
-			return s;
 		}
 	}
 }

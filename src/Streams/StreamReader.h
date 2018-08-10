@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <type_traits>
 #include <vector>
+#include <string>
+#include <stdexcept>
 
 class StreamReader {
 protected:
@@ -38,5 +40,19 @@ public:
 	template<typename T, typename A>
 	inline void Read(std::vector<T, A>& vector) {
 		ReadImplementation(vector.data(), vector.size() * sizeof(T));
+	}
+
+	// std::string prefixed by the string's size. The type of integer representing the size must be provided. 
+	template<typename SizeType>
+	void Read(std::string& string) {
+		SizeType stringSize;
+		Read(stringSize);
+		if (stringSize < 0) {
+			throw std::runtime_error("String's size may not be a negative number");
+		}
+
+		string.clear();
+		string.resize(stringSize);
+		Read(&string[0], stringSize);
 	}
 };
