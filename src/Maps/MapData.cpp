@@ -11,7 +11,7 @@ CellType MapData::GetCellType(std::size_t x, std::size_t y) const
 	return tiles[GetTileIndex(x, y)].cellType;
 }
 
-int MapData::GetLavaPossible(std::size_t x, std::size_t y) const
+bool MapData::GetLavaPossible(std::size_t x, std::size_t y) const
 {
 	return tiles[GetTileIndex(x, y)].bLavaPossible;
 }

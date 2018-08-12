@@ -44,7 +44,7 @@ struct MapData
 public:
 	std::size_t GetTileInfoIndex(std::size_t x, std::size_t y) const;
 	CellType GetCellType(std::size_t x, std::size_t y) const;
-	int GetLavaPossible(std::size_t x, std::size_t y) const;
+	bool GetLavaPossible(std::size_t x, std::size_t y) const;
 	uint16_t GetTilesetIndex(std::size_t x, std::size_t y) const;
 	uint16_t GetImageIndex(std::size_t x, std::size_t y) const;
 
