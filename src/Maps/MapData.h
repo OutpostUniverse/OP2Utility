@@ -49,5 +49,5 @@ public:
 	uint16_t GetImageIndex(std::size_t x, std::size_t y) const;
 
 private:
-	std::size_t GetCellIndex(std::size_t x, std::size_t y) const;
+	std::size_t GetTileIndex(std::size_t x, std::size_t y) const;
 };
