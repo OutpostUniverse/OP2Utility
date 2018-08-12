@@ -1,7 +1,7 @@
 #include "MapData.h"
 #include "CellType.h"
 
-unsigned int MapData::GetTileInfoIndex(std::size_t x, std::size_t y) const
+std::size_t MapData::GetTileInfoIndex(std::size_t x, std::size_t y) const
 {
 	return tiles[GetTileIndex(x, y)].tileIndex;
 }
