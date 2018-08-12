@@ -3,8 +3,7 @@
 
 unsigned int MapData::GetTileInfoIndex(std::size_t x, std::size_t y) const
 {
-	std::size_t cellIndex = GetCellIndex(x, y);
-	return tiles[cellIndex].tileIndex;
+	return tiles[GetCellIndex(x, y)].tileIndex;
 }
 
 CellType MapData::GetCellType(std::size_t x, std::size_t y) const
