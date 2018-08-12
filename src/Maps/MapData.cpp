@@ -19,14 +19,12 @@ int MapData::GetLavaPossible(std::size_t x, std::size_t y) const
 
 uint16_t MapData::GetTilesetIndex(std::size_t x, std::size_t y) const
 {
-	auto tileInfoIndex = GetTileInfoIndex(x, y);
-	return tileInfos[tileInfoIndex].tilesetIndex;
+	return tileInfos[GetTileInfoIndex(x, y)].tilesetIndex;
 }
 
 uint16_t MapData::GetImageIndex(std::size_t x, std::size_t y) const
 {
-	auto tileInfoIndex = GetTileInfoIndex(x, y);
-	return tileInfos[tileInfoIndex].tileIndex;
+	return tileInfos[GetTileInfoIndex(x, y)].tileIndex;
 }
 
 
