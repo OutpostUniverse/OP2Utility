@@ -29,7 +29,7 @@ uint16_t MapData::GetImageIndex(unsigned int x, unsigned int y) const
 	return tileInfos[tileInfoIndex].tileIndex;
 }
 
-std::size_t MapData::GetCellIndex(uint32_t x, uint32_t y) const
+std::size_t MapData::GetCellIndex(unsigned int x, unsigned int y) const
 {
 	uint32_t lowerX = x & 0x1F; // ... 0001 1111
 	uint32_t upperX = x >> 5;   // ... 1110 0000
