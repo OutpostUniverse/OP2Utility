@@ -45,8 +45,8 @@ public:
 	std::size_t GetTileInfoIndex(std::size_t x, std::size_t y) const;
 	CellType GetCellType(std::size_t x, std::size_t y) const;
 	bool GetLavaPossible(std::size_t x, std::size_t y) const;
-	uint16_t GetTilesetIndex(std::size_t x, std::size_t y) const;
-	uint16_t GetImageIndex(std::size_t x, std::size_t y) const;
+	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
+	std::size_t GetImageIndex(std::size_t x, std::size_t y) const;
 
 private:
 	std::size_t GetTileIndex(std::size_t x, std::size_t y) const;

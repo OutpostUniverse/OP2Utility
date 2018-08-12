@@ -17,12 +17,12 @@ bool MapData::GetLavaPossible(std::size_t x, std::size_t y) const
 }
 
 
-uint16_t MapData::GetTilesetIndex(std::size_t x, std::size_t y) const
+std::size_t MapData::GetTilesetIndex(std::size_t x, std::size_t y) const
 {
 	return tileInfos[GetTileInfoIndex(x, y)].tilesetIndex;
 }
 
-uint16_t MapData::GetImageIndex(std::size_t x, std::size_t y) const
+std::size_t MapData::GetImageIndex(std::size_t x, std::size_t y) const
 {
 	return tileInfos[GetTileInfoIndex(x, y)].tileIndex;
 }
