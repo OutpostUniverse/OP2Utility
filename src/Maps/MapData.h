@@ -42,12 +42,12 @@ struct MapData
 	std::vector<TileGroup> tileGroups;
 
 public:
-	unsigned int GetTileInfoIndex(unsigned int x, unsigned int y) const;
-	CellType GetCellType(unsigned int x, unsigned int y) const;
-	int GetLavaPossible(unsigned int x, unsigned int y) const;
-	uint16_t GetTilesetIndex(unsigned int x, unsigned int y) const;
-	uint16_t GetImageIndex(unsigned int x, unsigned int y) const;
+	std::size_t GetTileInfoIndex(std::size_t x, std::size_t y) const;
+	CellType GetCellType(std::size_t x, std::size_t y) const;
+	bool GetLavaPossible(std::size_t x, std::size_t y) const;
+	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
+	std::size_t GetImageIndex(std::size_t x, std::size_t y) const;
 
 private:
-	std::size_t GetCellIndex(unsigned int x, unsigned int y) const;
+	std::size_t GetTileIndex(std::size_t x, std::size_t y) const;
 };
