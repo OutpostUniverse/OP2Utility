@@ -21,9 +21,9 @@ namespace Archives
 		uint64_t GetVolumeFileSize() { return m_ArchiveFileSize; };
 		std::size_t GetCount() { return m_Count; };
 		bool Contains(const std::string& name);
-		std::size_t GetIndex(const std::string& name);
 		void ExtractFile(const std::string& name, const std::string& pathOut);
 
+		virtual std::size_t GetIndex(const std::string& name);
 		virtual std::string GetName(std::size_t index) = 0;
 		virtual uint32_t GetSize(std::size_t index) = 0;
 		virtual void ExtractFile(std::size_t index, const std::string& pathOut) = 0;

@@ -20,7 +20,7 @@ namespace Archives
 		~VolFile();
 
 		// Internal file status
-		virtual std::size_t GetIndex(const std::string& name);
+		//std::size_t GetIndex(const std::string& name) override;
 		std::string GetName(std::size_t index) override;
 		CompressionType GetCompressionCode(std::size_t index);
 		uint32_t GetSize(std::size_t index) override;
