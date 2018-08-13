@@ -18,15 +18,15 @@ namespace Archives
 		ClmFile(const std::string& filename);
 		virtual ~ClmFile();
 
-		std::string GetName(std::size_t index);
-		void ExtractFile(std::size_t index, const std::string& pathOut);
+		std::string GetName(std::size_t index) override;
+		void ExtractFile(std::size_t index, const std::string& pathOut) override;
 
 		// Opens a stream containing packed audio PCM data
-		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index);
+		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index) override;
 
-		uint32_t GetSize(std::size_t index);
+		uint32_t GetSize(std::size_t index) override;
 
-		void Repack();
+		void Repack() override;
 
 		// Create a new archive with the files specified in filesToPack
 		static void CreateArchive(const std::string& archiveFilename, std::vector<std::string> filesToPack);
