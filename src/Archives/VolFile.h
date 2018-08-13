@@ -20,18 +20,19 @@ namespace Archives
 		~VolFile();
 
 		// Internal file status
-		std::string GetName(std::size_t index);
+		virtual std::size_t GetIndex(const std::string& name);
+		std::string GetName(std::size_t index) override;
 		CompressionType GetCompressionCode(std::size_t index);
-		uint32_t GetSize(std::size_t index);
+		uint32_t GetSize(std::size_t index) override;
 
 		// Extraction
-		void ExtractFile(std::size_t index, const std::string& pathOut);
+		void ExtractFile(std::size_t index, const std::string& pathOut) override;
 
 		// Opens a stream containing a packed file
-		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index);
+		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index) override;
 
 		// Volume Creation
-		void Repack();
+		void Repack() override;
 
 		// Create a new archive with the files specified in filesToPack
 		static void CreateArchive(const std::string& volumeFilename, std::vector<std::string> filesToPack);
