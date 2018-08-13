@@ -19,12 +19,11 @@ namespace Archives
 		virtual ~ClmFile();
 
 		std::string GetName(std::size_t index) override;
+		uint32_t GetSize(std::size_t index) override;
 		void ExtractFile(std::size_t index, const std::string& pathOut) override;
 
 		// Opens a stream containing packed audio PCM data
 		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index) override;
-
-		uint32_t GetSize(std::size_t index) override;
 
 		void Repack() override;
 
