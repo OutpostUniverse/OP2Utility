@@ -28,7 +28,7 @@ namespace MapWriter {
 	void Write(StreamWriter& streamWriter, const MapData& mapData)
 	{
 		WriteHeader(streamWriter, mapData.header);
-		streamWriter.Write(&mapData.tiles[0], mapData.tiles.size() * sizeof(TileData));
+		streamWriter.Write(mapData.tiles);
 		streamWriter.Write(mapData.clipRect);
 		WriteTilesetSources(streamWriter, mapData.tilesetSources);
 		streamWriter.Write("TILE SET\x1a", 10);

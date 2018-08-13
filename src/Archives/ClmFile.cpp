@@ -33,7 +33,7 @@ namespace Archives
 		m_Count = clmHeader.packedFilesCount;
 
 		indexEntries = std::vector<IndexEntry>(m_Count);
-		clmFileReader.Read(indexEntries.data(), m_Count * sizeof(IndexEntry));
+		clmFileReader.Read(indexEntries);
 	}
 
 
@@ -260,7 +260,7 @@ namespace Archives
 
 		// Prepare and write Archive Index
 		PrepareIndex(sizeof(header), names, indexEntries);
-		clmFileWriter.Write(indexEntries.data(), header.packedFilesCount * sizeof(IndexEntry));
+		clmFileWriter.Write(indexEntries);
 
 		// Copy files into the archive
 		for (std::size_t i = 0; i < header.packedFilesCount; ++i) {

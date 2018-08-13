@@ -129,7 +129,7 @@ namespace Archives
 			// Load data into temporary memory buffer
 			std::size_t length = sectionHeader.length;
 			std::vector<uint8_t> buffer(length);
-			archiveFileReader.Read(buffer.data(), length);
+			archiveFileReader.Read(buffer);
 
 			HuffLZ decompressor(length, buffer.data());
 
@@ -225,7 +225,7 @@ namespace Archives
 		// Write the string table
 		volWriter.Write(SectionHeader(TagVOLS, volInfo.paddedStringTableLength));
 
-		volWriter.Write(&volInfo.stringTableLength, sizeof(volInfo.stringTableLength));
+		volWriter.Write(volInfo.stringTableLength);
 
 		// Write out all internal file name strings (including NULL terminator)
 		for (std::size_t i = 0; i < volInfo.fileCount(); ++i) {
@@ -377,7 +377,7 @@ namespace Archives
 	void VolFile::ReadStringTable()
 	{
 		uint32_t actualStringTableLength;
-		archiveFileReader.Read(&actualStringTableLength, sizeof(actualStringTableLength));
+		archiveFileReader.Read(actualStringTableLength);
 
 		std::string charBuffer;
 		charBuffer.resize(actualStringTableLength);

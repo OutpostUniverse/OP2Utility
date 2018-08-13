@@ -15,7 +15,6 @@ namespace MapReader {
 		void ReadTiles(StreamReader& streamReader, MapData& mapData);
 		void ReadTilesetSources(StreamReader& streamReader, MapData& mapData);
 		void ReadTilesetHeader(StreamReader& streamReader);
-		void ReadTileInfo(StreamReader& streamReader, MapData& mapData);
 		void ReadVersionTag(StreamReader& streamReader);
 		void ReadTileGroups(StreamReader& streamReader, MapData& mapData);
 		TileGroup ReadTileGroup(StreamReader& streamReader);
@@ -46,7 +45,8 @@ namespace MapReader {
 		streamReader.Read(mapData.clipRect);
 		ReadTilesetSources(streamReader, mapData);
 		ReadTilesetHeader(streamReader);
-		ReadTileInfo(streamReader, mapData);
+		streamReader.Read<uint32_t>(mapData.tileInfos);
+		streamReader.Read<uint32_t>(mapData.terrainTypes);
 		ReadVersionTag(streamReader);
 		ReadVersionTag(streamReader);
 		ReadTileGroups(streamReader, mapData);
@@ -67,7 +67,7 @@ namespace MapReader {
 		void ReadTiles(StreamReader& streamReader, MapData& mapData)
 		{
 			mapData.tiles.resize(mapData.header.TileCount());
-			streamReader.Read(&mapData.tiles[0], mapData.tiles.size() * sizeof(TileData));
+			streamReader.Read(mapData.tiles);
 		}
 
 		void ReadTilesetHeader(StreamReader& streamReader)
@@ -96,20 +96,6 @@ namespace MapReader {
 					streamReader.Read(tilesetSource.numTiles);
 				}
 			}
-		}
-
-		void ReadTileInfo(StreamReader& streamReader, MapData& mapData)
-		{
-			uint32_t numTileInfo;
-			streamReader.Read(numTileInfo);
-
-			mapData.tileInfos.resize(numTileInfo);
-			streamReader.Read(&mapData.tileInfos[0], numTileInfo * sizeof(TileInfo));
-
-			uint32_t numTerrainTypes;
-			streamReader.Read(numTerrainTypes);
-			mapData.terrainTypes.resize(numTerrainTypes);
-			streamReader.Read(&mapData.terrainTypes[0], numTerrainTypes * sizeof(TerrainType));
 		}
 
 		void ReadVersionTag(StreamReader& streamReader)
