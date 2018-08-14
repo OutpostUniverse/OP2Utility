@@ -33,7 +33,7 @@ file(GLOB SOURCE_CODE
 	"src/Archives/WaveFile.h"
 	
 	"src/Maps/CellType.h"
-	"src/Maps/ClipRect.h"
+	"src/Maps/Rect.h"
 	"src/Maps/MapData.cpp"
 	"src/Maps/MapData.h"
 	"src/Maps/MapHeader.h"

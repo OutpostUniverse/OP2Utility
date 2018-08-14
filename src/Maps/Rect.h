@@ -4,8 +4,7 @@
 
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
-// Represents playable area of the map.
-struct ClipRect
+struct Rect
 {
 	int32_t x1;
 	int32_t y1;
