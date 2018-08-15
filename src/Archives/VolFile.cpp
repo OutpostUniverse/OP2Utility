@@ -381,7 +381,7 @@ namespace Archives
 
 		std::string charBuffer;
 		charBuffer.resize(actualStringTableLength);
-		archiveFileReader.Read(&charBuffer[0], actualStringTableLength);
+		archiveFileReader.Read(charBuffer);
 
 		m_StringTable.push_back("");
 		for (std::size_t i = 0; i < charBuffer.size(); ++i)
