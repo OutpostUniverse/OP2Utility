@@ -53,6 +53,7 @@ public:
 	}
 
 	// String data types
+	// Does not write null terminator unless specifically included in string
 	template<typename CharT, typename Traits, typename Allocator>
 	void Write(const std::basic_string<CharT, Traits, Allocator>& string) {
 		Write(&string[0], string.size() * sizeof(CharT));
