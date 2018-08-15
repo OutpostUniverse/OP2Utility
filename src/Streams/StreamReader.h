@@ -37,12 +37,15 @@ public:
 	}
 
 	// Vector data types
+	// Reads into entire length of passed vector. Call vector.resize(vectorSize) before 
+	// passing vector into this function to ensure proper vector size is read
 	template<typename T, typename A>
 	inline void Read(std::vector<T, A>& vector) {
 		ReadImplementation(vector.data(), vector.size() * sizeof(T));
 	}
 
 	// Size prefixed vector data types
+	// Ex: Read<uint32_t>(vector); // Read 32-bit vector size, allocate space, then read vector data
 	template<typename SizeType, typename T, typename A>
 	void Read(std::vector<T, A>& vector) {
 		SizeType vectorSize;
@@ -55,9 +58,18 @@ public:
 		Read(vector);
 	}
 
-	// std::string prefixed by the string's size. The type of integer representing the size must be provided. 
-	template<typename SizeType>
-	void Read(std::string& string) {
+	// String data types
+	// Reads into entire length of passed string. Call string.resize(stringSize) before 
+	// passing string into this function to ensure proper string size is read
+	template<typename CharT, typename Traits, typename Allocator>
+	void Read(std::basic_string<CharT, Traits, Allocator>& string) {
+		Read(&string[0], string.size() * sizeof(CharT));
+	}
+
+	// Size prefixed string data types
+	// Ex: Read<uint32_t>(string); // Read 32-bit string length, allocate space, then read string data
+	template<typename SizeType, typename CharT, typename Traits, typename Allocator>
+	void Read(std::basic_string<CharT, Traits, Allocator>& string) {
 		SizeType stringSize;
 		Read(stringSize);
 		if (stringSize < 0) {
@@ -66,6 +78,6 @@ public:
 
 		string.clear();
 		string.resize(stringSize);
-		Read(&string[0], stringSize);
+		Read(string);
 	}
 };
