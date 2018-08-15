@@ -37,6 +37,8 @@ public:
 	}
 
 	// Vector data types
+	// Reads into entire length of passed vector. Call vector.resize(vectorSize) before 
+	// passing vector into this function to ensure proper vector size is read
 	template<typename T, typename A>
 	inline void Read(std::vector<T, A>& vector) {
 		ReadImplementation(vector.data(), vector.size() * sizeof(T));
@@ -57,6 +59,8 @@ public:
 	}
 
 	// String data types
+	// Reads into entire length of passed string. Call string.resize(stringSize) before 
+	// passing string into this function to ensure proper string size is read
 	template<typename CharT, typename Traits, typename Allocator>
 	void Read(std::basic_string<CharT, Traits, Allocator>& string) {
 		Read(&string[0], string.size() * sizeof(CharT));
