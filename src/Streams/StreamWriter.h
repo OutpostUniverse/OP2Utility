@@ -59,7 +59,7 @@ public:
 
 	// Size prefixed string data types
 	// Ex: Write<uint32_t>(string); // Write 32-bit string length followed by string data
-	// Does not write null terminator unless specifcally included in string.
+	// Does not write null terminator unless specifically included in string.
 	template<typename SizeType, typename CharT, typename Traits, typename Allocator>
 	void Write(const std::basic_string<CharT, Traits, Allocator>& string) {
 		auto stringSize = string.size();
