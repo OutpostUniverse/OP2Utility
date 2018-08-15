@@ -5,7 +5,7 @@
 #include "TilesetSource.h"
 #include "TileInfo.h"
 #include "TerrainType.h"
-#include "ClipRect.h"
+#include "Rect.h"
 #include "TileGroup.h"
 #include <string>
 #include <vector>
@@ -28,7 +28,8 @@ struct MapData
 	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
 	std::vector<TileData> tiles;
 
-	ClipRect clipRect;
+	// Represents playable area of the map.
+	Rect clipRect;
 
 	// Listing of all tile set sources associated with the map.
 	std::vector<TilesetSource> tilesetSources;

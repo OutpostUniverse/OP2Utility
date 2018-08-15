@@ -121,7 +121,7 @@
     <ClInclude Include="src\Archives\WaveFile.h" />
     <ClInclude Include="include\OP2Utility.h" />
     <ClInclude Include="src\Maps\CellType.h" />
-    <ClInclude Include="src\Maps\ClipRect.h" />
+    <ClInclude Include="src\Maps\Rect.h" />
     <ClInclude Include="src\Maps\MapData.h" />
     <ClInclude Include="src\Maps\MapHeader.h" />
     <ClInclude Include="src\Maps\MapReader.h" />

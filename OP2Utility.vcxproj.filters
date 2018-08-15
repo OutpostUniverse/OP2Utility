@@ -78,7 +78,7 @@
     <ClInclude Include="src\Maps\TileInfo.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maps\ClipRect.h">
+    <ClInclude Include="src\Maps\Rect.h">
       <Filter>Maps</Filter>
     </ClInclude>
     <ClInclude Include="src\Maps\MapWriter.h">
