@@ -40,6 +40,7 @@ public:
 	}
 
 	// Size prefixed vector data types
+	// Ex: Write<uint32_t>(vector); // Write 32-bit vector size followed by vector data
 	template<typename SizeType, typename T, typename A>
 	void Write(const std::vector<T, A>& vector) {
 		auto vectorSize = vector.size();

@@ -43,6 +43,7 @@ public:
 	}
 
 	// Size prefixed vector data types
+	// Ex: Read<uint32_t>(vector); // Read 32-bit vector size, allocate space, then read vector data
 	template<typename SizeType, typename T, typename A>
 	void Read(std::vector<T, A>& vector) {
 		SizeType vectorSize;
