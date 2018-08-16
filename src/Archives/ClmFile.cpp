@@ -156,6 +156,13 @@ namespace Archives
 
 		std::vector<std::string> names = GetNamesFromPaths(filesToPack);
 		names = StripFilenameExtensions(names);
+
+		for (const auto& name : names) {
+			if (name.size() > 8) {
+				throw std::runtime_error("Filename " + name + " for packing into archive " + archiveFilename + " must be at most 8 characters in length excluding the extension");
+			}
+		}
+
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
 		CheckSortedContainerForDuplicateNames(names);
 
