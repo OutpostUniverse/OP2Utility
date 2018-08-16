@@ -1,17 +1,17 @@
-#include "BitStream.h"
+#include "BitStreamReader.h"
 #include <stdexcept>
 #include <string>
 #include <limits>
 
 namespace Archives
 {
-	BitStream::BitStream() :
+	BitStreamReader::BitStreamReader() :
 		m_BufferBitSize(0),
 		m_Buffer(0),
 		m_ReadBitIndex(0),
 		m_ReadBuff(0) { }
 
-	BitStream::BitStream(std::size_t bufferSize, void *buffer) :
+	BitStreamReader::BitStreamReader(std::size_t bufferSize, void *buffer) :
 		m_BufferBitSize(bufferSize << 3),
 		m_Buffer(static_cast<unsigned char*>(buffer)),
 		m_ReadBitIndex(0),
@@ -19,14 +19,14 @@ namespace Archives
 	{
 		// Check bufferSize does not exceed the max addressable bit index
 		if (bufferSize > std::numeric_limits<decltype(m_BufferBitSize)>::max() / 8) {
-			throw std::runtime_error("BitStream cannot support a buffer size of " + std::to_string(bufferSize));
+			throw std::runtime_error("BitStreamReader cannot support a buffer size of " + std::to_string(bufferSize));
 		}
 	}
 
 
 
 
-	bool BitStream::ReadNextBit()
+	bool BitStreamReader::ReadNextBit()
 	{
 		bool bNextBit;
 
@@ -50,7 +50,7 @@ namespace Archives
 		return bNextBit;	// Return the next bit in the stream
 	}
 
-	int BitStream::ReadNext8Bits()
+	int BitStreamReader::ReadNext8Bits()
 	{
 		int value;
 
@@ -85,12 +85,12 @@ namespace Archives
 	}
 
 
-	bool BitStream::EndOfStream() const
+	bool BitStreamReader::EndOfStream() const
 	{
 		return m_ReadBitIndex >= m_BufferBitSize;
 	}
 
-	std::size_t BitStream::GetBitReadPos() const
+	std::size_t BitStreamReader::GetBitReadPos() const
 	{
 		return m_ReadBitIndex;
 	}
