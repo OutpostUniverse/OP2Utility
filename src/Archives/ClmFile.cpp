@@ -163,7 +163,7 @@ namespace Archives
 			}
 		}
 
-		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
+		// Allowing duplicate names when packing may cause unintended results during search and file extraction.
 		CheckSortedContainerForDuplicateNames(names);
 
 		// Write the archive header and copy files into the archive
