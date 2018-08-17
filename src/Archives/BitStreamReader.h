@@ -5,11 +5,11 @@
 namespace Archives
 {
 	// This is designed for use in the .vol file decompressor
-	class BitStream
+	class BitStreamReader
 	{
 	public:
-		BitStream();				// Construct empty stream
-		BitStream(std::size_t bufferSize, void *buffer); // Construct stream around given buffer
+		BitStreamReader();			// Construct empty stream
+		BitStreamReader(std::size_t bufferSize, void *buffer); // Construct stream around given buffer
 
 		bool ReadNextBit();			// Get bit at Read index and advance index
 		int  ReadNext8Bits();		// Get next 8 bits at Read index and advance index

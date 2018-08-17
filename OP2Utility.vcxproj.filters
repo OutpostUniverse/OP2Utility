@@ -45,9 +45,6 @@
     <ClInclude Include="src\Archives\ArchiveFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="src\Archives\BitStream.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
     <ClInclude Include="src\Archives\ClmFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
@@ -129,6 +126,9 @@
     <ClInclude Include="src\Maps\TilesetSource.h">
       <Filter>Maps</Filter>
     </ClInclude>
+    <ClInclude Include="src\Archives\BitStreamReader.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
@@ -141,9 +141,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Archives\AdaptHuffTree.cpp">
-      <Filter>Archives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Archives\BitStream.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
     <ClCompile Include="src\Archives\ClmFile.cpp">
@@ -184,6 +181,9 @@
     </ClCompile>
     <ClCompile Include="src\Streams\FileSliceReader.cpp">
       <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Archives\BitStreamReader.cpp">
+      <Filter>Archives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

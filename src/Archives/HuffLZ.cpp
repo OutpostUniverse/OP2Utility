@@ -4,10 +4,10 @@
 namespace Archives
 {
 	// Constructs the object around an existing bit stream
-	HuffLZ::HuffLZ(BitStream *bitStream)
+	HuffLZ::HuffLZ(BitStreamReader *bitStreamReader)
 	{
-		m_ContructedBitStream = 0;				// Don't need to delete stream in destructor
-		m_BitStream = bitStream;				// Store a reference to the bit stream
+		m_ContructedBitStreamReader = 0;		// Don't need to delete stream in destructor
+		m_BitStreamReader = bitStreamReader;	// Store a reference to the bit stream
 		m_HuffTree = new AdaptHuffTree(314);	// Construct the Adaptive Huffman tree
 		m_BuffWriteIndex = 0;
 		m_BuffReadIndex = 0;
@@ -20,9 +20,9 @@ namespace Archives
 	// Creates an internal bit stream for the buffer
 	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer)
 	{
-		// Construct the BitStream object
-		m_BitStream = new BitStream(bufferSize, buffer);
-		m_ContructedBitStream = m_BitStream;	// Remeber to delete this in the destructor
+		// Construct the BitStreamReader object
+		m_BitStreamReader = new BitStreamReader(bufferSize, buffer);
+		m_ContructedBitStreamReader = m_BitStreamReader;	// Remeber to delete this in the destructor
 
 		m_HuffTree = new AdaptHuffTree(314);	// Construct the Adaptive Huffman tree
 		m_BuffWriteIndex = 0;
@@ -35,7 +35,7 @@ namespace Archives
 
 	HuffLZ::~HuffLZ()
 	{
-		delete m_ContructedBitStream;
+		delete m_ContructedBitStreamReader;
 		delete m_HuffTree;
 	}
 
@@ -211,7 +211,7 @@ namespace Archives
 		}
 
 		// Check for the end of the stream
-		return m_BitStream->EndOfStream();
+		return m_BitStreamReader->EndOfStream();
 	}
 
 
@@ -225,7 +225,7 @@ namespace Archives
 		nodeIndex = m_HuffTree->GetRootNodeIndex();
 		while (!m_HuffTree->IsLeaf(nodeIndex))
 		{
-			bBit = m_BitStream->ReadNextBit();
+			bBit = m_BitStreamReader->ReadNextBit();
 			nodeIndex = m_HuffTree->GetChildNode(nodeIndex, bBit);
 		}
 
@@ -236,11 +236,11 @@ namespace Archives
 	int HuffLZ::GetRepeatOffset()
 	{
 		// Get the next 8 bits
-		int offset = m_BitStream->ReadNext8Bits();
+		int offset = m_BitStreamReader->ReadNext8Bits();
 
 		// Read in the extra bits
 		for (int numExtraBits = GetNumExtraBits(offset); numExtraBits; numExtraBits--) {
-			offset = (offset << 1) + m_BitStream->ReadNextBit();
+			offset = (offset << 1) + m_BitStreamReader->ReadNextBit();
 		}
 		offset &= 0x3F;			// Mask upper bits (keep lower 6)
 

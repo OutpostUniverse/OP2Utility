@@ -134,7 +134,7 @@
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\Archives\AdaptHuffTree.h" />
     <ClInclude Include="src\Archives\ArchiveFile.h" />
-    <ClInclude Include="src\Archives\BitStream.h" />
+    <ClInclude Include="src\Archives\BitStreamReader.h" />
     <ClInclude Include="src\Archives\ClmFile.h" />
     <ClInclude Include="src\Archives\HuffLZ.h" />
     <ClInclude Include="src\Archives\VolFile.h" />
@@ -145,7 +145,7 @@
     <ClCompile Include="src\Maps\MapWriter.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\Archives\AdaptHuffTree.cpp" />
-    <ClCompile Include="src\Archives\BitStream.cpp" />
+    <ClCompile Include="src\Archives\BitStreamReader.cpp" />
     <ClCompile Include="src\Archives\ClmFile.cpp" />
     <ClCompile Include="src\Archives\HuffLZ.cpp" />
     <ClCompile Include="src\Archives\VolFile.cpp" />
