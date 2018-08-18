@@ -60,7 +60,7 @@ namespace Archives
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<Stream::SeekableStreamReader> VolFile::OpenStream(std::size_t index)
+	std::unique_ptr<Stream::SeekableReader> VolFile::OpenStream(std::size_t index)
 	{
 		SectionHeader sectionHeader = GetSectionHeader(index);
 
@@ -110,7 +110,7 @@ namespace Archives
 			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
 			SectionHeader sectionHeader = GetSectionHeader(index);
 			auto slice = archiveFileReader.Slice(sectionHeader.length);
-			Stream::FileStreamWriter fileStreamWriter(pathOut);
+			Stream::FileWriter fileStreamWriter(pathOut);
 			fileStreamWriter.Write(slice);
 		}
 		catch (const std::exception& e)
@@ -133,7 +133,7 @@ namespace Archives
 
 			HuffLZ decompressor(length, buffer.data());
 
-			Stream::FileStreamWriter fileStreamWriter(pathOut);
+			Stream::FileWriter fileStreamWriter(pathOut);
 
 			do
 			{
@@ -188,13 +188,13 @@ namespace Archives
 
 	void VolFile::WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo)
 	{
-		Stream::FileStreamWriter volWriter(filename);
+		Stream::FileWriter volWriter(filename);
 
 		WriteHeader(volWriter, volInfo);
 		WriteFiles(volWriter, volInfo);
 	}
 
-	void VolFile::WriteFiles(Stream::StreamWriter& volWriter, CreateVolumeInfo &volInfo)
+	void VolFile::WriteFiles(Stream::Writer& volWriter, CreateVolumeInfo &volInfo)
 	{
 		// Write each file header and contents
 		for (std::size_t i = 0; i < volInfo.fileCount(); ++i)
@@ -215,7 +215,7 @@ namespace Archives
 		}
 	}
 
-	void VolFile::WriteHeader(Stream::StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
+	void VolFile::WriteHeader(Stream::Writer& volWriter, const CreateVolumeInfo &volInfo)
 	{
 		// Write the header
 		volWriter.Write(SectionHeader(TagVOL_, volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24));
@@ -250,7 +250,7 @@ namespace Archives
 
 		for (const auto& filename : volInfo.filesToPack) {
 			try {
-				volInfo.fileStreamReaders.push_back(std::make_unique<Stream::FileStreamReader>(filename));
+				volInfo.fileStreamReaders.push_back(std::make_unique<Stream::FileReader>(filename));
 			}
 			catch (const std::exception& e) {
 				throw std::runtime_error("Error attempting to open " + filename +

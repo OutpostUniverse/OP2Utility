@@ -65,7 +65,7 @@ namespace Archives
 
 		try
 		{
-			Stream::FileStreamWriter waveFileWriter(pathOut);
+			Stream::FileWriter waveFileWriter(pathOut);
 
 			waveFileWriter.Write(header);
 
@@ -96,7 +96,7 @@ namespace Archives
 		headerOut.dataChunk.length = indexEntries[index].dataLength;
 	}
 
-	std::unique_ptr<Stream::SeekableStreamReader> ClmFile::OpenStream(std::size_t index)
+	std::unique_ptr<Stream::SeekableReader> ClmFile::OpenStream(std::size_t index)
 	{
 		CheckIndexBounds(index);
 
@@ -137,15 +137,15 @@ namespace Archives
 		// Packed files must be locatable by a binary search of their filename.
 		std::sort(filesToPack.begin(), filesToPack.end(), ComparePathFilenames);
 
-		std::vector<std::unique_ptr<Stream::FileStreamReader>> filesToPackReaders;
+		std::vector<std::unique_ptr<Stream::FileReader>> filesToPackReaders;
 
 		// Opens all files for packing. If there is a problem opening a file, an exception is raised.
 		for (const auto& filename : filesToPack) {
-			filesToPackReaders.push_back(std::make_unique<Stream::FileStreamReader>(filename));
+			filesToPackReaders.push_back(std::make_unique<Stream::FileReader>(filename));
 		}
 
 		// Initialize vectors with default values for the number of files to pack.
-		// Allows directly reading data into the vector using a StreamReader.
+		// Allows directly reading data into the vector using a Reader.
 		std::vector<WaveFormatEx> waveFormats(filesToPack.size());
 		std::vector<IndexEntry> indexEntries(filesToPack.size());
 
@@ -175,7 +175,7 @@ namespace Archives
 	// The current stream position is set to the start of the data chunk.
 	// Note: This function assumes that all stream positions are initially set to the beginning
 	//  of the file. When reading the wave file header, it does not seek to the file start.
-	void ClmFile::ReadAllWaveHeaders(std::vector<std::unique_ptr<Stream::FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries)
+	void ClmFile::ReadAllWaveHeaders(std::vector<std::unique_ptr<Stream::FileReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries)
 	{
 		RiffHeader header;
 
@@ -208,7 +208,7 @@ namespace Archives
 	// Searches through the wave file to find the given chunk length
 	// The current stream position is set the the first byte after the chunk header
 	// Returns the chunk length if found or -1 otherwise
-	uint32_t ClmFile::FindChunk(std::array<char, 4> chunkTag, Stream::SeekableStreamReader& seekableStreamReader)
+	uint32_t ClmFile::FindChunk(std::array<char, 4> chunkTag, Stream::SeekableReader& seekableStreamReader)
 	{
 		uint64_t fileSize = seekableStreamReader.Length();
 
@@ -253,7 +253,7 @@ namespace Archives
 	}
 
 	void ClmFile::WriteArchive(const std::string& archiveFilename,
-		const std::vector<std::unique_ptr<Stream::FileStreamReader>>& filesToPackReaders,
+		const std::vector<std::unique_ptr<Stream::FileReader>>& filesToPackReaders,
 		std::vector<IndexEntry>& indexEntries,
 		const std::vector<std::string>& names,
 		const WaveFormatEx& waveFormat)
@@ -261,7 +261,7 @@ namespace Archives
 		// ClmFile cannot contain more than 32 bit size internal file count.
 		ClmHeader header(waveFormat, static_cast<uint32_t>(names.size()));
 
-		Stream::FileStreamWriter clmFileWriter(archiveFilename);
+		Stream::FileWriter clmFileWriter(archiveFilename);
 
 		clmFileWriter.Write(header);
 

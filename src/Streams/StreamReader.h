@@ -8,7 +8,7 @@
 
 namespace Stream
 {
-	class StreamReader {
+	class Reader {
 	protected:
 		// Generic read method, which raises an exception if the full data can not be read
 		// Note: This is named separately from Read to prevent name hiding in derived classes
@@ -20,7 +20,7 @@ namespace Stream
 		// This method is similar to Read, except it does not raise an exception if the buffer can not be filled
 		virtual std::size_t ReadPartial(void* buffer, std::size_t size) noexcept = 0;
 
-		virtual ~StreamReader() = default;
+		virtual ~Reader() = default;
 
 		// Helper methods, which depend only on the above interface
 		// ====

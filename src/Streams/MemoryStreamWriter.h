@@ -6,14 +6,14 @@
 
 namespace Stream
 {
-	class MemoryStreamWriter : public SeekableStreamWriter
+	class MemoryWriter : public SeekableWriter
 	{
 	public:
 		// buffer: where data will be written to.
 		// size: Amount of space allocated in the buffer for writing into.
-		MemoryStreamWriter(void* buffer, std::size_t size);
+		MemoryWriter(void* buffer, std::size_t size);
 
-		// SeekableStreamWriter methods
+		// SeekableWriter methods
 		uint64_t Length() override;
 		uint64_t Position() override;
 		void Seek(uint64_t offset) override;

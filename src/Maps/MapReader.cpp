@@ -11,13 +11,13 @@
 namespace MapReader {
 	// Anonymous namespace to hold private methods
 	namespace {
-		void SkipSaveGameHeader(Stream::SeekableStreamReader& streamReader);
-		void ReadTiles(Stream::StreamReader& streamReader, MapData& mapData);
-		void ReadTilesetSources(Stream::StreamReader& streamReader, MapData& mapData);
-		void ReadTilesetHeader(Stream::StreamReader& streamReader);
-		void ReadVersionTag(Stream::StreamReader& streamReader);
-		void ReadTileGroups(Stream::StreamReader& streamReader, MapData& mapData);
-		TileGroup ReadTileGroup(Stream::StreamReader& streamReader);
+		void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
+		void ReadTiles(Stream::Reader& streamReader, MapData& mapData);
+		void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData);
+		void ReadTilesetHeader(Stream::Reader& streamReader);
+		void ReadVersionTag(Stream::Reader& streamReader);
+		void ReadTileGroups(Stream::Reader& streamReader, MapData& mapData);
+		TileGroup ReadTileGroup(Stream::Reader& streamReader);
 
 		const std::array<char, 10> tilesetHeader{ "TILE SET\x1a" };
 	}
@@ -28,11 +28,11 @@ namespace MapReader {
 
 	MapData Read(std::string filename, bool savedGame)
 	{
-		Stream::FileStreamReader mapReader(filename);
+		Stream::FileReader mapReader(filename);
 		return Read(mapReader, savedGame);
 	}
 
-	MapData Read(Stream::SeekableStreamReader& streamReader, bool savedGame)
+	MapData Read(Stream::SeekableReader& streamReader, bool savedGame)
 	{
 		MapData mapData;
 
@@ -59,18 +59,18 @@ namespace MapReader {
 
 
 	namespace {
-		void SkipSaveGameHeader(Stream::SeekableStreamReader& streamReader)
+		void SkipSaveGameHeader(Stream::SeekableReader& streamReader)
 		{
 			streamReader.SeekRelative(0x1E025);
 		}
 
-		void ReadTiles(Stream::StreamReader& streamReader, MapData& mapData)
+		void ReadTiles(Stream::Reader& streamReader, MapData& mapData)
 		{
 			mapData.tiles.resize(mapData.header.TileCount());
 			streamReader.Read(mapData.tiles);
 		}
 
-		void ReadTilesetHeader(Stream::StreamReader& streamReader)
+		void ReadTilesetHeader(Stream::Reader& streamReader)
 		{
 			std::array<char, 10> buffer;
 			streamReader.Read(buffer);
@@ -80,7 +80,7 @@ namespace MapReader {
 			}
 		}
 
-		void ReadTilesetSources(Stream::StreamReader& streamReader, MapData& mapData)
+		void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData)
 		{
 			mapData.tilesetSources.resize(static_cast<std::size_t>(mapData.header.numTilesets));
 
@@ -98,7 +98,7 @@ namespace MapReader {
 			}
 		}
 
-		void ReadVersionTag(Stream::StreamReader& streamReader)
+		void ReadVersionTag(Stream::Reader& streamReader)
 		{
 			uint32_t versionTag;
 			streamReader.Read(versionTag);
@@ -109,7 +109,7 @@ namespace MapReader {
 			}
 		}
 
-		void ReadTileGroups(Stream::StreamReader& streamReader, MapData& mapData)
+		void ReadTileGroups(Stream::Reader& streamReader, MapData& mapData)
 		{
 			uint32_t numTileGroups;
 			streamReader.Read(numTileGroups);
@@ -122,7 +122,7 @@ namespace MapReader {
 			}
 		}
 
-		TileGroup ReadTileGroup(Stream::StreamReader& streamReader)
+		TileGroup ReadTileGroup(Stream::Reader& streamReader)
 		{
 			TileGroup tileGroup;
 

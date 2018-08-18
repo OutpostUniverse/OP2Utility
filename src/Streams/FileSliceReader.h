@@ -8,7 +8,7 @@
 namespace Stream
 {
 	// Opens a new file stream that is limited to reading from the provided file slice.
-	class FileSliceReader : public SeekableStreamReader
+	class FileSliceReader : public SeekableReader
 	{
 	public:
 		FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength);
@@ -16,7 +16,7 @@ namespace Stream
 
 		std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
 
-		// SeekableStreamReader methods
+		// SeekableReader methods
 		uint64_t Length() override;
 		uint64_t Position() override;
 		void Seek(uint64_t position) override;
@@ -35,7 +35,7 @@ namespace Stream
 	private:
 		void Initialize();
 
-		FileStreamReader fileStreamReader;
+		FileReader fileStreamReader;
 		const uint64_t startingOffset;
 		const uint64_t sliceLength;
 	};

@@ -10,15 +10,15 @@ namespace Stream
 {
 	class FileSliceReader;
 
-	class FileStreamReader : public SeekableStreamReader {
+	class FileReader : public SeekableReader {
 	public:
-		FileStreamReader(std::string filename);
-		FileStreamReader(const FileStreamReader& fileStreamReader);
-		~FileStreamReader() override;
+		FileReader(std::string filename);
+		FileReader(const FileReader& fileStreamReader);
+		~FileReader() override;
 
 		std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
 
-		// SeekableStreamReader methods
+		// SeekableReader methods
 		uint64_t Length() override;
 		uint64_t Position() override;
 		void Seek(uint64_t position) override;

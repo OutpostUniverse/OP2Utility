@@ -8,13 +8,13 @@
 
 namespace Stream
 {
-	class FileStreamWriter : public SeekableStreamWriter
+	class FileWriter : public SeekableWriter
 	{
 	public:
-		FileStreamWriter(const std::string& filename);
-		~FileStreamWriter() override;
+		FileWriter(const std::string& filename);
+		~FileWriter() override;
 
-		// SeekableStreamWriter methods
+		// SeekableWriter methods
 		uint64_t Length() override;
 		uint64_t Position() override;
 		void Seek(uint64_t offset) override;

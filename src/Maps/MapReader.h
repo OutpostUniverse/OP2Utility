@@ -4,10 +4,10 @@
 #include <string>
 
 namespace Stream {
-	class SeekableStreamReader;
+	class SeekableReader;
 }
 
 namespace MapReader {
 	MapData Read(std::string filename, bool savedGame = false);
-	MapData Read(Stream::SeekableStreamReader& mapStream, bool savedGame = false);
+	MapData Read(Stream::SeekableReader& mapStream, bool savedGame = false);
 }

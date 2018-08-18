@@ -4,11 +4,11 @@
 #include <string>
 
 namespace Stream {
-	class StreamWriter;
+	class Writer;
 }
 
 // Writes an Outpost 2 map to file.
 namespace MapWriter {
 	void Write(const std::string& filename, const MapData& mapData);
-	void Write(Stream::StreamWriter& mapStream, const MapData& mapData);
+	void Write(Stream::Writer& mapStream, const MapData& mapData);
 }

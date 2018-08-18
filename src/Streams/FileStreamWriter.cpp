@@ -3,7 +3,7 @@
 
 namespace Stream
 {
-	FileStreamWriter::FileStreamWriter(const std::string& filename) :
+	FileWriter::FileWriter(const std::string& filename) :
 		filename(filename),
 		file(filename, std::ios::trunc | std::ios::out | std::ios::binary)
 	{
@@ -12,16 +12,16 @@ namespace Stream
 		}
 	}
 
-	FileStreamWriter::~FileStreamWriter() {
+	FileWriter::~FileWriter() {
 		file.close();
 	}
 
-	void FileStreamWriter::WriteImplementation(const void* buffer, std::size_t size)
+	void FileWriter::WriteImplementation(const void* buffer, std::size_t size)
 	{
 		file.write(static_cast<const char*>(buffer), size);
 	}
 
-	uint64_t FileStreamWriter::Length()
+	uint64_t FileWriter::Length()
 	{
 		auto currentPosition = file.tellp();  // Record current position
 		file.seekp(0, std::ios_base::end);    // Seek to end of file
@@ -30,17 +30,17 @@ namespace Stream
 		return length;
 	}
 
-	uint64_t FileStreamWriter::Position()
+	uint64_t FileWriter::Position()
 	{
 		return file.tellp();  // Return the current put pointer
 	}
 
-	void FileStreamWriter::Seek(uint64_t offset)
+	void FileWriter::Seek(uint64_t offset)
 	{
 		file.seekp(offset);
 	}
 
-	void FileStreamWriter::SeekRelative(int64_t offset)
+	void FileWriter::SeekRelative(int64_t offset)
 	{
 		file.seekp(offset, std::ios_base::cur);
 	}

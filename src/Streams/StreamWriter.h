@@ -12,7 +12,7 @@
 
 namespace Stream
 {
-	class StreamWriter {
+	class Writer {
 	protected:
 		// Generic write method, which raises an exception if the full data can not be written
 		// Note: This is named separately from Write to prevent name hiding in derived classes
@@ -20,7 +20,7 @@ namespace Stream
 		virtual void WriteImplementation(const void* buffer, std::size_t size) = 0;
 
 	public:
-		virtual ~StreamWriter() = default;
+		virtual ~Writer() = default;
 
 		inline void Write(const void* buffer, std::size_t size) {
 			WriteImplementation(buffer, size);
@@ -74,10 +74,10 @@ namespace Stream
 			Write(string);
 		}
 
-		// Copy a StreamReader to a StreamWriter
+		// Copy a Reader to a Writer
 		static const std::size_t DefaultCopyChunkSize = 0x00020000;
 		template<std::size_t BufferSize = DefaultCopyChunkSize>
-		void Write(StreamReader& streamReader) {
+		void Write(Reader& streamReader) {
 			std::array<char, BufferSize> buffer;
 			std::size_t numBytesRead;
 
