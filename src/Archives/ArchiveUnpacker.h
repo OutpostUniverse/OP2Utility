@@ -5,9 +5,11 @@
 #include <cstdint>
 #include <cstddef>
 
-class SeekableStreamReader;
-class StreamReader;
-class StreamWriter;
+namespace Stream {
+	class SeekableStreamReader;
+	class StreamReader;
+	class StreamWriter;
+}
 
 namespace Archives
 {
@@ -28,8 +30,8 @@ namespace Archives
 		virtual uint32_t GetSize(std::size_t index) = 0;
 		virtual void ExtractFile(std::size_t index, const std::string& pathOut) = 0;
 		virtual void ExtractAllFiles(const std::string& destDirectory);
-		virtual std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index) = 0;
-		virtual std::unique_ptr<SeekableStreamReader> OpenStream(const std::string& name);
+		virtual std::unique_ptr<Stream::SeekableStreamReader> OpenStream(std::size_t index) = 0;
+		virtual std::unique_ptr<Stream::SeekableStreamReader> OpenStream(const std::string& name);
 
 	protected:
 		void CheckIndexBounds(std::size_t index);

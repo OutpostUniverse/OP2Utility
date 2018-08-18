@@ -6,7 +6,9 @@
 #include <memory>
 #include <cstddef>
 
-class SeekableStreamReader;
+namespace Stream {
+	class SeekableStreamReader;
+}
 
 // Use to find files/resources either on disk or contained in an archive file (.vol|.clm).
 class ResourceManager
@@ -14,7 +16,7 @@ class ResourceManager
 public:
 	ResourceManager(const std::string& archiveDirectory);
 
-	std::unique_ptr<SeekableStreamReader> GetResourceStream(const std::string& filename, bool accessArchives = true);
+	std::unique_ptr<Stream::SeekableStreamReader> GetResourceStream(const std::string& filename, bool accessArchives = true);
 
 	std::vector<std::string> GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArchives = true);
 	std::vector<std::string> GetAllFilenamesOfType(const std::string& directory, const std::string& extension, bool accessArchives = true);

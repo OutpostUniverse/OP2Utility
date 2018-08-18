@@ -3,9 +3,11 @@
 #include "MapData.h"
 #include <string>
 
-class SeekableStreamReader;
+namespace Stream {
+	class SeekableStreamReader;
+}
 
 namespace MapReader {
 	MapData Read(std::string filename, bool savedGame = false);
-	MapData Read(SeekableStreamReader& mapStream, bool savedGame = false);
+	MapData Read(Stream::SeekableStreamReader& mapStream, bool savedGame = false);
 }

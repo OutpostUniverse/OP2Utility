@@ -29,7 +29,7 @@ namespace Archives
 		void ExtractFile(std::size_t index, const std::string& pathOut) override;
 
 		// Opens a stream containing a packed file
-		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index) override;
+		std::unique_ptr<Stream::SeekableStreamReader> OpenStream(std::size_t index) override;
 
 		// Volume Creation
 		void Repack() override;
@@ -75,7 +75,7 @@ namespace Archives
 		struct CreateVolumeInfo
 		{
 			std::vector<IndexEntry> indexEntries;
-			std::vector<std::unique_ptr<SeekableStreamReader>> fileStreamReaders;
+			std::vector<std::unique_ptr<Stream::SeekableStreamReader>> fileStreamReaders;
 			std::vector<std::string> filesToPack;
 			std::vector<std::string> names;
 			uint32_t stringTableLength;
@@ -96,12 +96,12 @@ namespace Archives
 		SectionHeader GetSectionHeader(std::size_t index);
 
 		static void WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo);
-		static void WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo);
-		static void WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
+		static void WriteFiles(Stream::StreamWriter& volWriter, CreateVolumeInfo &volInfo);
+		static void WriteHeader(Stream::StreamWriter& volWriter, const CreateVolumeInfo &volInfo);
 		static void PrepareHeader(CreateVolumeInfo &volInfo, const std::string& volumeFilename);
 		static void OpenAllInputFiles(CreateVolumeInfo &volInfo, const std::string& volumeFilename);
 
-		FileStreamReader archiveFileReader;
+		Stream::FileStreamReader archiveFileReader;
 		uint32_t m_IndexEntryCount;
 		std::vector<std::string> m_StringTable;
 		uint32_t m_HeaderLength;

@@ -60,11 +60,11 @@ namespace Archives
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenStream(std::size_t index)
+	std::unique_ptr<Stream::SeekableStreamReader> VolFile::OpenStream(std::size_t index)
 	{
 		SectionHeader sectionHeader = GetSectionHeader(index);
 
-		return std::make_unique<FileSliceReader>(archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length)));
+		return std::make_unique<Stream::FileSliceReader>(archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length)));
 	}
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(std::size_t index)
@@ -109,8 +109,8 @@ namespace Archives
 		{
 			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
 			SectionHeader sectionHeader = GetSectionHeader(index);
-			FileSliceReader slice = archiveFileReader.Slice(sectionHeader.length);
-			FileStreamWriter fileStreamWriter(pathOut);
+			auto slice = archiveFileReader.Slice(sectionHeader.length);
+			Stream::FileStreamWriter fileStreamWriter(pathOut);
 			fileStreamWriter.Write(slice);
 		}
 		catch (const std::exception& e)
@@ -133,7 +133,7 @@ namespace Archives
 
 			HuffLZ decompressor(length, buffer.data());
 
-			FileStreamWriter fileStreamWriter(pathOut);
+			Stream::FileStreamWriter fileStreamWriter(pathOut);
 
 			do
 			{
@@ -188,13 +188,13 @@ namespace Archives
 
 	void VolFile::WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo)
 	{
-		FileStreamWriter volWriter(filename);
+		Stream::FileStreamWriter volWriter(filename);
 
 		WriteHeader(volWriter, volInfo);
 		WriteFiles(volWriter, volInfo);
 	}
 
-	void VolFile::WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo)
+	void VolFile::WriteFiles(Stream::StreamWriter& volWriter, CreateVolumeInfo &volInfo)
 	{
 		// Write each file header and contents
 		for (std::size_t i = 0; i < volInfo.fileCount(); ++i)
@@ -215,7 +215,7 @@ namespace Archives
 		}
 	}
 
-	void VolFile::WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
+	void VolFile::WriteHeader(Stream::StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
 	{
 		// Write the header
 		volWriter.Write(SectionHeader(TagVOL_, volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24));
@@ -250,7 +250,7 @@ namespace Archives
 
 		for (const auto& filename : volInfo.filesToPack) {
 			try {
-				volInfo.fileStreamReaders.push_back(std::make_unique<FileStreamReader>(filename));
+				volInfo.fileStreamReaders.push_back(std::make_unique<Stream::FileStreamReader>(filename));
 			}
 			catch (const std::exception& e) {
 				throw std::runtime_error("Error attempting to open " + filename +

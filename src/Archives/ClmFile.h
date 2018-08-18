@@ -23,7 +23,7 @@ namespace Archives
 		void ExtractFile(std::size_t index, const std::string& pathOut) override;
 
 		// Opens a stream containing packed audio PCM data
-		std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index) override;
+		std::unique_ptr<Stream::SeekableStreamReader> OpenStream(std::size_t index) override;
 
 		void Repack() override;
 
@@ -65,16 +65,16 @@ namespace Archives
 		void InitializeWaveHeader(WaveHeader& headerOut, std::size_t index);
 
 		// Private functions for packing files
-		static void ReadAllWaveHeaders(std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
-		static uint32_t FindChunk(std::array<char, 4> chunkTag, SeekableStreamReader& seekableStreamReader);
+		static void ReadAllWaveHeaders(std::vector<std::unique_ptr<Stream::FileStreamReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
+		static uint32_t FindChunk(std::array<char, 4> chunkTag, Stream::SeekableStreamReader& seekableStreamReader);
 		static void CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormatsconst, const std::vector<std::string>& filesToPack);
-		static void WriteArchive(const std::string& archiveFilename, const std::vector<std::unique_ptr<FileStreamReader>>& filesToPackReaders,
+		static void WriteArchive(const std::string& archiveFilename, const std::vector<std::unique_ptr<Stream::FileStreamReader>>& filesToPackReaders,
 			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& names, const WaveFormatEx& waveFormat);
 		static void PrepareIndex(int headerSize, const std::vector<std::string>& names, std::vector<IndexEntry>& indexEntries);
 		static std::vector<std::string> StripFilenameExtensions(std::vector<std::string> paths);
 		static WaveFormatEx PrepareWaveFormat(const std::vector<WaveFormatEx>& waveFormats);
 
-		FileStreamReader clmFileReader;
+		Stream::FileStreamReader clmFileReader;
 		ClmHeader clmHeader;
 		std::vector<IndexEntry> indexEntries;
 	};
