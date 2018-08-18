@@ -2,8 +2,8 @@
 
 #include "WaveFile.h"
 #include "ArchiveFile.h"
-#include "../Streams/FileStreamReader.h"
-#include "../Streams/FileStreamWriter.h"
+#include "../Streams/FileReader.h"
+#include "../Streams/FileWriter.h"
 #include <cstdint>
 #include <string>
 #include <vector>

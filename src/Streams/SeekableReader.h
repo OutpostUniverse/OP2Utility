@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StreamReader.h"
+#include "Reader.h"
 #include <cstdint>
 
 namespace Stream

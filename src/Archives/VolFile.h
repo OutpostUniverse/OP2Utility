@@ -3,8 +3,8 @@
 #include "HuffLZ.h"
 #include "ArchiveFile.h"
 #include "CompressionType.h"
-#include "../Streams/FileStreamWriter.h"
-#include "../Streams/FileStreamReader.h"
+#include "../Streams/FileWriter.h"
+#include "../Streams/FileReader.h"
 #include <cstddef>
 #include <string>
 #include <vector>

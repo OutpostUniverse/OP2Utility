@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StreamReader.h"
+#include "Reader.h"
 
 #include <cstddef>
 #include <type_traits>

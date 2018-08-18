@@ -1,7 +1,7 @@
 #include "ResourceManager.h"
 #include "Archives/VolFile.h"
 #include "Archives/ClmFile.h"
-#include "Streams/SeekableStreamReader.h"
+#include "Streams/SeekableReader.h"
 #include "XFile.h"
 #include <regex>
 

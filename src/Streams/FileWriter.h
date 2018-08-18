@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SeekableStreamWriter.h"
+#include "SeekableWriter.h"
 #include <string>
 #include <fstream>
 #include <cstddef>

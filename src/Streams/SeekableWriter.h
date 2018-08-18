@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StreamWriter.h"
+#include "Writer.h"
 #include <cstdint>
 
 namespace Stream

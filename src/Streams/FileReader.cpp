@@ -1,4 +1,4 @@
-#include "FileStreamReader.h"
+#include "FileReader.h"
 #include "FileSliceReader.h"
 #include <stdexcept>
 

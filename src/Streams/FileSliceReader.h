@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FileStreamReader.h"
+#include "FileReader.h"
 #include <string>
 #include <cstddef>
 #include <cstdint>

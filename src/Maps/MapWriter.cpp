@@ -1,5 +1,5 @@
 #include "MapWriter.h"
-#include "../Streams/FileStreamWriter.h"
+#include "../Streams/FileWriter.h"
 #include <cstdint>
 #include <cstddef>
 #include <stdexcept>

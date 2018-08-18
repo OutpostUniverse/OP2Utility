@@ -1,4 +1,4 @@
-#include "FileStreamWriter.h"
+#include "FileWriter.h"
 #include <stdexcept>
 
 namespace Stream

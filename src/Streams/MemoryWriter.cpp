@@ -1,4 +1,4 @@
-#include "MemoryStreamWriter.h"
+#include "MemoryWriter.h"
 #include <cstring> //memcpy
 #include <stdexcept>
 

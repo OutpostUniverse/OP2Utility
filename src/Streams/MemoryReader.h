@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SeekableStreamReader.h"
+#include "SeekableReader.h"
 #include <cstddef>
 #include <cstdint>
 

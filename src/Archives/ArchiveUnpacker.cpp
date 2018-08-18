@@ -1,7 +1,7 @@
 #include "ArchiveUnpacker.h"
 #include "../XFile.h"
-#include "../Streams/SeekableStreamReader.h"
-#include "../Streams/FileStreamWriter.h"
+#include "../Streams/SeekableReader.h"
+#include "../Streams/FileWriter.h"
 #include <array>
 #include <string>
 #include <stdexcept>

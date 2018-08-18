@@ -1,4 +1,4 @@
-#include "MemoryStreamReader.h"
+#include "MemoryReader.h"
 #include <iostream>
 #include <cstring> //memcpy
 #include <stdexcept>

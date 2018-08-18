@@ -1,5 +1,5 @@
 #include "MapReader.h"
-#include "../Streams/FileStreamReader.h"
+#include "../Streams/FileReader.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
