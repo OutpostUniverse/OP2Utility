@@ -18,7 +18,7 @@ namespace Archives
 	// Creates an internal bit stream for the buffer
 	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer) :
 		m_BitStream(new BitStream(bufferSize, buffer)),
-		m_ConstructedBitStream(m_BitStream), // Remeber to delete this in the destructor
+		m_ConstructedBitStream(m_BitStream), // Remember to delete this in the destructor
 		m_HuffTree(new AdaptHuffTree(314)),
 		m_BuffWriteIndex(0), 
 		m_BuffReadIndex(0),
