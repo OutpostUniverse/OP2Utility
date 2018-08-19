@@ -12,8 +12,7 @@ namespace Archives
 		m_BuffReadIndex(0), 
 		m_EOS(false)
 	{
-		// Initialize the decompress buffer to spaces
-		memset(m_DecompressBuffer, ' ', 4096);
+		InitializeDecompressBuffer();
 	}
 
 	// Creates an internal bit stream for the buffer
@@ -25,8 +24,7 @@ namespace Archives
 		m_BuffReadIndex(0),
 		m_EOS(false)
 	{
-		// Initialize the decompress buffer to spaces
-		memset(m_DecompressBuffer, ' ', 4096);
+		InitializeDecompressBuffer();
 	}
 
 	HuffLZ::~HuffLZ()
@@ -35,6 +33,10 @@ namespace Archives
 		delete m_HuffTree;
 	}
 
+	void HuffLZ::InitializeDecompressBuffer() {
+		// Initialize the decompress buffer to spaces
+		memset(m_DecompressBuffer, ' ', 4096);
+	}
 
 
 	// Copies up to bufferSize bytes into buffer from the decoded data. If not enough

@@ -20,6 +20,7 @@ namespace Archives
 		// Give access to internal decompress
 		// buffer (no memory copy required)
 	private:
+		void InitializeDecompressBuffer();
 		void FillDecompressBuffer();				// Decompress until buffer is near full
 		std::size_t CopyAvailableData(std::size_t size, char *buff);// Copies already decompressed data
 		bool DecompressCode();	// Decompresses a code and returns false at end of stream
