@@ -2,7 +2,7 @@
 // the compression in .vol files.
 
 #include "AdaptHuffTree.h"
-#include "BitStream.h"
+#include "BitStreamReader.h"
 #include <cstddef>
 
 namespace Archives
@@ -10,7 +10,7 @@ namespace Archives
 	class HuffLZ
 	{
 	public:
-		HuffLZ(BitStream *bitStream);
+		HuffLZ(BitStreamReader *bitStreamReader);
 		HuffLZ(std::size_t bufferSize, void *buffer);
 		~HuffLZ();
 
@@ -31,8 +31,8 @@ namespace Archives
 		void WriteCharToBuffer(char c);
 
 		// Member variables
-		BitStream *m_BitStream;
-		BitStream *m_ConstructedBitStream;
+		BitStreamReader *m_BitStreamReader;
+		BitStreamReader *m_ConstructedBitStreamReader;
 		AdaptHuffTree *m_HuffTree;
 		char m_DecompressBuffer[4096];				// Circular decompression buffer
 		std::size_t m_BuffWriteIndex;
