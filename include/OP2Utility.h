@@ -20,11 +20,11 @@
 #include "../src/Maps/MapReader.h"
 #include "../src/Maps/MapWriter.h"
 
-#include "../src/Streams/FileStreamReader.h"
+#include "../src/Streams/FileReader.h"
 #include "../src/Streams/FileSliceReader.h"
-#include "../src/Streams/FileStreamWriter.h"
-#include "../src/Streams/MemoryStreamReader.h"
-#include "../src/Streams/MemoryStreamWriter.h"
+#include "../src/Streams/FileWriter.h"
+#include "../src/Streams/MemoryReader.h"
+#include "../src/Streams/MemoryWriter.h"
 
 #include "../src/ResourceManager.h"
 #include "../src/StringHelper.h"
