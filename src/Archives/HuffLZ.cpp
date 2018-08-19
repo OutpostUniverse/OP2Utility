@@ -6,7 +6,7 @@ namespace Archives
 	// Constructs the object around an existing bit stream
 	HuffLZ::HuffLZ(BitStream *bitStream)
 	{
-		m_ContructedBitStream = 0;				// Don't need to delete stream in destructor
+		m_ConstructedBitStream = 0;				// Don't need to delete stream in destructor
 		m_BitStream = bitStream;				// Store a reference to the bit stream
 		m_HuffTree = new AdaptHuffTree(314);	// Construct the Adaptive Huffman tree
 		m_BuffWriteIndex = 0;
@@ -22,7 +22,7 @@ namespace Archives
 	{
 		// Construct the BitStream object
 		m_BitStream = new BitStream(bufferSize, buffer);
-		m_ContructedBitStream = m_BitStream;	// Remeber to delete this in the destructor
+		m_ConstructedBitStream = m_BitStream;	// Remeber to delete this in the destructor
 
 		m_HuffTree = new AdaptHuffTree(314);	// Construct the Adaptive Huffman tree
 		m_BuffWriteIndex = 0;
@@ -35,7 +35,7 @@ namespace Archives
 
 	HuffLZ::~HuffLZ()
 	{
-		delete m_ContructedBitStream;
+		delete m_ConstructedBitStream;
 		delete m_HuffTree;
 	}
 
@@ -249,6 +249,8 @@ namespace Archives
 
 		return offset;			// Return the offset to the start of the repeated block
 	}
+
+	
 
 	// Determine how many more bits to read in
 	int HuffLZ::GetNumExtraBits(int offset) const

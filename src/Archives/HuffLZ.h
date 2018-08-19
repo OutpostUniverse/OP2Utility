@@ -31,7 +31,7 @@ namespace Archives
 
 		// Member variables
 		BitStream *m_BitStream;
-		BitStream *m_ContructedBitStream;
+		BitStream *m_ConstructedBitStream;
 		AdaptHuffTree *m_HuffTree;
 		char m_DecompressBuffer[4096];				// Circular decompression buffer
 		std::size_t m_BuffWriteIndex;
