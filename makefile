@@ -53,3 +53,38 @@ clean-deps:
 	-rm -fr $(DEPDIR)
 clean-all:
 	-rm -rf $(BUILDDIR)
+
+
+TESTDIR := test
+TESTOBJDIR := $(BUILDDIR)/testObj
+TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
+TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
+TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
+TESTLDFLAGS := -L./
+TESTLIBS := -lgtest -lgtest_main -lpthread -lOP2Utility
+TESTOUTPUT := $(BUILDDIR)/testBin/runTests
+
+TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
+TESTCOMPILE.cpp = $(CXX) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
+TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
+
+.PHONY:check
+check: $(TESTOUTPUT)
+	./$(TESTOUTPUT)
+
+$(TESTOUTPUT): $(TESTOBJS) $(OUTPUT)
+	@mkdir -p ${@D}
+	$(CXX) $(TESTOBJS) $(TESTLDFLAGS) $(TESTLIBS) -o $@
+
+$(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build-folder
+	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) -I$(SRCDIR) $<
+	$(TESTPOSTCOMPILE)
+
+.PHONY:test-build-folder
+test-build-folder:
+	@mkdir -p $(patsubst $(TESTDIR)/%,$(TESTOBJDIR)/%, $(TESTFOLDERS))
+
+$(TESTOBJDIR)/%.d: ;
+.PRECIOUS: $(TESTOBJDIR)/%.d
+
+include $(wildcard $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.d,$(TESTSRCS)))
