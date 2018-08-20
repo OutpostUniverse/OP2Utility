@@ -93,30 +93,6 @@
     <ClInclude Include="src\Archives\WaveFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="src\Streams\StreamReader.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\StreamWriter.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\FileStreamWriter.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\MemoryStreamWriter.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\SeekableStreamWriter.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\SeekableStreamReader.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\FileStreamReader.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\MemoryStreamReader.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
     <ClInclude Include="src\Streams\FileSliceReader.h">
       <Filter>Streams</Filter>
     </ClInclude>
@@ -125,6 +101,30 @@
     </ClInclude>
     <ClInclude Include="src\Maps\TilesetSource.h">
       <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\FileReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\FileWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\MemoryReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\MemoryWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\SeekableReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\SeekableWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\Reader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\Writer.h">
+      <Filter>Streams</Filter>
     </ClInclude>
     <ClInclude Include="src\Archives\BitStreamReader.h">
       <Filter>Archives</Filter>
@@ -167,19 +167,19 @@
     <ClCompile Include="src\Maps\MapReader.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
-    <ClCompile Include="src\Streams\FileStreamWriter.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Streams\MemoryStreamWriter.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Streams\FileStreamReader.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Streams\MemoryStreamReader.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
     <ClCompile Include="src\Streams\FileSliceReader.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Streams\FileReader.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Streams\FileWriter.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Streams\MemoryReader.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Streams\MemoryWriter.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
     <ClCompile Include="src\Archives\BitStreamReader.cpp">

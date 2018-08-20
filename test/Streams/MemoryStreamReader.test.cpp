@@ -1,11 +1,11 @@
-#include "Streams/MemoryStreamReader.h"
+#include "Streams/MemoryReader.h"
 #include <gtest/gtest.h>
 
 
 // Simple test
 
 TEST(MemoryStreamReaderTest, EmptyStream) {
-  MemoryStreamReader stream(nullptr, 0);
+  Stream::MemoryReader stream(nullptr, 0);
   // Length and position
   EXPECT_EQ(0, stream.Length());
   EXPECT_EQ(0, stream.Position());
@@ -25,7 +25,7 @@ class EmptyMemoryStreamReader : public ::testing::Test {
 public:
   EmptyMemoryStreamReader() : stream(nullptr, 0) {}
 protected:
-  MemoryStreamReader stream;
+  Stream::MemoryReader stream;
 };
 
 TEST_F(EmptyMemoryStreamReader, EmptySize) {
