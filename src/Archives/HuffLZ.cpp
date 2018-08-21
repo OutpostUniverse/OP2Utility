@@ -6,7 +6,6 @@ namespace Archives
 	// Constructs the object around an existing bit stream
 	HuffLZ::HuffLZ(BitStreamReader& bitStream) :
 		m_BitStreamReader(bitStream),
-		m_ConstructedBitStreamReader(), // Don't need to delete stream in destructor
 		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)),
 		m_BuffWriteIndex(0),
 		m_BuffReadIndex(0),
@@ -18,7 +17,6 @@ namespace Archives
 	// Creates an internal bit stream for the buffer
 	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer) :
 		m_BitStreamReader(BitStreamReader(bufferSize, buffer)),
-		m_ConstructedBitStreamReader(m_BitStreamReader), // Remember to delete this in the destructor
 		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)),
 		m_BuffWriteIndex(0),
 		m_BuffReadIndex(0),
