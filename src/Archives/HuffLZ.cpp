@@ -7,9 +7,9 @@ namespace Archives
 	HuffLZ::HuffLZ(BitStreamReader& bitStream) :
 		m_BitStreamReader(bitStream),
 		m_ConstructedBitStreamReader(), // Don't need to delete stream in destructor
-		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)), 
-		m_BuffWriteIndex(0), 
-		m_BuffReadIndex(0), 
+		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)),
+		m_BuffWriteIndex(0),
+		m_BuffReadIndex(0),
 		m_EOS(false)
 	{
 		InitializeDecompressBuffer();
@@ -20,7 +20,7 @@ namespace Archives
 		m_BitStreamReader(BitStreamReader(bufferSize, buffer)),
 		m_ConstructedBitStreamReader(m_BitStreamReader), // Remember to delete this in the destructor
 		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)),
-		m_BuffWriteIndex(0), 
+		m_BuffWriteIndex(0),
 		m_BuffReadIndex(0),
 		m_EOS(false)
 	{
@@ -242,7 +242,7 @@ namespace Archives
 		return offset;			// Return the offset to the start of the repeated block
 	}
 
-	
+
 
 	// Determine how many more bits to read in
 	int HuffLZ::GetNumExtraBits(int offset) const
