@@ -4,13 +4,13 @@ namespace Archives
 	// The tree is initially balanced with codes 0 to numTerminalNodes-1 in the
 	// terminal nodes at the bottom of the tree. The tree branches are traversed
 	// using binary values: "0" traverse Left branch, "1" traverse Right branch.
-	class AdaptHuffTree
+	class AdaptiveHuffmanTree
 	{
 	public:
 		typedef unsigned short USHORT;
 
-		AdaptHuffTree(USHORT numTerminalNodes);
-		~AdaptHuffTree();
+		AdaptiveHuffmanTree(USHORT numTerminalNodes);
+		~AdaptiveHuffmanTree();
 
 		// Decompression routines
 		USHORT GetRootNodeIndex();				// Get root of tree to start search at

@@ -7,7 +7,7 @@ namespace Archives
 	HuffLZ::HuffLZ(BitStreamReader *bitStream) :
 		m_BitStreamReader(bitStream),
 		m_ConstructedBitStreamReader(0), // Don't need to delete stream in destructor
-		m_HuffTree(new AdaptHuffTree(314)), 
+		m_AdaptiveHuffmanTree(new AdaptiveHuffmanTree(314)), 
 		m_BuffWriteIndex(0), 
 		m_BuffReadIndex(0), 
 		m_EOS(false)
@@ -19,7 +19,7 @@ namespace Archives
 	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer) :
 		m_BitStreamReader(new BitStreamReader(bufferSize, buffer)),
 		m_ConstructedBitStreamReader(m_BitStreamReader), // Remember to delete this in the destructor
-		m_HuffTree(new AdaptHuffTree(314)),
+		m_AdaptiveHuffmanTree(new AdaptiveHuffmanTree(314)),
 		m_BuffWriteIndex(0), 
 		m_BuffReadIndex(0),
 		m_EOS(false)
@@ -30,7 +30,7 @@ namespace Archives
 	HuffLZ::~HuffLZ()
 	{
 		delete m_ConstructedBitStreamReader;
-		delete m_HuffTree;
+		delete m_AdaptiveHuffmanTree;
 	}
 
 	void HuffLZ::InitializeDecompressBuffer() {
@@ -185,7 +185,7 @@ namespace Archives
 		// Get the next code
 		code = GetNextCode();
 		// Update the tree
-		m_HuffTree->UpdateCodeCount(code);
+		m_AdaptiveHuffmanTree->UpdateCodeCount(code);
 
 		// Determine if the code is an ASCII code or a repeat block code
 		if (code < 256)
@@ -220,14 +220,14 @@ namespace Archives
 		bool bBit;
 
 		// Use bitstream to find a terminal node
-		nodeIndex = m_HuffTree->GetRootNodeIndex();
-		while (!m_HuffTree->IsLeaf(nodeIndex))
+		nodeIndex = m_AdaptiveHuffmanTree->GetRootNodeIndex();
+		while (!m_AdaptiveHuffmanTree->IsLeaf(nodeIndex))
 		{
 			bBit = m_BitStreamReader->ReadNextBit();
-			nodeIndex = m_HuffTree->GetChildNode(nodeIndex, bBit);
+			nodeIndex = m_AdaptiveHuffmanTree->GetChildNode(nodeIndex, bBit);
 		}
 
-		return m_HuffTree->GetNodeData(nodeIndex);
+		return m_AdaptiveHuffmanTree->GetNodeData(nodeIndex);
 	}
 
 	// Determines the offset to the start of a repeated block. (This one is a little weird)
