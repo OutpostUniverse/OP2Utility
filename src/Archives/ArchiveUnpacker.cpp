@@ -1,7 +1,7 @@
 #include "ArchiveUnpacker.h"
 #include "../XFile.h"
-#include "../Streams/SeekableStreamReader.h"
-#include "../Streams/FileStreamWriter.h"
+#include "../Streams/SeekableReader.h"
+#include "../Streams/FileWriter.h"
 #include <array>
 #include <string>
 #include <stdexcept>
@@ -50,7 +50,7 @@ namespace Archives
 		ExtractFile(GetIndex(name), pathOut);
 	}
 
-	std::unique_ptr<SeekableStreamReader> ArchiveUnpacker::OpenStream(const std::string& name)
+	std::unique_ptr<Stream::SeekableReader> ArchiveUnpacker::OpenStream(const std::string& name)
 	{
 		return OpenStream(GetIndex(name));
 	}

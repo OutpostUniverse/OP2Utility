@@ -1,7 +1,7 @@
 #include "ResourceManager.h"
 #include "Archives/VolFile.h"
 #include "Archives/ClmFile.h"
-#include "Streams/SeekableStreamReader.h"
+#include "Streams/SeekableReader.h"
 #include "XFile.h"
 #include <regex>
 
@@ -24,10 +24,10 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory)
 
 // First searches for resources loosely in provided directory.
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
-std::unique_ptr<SeekableStreamReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
+std::unique_ptr<Stream::SeekableReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
 {
 	if (XFile::PathExists(filename)) {
-		return std::make_unique<FileStreamReader>(filename);
+		return std::make_unique<Stream::FileReader>(filename);
 	}
 
 	if (!accessArchives) {

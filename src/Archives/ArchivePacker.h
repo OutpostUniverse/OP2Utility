@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Streams/StreamReader.h"
-#include "../Streams/StreamWriter.h"
+#include "../Streams/Reader.h"
+#include "../Streams/Writer.h"
 #include <string>
 #include <vector>
 
