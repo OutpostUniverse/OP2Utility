@@ -15,8 +15,8 @@ file(GLOB SOURCE_CODE
 	"src/XFile.cpp"
 	"src/XFile.h"
 	
-	"src/Archives/AdaptHuffTree.cpp"
-	"src/Archives/AdaptHuffTree.h"
+	"src/Archives/AdaptiveHuffmanTree.cpp"
+	"src/Archives/AdaptiveHuffmanTree.h"
 	"src/Archives/ArchiveFile.h"
 	"src/Archives/ArchivePacker.cpp"
 	"src/Archives/ArchivePacker.h"

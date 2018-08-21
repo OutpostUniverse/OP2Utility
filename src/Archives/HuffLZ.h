@@ -1,7 +1,7 @@
 // This decompressor is meant to be compatible with
 // the compression in .vol files.
 
-#include "AdaptHuffTree.h"
+#include "AdaptiveHuffmanTree.h"
 #include "BitStreamReader.h"
 #include <cstddef>
 

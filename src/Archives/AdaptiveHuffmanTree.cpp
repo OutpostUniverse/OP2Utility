@@ -1,4 +1,4 @@
-#include "AdaptHuffTree.h"
+#include "AdaptiveHuffmanTree.h"
 #include <stdexcept>
 
 namespace Archives
