@@ -4,10 +4,10 @@
 namespace Archives
 {
 	// Constructs the object around an existing bit stream
-	HuffLZ::HuffLZ(BitStreamReader *bitStream) :
+	HuffLZ::HuffLZ(BitStreamReader& bitStream) :
 		m_BitStreamReader(bitStream),
-		m_ConstructedBitStreamReader(0), // Don't need to delete stream in destructor
-		m_AdaptiveHuffmanTree(new AdaptiveHuffmanTree(314)), 
+		m_ConstructedBitStreamReader(), // Don't need to delete stream in destructor
+		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)), 
 		m_BuffWriteIndex(0), 
 		m_BuffReadIndex(0), 
 		m_EOS(false)
@@ -17,20 +17,14 @@ namespace Archives
 
 	// Creates an internal bit stream for the buffer
 	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer) :
-		m_BitStreamReader(new BitStreamReader(bufferSize, buffer)),
+		m_BitStreamReader(BitStreamReader(bufferSize, buffer)),
 		m_ConstructedBitStreamReader(m_BitStreamReader), // Remember to delete this in the destructor
-		m_AdaptiveHuffmanTree(new AdaptiveHuffmanTree(314)),
+		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)),
 		m_BuffWriteIndex(0), 
 		m_BuffReadIndex(0),
 		m_EOS(false)
 	{
 		InitializeDecompressBuffer();
-	}
-
-	HuffLZ::~HuffLZ()
-	{
-		delete m_ConstructedBitStreamReader;
-		delete m_AdaptiveHuffmanTree;
 	}
 
 	void HuffLZ::InitializeDecompressBuffer() {
@@ -185,7 +179,7 @@ namespace Archives
 		// Get the next code
 		code = GetNextCode();
 		// Update the tree
-		m_AdaptiveHuffmanTree->UpdateCodeCount(code);
+		m_AdaptiveHuffmanTree.UpdateCodeCount(code);
 
 		// Determine if the code is an ASCII code or a repeat block code
 		if (code < 256)
@@ -209,7 +203,7 @@ namespace Archives
 		}
 
 		// Check for the end of the stream
-		return m_BitStreamReader->EndOfStream();
+		return m_BitStreamReader.EndOfStream();
 	}
 
 
@@ -220,25 +214,25 @@ namespace Archives
 		bool bBit;
 
 		// Use bitstream to find a terminal node
-		nodeIndex = m_AdaptiveHuffmanTree->GetRootNodeIndex();
-		while (!m_AdaptiveHuffmanTree->IsLeaf(nodeIndex))
+		nodeIndex = m_AdaptiveHuffmanTree.GetRootNodeIndex();
+		while (!m_AdaptiveHuffmanTree.IsLeaf(nodeIndex))
 		{
-			bBit = m_BitStreamReader->ReadNextBit();
-			nodeIndex = m_AdaptiveHuffmanTree->GetChildNode(nodeIndex, bBit);
+			bBit = m_BitStreamReader.ReadNextBit();
+			nodeIndex = m_AdaptiveHuffmanTree.GetChildNode(nodeIndex, bBit);
 		}
 
-		return m_AdaptiveHuffmanTree->GetNodeData(nodeIndex);
+		return m_AdaptiveHuffmanTree.GetNodeData(nodeIndex);
 	}
 
 	// Determines the offset to the start of a repeated block. (This one is a little weird)
 	int HuffLZ::GetRepeatOffset()
 	{
 		// Get the next 8 bits
-		int offset = m_BitStreamReader->ReadNext8Bits();
+		int offset = m_BitStreamReader.ReadNext8Bits();
 
 		// Read in the extra bits
 		for (int numExtraBits = GetNumExtraBits(offset); numExtraBits; numExtraBits--) {
-			offset = (offset << 1) + m_BitStreamReader->ReadNextBit();
+			offset = (offset << 1) + m_BitStreamReader.ReadNextBit();
 		}
 		offset &= 0x3F;			// Mask upper bits (keep lower 6)
 

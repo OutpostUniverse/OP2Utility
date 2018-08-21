@@ -10,9 +10,8 @@ namespace Archives
 	class HuffLZ
 	{
 	public:
-		HuffLZ(BitStreamReader *bitStreamReader);
+		HuffLZ(BitStreamReader& bitStreamReader);
 		HuffLZ(std::size_t bufferSize, void *buffer);
-		~HuffLZ();
 
 		std::size_t GetData(std::size_t bufferSize, char *buffer);	// Copy decoded data into given buffer.
 													// Returns number of bytes copied
@@ -31,9 +30,9 @@ namespace Archives
 		void WriteCharToBuffer(char c);
 
 		// Member variables
-		BitStreamReader *m_BitStreamReader;
-		BitStreamReader *m_ConstructedBitStreamReader;
-		AdaptiveHuffmanTree *m_AdaptiveHuffmanTree;
+		BitStreamReader m_BitStreamReader;
+		BitStreamReader m_ConstructedBitStreamReader;
+		AdaptiveHuffmanTree m_AdaptiveHuffmanTree;
 		char m_DecompressBuffer[4096];				// Circular decompression buffer
 		std::size_t m_BuffWriteIndex;
 		std::size_t m_BuffReadIndex;
