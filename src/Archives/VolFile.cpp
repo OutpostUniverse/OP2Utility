@@ -131,7 +131,7 @@ namespace Archives
 			std::vector<uint8_t> buffer(length);
 			archiveFileReader.Read(buffer);
 
-			HuffLZ decompressor(BitStreamReader(length, buffer.data()));
+			HuffLZ decompressor(BitStreamReader(buffer.data(), length));
 
 			Stream::FileWriter fileStreamWriter(pathOut);
 

@@ -9,7 +9,7 @@ namespace Archives
 	{
 	public:
 		BitStreamReader();			// Construct empty stream
-		BitStreamReader(std::size_t bufferSize, void *buffer); // Construct stream around given buffer
+		BitStreamReader(void *buffer, std::size_t bufferSize); // Construct stream around given buffer
 
 		bool ReadNextBit();			// Get bit at Read index and advance index
 		int  ReadNext8Bits();		// Get next 8 bits at Read index and advance index
