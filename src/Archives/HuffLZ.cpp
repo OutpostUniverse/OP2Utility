@@ -34,7 +34,7 @@ namespace Archives
 		FillDecompressBuffer();
 
 		// Copy what is currently available
-		numBytesCopied = CopyAvailableData(bufferSize, buffer);
+		numBytesCopied = CopyAvailableData(buffer, bufferSize);
 		numBytesTotal += numBytesCopied;
 		bufferSize -= numBytesCopied;
 
@@ -42,7 +42,7 @@ namespace Archives
 		while (bufferSize && !m_EOS)
 		{
 			FillDecompressBuffer();		// Decompress a bunch
-			numBytesCopied = CopyAvailableData(bufferSize, &buffer[numBytesTotal]);
+			numBytesCopied = CopyAvailableData(&buffer[numBytesTotal], bufferSize);
 			numBytesTotal += numBytesCopied;
 			bufferSize -= numBytesCopied;
 		}
@@ -104,7 +104,7 @@ namespace Archives
 
 	// Copies all available data into buff up to a maximum of size bytes
 	// This routine handles the case when the copy must wrap around the circular buffer
-	std::size_t HuffLZ::CopyAvailableData(std::size_t size, char *buff)
+	std::size_t HuffLZ::CopyAvailableData(char *buff, std::size_t size)
 	{
 		std::size_t numBytesToCopy;
 		std::size_t numBytesTotal = 0;
