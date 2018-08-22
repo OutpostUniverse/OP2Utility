@@ -12,7 +12,7 @@ namespace Archives
 	public:
 		HuffLZ(const BitStreamReader& bitStreamReader);
 
-		std::size_t GetData(std::size_t bufferSize, char *buffer);	// Copy decoded data into given buffer.
+		std::size_t GetData(char *buffer, std::size_t bufferSize);	// Copy decoded data into given buffer.
 													// Returns number of bytes copied
 		const char* GetInternalBuffer(std::size_t *sizeAvailableData);
 		// Give access to internal decompress

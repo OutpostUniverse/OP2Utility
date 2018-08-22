@@ -24,7 +24,7 @@ namespace Archives
 	// data is available to fill the buffer, more of the input is decompressed up to
 	// the end of the input stream or until the buffer is filled. Returns the total
 	// number of bytes that were copied.
-	std::size_t HuffLZ::GetData(std::size_t bufferSize, char *buffer)
+	std::size_t HuffLZ::GetData(char *buffer, std::size_t bufferSize)
 	{
 		std::size_t numBytesCopied;
 		std::size_t numBytesTotal = 0;
