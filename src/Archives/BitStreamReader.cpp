@@ -5,13 +5,7 @@
 
 namespace Archives
 {
-	BitStreamReader::BitStreamReader() :
-		m_BufferBitSize(0),
-		m_Buffer(0),
-		m_ReadBitIndex(0),
-		m_ReadBuff(0) { }
-
-	BitStreamReader::BitStreamReader(std::size_t bufferSize, void *buffer) :
+	BitStreamReader::BitStreamReader(void *buffer, std::size_t bufferSize) :
 		m_BufferBitSize(bufferSize << 3),
 		m_Buffer(static_cast<unsigned char*>(buffer)),
 		m_ReadBitIndex(0),

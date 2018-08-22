@@ -7,16 +7,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # https://cmake.org/cmake/help/v3.12/command/file.html
 # CMake documentation recommends not collecting all source files using a GLOB
-file(GLOB SOURCE_CODE 
+file(GLOB SOURCE_CODE
 	"src/ResourceManager.cpp"
 	"src/ResourceManager.h"
 	"src/StringHelper.cpp"
 	"src/StringHelper.h"
 	"src/XFile.cpp"
 	"src/XFile.h"
-	
-	"src/Archives/AdaptHuffTree.cpp"
-	"src/Archives/AdaptHuffTree.h"
+
+	"src/Archives/AdaptiveHuffmanTree.cpp"
+	"src/Archives/AdaptiveHuffmanTree.h"
 	"src/Archives/ArchiveFile.h"
 	"src/Archives/ArchivePacker.cpp"
 	"src/Archives/ArchivePacker.h"
@@ -31,7 +31,7 @@ file(GLOB SOURCE_CODE
 	"src/Archives/VolFile.cpp"
 	"src/Archives/VolFile.h"
 	"src/Archives/WaveFile.h"
-	
+
 	"src/Maps/CellType.h"
 	"src/Maps/Rect.h"
 	"src/Maps/MapData.cpp"
@@ -46,7 +46,7 @@ file(GLOB SOURCE_CODE
 	"src/Maps/TileGroup.h"
 	"src/Maps/TileInfo.h"
 	"src/Maps/TilesetSource.h"
-	
+
 	"src/Streams/FileSliceReader.cpp"
 	"src/Streams/FileSliceReader.h"
 	"src/Streams/FileStreamReader.cpp"
@@ -61,7 +61,7 @@ file(GLOB SOURCE_CODE
 	"src/Streams/SeekableStreamWriter.h"
 	"src/Streams/StreamReader.h"
 	"src/Streams/StreamWriter.h")
-	
+
 file(GLOB EXTERNAL_HEADERS "include/OP2Utility.h")
 
 add_library(OP2Utility STATIC "${SOURCE_CODE}" "${EXTERNAL_HEADERS}")

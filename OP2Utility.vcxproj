@@ -132,7 +132,7 @@
     <ClInclude Include="src\Maps\TileInfo.h" />
     <ClInclude Include="src\Maps\TilesetSource.h" />
     <ClInclude Include="src\ResourceManager.h" />
-    <ClInclude Include="src\Archives\AdaptHuffTree.h" />
+    <ClInclude Include="src\Archives\AdaptiveHuffmanTree.h" />
     <ClInclude Include="src\Archives\ArchiveFile.h" />
     <ClInclude Include="src\Archives\BitStreamReader.h" />
     <ClInclude Include="src\Archives\ClmFile.h" />
@@ -144,7 +144,7 @@
     <ClCompile Include="src\Maps\MapReader.cpp" />
     <ClCompile Include="src\Maps\MapWriter.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
-    <ClCompile Include="src\Archives\AdaptHuffTree.cpp" />
+    <ClCompile Include="src\Archives\AdaptiveHuffmanTree.cpp" />
     <ClCompile Include="src\Archives\BitStreamReader.cpp" />
     <ClCompile Include="src\Archives\ClmFile.cpp" />
     <ClCompile Include="src\Archives\HuffLZ.cpp" />

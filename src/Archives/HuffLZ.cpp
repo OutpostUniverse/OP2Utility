@@ -4,48 +4,27 @@
 namespace Archives
 {
 	// Constructs the object around an existing bit stream
-	HuffLZ::HuffLZ(BitStreamReader *bitStreamReader)
+	HuffLZ::HuffLZ(const BitStreamReader& bitStream) :
+		m_BitStreamReader(bitStream),
+		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)),
+		m_BuffWriteIndex(0),
+		m_BuffReadIndex(0),
+		m_EOS(false)
 	{
-		m_ContructedBitStreamReader = 0;		// Don't need to delete stream in destructor
-		m_BitStreamReader = bitStreamReader;	// Store a reference to the bit stream
-		m_HuffTree = new AdaptHuffTree(314);	// Construct the Adaptive Huffman tree
-		m_BuffWriteIndex = 0;
-		m_BuffReadIndex = 0;
-		m_EOS = false;
+		InitializeDecompressBuffer();
+	}
 
+	void HuffLZ::InitializeDecompressBuffer() {
 		// Initialize the decompress buffer to spaces
 		memset(m_DecompressBuffer, ' ', 4096);
 	}
-
-	// Creates an internal bit stream for the buffer
-	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer)
-	{
-		// Construct the BitStreamReader object
-		m_BitStreamReader = new BitStreamReader(bufferSize, buffer);
-		m_ContructedBitStreamReader = m_BitStreamReader;	// Remeber to delete this in the destructor
-
-		m_HuffTree = new AdaptHuffTree(314);	// Construct the Adaptive Huffman tree
-		m_BuffWriteIndex = 0;
-		m_BuffReadIndex = 0;
-		m_EOS = false;
-
-		// Initialize the decompress buffer to spaces
-		memset(m_DecompressBuffer, ' ', 4096);
-	}
-
-	HuffLZ::~HuffLZ()
-	{
-		delete m_ContructedBitStreamReader;
-		delete m_HuffTree;
-	}
-
 
 
 	// Copies up to bufferSize bytes into buffer from the decoded data. If not enough
 	// data is available to fill the buffer, more of the input is decompressed up to
 	// the end of the input stream or until the buffer is filled. Returns the total
 	// number of bytes that were copied.
-	std::size_t HuffLZ::GetData(std::size_t bufferSize, char *buffer)
+	std::size_t HuffLZ::GetData(char *buffer, std::size_t bufferSize)
 	{
 		std::size_t numBytesCopied;
 		std::size_t numBytesTotal = 0;
@@ -55,7 +34,7 @@ namespace Archives
 		FillDecompressBuffer();
 
 		// Copy what is currently available
-		numBytesCopied = CopyAvailableData(bufferSize, buffer);
+		numBytesCopied = CopyAvailableData(buffer, bufferSize);
 		numBytesTotal += numBytesCopied;
 		bufferSize -= numBytesCopied;
 
@@ -63,7 +42,7 @@ namespace Archives
 		while (bufferSize && !m_EOS)
 		{
 			FillDecompressBuffer();		// Decompress a bunch
-			numBytesCopied = CopyAvailableData(bufferSize, &buffer[numBytesTotal]);
+			numBytesCopied = CopyAvailableData(&buffer[numBytesTotal], bufferSize);
 			numBytesTotal += numBytesCopied;
 			bufferSize -= numBytesCopied;
 		}
@@ -125,7 +104,7 @@ namespace Archives
 
 	// Copies all available data into buff up to a maximum of size bytes
 	// This routine handles the case when the copy must wrap around the circular buffer
-	std::size_t HuffLZ::CopyAvailableData(std::size_t size, char *buff)
+	std::size_t HuffLZ::CopyAvailableData(char *buff, std::size_t size)
 	{
 		std::size_t numBytesToCopy;
 		std::size_t numBytesTotal = 0;
@@ -187,7 +166,7 @@ namespace Archives
 		// Get the next code
 		code = GetNextCode();
 		// Update the tree
-		m_HuffTree->UpdateCodeCount(code);
+		m_AdaptiveHuffmanTree.UpdateCodeCount(code);
 
 		// Determine if the code is an ASCII code or a repeat block code
 		if (code < 256)
@@ -211,7 +190,7 @@ namespace Archives
 		}
 
 		// Check for the end of the stream
-		return m_BitStreamReader->EndOfStream();
+		return m_BitStreamReader.EndOfStream();
 	}
 
 
@@ -222,27 +201,27 @@ namespace Archives
 		bool bBit;
 
 		// Use bitstream to find a terminal node
-		nodeIndex = m_HuffTree->GetRootNodeIndex();
-		while (!m_HuffTree->IsLeaf(nodeIndex))
+		nodeIndex = m_AdaptiveHuffmanTree.GetRootNodeIndex();
+		while (!m_AdaptiveHuffmanTree.IsLeaf(nodeIndex))
 		{
-			bBit = m_BitStreamReader->ReadNextBit();
-			nodeIndex = m_HuffTree->GetChildNode(nodeIndex, bBit);
+			bBit = m_BitStreamReader.ReadNextBit();
+			nodeIndex = m_AdaptiveHuffmanTree.GetChildNode(nodeIndex, bBit);
 		}
 
-		return m_HuffTree->GetNodeData(nodeIndex);
+		return m_AdaptiveHuffmanTree.GetNodeData(nodeIndex);
 	}
 
 	// Determines the offset to the start of a repeated block. (This one is a little weird)
 	int HuffLZ::GetRepeatOffset()
 	{
 		// Get the next 8 bits
-		int offset = m_BitStreamReader->ReadNext8Bits();
+		int offset = m_BitStreamReader.ReadNext8Bits();
 		int numExtraBits = GetNumExtraBits(offset);
 		int mod = GetOffsetBitMod(offset);
 
 		// Read in the extra bits
 		for (; numExtraBits; numExtraBits--) {
-			offset = (offset << 1) + m_BitStreamReader->ReadNextBit();
+			offset = (offset << 1) + m_BitStreamReader.ReadNextBit();
 		}
 		offset &= 0x3F;			// Mask upper bits (keep lower 6)
 
@@ -251,6 +230,8 @@ namespace Archives
 
 		return offset;			// Return the offset to the start of the repeated block
 	}
+
+
 
 	// Determine how many more bits to read in
 	int HuffLZ::GetNumExtraBits(int offset) const

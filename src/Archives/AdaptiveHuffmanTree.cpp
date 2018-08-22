@@ -1,10 +1,10 @@
-#include "AdaptHuffTree.h"
+#include "AdaptiveHuffmanTree.h"
 #include <stdexcept>
 
 namespace Archives
 {
 	// Creates an (adaptive) Huffman tree with numTerminalNodes at the bottom.
-	AdaptHuffTree::AdaptHuffTree(unsigned short numTerminalNodes)
+	AdaptiveHuffmanTree::AdaptiveHuffmanTree(unsigned short numTerminalNodes)
 	{
 		unsigned short i;
 		unsigned short left;
@@ -39,7 +39,7 @@ namespace Archives
 		}
 	}
 
-	AdaptHuffTree::~AdaptHuffTree()
+	AdaptiveHuffmanTree::~AdaptiveHuffmanTree()
 	{
 		// Delete the tree
 		delete m_Data;
@@ -51,14 +51,14 @@ namespace Archives
 
 	// Returns the index of the root node.
 	// All tree searches start at the root node.
-	unsigned short AdaptHuffTree::GetRootNodeIndex()
+	unsigned short AdaptiveHuffmanTree::GetRootNodeIndex()
 	{
 		return m_RootNodeIndex;
 	}
 
 	// Return a child node of the given node.
 	// This is used to traverse the tree to a terminal node.
-	unsigned short AdaptHuffTree::GetChildNode(unsigned short nodeIndex, bool bRight)
+	unsigned short AdaptiveHuffmanTree::GetChildNode(unsigned short nodeIndex, bool bRight)
 	{
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NumNodes)
@@ -72,7 +72,7 @@ namespace Archives
 
 	// Returns true if the node is a terminal node.
 	// This is used to know when a tree search has completed.
-	bool AdaptHuffTree::IsLeaf(unsigned short nodeIndex)
+	bool AdaptiveHuffmanTree::IsLeaf(unsigned short nodeIndex)
 	{
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NumNodes)
@@ -85,7 +85,7 @@ namespace Archives
 	}
 
 	// Returns the data stored in a terminal node
-	unsigned short AdaptHuffTree::GetNodeData(unsigned short nodeIndex)
+	unsigned short AdaptiveHuffmanTree::GetNodeData(unsigned short nodeIndex)
 	{
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NumNodes)
@@ -104,7 +104,7 @@ namespace Archives
 	// This updates the count for the given code and restructures the tree if needed.
 	// This is used after a tree search to update the tree (gives more frequently used
 	// codes a shorter bit encoding).
-	void AdaptHuffTree::UpdateCodeCount(unsigned short code)
+	void AdaptiveHuffmanTree::UpdateCodeCount(unsigned short code)
 	{
 		int curNodeIndex;
 		int blockLeaderIndex;
@@ -148,7 +148,7 @@ namespace Archives
 
 	// Private function to swap two nodes in the Huffman tree.
 	// This is used during tree restructing by UpdateCodeCount.
-	void AdaptHuffTree::SwapNodes(unsigned short node1, unsigned short node2)
+	void AdaptiveHuffmanTree::SwapNodes(unsigned short node1, unsigned short node2)
 	{
 		unsigned short temp;
 
@@ -185,7 +185,7 @@ namespace Archives
 	// in the bitString parameter. The branch to take between the root and a child
 	// of the root is placed in the LSB. Subsequent branches are stored in higher bits
 	// **NOTE**: I may change the bit ordering! (Make that I WILL change the bit ordering)
-	int AdaptHuffTree::GetEncodedBitString(int code, int &bitString)
+	int AdaptiveHuffmanTree::GetEncodedBitString(int code, int &bitString)
 	{
 		int curNodeIndex;
 		int numBits;
