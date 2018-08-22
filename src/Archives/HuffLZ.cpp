@@ -4,19 +4,8 @@
 namespace Archives
 {
 	// Constructs the object around an existing bit stream
-	HuffLZ::HuffLZ(BitStreamReader& bitStream) :
+	HuffLZ::HuffLZ(const BitStreamReader& bitStream) :
 		m_BitStreamReader(bitStream),
-		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)),
-		m_BuffWriteIndex(0),
-		m_BuffReadIndex(0),
-		m_EOS(false)
-	{
-		InitializeDecompressBuffer();
-	}
-
-	// Creates an internal bit stream for the buffer
-	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer) :
-		m_BitStreamReader(BitStreamReader(bufferSize, buffer)),
 		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)),
 		m_BuffWriteIndex(0),
 		m_BuffReadIndex(0),

@@ -10,8 +10,7 @@ namespace Archives
 	class HuffLZ
 	{
 	public:
-		HuffLZ(BitStreamReader& bitStreamReader);
-		HuffLZ(std::size_t bufferSize, void *buffer);
+		HuffLZ(const BitStreamReader& bitStreamReader);
 
 		std::size_t GetData(std::size_t bufferSize, char *buffer);	// Copy decoded data into given buffer.
 													// Returns number of bytes copied
