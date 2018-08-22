@@ -237,15 +237,17 @@ namespace Archives
 	{
 		// Get the next 8 bits
 		int offset = m_BitStreamReader->ReadNext8Bits();
+		int numExtraBits = GetNumExtraBits(offset);
+		int mod = GetOffsetBitMod(offset);
 
 		// Read in the extra bits
-		for (int numExtraBits = GetNumExtraBits(offset); numExtraBits; numExtraBits--) {
+		for (; numExtraBits; numExtraBits--) {
 			offset = (offset << 1) + m_BitStreamReader->ReadNextBit();
 		}
 		offset &= 0x3F;			// Mask upper bits (keep lower 6)
 
 		// Apply the modifier
-		offset |= (GetOffsetBitMod(offset) << 6);	// Set upper 6 bits (12 bit number -> buffer size is 4096)
+		offset |= (mod << 6);	// Set upper 6 bits (12 bit number -> buffer size is 4096)
 
 		return offset;			// Return the offset to the start of the repeated block
 	}
