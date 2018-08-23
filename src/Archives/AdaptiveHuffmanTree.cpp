@@ -58,11 +58,7 @@ namespace Archives
 	// This is used to traverse the tree to a terminal node.
 	AdaptiveHuffmanTree::NodeIndex AdaptiveHuffmanTree::GetChildNode(NodeIndex nodeIndex, bool bRight)
 	{
-		// Check that the nodeIndex is in range
-		if (nodeIndex >= m_NumNodes)
-		{
-			throw std::runtime_error("Index out of range");
-		}
+		VerifyValidNodeIndex(nodeIndex);
 
 		// Return the child node index
 		return m_Data[nodeIndex] + bRight;
@@ -72,11 +68,7 @@ namespace Archives
 	// This is used to know when a tree search has completed.
 	bool AdaptiveHuffmanTree::IsLeaf(NodeIndex nodeIndex)
 	{
-		// Check that the nodeIndex is in range
-		if (nodeIndex >= m_NumNodes)
-		{
-			throw std::runtime_error("Index out of range");
-		}
+		VerifyValidNodeIndex(nodeIndex);
 
 		// Return whether or not this is a terminal node
 		return m_Data[nodeIndex] >= m_NumNodes;
@@ -85,11 +77,7 @@ namespace Archives
 	// Returns the data stored in a terminal node
 	AdaptiveHuffmanTree::DataValue AdaptiveHuffmanTree::GetNodeData(NodeIndex nodeIndex)
 	{
-		// Check that the nodeIndex is in range
-		if (nodeIndex >= m_NumNodes)
-		{
-			throw std::runtime_error("Index out of range");
-		}
+		VerifyValidNodeIndex(nodeIndex);
 
 		// Return data stored in node translated back to normal form
 		// Note: This assumes the node is a terminal node
@@ -143,6 +131,16 @@ namespace Archives
 	}
 
 
+
+	// Raise exception if nodeIndex is out of range
+	void AdaptiveHuffmanTree::VerifyValidNodeIndex(NodeIndex nodeIndex)
+	{
+		// Check that the nodeIndex is in range
+		if (nodeIndex >= m_NumNodes)
+		{
+			throw std::runtime_error("Index out of range");
+		}
+	}
 
 	// Private function to swap two nodes in the Huffman tree.
 	// This is used during tree restructing by UpdateCodeCount.

@@ -31,6 +31,7 @@ namespace Archives
 		// code and places the path in bitString
 
 	private:
+		void VerifyValidNodeIndex(NodeIndex nodeIndex);
 		void SwapNodes(NodeIndex nodeIndex1, NodeIndex nodeIndex2);
 
 		// Next three arrays comprise the adaptive huffman tree
