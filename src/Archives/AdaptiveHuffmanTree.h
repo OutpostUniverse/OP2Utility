@@ -7,20 +7,22 @@ namespace Archives
 	class AdaptiveHuffmanTree
 	{
 	public:
-		typedef unsigned short USHORT;
+		using NodeType = unsigned short;
+		using NodeIndex = NodeType;
+		using DataValue = NodeType;
 
-		AdaptiveHuffmanTree(USHORT numTerminalNodes);
+		AdaptiveHuffmanTree(NodeType numTerminalNodes);
 		~AdaptiveHuffmanTree();
 
 		// Decompression routines
-		USHORT GetRootNodeIndex();				// Get root of tree to start search at
-		USHORT GetChildNode(USHORT nodeIndex, bool bRight);
+		NodeIndex GetRootNodeIndex();				// Get root of tree to start search at
+		NodeIndex GetChildNode(NodeIndex nodeIndex, bool bRight);
 		// bRight = 1 --> follow right branch
-		bool IsLeaf(USHORT nodeIndex);			// Determines if node is terminal node
-		USHORT GetNodeData(USHORT nodeIndex);	// Returns the data in a terminal node
+		bool IsLeaf(NodeIndex nodeIndex);			// Determines if node is terminal node
+		DataValue GetNodeData(NodeIndex nodeIndex);	// Returns the data in a terminal node
 
 		// Tree restructuring routines
-		void UpdateCodeCount(USHORT code);		// Perform tree update/restructure
+		void UpdateCodeCount(DataValue code);		// Perform tree update/restructure
 
 		// Compression routines
 		int GetEncodedBitString(int code, int &bitString);
@@ -29,20 +31,20 @@ namespace Archives
 		// code and places the path in bitString
 
 	private:
-		void SwapNodes(USHORT node1, USHORT node2);
+		void SwapNodes(NodeIndex node1, NodeIndex node2);
 
 		// Next three arrays comprise the adaptive huffman tree
 		// Note: m_Data is used for both tree links and node data.
 		//   Values above or equal m_NumNodes represent data
 		//   Values below m_NumNodes represent links
-		USHORT *m_Data;		// index of left child (link) or code+m_NumNodes (data)
-		USHORT *m_Count;	// number of occurances of code or codes in subtrees
-		USHORT *m_Parent;	// index of the parent node to (current node or data)
+		NodeType *m_Data;		// index of left child (link) or code+m_NumNodes (data)
+		NodeType *m_Count;	// number of occurances of code or codes in subtrees
+		NodeType *m_Parent;	// index of the parent node to (current node or data)
 							//  Note: This is also used to translate: code -> node_index
 		// Tree properties
-		USHORT m_RootNodeIndex;
-		USHORT m_NumTerminalNodes;
-		USHORT m_NumNodes;
+		NodeIndex m_RootNodeIndex;
+		NodeType m_NumTerminalNodes;
+		NodeType m_NumNodes;
 	};
 
 

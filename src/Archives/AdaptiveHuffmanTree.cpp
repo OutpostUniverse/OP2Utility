@@ -4,10 +4,10 @@
 namespace Archives
 {
 	// Creates an (adaptive) Huffman tree with numTerminalNodes at the bottom.
-	AdaptiveHuffmanTree::AdaptiveHuffmanTree(unsigned short numTerminalNodes)
+	AdaptiveHuffmanTree::AdaptiveHuffmanTree(NodeType numTerminalNodes)
 	{
-		unsigned short i;
-		unsigned short left;
+		NodeIndex i;
+		NodeIndex left;
 
 		// Initialize tree properties
 		m_NumTerminalNodes = numTerminalNodes;
@@ -15,9 +15,9 @@ namespace Archives
 		m_RootNodeIndex = m_NumNodes - 1;
 
 		// Allocate space for the tree
-		m_Data = new USHORT[m_NumNodes];
-		m_Count = new USHORT[m_NumNodes];
-		m_Parent = new USHORT[m_NumNodes + m_NumTerminalNodes];
+		m_Data = new NodeType[m_NumNodes];
+		m_Count = new NodeType[m_NumNodes];
+		m_Parent = new NodeType[m_NumNodes + m_NumTerminalNodes];
 
 		// Initialize the tree
 		// Initialize terminal nodes
@@ -51,14 +51,14 @@ namespace Archives
 
 	// Returns the index of the root node.
 	// All tree searches start at the root node.
-	unsigned short AdaptiveHuffmanTree::GetRootNodeIndex()
+	AdaptiveHuffmanTree::NodeIndex AdaptiveHuffmanTree::GetRootNodeIndex()
 	{
 		return m_RootNodeIndex;
 	}
 
 	// Return a child node of the given node.
 	// This is used to traverse the tree to a terminal node.
-	unsigned short AdaptiveHuffmanTree::GetChildNode(unsigned short nodeIndex, bool bRight)
+	AdaptiveHuffmanTree::NodeIndex AdaptiveHuffmanTree::GetChildNode(NodeIndex nodeIndex, bool bRight)
 	{
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NumNodes)
@@ -72,7 +72,7 @@ namespace Archives
 
 	// Returns true if the node is a terminal node.
 	// This is used to know when a tree search has completed.
-	bool AdaptiveHuffmanTree::IsLeaf(unsigned short nodeIndex)
+	bool AdaptiveHuffmanTree::IsLeaf(NodeIndex nodeIndex)
 	{
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NumNodes)
@@ -85,7 +85,7 @@ namespace Archives
 	}
 
 	// Returns the data stored in a terminal node
-	unsigned short AdaptiveHuffmanTree::GetNodeData(unsigned short nodeIndex)
+	AdaptiveHuffmanTree::DataValue AdaptiveHuffmanTree::GetNodeData(NodeIndex nodeIndex)
 	{
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NumNodes)
@@ -104,7 +104,7 @@ namespace Archives
 	// This updates the count for the given code and restructures the tree if needed.
 	// This is used after a tree search to update the tree (gives more frequently used
 	// codes a shorter bit encoding).
-	void AdaptiveHuffmanTree::UpdateCodeCount(unsigned short code)
+	void AdaptiveHuffmanTree::UpdateCodeCount(DataValue code)
 	{
 		int curNodeIndex;
 		int blockLeaderIndex;
@@ -148,12 +148,10 @@ namespace Archives
 
 	// Private function to swap two nodes in the Huffman tree.
 	// This is used during tree restructing by UpdateCodeCount.
-	void AdaptiveHuffmanTree::SwapNodes(unsigned short node1, unsigned short node2)
+	void AdaptiveHuffmanTree::SwapNodes(NodeIndex node1, NodeIndex node2)
 	{
-		unsigned short temp;
-
 		// Swap Count values
-		temp = m_Count[node1]; m_Count[node1] = m_Count[node2]; m_Count[node2] = temp;
+		auto temp = m_Count[node1]; m_Count[node1] = m_Count[node2]; m_Count[node2] = temp;
 
 		// Update the Parent of the children
 		// Note: If the current node is a terminal node (data node) then the left
