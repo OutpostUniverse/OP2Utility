@@ -1,3 +1,5 @@
+#include <vector>
+
 namespace Archives
 {
 	// The Huffman Tree stores codes in the terminal nodes of the (binary) tree.
@@ -12,7 +14,6 @@ namespace Archives
 		using DataValue = NodeType;
 
 		AdaptiveHuffmanTree(NodeType numTerminalNodes);
-		~AdaptiveHuffmanTree();
 
 		// Decompression routines
 		NodeIndex GetRootNodeIndex();				// Get root of tree to start search at
@@ -34,18 +35,18 @@ namespace Archives
 		void VerifyValidNodeIndex(NodeIndex nodeIndex);
 		void SwapNodes(NodeIndex nodeIndex1, NodeIndex nodeIndex2);
 
+		// Tree properties
+		NodeType m_NumTerminalNodes;
+		NodeType m_NumNodes;
+		NodeIndex m_RootNodeIndex;
 		// Next three arrays comprise the adaptive huffman tree
 		// Note: m_Data is used for both tree links and node data.
 		//   Values above or equal m_NumNodes represent data
 		//   Values below m_NumNodes represent links
-		NodeType *m_Data;		// index of left child (link) or code+m_NumNodes (data)
-		NodeType *m_Count;	// number of occurances of code or codes in subtrees
-		NodeType *m_Parent;	// index of the parent node to (current node or data)
+		std::vector<NodeType> m_Data;   // index of left child (link) or code+m_NumNodes (data)
+		std::vector<NodeType> m_Count;  // number of occurances of code or codes in subtrees
+		std::vector<NodeType> m_Parent; // index of the parent node to (current node or data)
 							//  Note: This is also used to translate: code -> node_index
-		// Tree properties
-		NodeIndex m_RootNodeIndex;
-		NodeType m_NumTerminalNodes;
-		NodeType m_NumNodes;
 	};
 
 

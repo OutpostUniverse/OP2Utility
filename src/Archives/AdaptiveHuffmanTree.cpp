@@ -5,18 +5,16 @@
 namespace Archives
 {
 	// Creates an (adaptive) Huffman tree with numTerminalNodes at the bottom.
-	AdaptiveHuffmanTree::AdaptiveHuffmanTree(NodeType numTerminalNodes)
-	{
+	AdaptiveHuffmanTree::AdaptiveHuffmanTree(NodeType numTerminalNodes) :
 		// Initialize tree properties
-		m_NumTerminalNodes = numTerminalNodes;
-		m_NumNodes = m_NumTerminalNodes * 2 - 1;
-		m_RootNodeIndex = m_NumNodes - 1;
-
-		// Allocate space for the tree
-		m_Data = new NodeType[m_NumNodes];
-		m_Count = new NodeType[m_NumNodes];
-		m_Parent = new NodeType[m_NumNodes + m_NumTerminalNodes];
-
+		m_NumTerminalNodes(numTerminalNodes),
+		m_NumNodes(m_NumTerminalNodes * 2 - 1),
+		m_RootNodeIndex(m_NumNodes - 1),
+		// Allocate space for tree
+		m_Data(m_NumNodes),
+		m_Count(m_NumNodes),
+		m_Parent(m_NumNodes + m_NumTerminalNodes)
+	{
 		// Initialize the tree
 		// Initialize terminal nodes
 		for (NodeIndex i = 0; i < m_NumTerminalNodes; ++i)
@@ -35,14 +33,6 @@ namespace Archives
 			m_Parent[i] = (i >> 1) + m_NumTerminalNodes;
 			left += 2;										// Calc index of left child (next loop)
 		}
-	}
-
-	AdaptiveHuffmanTree::~AdaptiveHuffmanTree()
-	{
-		// Delete the tree
-		delete m_Data;
-		delete m_Count;
-		delete m_Parent;
 	}
 
 
