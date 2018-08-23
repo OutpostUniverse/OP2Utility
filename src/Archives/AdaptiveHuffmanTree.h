@@ -31,7 +31,7 @@ namespace Archives
 		// code and places the path in bitString
 
 	private:
-		void SwapNodes(NodeIndex node1, NodeIndex node2);
+		void SwapNodes(NodeIndex nodeIndex1, NodeIndex nodeIndex2);
 
 		// Next three arrays comprise the adaptive huffman tree
 		// Note: m_Data is used for both tree links and node data.

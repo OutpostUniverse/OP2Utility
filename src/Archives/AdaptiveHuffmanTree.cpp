@@ -148,10 +148,10 @@ namespace Archives
 
 	// Private function to swap two nodes in the Huffman tree.
 	// This is used during tree restructing by UpdateCodeCount.
-	void AdaptiveHuffmanTree::SwapNodes(NodeIndex node1, NodeIndex node2)
+	void AdaptiveHuffmanTree::SwapNodes(NodeIndex nodeIndex1, NodeIndex nodeIndex2)
 	{
 		// Swap Count values
-		auto temp = m_Count[node1]; m_Count[node1] = m_Count[node2]; m_Count[node2] = temp;
+		auto temp = m_Count[nodeIndex1]; m_Count[nodeIndex1] = m_Count[nodeIndex2]; m_Count[nodeIndex2] = temp;
 
 		// Update the Parent of the children
 		// Note: If the current node is a terminal node (data node) then the left
@@ -160,17 +160,17 @@ namespace Archives
 		//  a terminal node (not a data node) then both left and right child nodes
 		//  need to have their parent link updated
 
-		temp = m_Data[node1];
-		m_Parent[temp] = node2;			// Update left child
+		temp = m_Data[nodeIndex1];
+		m_Parent[temp] = nodeIndex2;			// Update left child
 		if (temp < m_NumNodes)			// Check for non-data node (has right child)
-			m_Parent[temp + 1] = node2;	// Update right child
+			m_Parent[temp + 1] = nodeIndex2;	// Update right child
 
-		temp = m_Data[node2];
-		m_Parent[temp] = node1;			// Update left child
+		temp = m_Data[nodeIndex2];
+		m_Parent[temp] = nodeIndex1;			// Update left child
 		if (temp < m_NumNodes)			// Check for non-data node (has right child)
-			m_Parent[temp + 1] = node1;	// Update right child
+			m_Parent[temp + 1] = nodeIndex1;	// Update right child
 		// Swap Data values (link to children or code value)
-		temp = m_Data[node1]; m_Data[node1] = m_Data[node2]; m_Data[node2] = temp;
+		temp = m_Data[nodeIndex1]; m_Data[nodeIndex1] = m_Data[nodeIndex2]; m_Data[nodeIndex2] = temp;
 	}
 
 
