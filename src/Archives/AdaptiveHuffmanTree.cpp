@@ -7,9 +7,6 @@ namespace Archives
 	// Creates an (adaptive) Huffman tree with numTerminalNodes at the bottom.
 	AdaptiveHuffmanTree::AdaptiveHuffmanTree(NodeType numTerminalNodes)
 	{
-		NodeIndex i;
-		NodeIndex left;
-
 		// Initialize tree properties
 		m_NumTerminalNodes = numTerminalNodes;
 		m_NumNodes = m_NumTerminalNodes * 2 - 1;
@@ -22,7 +19,7 @@ namespace Archives
 
 		// Initialize the tree
 		// Initialize terminal nodes
-		for (i = 0; i < m_NumTerminalNodes; ++i)
+		for (NodeIndex i = 0; i < m_NumTerminalNodes; ++i)
 		{
 			m_Data[i] = i + m_NumNodes;						// Initilize data values
 			m_Count[i] = 1;
@@ -30,8 +27,8 @@ namespace Archives
 			m_Parent[i + m_NumNodes] = i;						// "Parent of code" (node index)
 		}
 		// Initialize non terminal nodes
-		left = 0;
-		for (i = m_NumTerminalNodes; i < m_NumNodes; ++i)
+		NodeIndex left = 0;
+		for (NodeIndex i = m_NumTerminalNodes; i < m_NumNodes; ++i)
 		{
 			m_Data[i] = left;								// Initialize link values
 			m_Count[i] = m_Count[left] + m_Count[left + 1];	// Count is sum of two subtrees
