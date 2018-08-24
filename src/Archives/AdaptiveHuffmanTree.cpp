@@ -1,5 +1,6 @@
 #include "AdaptiveHuffmanTree.h"
 #include <utility>
+#include <string>
 #include <stdexcept>
 
 namespace Archives
