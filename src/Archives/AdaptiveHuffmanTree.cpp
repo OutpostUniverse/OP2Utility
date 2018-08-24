@@ -4,33 +4,33 @@
 
 namespace Archives
 {
-	// Creates an (adaptive) Huffman tree with numTerminalNodes at the bottom.
-	AdaptiveHuffmanTree::AdaptiveHuffmanTree(NodeType numTerminalNodes) :
+	// Creates an (adaptive) Huffman tree with terminalNodeCount at the bottom.
+	AdaptiveHuffmanTree::AdaptiveHuffmanTree(NodeType terminalNodeCount) :
 		// Initialize tree properties
-		m_NumTerminalNodes(numTerminalNodes),
-		m_NumNodes(m_NumTerminalNodes * 2 - 1),
-		m_RootNodeIndex(m_NumNodes - 1),
+		m_TerminalNodeCount(terminalNodeCount),
+		m_NodeCount(m_TerminalNodeCount * 2 - 1),
+		m_RootNodeIndex(m_NodeCount - 1),
 		// Allocate space for tree
-		m_Data(m_NumNodes),
-		m_Count(m_NumNodes),
-		m_Parent(m_NumNodes + m_NumTerminalNodes)
+		m_Data(m_NodeCount),
+		m_Count(m_NodeCount),
+		m_Parent(m_NodeCount + m_TerminalNodeCount)
 	{
 		// Initialize the tree
 		// Initialize terminal nodes
-		for (NodeIndex i = 0; i < m_NumTerminalNodes; ++i)
+		for (NodeIndex i = 0; i < m_TerminalNodeCount; ++i)
 		{
-			m_Data[i] = i + m_NumNodes;						// Initilize data values
+			m_Data[i] = i + m_NodeCount;						// Initilize data values
 			m_Count[i] = 1;
-			m_Parent[i] = (i >> 1) + m_NumTerminalNodes;
-			m_Parent[i + m_NumNodes] = i;						// "Parent of code" (node index)
+			m_Parent[i] = (i >> 1) + m_TerminalNodeCount;
+			m_Parent[i + m_NodeCount] = i;						// "Parent of code" (node index)
 		}
 		// Initialize non terminal nodes
 		NodeIndex left = 0;
-		for (NodeIndex i = m_NumTerminalNodes; i < m_NumNodes; ++i)
+		for (NodeIndex i = m_TerminalNodeCount; i < m_NodeCount; ++i)
 		{
 			m_Data[i] = left;								// Initialize link values
 			m_Count[i] = m_Count[left] + m_Count[left + 1];	// Count is sum of two subtrees
-			m_Parent[i] = (i >> 1) + m_NumTerminalNodes;
+			m_Parent[i] = (i >> 1) + m_TerminalNodeCount;
 			left += 2;										// Calc index of left child (next loop)
 		}
 	}
@@ -61,7 +61,7 @@ namespace Archives
 		VerifyValidNodeIndex(nodeIndex);
 
 		// Return whether or not this is a terminal node
-		return m_Data[nodeIndex] >= m_NumNodes;
+		return m_Data[nodeIndex] >= m_NodeCount;
 	}
 
 	// Returns the data stored in a terminal node
@@ -71,7 +71,7 @@ namespace Archives
 
 		// Return data stored in node translated back to normal form
 		// Note: This assumes the node is a terminal node
-		return m_Data[nodeIndex] - m_NumNodes;
+		return m_Data[nodeIndex] - m_NodeCount;
 	}
 
 
@@ -86,13 +86,13 @@ namespace Archives
 		int blockLeaderIndex;
 
 		// Make sure the code is in range
-		if (code >= m_NumTerminalNodes)
+		if (code >= m_TerminalNodeCount)
 		{
 			throw std::runtime_error("Code value out of range");
 		}
 
 		// Get the index of the node containing this code
-		curNodeIndex = m_Parent[code + m_NumNodes];
+		curNodeIndex = m_Parent[code + m_NodeCount];
 		m_Count[curNodeIndex]++; // Update the node count
 
 		// Propagate the count increase up to the root of the tree
@@ -126,7 +126,7 @@ namespace Archives
 	void AdaptiveHuffmanTree::VerifyValidNodeIndex(NodeIndex nodeIndex)
 	{
 		// Check that the nodeIndex is in range
-		if (nodeIndex >= m_NumNodes)
+		if (nodeIndex >= m_NodeCount)
 		{
 			throw std::runtime_error("Index out of range");
 		}
@@ -148,12 +148,12 @@ namespace Archives
 
 		auto temp = m_Data[nodeIndex1];
 		m_Parent[temp] = nodeIndex2;			// Update left child
-		if (temp < m_NumNodes)			// Check for non-data node (has right child)
+		if (temp < m_NodeCount)			// Check for non-data node (has right child)
 			m_Parent[temp + 1] = nodeIndex2;	// Update right child
 
 		temp = m_Data[nodeIndex2];
 		m_Parent[temp] = nodeIndex1;			// Update left child
-		if (temp < m_NumNodes)			// Check for non-data node (has right child)
+		if (temp < m_NodeCount)			// Check for non-data node (has right child)
 			m_Parent[temp + 1] = nodeIndex1;	// Update right child
 
 		// Swap Data values (link to children or code value)
@@ -173,11 +173,11 @@ namespace Archives
 	int AdaptiveHuffmanTree::GetEncodedBitString(int code, int &bitString)
 	{
 		int curNodeIndex;
-		int numBits;
+		int bitCount;
 		bool bBit;
 
 		// Make sure the code is in range
-		if (code >= m_NumTerminalNodes)
+		if (code >= m_TerminalNodeCount)
 		{
 			throw std::runtime_error("Code value is out of range");
 		}
@@ -190,11 +190,11 @@ namespace Archives
 		while (curNodeIndex != m_RootNodeIndex)
 		{
 			bBit = curNodeIndex & 0x01;	// Get the direction from parent to current node
-			numBits++;
+			bitCount++;
 			bitString = (bitString << 1) + bBit;// Pack the bit into the returned string
 		}
 
-		return numBits;					// Return number of bits in path from root to node
+		return bitCount;					// Return number of bits in path from root to node
 	}
 	*/
 }
