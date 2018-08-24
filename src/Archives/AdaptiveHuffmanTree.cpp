@@ -172,10 +172,6 @@ namespace Archives
 	// **NOTE**: I may change the bit ordering! (Make that I WILL change the bit ordering)
 	int AdaptiveHuffmanTree::GetEncodedBitString(int code, int &bitString)
 	{
-		int curNodeIndex;
-		int bitCount;
-		bool bBit;
-
 		// Make sure the code is in range
 		if (code >= m_TerminalNodeCount)
 		{
@@ -183,15 +179,16 @@ namespace Archives
 		}
 
 		// Get the node containing the given code
-		curNodeIndex = m_Parent[code];
+		NodeIndex curNodeIndex = m_Parent[code];
 
 		// Record the path to the root
 		bitString = 0;
+		int bitCount = 0;
 		while (curNodeIndex != m_RootNodeIndex)
 		{
-			bBit = curNodeIndex & 0x01;	// Get the direction from parent to current node
+			bool bBit = curNodeIndex & 0x01;	// Get the direction from parent to current node
 			bitCount++;
-			bitString = (bitString << 1) + bBit;// Pack the bit into the returned string
+			bitString = (bitString << 1) | bBit;// Pack the bit into the returned string
 		}
 
 		return bitCount;					// Return number of bits in path from root to node
