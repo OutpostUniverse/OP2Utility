@@ -8,30 +8,30 @@ namespace Archives
 	// Creates an (adaptive) Huffman tree with terminalNodeCount at the bottom.
 	AdaptiveHuffmanTree::AdaptiveHuffmanTree(NodeType terminalNodeCount) :
 		// Initialize tree properties
-		m_TerminalNodeCount(terminalNodeCount),
-		m_NodeCount(m_TerminalNodeCount * 2 - 1),
-		m_RootNodeIndex(m_NodeCount - 1),
+		terminalNodeCount(terminalNodeCount),
+		nodeCount(terminalNodeCount * 2 - 1),
+		rootNodeIndex(nodeCount - 1),
 		// Allocate space for tree
-		m_Data(m_NodeCount),
-		m_Count(m_NodeCount),
-		m_Parent(m_NodeCount + m_TerminalNodeCount)
+		linkOrData(nodeCount),
+		subtreeCount(nodeCount),
+		parentIndex(nodeCount + terminalNodeCount)
 	{
 		// Initialize the tree
 		// Initialize terminal nodes
-		for (NodeIndex i = 0; i < m_TerminalNodeCount; ++i)
+		for (NodeIndex i = 0; i < terminalNodeCount; ++i)
 		{
-			m_Data[i] = i + m_NodeCount;						// Initilize data values
-			m_Count[i] = 1;
-			m_Parent[i] = (i >> 1) + m_TerminalNodeCount;
-			m_Parent[i + m_NodeCount] = i;						// "Parent of code" (node index)
+			linkOrData[i] = i + nodeCount;						// Initilize data values
+			subtreeCount[i] = 1;
+			parentIndex[i] = (i >> 1) + terminalNodeCount;
+			parentIndex[i + nodeCount] = i;						// "Parent of code" (node index)
 		}
 		// Initialize non terminal nodes
 		NodeIndex left = 0;
-		for (NodeIndex i = m_TerminalNodeCount; i < m_NodeCount; ++i)
+		for (NodeIndex i = terminalNodeCount; i < nodeCount; ++i)
 		{
-			m_Data[i] = left;								// Initialize link values
-			m_Count[i] = m_Count[left] + m_Count[left + 1];	// Count is sum of two subtrees
-			m_Parent[i] = (i >> 1) + m_TerminalNodeCount;
+			linkOrData[i] = left;								// Initialize link values
+			subtreeCount[i] = subtreeCount[left] + subtreeCount[left + 1];	// Count is sum of two subtrees
+			parentIndex[i] = (i >> 1) + terminalNodeCount;
 			left += 2;										// Calc index of left child (next loop)
 		}
 	}
@@ -42,7 +42,7 @@ namespace Archives
 	// All tree searches start at the root node.
 	AdaptiveHuffmanTree::NodeIndex AdaptiveHuffmanTree::GetRootNodeIndex()
 	{
-		return m_RootNodeIndex;
+		return rootNodeIndex;
 	}
 
 	// Return a child node of the given node.
@@ -52,7 +52,7 @@ namespace Archives
 		VerifyValidNodeIndex(nodeIndex);
 
 		// Return the child node index
-		return m_Data[nodeIndex] + bRight;
+		return linkOrData[nodeIndex] + bRight;
 	}
 
 	// Returns true if the node is a terminal node.
@@ -62,7 +62,7 @@ namespace Archives
 		VerifyValidNodeIndex(nodeIndex);
 
 		// Return whether or not this is a terminal node
-		return m_Data[nodeIndex] >= m_NodeCount;
+		return linkOrData[nodeIndex] >= nodeCount;
 	}
 
 	// Returns the data stored in a terminal node
@@ -72,7 +72,7 @@ namespace Archives
 
 		// Return data stored in node translated back to normal form
 		// Note: This assumes the node is a terminal node
-		return m_Data[nodeIndex] - m_NodeCount;
+		return linkOrData[nodeIndex] - nodeCount;
 	}
 
 
@@ -87,25 +87,25 @@ namespace Archives
 		int blockLeaderIndex;
 
 		// Make sure the code is in range
-		if (code >= m_TerminalNodeCount)
+		if (code >= terminalNodeCount)
 		{
 			throw std::runtime_error("AdaptiveHuffmanTree DataValue of " + std::to_string(code)
-				+ " is out of range " + std::to_string(m_TerminalNodeCount));
+				+ " is out of range " + std::to_string(terminalNodeCount));
 		}
 
 		// Get the index of the node containing this code
-		curNodeIndex = m_Parent[code + m_NodeCount];
-		m_Count[curNodeIndex]++; // Update the node count
+		curNodeIndex = parentIndex[code + nodeCount];
+		subtreeCount[curNodeIndex]++; // Update the node count
 
 		// Propagate the count increase up to the root of the tree
-		while (curNodeIndex != m_RootNodeIndex)
+		while (curNodeIndex != rootNodeIndex)
 		{
 			// Find the block leader of the block
 			// Note: the block leader is the "rightmost" node with count equal to the
 			//  count of the current node, BEFORE the count of the current node is
 			//  updated. (The current node has already had it's count updated.)
 			blockLeaderIndex = curNodeIndex;
-			while (m_Count[curNodeIndex] > m_Count[blockLeaderIndex + 1])
+			while (subtreeCount[curNodeIndex] > subtreeCount[blockLeaderIndex + 1])
 				blockLeaderIndex++;
 
 			// Check if Current Node needs to be swapped with the Block Leader
@@ -116,9 +116,9 @@ namespace Archives
 			}
 
 			// Follow the current node up to it's parent
-			curNodeIndex = m_Parent[curNodeIndex];
+			curNodeIndex = parentIndex[curNodeIndex];
 			// Increment the count of this new node
-			m_Count[curNodeIndex]++;
+			subtreeCount[curNodeIndex]++;
 		}
 	}
 
@@ -128,10 +128,10 @@ namespace Archives
 	void AdaptiveHuffmanTree::VerifyValidNodeIndex(NodeIndex nodeIndex)
 	{
 		// Check that the nodeIndex is in range
-		if (nodeIndex >= m_NodeCount)
+		if (nodeIndex >= nodeCount)
 		{
 			throw std::runtime_error("AdaptiveHuffmanTree NodeIndex of " + std::to_string(nodeIndex)
-				+ " is out of range " + std::to_string(m_NodeCount));
+				+ " is out of range " + std::to_string(nodeCount));
 		}
 	}
 
@@ -140,7 +140,7 @@ namespace Archives
 	void AdaptiveHuffmanTree::SwapNodes(NodeIndex nodeIndex1, NodeIndex nodeIndex2)
 	{
 		// Swap Count values
-		std::swap(m_Count[nodeIndex1], m_Count[nodeIndex2]);
+		std::swap(subtreeCount[nodeIndex1], subtreeCount[nodeIndex2]);
 
 		// Update the Parent of the children
 		// Note: If the current node is a terminal node (data node) then the left
@@ -149,18 +149,18 @@ namespace Archives
 		//  a terminal node (not a data node) then both left and right child nodes
 		//  need to have their parent link updated
 
-		auto temp = m_Data[nodeIndex1];
-		m_Parent[temp] = nodeIndex2;			// Update left child
-		if (temp < m_NodeCount)			// Check for non-data node (has right child)
-			m_Parent[temp + 1] = nodeIndex2;	// Update right child
+		auto temp = linkOrData[nodeIndex1];
+		parentIndex[temp] = nodeIndex2;			// Update left child
+		if (temp < nodeCount)			// Check for non-data node (has right child)
+			parentIndex[temp + 1] = nodeIndex2;	// Update right child
 
-		temp = m_Data[nodeIndex2];
-		m_Parent[temp] = nodeIndex1;			// Update left child
-		if (temp < m_NodeCount)			// Check for non-data node (has right child)
-			m_Parent[temp + 1] = nodeIndex1;	// Update right child
+		temp = linkOrData[nodeIndex2];
+		parentIndex[temp] = nodeIndex1;			// Update left child
+		if (temp < nodeCount)			// Check for non-data node (has right child)
+			parentIndex[temp + 1] = nodeIndex1;	// Update right child
 
 		// Swap Data values (link to children or code value)
-		std::swap(m_Data[nodeIndex1], m_Data[nodeIndex2]);
+		std::swap(linkOrData[nodeIndex1], linkOrData[nodeIndex2]);
 	}
 
 
@@ -176,18 +176,18 @@ namespace Archives
 	int AdaptiveHuffmanTree::GetEncodedBitString(int code, int &bitString)
 	{
 		// Make sure the code is in range
-		if (code >= m_TerminalNodeCount)
+		if (code >= terminalNodeCount)
 		{
 			throw std::runtime_error("Code value is out of range");
 		}
 
 		// Get the node containing the given code
-		NodeIndex curNodeIndex = m_Parent[code];
+		NodeIndex curNodeIndex = parentIndex[code];
 
 		// Record the path to the root
 		bitString = 0;
 		int bitCount = 0;
-		while (curNodeIndex != m_RootNodeIndex)
+		while (curNodeIndex != rootNodeIndex)
 		{
 			bool bBit = curNodeIndex & 0x01;	// Get the direction from parent to current node
 			bitCount++;
