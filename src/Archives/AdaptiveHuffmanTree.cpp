@@ -88,7 +88,8 @@ namespace Archives
 		// Make sure the code is in range
 		if (code >= m_TerminalNodeCount)
 		{
-			throw std::runtime_error("AdaptiveHuffmanTree DataValue out of range");
+			throw std::runtime_error("AdaptiveHuffmanTree DataValue of " + std::to_string(code)
+				+ " is out of range " + std::to_string(m_TerminalNodeCount));
 		}
 
 		// Get the index of the node containing this code
@@ -128,7 +129,8 @@ namespace Archives
 		// Check that the nodeIndex is in range
 		if (nodeIndex >= m_NodeCount)
 		{
-			throw std::runtime_error("AdaptiveHuffmanTree NodeIndex out of range");
+			throw std::runtime_error("AdaptiveHuffmanTree NodeIndex of " + std::to_string(nodeIndex)
+				+ " is out of range " + std::to_string(m_NodeCount));
 		}
 	}
 
