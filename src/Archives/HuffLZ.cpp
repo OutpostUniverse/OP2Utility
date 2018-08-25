@@ -231,6 +231,12 @@ namespace Archives
 		return offset;			// Return the offset to the start of the repeated block
 	}
 
+	void HuffLZ::WriteCharToBuffer(char c)
+	{
+		m_DecompressBuffer[m_BuffWriteIndex] = c;			// Write the char to the buffer
+		m_BuffWriteIndex = (m_BuffWriteIndex + 1) & 0x0FFF;	// Wrap around 4096
+	}
+
 
 
 	// Determine how many more bits to read in
@@ -275,11 +281,5 @@ namespace Archives
 		}
 
 		return offset - 0xC0;
-	}
-
-	void HuffLZ::WriteCharToBuffer(char c)
-	{
-		m_DecompressBuffer[m_BuffWriteIndex] = c;			// Write the char to the buffer
-		m_BuffWriteIndex = (m_BuffWriteIndex + 1) & 0x0FFF;	// Wrap around 4096
 	}
 }

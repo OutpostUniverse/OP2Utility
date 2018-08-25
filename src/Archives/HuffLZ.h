@@ -24,9 +24,10 @@ namespace Archives
 		bool DecompressCode();	// Decompresses a code and returns false at end of stream
 		int GetNextCode();
 		int GetRepeatOffset();
+		void WriteCharToBuffer(char c);
+
 		static int GetNumExtraBits(int offset);
 		static int GetOffsetBitMod(int offset);
-		void WriteCharToBuffer(char c);
 
 		// Member variables
 		BitStreamReader m_BitStreamReader;
