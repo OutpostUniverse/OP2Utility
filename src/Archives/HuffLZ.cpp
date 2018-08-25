@@ -1,5 +1,5 @@
-#include <string.h>
 #include "HuffLZ.h"
+#include <cstring>
 
 namespace Archives
 {
@@ -16,7 +16,7 @@ namespace Archives
 
 	void HuffLZ::InitializeDecompressBuffer() {
 		// Initialize the decompress buffer to spaces
-		memset(m_DecompressBuffer, ' ', 4096);
+		std::memset(m_DecompressBuffer, ' ', 4096);
 	}
 
 
@@ -127,7 +127,7 @@ namespace Archives
 			}
 
 			// Copy what is already decompressed into the output buffer
-			memcpy(buff, &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
+			std::memcpy(buff, &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
 			numBytesTotal = numBytesToCopy;	// Update number of bytes copied
 			size -= numBytesToCopy;			// Update space left in buffer
 			// Update read index and wrap around 4096
@@ -145,7 +145,7 @@ namespace Archives
 		if (numBytesToCopy > 0)
 		{
 			// Copy what is already decompressed into the output buffer
-			memcpy(&buff[numBytesTotal], &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
+			std::memcpy(&buff[numBytesTotal], &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
 			numBytesTotal += numBytesToCopy;// Update number of bytes copied
 			// Update read index (Note: no need to wrap around 4096 here)
 			m_BuffReadIndex = (m_BuffReadIndex + numBytesToCopy);
