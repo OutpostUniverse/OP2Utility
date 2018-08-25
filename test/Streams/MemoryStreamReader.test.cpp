@@ -4,7 +4,7 @@
 
 // Simple test
 
-TEST(MemoryStreamReaderTest, EmptyStream) {
+TEST(MemoryStreamReaderTest, ZeroSizeStreamHasSafeOperations) {
   Stream::MemoryReader stream(nullptr, 0);
   // Length and position
   EXPECT_EQ(0, stream.Length());
@@ -28,7 +28,7 @@ protected:
   Stream::MemoryReader stream;
 };
 
-TEST_F(EmptyMemoryStreamReader, EmptySize) {
+TEST_F(EmptyMemoryStreamReader, ZeroSizeStreamHasSafeOperations) {
   // Length and position
   EXPECT_EQ(0, stream.Length());
   EXPECT_EQ(0, stream.Position());
@@ -49,34 +49,34 @@ protected:
 	Stream::MemoryReader stream;
 };
 
-TEST_F(IntMemoryStreamReader, SeekOutOfBounds) {
+TEST_F(IntMemoryStreamReader, SeekOutOfBoundsThrows) {
 	EXPECT_THROW(stream.Seek(6), std::runtime_error);
 }
 
-TEST_F(IntMemoryStreamReader, ReadOutOfBounds) {
+TEST_F(IntMemoryStreamReader, ReadOutOfBoundsThrows) {
 	std::array<int, 6> destinationBuffer;
 	EXPECT_THROW(stream.Read(destinationBuffer), std::runtime_error);
 }
 
-TEST_F(IntMemoryStreamReader, SeekRelativeOutOfBoundsEnd) {
+TEST_F(IntMemoryStreamReader, SeekRelativeOutOfBoundsEndPreservesPosition) {
 	// Seeking out of bounds after end should not move the stream position
 	auto position = stream.Position();
 	EXPECT_THROW(stream.SeekRelative(6), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
 }
 
-TEST_F(IntMemoryStreamReader, SeekRelativeOutOfBoundsBeginning) {
+TEST_F(IntMemoryStreamReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
 	// Seeking out of bounds before beginning should not move the stream position
 	auto position = stream.Position();
 	EXPECT_THROW(stream.SeekRelative(-1), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
 }
 
-TEST_F(IntMemoryStreamReader, StreamSize) {
+TEST_F(IntMemoryStreamReader, StreamSizeMatchesInitialization) {
 	EXPECT_EQ(stream.Length(), buffer.size());
 }
 
-TEST_F(IntMemoryStreamReader, StreamPosition) {
+TEST_F(IntMemoryStreamReader, StreamPositionUpdatesOnRead) {
 	std::array<int, 6> destinationBuffer;
 
 	EXPECT_EQ(stream.Position(), 0);
