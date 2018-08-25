@@ -45,8 +45,8 @@ class IntMemoryStreamReader : public ::testing::Test {
 public:
 	IntMemoryStreamReader() : stream(buffer.data(), buffer.size()) {}
 protected:
-	Stream::MemoryReader stream;
 	const std::array<int, 5> buffer{ 0, 1, 2, 3, 4 };
+	Stream::MemoryReader stream;
 };
 
 TEST_F(IntMemoryStreamReader, SeekOutOfBounds) {
