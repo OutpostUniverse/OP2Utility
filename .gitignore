@@ -1,9 +1,10 @@
-x64
-Debug
-Release
+**/x64
+**/Debug
+**/Release
+**/packages
 .build/
-/*.user
-.vs
+*.user
+*.vs
 VisualStudio
 Makefile
 CMakeFiles/
