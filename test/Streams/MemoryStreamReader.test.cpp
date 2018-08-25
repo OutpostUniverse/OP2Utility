@@ -58,10 +58,18 @@ TEST_F(IntMemoryStreamReader, ReadOutOfBounds) {
 	EXPECT_THROW(stream.Read(destinationBuffer), std::runtime_error);
 }
 
-TEST_F(IntMemoryStreamReader, SeekOutOfBoundsRelative) {
-	// Seeking out of bounds should return a Stream::Seekable to previous condition
+TEST_F(IntMemoryStreamReader, SeekRelativeOutOfBoundsEnd) {
+	// Seeking out of bounds after end should not move the stream position
+	auto position = stream.Position();
 	EXPECT_THROW(stream.SeekRelative(6), std::runtime_error);
+	EXPECT_EQ(position, stream.Position());
+}
+
+TEST_F(IntMemoryStreamReader, SeekRelativeOutOfBoundsBeginning) {
+	// Seeking out of bounds before beginning should not move the stream position
+	auto position = stream.Position();
 	EXPECT_THROW(stream.SeekRelative(-1), std::runtime_error);
+	EXPECT_EQ(position, stream.Position());
 }
 
 TEST_F(IntMemoryStreamReader, StreamSize) {
