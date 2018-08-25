@@ -57,7 +57,7 @@ TEST_F(SimpleMemoryStreamReader, SeekOutOfBoundsEndPreservesPosition) {
 }
 
 TEST_F(SimpleMemoryStreamReader, ReadOutOfBoundsPreservesPosition) {
-	std::array<int, 6> destinationBuffer;
+	std::array<char, 6> destinationBuffer;
 	auto position = stream.Position();
 	EXPECT_THROW(stream.Read(destinationBuffer), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
@@ -80,7 +80,7 @@ TEST_F(SimpleMemoryStreamReader, StreamSizeMatchesInitialization) {
 }
 
 TEST_F(SimpleMemoryStreamReader, StreamPositionUpdatesOnRead) {
-	std::array<int, 6> destinationBuffer;
+	std::array<char, 6> destinationBuffer;
 
 	EXPECT_EQ(stream.Position(), 0);
 
