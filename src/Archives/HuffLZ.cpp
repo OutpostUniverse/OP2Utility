@@ -211,7 +211,11 @@ namespace Archives
 		return m_AdaptiveHuffmanTree.GetNodeData(nodeIndex);
 	}
 
-	// Determines the offset to the start of a repeated block. (This one is a little weird)
+	// Determines the offset to the start of a repeated block
+	//
+	// Reads a variable length code from the bit stream (9-14 bits)
+	// Smaller offsets have a shorter bit code
+	// Returns a 12-bit offset (0..4095)
 	unsigned int HuffLZ::GetRepeatOffset()
 	{
 		// Get the next 8 bits
@@ -223,12 +227,13 @@ namespace Archives
 		for (; numExtraBits; numExtraBits--) {
 			offset = (offset << 1) + m_BitStreamReader.ReadNextBit();
 		}
-		offset &= 0x3F;			// Mask upper bits (keep lower 6)
+		// Keep lower 6 bits (mask off upper bits)
+		offset &= 0x3F; // 0011 1111
 
-		// Apply the modifier
-		offset |= (mod << 6);	// Set upper 6 bits (12 bit number -> buffer size is 4096)
+		// Set upper 6 bits (12 bit number -> buffer size is 4096)
+		offset |= (mod << 6);
 
-		return offset;			// Return the offset to the start of the repeated block
+		return offset;
 	}
 
 	void HuffLZ::WriteCharToBuffer(char c)
