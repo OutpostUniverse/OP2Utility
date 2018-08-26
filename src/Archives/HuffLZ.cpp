@@ -227,11 +227,10 @@ namespace Archives
 		for (; numExtraBits; numExtraBits--) {
 			offset = (offset << 1) + m_BitStreamReader.ReadNextBit();
 		}
-		// Keep lower 6 bits (mask off upper bits)
-		offset &= 0x3F; // 0011 1111
 
-		// Set upper 6 bits (12 bit number -> buffer size is 4096)
-		offset |= (mod << 6);
+		// Set upper 6 bits and preserve lower 6 bits (0x3F = 0011 1111)
+		// Result is a 12-bit number with range 0..4095
+		offset = (mod << 6) | (offset & 0x3F);
 
 		return offset;
 	}
