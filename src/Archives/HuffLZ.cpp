@@ -243,52 +243,22 @@ namespace Archives
 
 
 	HuffLZ::OffsetModifiers HuffLZ::GetOffsetModifiers(unsigned int offset) {
-		auto extraBitCount = GetNumExtraBits(offset);
-		auto offsetUpperBits = GetOffsetBitMod(offset);
-		return OffsetModifiers { extraBitCount, offsetUpperBits };
-	}
-
-	// Determine how many more bits to read in
-	unsigned int HuffLZ::GetNumExtraBits(unsigned int offset)
-	{
 		if (offset < 0x20) {
-			return 1;
+			return { 1, 0 };
 		}
 		if (offset < 0x50) {
-			return 2;
+			return { 2, ((offset - 0x20) >> 4) + 1 };
 		}
 		if (offset < 0x90) {
-			return 3;
+			return { 3, ((offset - 0x50) >> 3) + 4 };
 		}
 		if (offset < 0xC0) {
-			return 4;
+			return { 4, ((offset - 0x90) >> 2) + 0x0C };
 		}
 		if (offset < 0xF0) {
-			return 5;
+			return { 5, ((offset - 0xC0) >> 1) + 0x18 };
 		}
 
-		return 6;
-	}
-
-	// Determine how to modify bits to get real offset
-	unsigned int HuffLZ::GetOffsetBitMod(unsigned int offset)
-	{
-		if (offset < 0x20) {
-			return 0;
-		}
-		if (offset < 0x50) {
-			return ((offset - 0x20) >> 4) + 1;
-		}
-		if (offset < 0x90) {
-			return ((offset - 0x50) >> 3) + 4;
-		}
-		if (offset < 0xC0) {
-			return ((offset - 0x90) >> 2) + 0x0C;
-		}
-		if (offset < 0xF0) {
-			return ((offset - 0xC0) >> 1) + 0x18;
-		}
-
-		return offset - 0xC0;
+		return { 6, offset - 0xC0 };
 	}
 }

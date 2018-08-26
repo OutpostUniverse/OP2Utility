@@ -31,8 +31,6 @@ namespace Archives
 			unsigned int offsetUpperBits;
 		};
 		static OffsetModifiers GetOffsetModifiers(unsigned int offset);
-		static unsigned int GetNumExtraBits(unsigned int offset);
-		static unsigned int GetOffsetBitMod(unsigned int offset);
 
 		// Member variables
 		BitStreamReader m_BitStreamReader;
