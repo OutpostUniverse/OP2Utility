@@ -26,8 +26,8 @@ namespace Archives
 		int GetRepeatOffset();
 		void WriteCharToBuffer(char c);
 
-		static int GetNumExtraBits(int offset);
-		static int GetOffsetBitMod(int offset);
+		static unsigned int GetNumExtraBits(unsigned int offset);
+		static unsigned int GetOffsetBitMod(unsigned int offset);
 
 		// Member variables
 		BitStreamReader m_BitStreamReader;
