@@ -220,17 +220,16 @@ namespace Archives
 	{
 		// Get the next 8 bits
 		unsigned int offset = m_BitStreamReader.ReadNext8Bits();
-		unsigned int numExtraBits = GetNumExtraBits(offset);
-		unsigned int mod = GetOffsetBitMod(offset);
+		auto modifiers = GetOffsetModifiers(offset);
 
 		// Read in the extra bits
-		for (; numExtraBits; numExtraBits--) {
+		for (auto i = modifiers.extraBitCount; i; --i) {
 			offset = (offset << 1) + m_BitStreamReader.ReadNextBit();
 		}
 
 		// Set upper 6 bits and preserve lower 6 bits (0x3F = 0011 1111)
 		// Result is a 12-bit number with range 0..4095
-		offset = (mod << 6) | (offset & 0x3F);
+		offset = (modifiers.offsetUpperBits << 6) | (offset & 0x3F);
 
 		return offset;
 	}
@@ -242,6 +241,12 @@ namespace Archives
 	}
 
 
+
+	HuffLZ::OffsetModifiers HuffLZ::GetOffsetModifiers(unsigned int offset) {
+		auto extraBitCount = GetNumExtraBits(offset);
+		auto offsetUpperBits = GetOffsetBitMod(offset);
+		return OffsetModifiers { extraBitCount, offsetUpperBits };
+	}
 
 	// Determine how many more bits to read in
 	unsigned int HuffLZ::GetNumExtraBits(unsigned int offset)

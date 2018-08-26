@@ -26,6 +26,11 @@ namespace Archives
 		unsigned int GetRepeatOffset();
 		void WriteCharToBuffer(char c);
 
+		struct OffsetModifiers {
+			unsigned int extraBitCount;
+			unsigned int offsetUpperBits;
+		};
+		static OffsetModifiers GetOffsetModifiers(unsigned int offset);
 		static unsigned int GetNumExtraBits(unsigned int offset);
 		static unsigned int GetOffsetBitMod(unsigned int offset);
 
