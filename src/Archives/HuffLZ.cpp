@@ -160,8 +160,8 @@ namespace Archives
 	bool HuffLZ::DecompressCode()
 	{
 		unsigned short code;
-		int start;
-		int offset;
+		unsigned int start;
+		unsigned int offset;
 
 		// Get the next code
 		code = GetNextCode();
@@ -212,12 +212,12 @@ namespace Archives
 	}
 
 	// Determines the offset to the start of a repeated block. (This one is a little weird)
-	int HuffLZ::GetRepeatOffset()
+	unsigned int HuffLZ::GetRepeatOffset()
 	{
 		// Get the next 8 bits
-		int offset = m_BitStreamReader.ReadNext8Bits();
-		int numExtraBits = GetNumExtraBits(offset);
-		int mod = GetOffsetBitMod(offset);
+		unsigned int offset = m_BitStreamReader.ReadNext8Bits();
+		unsigned int numExtraBits = GetNumExtraBits(offset);
+		unsigned int mod = GetOffsetBitMod(offset);
 
 		// Read in the extra bits
 		for (; numExtraBits; numExtraBits--) {
