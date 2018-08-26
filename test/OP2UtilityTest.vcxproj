@@ -33,6 +33,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="Streams\FileReader.test.cpp" />
     <ClCompile Include="Streams\MemoryStreamReader.test.cpp" />
   </ItemGroup>
   <ItemGroup>

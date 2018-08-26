@@ -4,6 +4,9 @@
     <ClCompile Include="Streams\MemoryStreamReader.test.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
+    <ClCompile Include="Streams\FileReader.test.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
