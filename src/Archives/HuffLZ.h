@@ -23,10 +23,14 @@ namespace Archives
 		std::size_t CopyAvailableData(char *buff, std::size_t size);// Copies already decompressed data
 		bool DecompressCode();	// Decompresses a code and returns false at end of stream
 		int GetNextCode();
-		int GetRepeatOffset();
-		int GetNumExtraBits(int offset) const;
-		int GetOffsetBitMod(int offset) const;
+		unsigned int GetRepeatOffset();
 		void WriteCharToBuffer(char c);
+
+		struct OffsetModifiers {
+			unsigned int extraBitCount;
+			unsigned int offsetUpperBits;
+		};
+		static OffsetModifiers GetOffsetModifiers(unsigned int offset);
 
 		// Member variables
 		BitStreamReader m_BitStreamReader;

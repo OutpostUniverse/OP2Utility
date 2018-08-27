@@ -1,5 +1,5 @@
-#include <string.h>
 #include "HuffLZ.h"
+#include <cstring>
 
 namespace Archives
 {
@@ -16,7 +16,7 @@ namespace Archives
 
 	void HuffLZ::InitializeDecompressBuffer() {
 		// Initialize the decompress buffer to spaces
-		memset(m_DecompressBuffer, ' ', 4096);
+		std::memset(m_DecompressBuffer, ' ', 4096);
 	}
 
 
@@ -127,7 +127,7 @@ namespace Archives
 			}
 
 			// Copy what is already decompressed into the output buffer
-			memcpy(buff, &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
+			std::memcpy(buff, &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
 			numBytesTotal = numBytesToCopy;	// Update number of bytes copied
 			size -= numBytesToCopy;			// Update space left in buffer
 			// Update read index and wrap around 4096
@@ -145,7 +145,7 @@ namespace Archives
 		if (numBytesToCopy > 0)
 		{
 			// Copy what is already decompressed into the output buffer
-			memcpy(&buff[numBytesTotal], &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
+			std::memcpy(&buff[numBytesTotal], &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
 			numBytesTotal += numBytesToCopy;// Update number of bytes copied
 			// Update read index (Note: no need to wrap around 4096 here)
 			m_BuffReadIndex = (m_BuffReadIndex + numBytesToCopy);
@@ -160,8 +160,8 @@ namespace Archives
 	bool HuffLZ::DecompressCode()
 	{
 		unsigned short code;
-		int start;
-		int offset;
+		unsigned int start;
+		unsigned int offset;
 
 		// Get the next code
 		code = GetNextCode();
@@ -211,75 +211,54 @@ namespace Archives
 		return m_AdaptiveHuffmanTree.GetNodeData(nodeIndex);
 	}
 
-	// Determines the offset to the start of a repeated block. (This one is a little weird)
-	int HuffLZ::GetRepeatOffset()
+	// Determines the offset to the start of a repeated block
+	//
+	// Reads a variable length code from the bit stream (9-14 bits)
+	// Smaller offsets have a shorter bit code
+	// Returns a 12-bit offset (0..4095)
+	unsigned int HuffLZ::GetRepeatOffset()
 	{
 		// Get the next 8 bits
-		int offset = m_BitStreamReader.ReadNext8Bits();
-		int numExtraBits = GetNumExtraBits(offset);
-		int mod = GetOffsetBitMod(offset);
+		unsigned int offset = m_BitStreamReader.ReadNext8Bits();
+		auto modifiers = GetOffsetModifiers(offset);
 
 		// Read in the extra bits
-		for (; numExtraBits; numExtraBits--) {
+		for (auto i = modifiers.extraBitCount; i; --i) {
 			offset = (offset << 1) + m_BitStreamReader.ReadNextBit();
 		}
-		offset &= 0x3F;			// Mask upper bits (keep lower 6)
 
-		// Apply the modifier
-		offset |= (mod << 6);	// Set upper 6 bits (12 bit number -> buffer size is 4096)
+		// Set upper 6 bits and preserve lower 6 bits (0x3F = 0011 1111)
+		// Result is a 12-bit number with range 0..4095
+		offset = (modifiers.offsetUpperBits << 6) | (offset & 0x3F);
 
-		return offset;			// Return the offset to the start of the repeated block
-	}
-
-
-
-	// Determine how many more bits to read in
-	int HuffLZ::GetNumExtraBits(int offset) const
-	{
-		if (offset < 0x20) {
-			return 1;
-		}
-		if (offset < 0x50) {
-			return 2;
-		}
-		if (offset < 0x90) {
-			return 3;
-		}
-		if (offset < 0xC0) {
-			return 4;
-		}
-		if (offset < 0xF0) {
-			return 5;
-		}
-
-		return 6;
-	}
-
-	// Determine how to modify bits to get real offset
-	int HuffLZ::GetOffsetBitMod(int offset) const
-	{
-		if (offset < 0x20) {
-			return 0;
-		}
-		if (offset < 0x50) {
-			return ((offset - 0x20) >> 4) + 1;
-		}
-		if (offset < 0x90) {
-			return ((offset - 0x50) >> 3) + 4;
-		}
-		if (offset < 0xC0) {
-			return ((offset - 0x90) >> 2) + 0x0C;
-		}
-		if (offset < 0xF0) {
-			return ((offset - 0xC0) >> 1) + 0x18;
-		}
-
-		return offset - 0xC0;
+		return offset;
 	}
 
 	void HuffLZ::WriteCharToBuffer(char c)
 	{
 		m_DecompressBuffer[m_BuffWriteIndex] = c;			// Write the char to the buffer
 		m_BuffWriteIndex = (m_BuffWriteIndex + 1) & 0x0FFF;	// Wrap around 4096
+	}
+
+
+
+	HuffLZ::OffsetModifiers HuffLZ::GetOffsetModifiers(unsigned int offset) {
+		if (offset < 0x20) {
+			return { 1, 0 };
+		}
+		if (offset < 0x50) {
+			return { 2, ((offset - 0x20) >> 4) + 1 };
+		}
+		if (offset < 0x90) {
+			return { 3, ((offset - 0x50) >> 3) + 4 };
+		}
+		if (offset < 0xC0) {
+			return { 4, ((offset - 0x90) >> 2) + 0x0C };
+		}
+		if (offset < 0xF0) {
+			return { 5, ((offset - 0xC0) >> 1) + 0x18 };
+		}
+
+		return { 6, offset - 0xC0 };
 	}
 }
