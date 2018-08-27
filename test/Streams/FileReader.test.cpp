@@ -7,7 +7,7 @@ TEST(FileReaderTest, AccessNonexistingFile) {
 }
 
 TEST(FileReaderTest, ZeroSizeStreamHasSafeOperations) {
-	Stream::FileReader stream("Streams/EmptyStream.txt");
+	Stream::FileReader stream("Streams/EmptyFile.txt");
 	// Length and position
 	EXPECT_EQ(0, stream.Length());
 	EXPECT_EQ(0, stream.Position());
