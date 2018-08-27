@@ -2,6 +2,9 @@
 #include <gtest/gtest.h>
 #include <array>
 
+TEST(FileReaderTest, AccessNonexistingFile) {
+	EXPECT_THROW(Stream::FileReader("MissingFile.txt"), std::runtime_error);
+}
 
 TEST(FileReaderTest, ZeroSizeStreamHasSafeOperations) {
 	Stream::FileReader stream("Streams/EmptyStream.txt");
