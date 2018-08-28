@@ -35,6 +35,7 @@
   <ItemGroup>
     <ClCompile Include="Streams\FileReader.test.cpp" />
     <ClCompile Include="Streams\MemoryStreamReader.test.cpp" />
+    <ClCompile Include="Streams\SeekableReader.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OP2Utility.vcxproj">
