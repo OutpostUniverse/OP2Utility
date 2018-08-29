@@ -15,13 +15,9 @@ protected:
 	const unsigned int size = 5;
 };
 
-using testing::Types;
+TYPED_TEST_CASE_P(SimpleSeekableReader);
 
-typedef Types<Stream::MemoryReader, Stream::FileReader> SeekableStreamImplementations;
-
-TYPED_TEST_CASE(SimpleSeekableReader, SeekableStreamImplementations); 
-
-TYPED_TEST(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
+TYPED_TEST_P(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
 	auto position = this->seekableReader.Position();
 	EXPECT_THROW(this->seekableReader.SeekRelative(-1), std::runtime_error);
 	EXPECT_EQ(position, this->seekableReader.Position());
@@ -29,7 +25,7 @@ TYPED_TEST(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPositi
 
 // Then use TYPED_TEST(TestCaseName, TestName) to define a typed test,
 // similar to TEST_F.
-TYPED_TEST(SimpleSeekableReader, StreamPositionUpdatesOnReadVer2) {
+TYPED_TEST_P(SimpleSeekableReader, StreamPositionUpdatesOnReadVer2) {
 	char destinationBuffer;
 
 	EXPECT_EQ(0, this->seekableReader.Position());
@@ -38,6 +34,16 @@ TYPED_TEST(SimpleSeekableReader, StreamPositionUpdatesOnReadVer2) {
 	EXPECT_EQ(1, this->seekableReader.Position());
 }
 
-TYPED_TEST(SimpleSeekableReader, StreamSizeMatchesInitialization) {
+TYPED_TEST_P(SimpleSeekableReader, StreamSizeMatchesInitialization) {
 	EXPECT_EQ(this->size, this->seekableReader.Length());
 }
+
+REGISTER_TYPED_TEST_CASE_P(SimpleSeekableReader,
+	SeekRelativeOutOfBoundsBeginningPreservesPosition,
+	StreamPositionUpdatesOnReadVer2,
+	StreamSizeMatchesInitialization
+);
+
+using testing::Types;
+typedef Types<Stream::MemoryReader, Stream::FileReader> SeekableStreamImplementations;
+INSTANTIATE_TYPED_TEST_CASE_P(Prefix, SimpleSeekableReader, SeekableStreamImplementations);
