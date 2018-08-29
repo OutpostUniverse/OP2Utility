@@ -1,6 +1,12 @@
+#include "SeekableReader.test.h"
 #include "Streams/MemoryReader.h"
-#include <gtest/gtest.h>
 #include <array>
+
+template <>
+Stream::SeekableReader* CreateSeekableReader<Stream::MemoryReader>() {
+	std::array<char, 5> buffer{ 't', 'e', 's', 't', '!' };
+	return new Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
+}
 
 // Simple test
 

@@ -1,28 +1,8 @@
+#include "SeekableReader.test.h"
 #include "Streams/MemoryReader.h"
 #include "Streams/FileReader.h"
 #include "Streams/FileSliceReader.h"
-#include <gtest/gtest.h>
 #include <array>
-
-template <class T>
-Stream::SeekableReader* CreateSeekableReader();
-
-template <>
-Stream::SeekableReader* CreateSeekableReader<Stream::MemoryReader>() {
-	std::array<char, 5> buffer{ 't', 'e', 's', 't', '!' };
-	return new Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
-}
-
-template <>
-Stream::SeekableReader* CreateSeekableReader<Stream::FileReader>() {
-	return new Stream::FileReader("Streams/SimpleStream.txt");
-}
-
-template <>
-Stream::SeekableReader* CreateSeekableReader<Stream::FileSliceReader>() {
-	Stream::FileReader fileReader("Streams/SimpleStream.txt");
-	return &fileReader.Slice(5);
-}
 
 // Define a test fixture class template
 template <class T>

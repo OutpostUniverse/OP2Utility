@@ -1,6 +1,11 @@
+#include "SeekableReader.test.h"
 #include "Streams/FileReader.h"
-#include <gtest/gtest.h>
 #include <array>
+
+template <>
+Stream::SeekableReader* CreateSeekableReader<Stream::FileReader>() {
+	return new Stream::FileReader("Streams/SimpleStream.txt");
+}
 
 TEST(FileReaderTest, AccessNonexistingFile) {
 	EXPECT_THROW(Stream::FileReader("MissingFile.txt"), std::runtime_error);
