@@ -4,4 +4,4 @@
 #include <gtest/gtest.h>
 
 template <class T>
-Stream::SeekableReader* CreateSeekableReader();
+T CreateSeekableReader();

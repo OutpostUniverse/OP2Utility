@@ -3,8 +3,8 @@
 #include <array>
 
 template <>
-Stream::SeekableReader* CreateSeekableReader<Stream::FileReader>() {
-	return new Stream::FileReader("Streams/SimpleStream.txt");
+Stream::FileReader CreateSeekableReader<Stream::FileReader>() {
+	return Stream::FileReader("Streams/SimpleStream.txt");
 }
 
 TEST(FileReaderTest, AccessNonexistingFile) {

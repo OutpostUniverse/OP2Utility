@@ -2,7 +2,7 @@
 #include "Streams/FileSliceReader.h"
 
 template <>
-Stream::SeekableReader* CreateSeekableReader<Stream::FileSliceReader>() {
+Stream::FileSliceReader CreateSeekableReader<Stream::FileSliceReader>() {
 	Stream::FileReader fileReader("Streams/SimpleStream.txt");
-	return &fileReader.Slice(5);
+	return fileReader.Slice(5);
 }

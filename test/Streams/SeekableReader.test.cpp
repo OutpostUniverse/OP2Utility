@@ -11,9 +11,7 @@ protected:
 	// The ctor calls the factory function to create a reader implemented by T
 	SimpleSeekableReader() : seekableReader(CreateSeekableReader<T>()) {}
 
-	virtual ~SimpleSeekableReader() { delete seekableReader; }
-
-	Stream::SeekableReader* const seekableReader;
+	T seekableReader;
 	const unsigned int size = 5;
 };
 
@@ -24,9 +22,9 @@ typedef Types<Stream::MemoryReader, Stream::FileReader> SeekableStreamImplementa
 TYPED_TEST_CASE(SimpleSeekableReader, SeekableStreamImplementations); 
 
 TYPED_TEST(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
-	auto position = this->seekableReader->Position();
-	EXPECT_THROW(this->seekableReader->SeekRelative(-1), std::runtime_error);
-	EXPECT_EQ(position, this->seekableReader->Position());
+	auto position = this->seekableReader.Position();
+	EXPECT_THROW(this->seekableReader.SeekRelative(-1), std::runtime_error);
+	EXPECT_EQ(position, this->seekableReader.Position());
 }
 
 // Then use TYPED_TEST(TestCaseName, TestName) to define a typed test,
@@ -34,12 +32,12 @@ TYPED_TEST(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPositi
 TYPED_TEST(SimpleSeekableReader, StreamPositionUpdatesOnReadVer2) {
 	char destinationBuffer;
 
-	EXPECT_EQ(this->seekableReader->Position(), 0);
+	EXPECT_EQ(this->seekableReader.Position(), 0);
 
-	this->seekableReader->Read(destinationBuffer);
-	EXPECT_EQ(this->seekableReader->Position(), 1);
+	this->seekableReader.Read(destinationBuffer);
+	EXPECT_EQ(this->seekableReader.Position(), 1);
 }
 
 TYPED_TEST(SimpleSeekableReader, StreamSizeMatchesInitialization) {
-	EXPECT_EQ(this->seekableReader->Length(), this->size);
+	EXPECT_EQ(this->seekableReader.Length(), this->size);
 }
