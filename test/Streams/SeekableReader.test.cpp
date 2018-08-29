@@ -32,11 +32,11 @@ TYPED_TEST(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPositi
 // Then use TYPED_TEST(TestCaseName, TestName) to define a typed test,
 // similar to TEST_F.
 TYPED_TEST(SimpleSeekableReader, StreamPositionUpdatesOnReadVer2) {
-	std::array<char, 6> destinationBuffer;
+	char destinationBuffer;
 
 	EXPECT_EQ(this->seekableReader->Position(), 0);
 
-	this->seekableReader->Read(&destinationBuffer[0], 1);
+	this->seekableReader->Read(destinationBuffer);
 	EXPECT_EQ(this->seekableReader->Position(), 1);
 }
 
