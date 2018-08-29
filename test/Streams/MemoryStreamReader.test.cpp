@@ -8,6 +8,9 @@ Stream::MemoryReader CreateSeekableReader<Stream::MemoryReader>() {
 	return Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
 }
 
+INSTANTIATE_TYPED_TEST_CASE_P(MemoryReader, SimpleSeekableReader, Stream::MemoryReader);
+
+
 // Simple test
 
 TEST(MemoryStreamReaderTest, ZeroSizeStreamHasSafeOperations) {

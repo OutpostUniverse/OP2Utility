@@ -7,6 +7,9 @@ Stream::FileReader CreateSeekableReader<Stream::FileReader>() {
 	return Stream::FileReader("Streams/SimpleStream.txt");
 }
 
+INSTANTIATE_TYPED_TEST_CASE_P(FileReader, SimpleSeekableReader, Stream::FileReader);
+
+
 TEST(FileReaderTest, AccessNonexistingFile) {
 	EXPECT_THROW(Stream::FileReader("MissingFile.txt"), std::runtime_error);
 }
