@@ -60,8 +60,7 @@ namespace Stream
 	void FileReader::SeekRelative(int64_t offset) 
 	{
 		if (offset < 0) {
-			const int mask = offset >> ( sizeof(int64_t) * CHAR_BIT - 1 );
-			const uint64_t offsetAbsValue = (offset ^ mask) - mask;
+			const uint64_t offsetAbsValue = -offset;
 
 			if (offsetAbsValue > Position()) {
 				throw std::runtime_error("Change in offset puts read position before beginning bounds of file.");
