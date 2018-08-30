@@ -7,9 +7,6 @@
     <ClCompile Include="Streams\FileReader.test.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
-    <ClCompile Include="Streams\SeekableReader.test.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
     <ClCompile Include="Streams\FileSliceReader.test.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
