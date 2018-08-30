@@ -3,7 +3,7 @@
 
 template <>
 Stream::FileSliceReader CreateSeekableReader<Stream::FileSliceReader>() {
-	Stream::FileReader fileReader("Streams/SimpleStream.txt");
+	Stream::FileReader fileReader("test/Streams/SimpleStream.txt");
 	return fileReader.Slice(5);
 }
 
