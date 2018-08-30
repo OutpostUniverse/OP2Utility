@@ -8,4 +8,5 @@ platform:
 before_build: nuget restore
 build:
   project: OP2Utility.sln
-test_script: '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\OP2UtilityTest.exe'
+test_script:
+  - '%APPVEYOR_BUILD_FOLDER%\%PLATFORM%\%CONFIGURATION%\OP2UtilityTest.exe'
