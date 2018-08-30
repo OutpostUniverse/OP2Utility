@@ -28,7 +28,7 @@ TYPED_TEST_P(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPosi
 
 // Then use TYPED_TEST(TestCaseName, TestName) to define a typed test,
 // similar to TEST_F.
-TYPED_TEST_P(SimpleSeekableReader, StreamPositionUpdatesOnReadVer2) {
+TYPED_TEST_P(SimpleSeekableReader, StreamPositionUpdatesOnRead) {
 	char destinationBuffer;
 
 	EXPECT_EQ(0, this->seekableReader.Position());
@@ -43,6 +43,6 @@ TYPED_TEST_P(SimpleSeekableReader, StreamSizeMatchesInitialization) {
 
 REGISTER_TYPED_TEST_CASE_P(SimpleSeekableReader,
 	SeekRelativeOutOfBoundsBeginningPreservesPosition,
-	StreamPositionUpdatesOnReadVer2,
+	StreamPositionUpdatesOnRead,
 	StreamSizeMatchesInitialization
 );

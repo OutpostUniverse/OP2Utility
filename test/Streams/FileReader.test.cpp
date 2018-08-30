@@ -44,12 +44,3 @@ TEST_F(SimpleFileReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
 TEST_F(SimpleFileReader, StreamSizeMatchesInitialization) {
 	EXPECT_EQ(stream.Length(), 5);
 }
-
-TEST_F(SimpleFileReader, StreamPositionUpdatesOnRead) {
-	std::array<char, 6> destinationBuffer;
-
-	EXPECT_EQ(stream.Position(), 0);
-
-	stream.Read(&destinationBuffer[0], 1);
-	EXPECT_EQ(stream.Position(), 1);
-}
