@@ -4,18 +4,18 @@
 
 template <>
 Stream::FileReader CreateSeekableReader<Stream::FileReader>() {
-	return Stream::FileReader("test/Streams/SimpleStream.txt");
+	return Stream::FileReader("Streams/SimpleStream.txt");
 }
 
 INSTANTIATE_TYPED_TEST_CASE_P(FileReader, SimpleSeekableReader, Stream::FileReader);
 
 
 TEST(FileReaderTest, AccessNonexistingFile) {
-	EXPECT_THROW(Stream::FileReader("test/Streams/MissingFile.txt"), std::runtime_error);
+	EXPECT_THROW(Stream::FileReader("Streams/MissingFile.txt"), std::runtime_error);
 }
 
 TEST(FileReaderTest, ZeroSizeStreamHasSafeOperations) {
-	Stream::FileReader stream("test/Streams/EmptyFile.txt");
+	Stream::FileReader stream("Streams/EmptyFile.txt");
 	// Length and position
 	EXPECT_EQ(0, stream.Length());
 	EXPECT_EQ(0, stream.Position());
@@ -30,7 +30,7 @@ TEST(FileReaderTest, ZeroSizeStreamHasSafeOperations) {
 
 class SimpleFileReader : public ::testing::Test {
 public:
-	SimpleFileReader() : stream("test/Streams/SimpleStream.txt") {}
+	SimpleFileReader() : stream("Streams/SimpleStream.txt") {}
 protected:
 	Stream::FileReader stream;
 };
