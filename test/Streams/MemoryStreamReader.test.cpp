@@ -1,6 +1,17 @@
+#include "Reader.test.h"
 #include "SeekableReader.test.h"
 #include "Streams/MemoryReader.h"
 #include <array>
+
+
+template <>
+Stream::MemoryReader CreateReader<Stream::MemoryReader>() {
+	std::array<char, 5> buffer{ 't', 'e', 's', 't', '!' };
+	return Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
+}
+
+INSTANTIATE_TYPED_TEST_CASE_P(BasicMemoryReader, BasicReaderTests, Stream::MemoryReader);
+
 
 template <>
 Stream::MemoryReader CreateSeekableReader<Stream::MemoryReader>() {
