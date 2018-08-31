@@ -23,5 +23,8 @@
     <ClInclude Include="Streams\SeekableReader.test.h">
       <Filter>Streams</Filter>
     </ClInclude>
+    <ClInclude Include="Streams\Reader.test.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
