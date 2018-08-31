@@ -70,7 +70,7 @@ TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 
 .PHONY:check
 check: $(TESTOUTPUT)
-	./$(TESTOUTPUT)
+	cd test && ../$(TESTOUTPUT)
 
 $(TESTOUTPUT): $(TESTOBJS) $(OUTPUT)
 	@mkdir -p ${@D}

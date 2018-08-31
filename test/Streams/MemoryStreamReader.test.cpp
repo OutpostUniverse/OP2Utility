@@ -1,6 +1,15 @@
+#include "SeekableReader.test.h"
 #include "Streams/MemoryReader.h"
-#include <gtest/gtest.h>
 #include <array>
+
+template <>
+Stream::MemoryReader CreateSeekableReader<Stream::MemoryReader>() {
+	std::array<char, 5> buffer{ 't', 'e', 's', 't', '!' };
+	return Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
+}
+
+INSTANTIATE_TYPED_TEST_CASE_P(MemoryReader, SimpleSeekableReader, Stream::MemoryReader);
+
 
 // Simple test
 
@@ -41,49 +50,30 @@ TEST_F(EmptyMemoryStreamReader, ZeroSizeStreamHasSafeOperations) {
 }
 
 
-class SimpleMemoryStreamReader : public ::testing::Test {
+class SimpleMemoryReader : public ::testing::Test {
 public:
-	SimpleMemoryStreamReader() : stream(buffer.data(), buffer.size()) {}
+	SimpleMemoryReader() : stream(buffer.data(), buffer.size()) {}
 protected:
 	const std::array<char, 5> buffer{ 't', 'e', 's', 't', '!' };
 	Stream::MemoryReader stream;
 };
 
-TEST_F(SimpleMemoryStreamReader, SeekOutOfBoundsEndPreservesPosition) {
+TEST_F(SimpleMemoryReader, SeekOutOfBoundsEndPreservesPosition) {
 	// Check for strong exception safety
 	auto position = stream.Position();
 	EXPECT_THROW(stream.Seek(6), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
 }
 
-TEST_F(SimpleMemoryStreamReader, ReadOutOfBoundsPreservesPosition) {
+TEST_F(SimpleMemoryReader, ReadOutOfBoundsPreservesPosition) {
 	std::array<char, 6> destinationBuffer;
 	auto position = stream.Position();
 	EXPECT_THROW(stream.Read(destinationBuffer), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
 }
 
-TEST_F(SimpleMemoryStreamReader, SeekRelativeOutOfBoundsEndPreservesPosition) {
+TEST_F(SimpleMemoryReader, SeekRelativeOutOfBoundsEndPreservesPosition) {
 	auto position = stream.Position();
 	EXPECT_THROW(stream.SeekRelative(6), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
-}
-
-TEST_F(SimpleMemoryStreamReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
-	auto position = stream.Position();
-	EXPECT_THROW(stream.SeekRelative(-1), std::runtime_error);
-	EXPECT_EQ(position, stream.Position());
-}
-
-TEST_F(SimpleMemoryStreamReader, StreamSizeMatchesInitialization) {
-	EXPECT_EQ(stream.Length(), buffer.size());
-}
-
-TEST_F(SimpleMemoryStreamReader, StreamPositionUpdatesOnRead) {
-	std::array<char, 6> destinationBuffer;
-
-	EXPECT_EQ(stream.Position(), 0);
-
-	stream.Read(&destinationBuffer[0], 1);
-	EXPECT_EQ(stream.Position(), 1);
 }

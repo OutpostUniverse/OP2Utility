@@ -41,6 +41,8 @@
     <OutDir>$(SolutionDir)x86\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="Streams\FileReader.test.cpp" />
+    <ClCompile Include="Streams\FileSliceReader.test.cpp" />
     <ClCompile Include="Streams\MemoryStreamReader.test.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Streams\SeekableReader.test.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

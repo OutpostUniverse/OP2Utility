@@ -4,6 +4,12 @@
     <ClCompile Include="Streams\MemoryStreamReader.test.cpp">
       <Filter>Streams</Filter>
     </ClCompile>
+    <ClCompile Include="Streams\FileReader.test.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="Streams\FileSliceReader.test.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -12,5 +18,10 @@
     <Filter Include="Streams">
       <UniqueIdentifier>{f07f4252-ca5e-4f5b-94cb-8df3794157fe}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Streams\SeekableReader.test.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
