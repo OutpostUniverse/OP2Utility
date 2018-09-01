@@ -17,8 +17,3 @@ TEST(MapReader, EmptyFile) {
 	EXPECT_THROW(MapReader::Read("Maps/data/EmptyMap.map", MapType::Map), std::runtime_error);
 	EXPECT_THROW(MapReader::Read("Maps/data/EmptySave.OP2", MapType::Save), std::runtime_error);
 }
-
-//TEST(MapReader, WrongExtension) {
-//	EXPECT_THROW(MapReader::Read("Maps/data/WrongExtension.txt", MapType::Map), std::runtime_error);
-//	EXPECT_THROW(MapReader::Read("Maps/data/WrongExtension.txt", MapType::Save), std::runtime_error);
-//}
