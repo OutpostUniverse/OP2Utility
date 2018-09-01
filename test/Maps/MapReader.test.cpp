@@ -4,8 +4,8 @@
 #include <string>
 
 TEST(MapReader, EmptyFilename) {
-	EXPECT_THROW(MapReader::Read(std::string(), MapType::Map), std::runtime_error);
-	EXPECT_THROW(MapReader::Read(std::string(), MapType::Save), std::runtime_error);
+	EXPECT_THROW(MapReader::Read(std::string(""), MapType::Map), std::runtime_error);
+	EXPECT_THROW(MapReader::Read(std::string(""), MapType::Save), std::runtime_error);
 }
 
 TEST(MapReader, MissingFile) {
