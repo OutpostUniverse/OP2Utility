@@ -7,8 +7,8 @@ TEST(MapReader, MissingFile) {
 	EXPECT_THROW(MapReader::ReadSavedGame("MissingFile.op2"), std::runtime_error);
 
 	// Check if filename is an empty string
-	EXPECT_THROW(MapReader::ReadMap(std::string("")), std::runtime_error);
-	EXPECT_THROW(MapReader::ReadSavedGame(std::string("")), std::runtime_error);
+	EXPECT_THROW(MapReader::ReadMap(""), std::runtime_error);
+	EXPECT_THROW(MapReader::ReadSavedGame(""), std::runtime_error);
 }
 
 TEST(MapReader, EmptyFile) {
