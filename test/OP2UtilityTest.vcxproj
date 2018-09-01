@@ -41,6 +41,7 @@
     <OutDir>$(SolutionDir)x86\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="Maps\MapReader.test.cpp" />
     <ClCompile Include="Streams\FileReader.test.cpp" />
     <ClCompile Include="Streams\FileSliceReader.test.cpp" />
     <ClCompile Include="Streams\MemoryStreamReader.test.cpp" />

@@ -25,20 +25,15 @@ namespace MapReader {
 
 	// ==== Public methohds ====
 
-
-	MapData Read(std::string filename, bool savedGame)
+	MapData ReadMap(std::string filename)
 	{
 		Stream::FileReader mapReader(filename);
-		return Read(mapReader, savedGame);
+		return ReadMap(mapReader);
 	}
 
-	MapData Read(Stream::SeekableReader& streamReader, bool savedGame)
+	MapData ReadMap(Stream::SeekableReader& streamReader)
 	{
 		MapData mapData;
-
-		if (savedGame) {
-			SkipSaveGameHeader(streamReader);
-		}
 
 		streamReader.Read(mapData.header);
 		ReadTiles(streamReader, mapData);
@@ -52,6 +47,18 @@ namespace MapReader {
 		ReadTileGroups(streamReader, mapData);
 
 		return mapData;
+	}
+
+	MapData ReadSavedGame(std::string filename)
+	{
+		Stream::FileReader mapReader(filename);
+		return ReadSavedGame(mapReader);
+	}
+
+	MapData ReadSavedGame(Stream::SeekableReader& streamReader)
+	{
+		SkipSaveGameHeader(streamReader);
+		return ReadMap(streamReader);
 	}
 
 

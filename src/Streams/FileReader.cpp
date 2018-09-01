@@ -32,6 +32,10 @@ namespace Stream
 
 	void FileReader::ReadImplementation(void* buffer, std::size_t size) {
 		file.read(static_cast<char*>(buffer), size);
+		// Check stream flags for errors
+		if (!file) {
+			throw std::runtime_error("Error reading from file");
+		}
 	}
 
 	std::size_t FileReader::ReadPartial(void* buffer, std::size_t size) noexcept {

@@ -8,6 +8,8 @@ namespace Stream {
 }
 
 namespace MapReader {
-	MapData Read(std::string filename, bool savedGame = false);
-	MapData Read(Stream::SeekableReader& mapStream, bool savedGame = false);
+	MapData ReadMap(std::string filename);
+	MapData ReadMap(Stream::SeekableReader& seekableReader);
+	MapData ReadSavedGame(std::string filename);
+	MapData ReadSavedGame(Stream::SeekableReader& seekableReader);
 }
