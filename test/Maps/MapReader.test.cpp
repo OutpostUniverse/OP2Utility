@@ -1,6 +1,6 @@
 #include "Maps/MapReader.h"
 #include "Maps/MapType.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <string>
 
 TEST(MapReader, EmptyFilename) {
