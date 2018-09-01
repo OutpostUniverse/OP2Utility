@@ -26,17 +26,17 @@ namespace MapReader {
 	// ==== Public methohds ====
 
 
-	MapData Read(std::string filename, bool savedGame)
+	MapData Read(std::string filename, MapType type)
 	{
 		Stream::FileReader mapReader(filename);
-		return Read(mapReader, savedGame);
+		return Read(mapReader, type);
 	}
 
-	MapData Read(Stream::SeekableReader& streamReader, bool savedGame)
+	MapData Read(Stream::SeekableReader& streamReader, MapType type)
 	{
 		MapData mapData;
 
-		if (savedGame) {
+		if (type == MapType::Save) {
 			SkipSaveGameHeader(streamReader);
 		}
 
