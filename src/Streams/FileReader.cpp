@@ -1,7 +1,6 @@
 #include "FileReader.h"
 #include "FileSliceReader.h"
 #include <stdexcept>
-#include <limits.h>
 
 namespace Stream
 {
