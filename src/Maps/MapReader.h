@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MapData.h"
-#include "MapType.h"
 #include <string>
 
 namespace Stream {
@@ -9,6 +8,8 @@ namespace Stream {
 }
 
 namespace MapReader {
-	MapData Read(std::string filename, MapType type = MapType::Map);
-	MapData Read(Stream::SeekableReader& mapStream, MapType type = MapType::Map);
+	MapData ReadMap(std::string filename);
+	MapData ReadMap(Stream::SeekableReader& seekableReader);
+	MapData ReadSavedGame(std::string filename);
+	MapData ReadSavedGame(Stream::SeekableReader& seekableReader);
 }
