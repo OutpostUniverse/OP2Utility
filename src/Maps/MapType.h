@@ -2,5 +2,5 @@
 
 enum class MapType {
 	Map,
-	Save
+	SavedGame
 };
