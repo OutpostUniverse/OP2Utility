@@ -55,12 +55,21 @@ clean-all:
 	-rm -rf $(BUILDDIR)
 
 
+GTESTDIR := $(BUILDDIR)/gtest
+
+.PHONY:gtest
+gtest:
+	mkdir -p $(GTESTDIR)
+	cd $(GTESTDIR) && cmake /usr/src/gtest/
+	make -C $(GTESTDIR)
+
+
 TESTDIR := test
 TESTOBJDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
-TESTLDFLAGS := -L./
+TESTLDFLAGS := -L./ -L$(GTESTDIR)
 TESTLIBS := -lgtest -lgtest_main -lpthread -lOP2Utility
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
