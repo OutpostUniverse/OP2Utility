@@ -15,8 +15,7 @@ TEST(MapWriter, EmptyMapData)
 	XFile::DeletePath(testFilename);
 
 	// Write to Memory
-	std::vector<char> buffer;
-	buffer.resize(1000);
+	std::vector<char> buffer(1024);
 	Stream::MemoryWriter memoryWriter(buffer.data(), buffer.size() * sizeof(decltype(buffer)::value_type));
 	EXPECT_THROW(MapWriter::Write(memoryWriter, mapData), std::runtime_error);
 }
