@@ -2,8 +2,8 @@ version: 2
 jobs:
   build:
     docker:
-      - image: gcc:8
+      - image: outpostuniverse/circleci-gcc-googletest
     steps:
       - checkout
-      - run: make CXX=g++
-
+      - run: make -k CXX=g++
+      - run: make check CXX=g++
