@@ -57,7 +57,7 @@ namespace MapWriter {
 				throw std::runtime_error("Header reported tile width * tile height does not match actual tile count");
 			}
 
-			if (mapData.header.numTilesets != mapData.tilesetSources.size()) {
+			if (mapData.header.tilesetCount != mapData.tilesetSources.size()) {
 				throw std::runtime_error("Header reported tileset count does not match actual tileset sources");
 			}
 		}

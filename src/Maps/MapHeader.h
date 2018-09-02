@@ -23,7 +23,7 @@ struct MapHeader
 	uint32_t mapTileHeight;
 
 	// Number of tile sets on map.
-	uint32_t numTilesets;
+	uint32_t tilesetCount;
 
 	// Map Width in Tiles.
 	uint32_t MapTileWidth() const
