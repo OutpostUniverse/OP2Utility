@@ -99,7 +99,7 @@ namespace MapWriter {
 		void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size)
 		{
 			if (size > UINT32_MAX) {
-				throw std::runtime_error("Container size is too large for writing into an Outpost 2 maps.");
+				throw std::runtime_error("Container size is too large for writing into an Outpost 2 map");
 			}
 
 			streamWriter.Write(static_cast<uint32_t>(size));
