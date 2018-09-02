@@ -27,3 +27,20 @@ TEST(MapWriter, BlankFilename)
 
 	EXPECT_THROW(MapWriter::Write("", mapData), std::runtime_error);
 }
+
+TEST(MapWriter, VersionTag) {
+	const std::string testFilename("maps/data/test.map");
+	MapData mapData;
+	const int minVersionTag = 0x1010;
+	
+	mapData.header.versionTag = minVersionTag;
+	EXPECT_NO_THROW(MapWriter::Write(testFilename, mapData), std::runtime_error);
+
+	mapData.header.versionTag = minVersionTag + 1;
+	EXPECT_NO_THROW(MapWriter::Write(testFilename, mapData), std::runtime_error);
+
+	mapData.header.versionTag = minVersionTag - 1;
+	EXPECT_THROW(MapWriter::Write(testFilename, mapData), std::runtime_error);
+
+	XFile::DeletePath(testFilename);
+}
