@@ -6,4 +6,4 @@ jobs:
     steps:
       - checkout
       - run: make -k CXX=g++
-
+      - run: make check CXX=g++
