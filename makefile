@@ -60,7 +60,7 @@ GTESTDIR := $(BUILDDIR)/gtest
 .PHONY:gtest
 gtest:
 	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake /usr/src/gtest/
+	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++14" /usr/src/gtest/
 	make -C $(GTESTDIR)
 
 
