@@ -8,7 +8,7 @@
 TEST(MapWriter, EmptyMapData)
 {
 	// Write to File
-	const std::string testFilename("maps/data/test.map");
+	const std::string testFilename("Maps/data/test.map");
 	EXPECT_THROW(MapWriter::Write(testFilename, MapData()), std::runtime_error);
 	XFile::DeletePath(testFilename);
 
@@ -24,7 +24,7 @@ TEST(MapWriter, BlankFilename)
 }
 
 TEST(MapWriter, VersionTag) {
-	const std::string testFilename("maps/data/test.map");
+	const std::string testFilename("Maps/data/test.map");
 	MapData mapData;
 	const int minVersionTag = 0x1010;
 	
