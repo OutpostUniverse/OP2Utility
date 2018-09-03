@@ -10,6 +10,8 @@ extern const int minMapVersion;
 // Outpost 2 map and save file header
 struct MapHeader
 {
+	MapHeader();
+
 	// The map's version tag.
 	// It must be >= to 0x1010 or Outpost 2 will abort loading the map.
 	int32_t versionTag;

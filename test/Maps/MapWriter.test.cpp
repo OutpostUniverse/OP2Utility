@@ -10,13 +10,13 @@ TEST(MapWriter, EmptyMapData)
 {
 	// Write to File
 	const std::string testFilename("Maps/data/test.map");
-	EXPECT_THROW(MapWriter::Write(testFilename, MapData()), std::runtime_error);
+	EXPECT_NO_THROW(MapWriter::Write(testFilename, MapData()));
 	XFile::DeletePath(testFilename);
 
 	// Write to Memory
 	std::vector<char> buffer(1024);
 	Stream::MemoryWriter memoryWriter(buffer.data(), buffer.size() * sizeof(decltype(buffer)::value_type));
-	EXPECT_THROW(MapWriter::Write(memoryWriter, MapData()), std::runtime_error);
+	EXPECT_NO_THROW(MapWriter::Write(memoryWriter, MapData()));
 }
 
 TEST(MapWriter, BlankFilename)
