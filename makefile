@@ -70,7 +70,7 @@ TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
 TESTLDFLAGS := -L./ -L$(GTESTDIR)
-TESTLIBS := -lgtest -lgtest_main -lpthread -lOP2Utility
+TESTLIBS := -lgtest -lgtest_main -lpthread -lOP2Utility -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
 TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td

@@ -9,7 +9,7 @@
 namespace MapWriter {
 	// Anonymous namespace to hold private methods
 	namespace {
-		void WriteHeader(Stream::Writer& streamWriter, const MapHeader& header);
+		void ValidateMap(const MapData& mapData);
 		void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources);
 		void WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups);
 		void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
@@ -27,7 +27,9 @@ namespace MapWriter {
 
 	void Write(Stream::Writer& streamWriter, const MapData& mapData)
 	{
-		WriteHeader(streamWriter, mapData.header);
+		ValidateMap(mapData);
+
+		streamWriter.Write(mapData.header);
 		streamWriter.Write(mapData.tiles);
 		streamWriter.Write(mapData.clipRect);
 		WriteTilesetSources(streamWriter, mapData.tilesetSources);
@@ -46,13 +48,18 @@ namespace MapWriter {
 
 
 	namespace {
-		void WriteHeader(Stream::Writer& streamWriter, const MapHeader& header)
-		{
-			if (!header.VersionTagValid()) {
-				throw std::runtime_error("All instances of version tag in .map and .op2 files must be greater than 0x1010.");
+		void ValidateMap(const MapData& mapData) {
+			if (!mapData.header.VersionTagValid()) {
+				throw std::runtime_error("All instances of version tag in .map and .op2 files must be greater than 0x1010");
 			}
 
-			streamWriter.Write(header);
+			if (mapData.header.TileCount() != mapData.tiles.size()) {
+				throw std::runtime_error("Header reported tile width * tile height does not match actual tile count");
+			}
+
+			if (mapData.header.tilesetCount != mapData.tilesetSources.size()) {
+				throw std::runtime_error("Header reported tileset count does not match actual tileset sources");
+			}
 		}
 
 		void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources)
@@ -92,7 +99,7 @@ namespace MapWriter {
 		void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size)
 		{
 			if (size > UINT32_MAX) {
-				throw std::runtime_error("Container size is too large for writing into an Outpost 2 maps.");
+				throw std::runtime_error("Container size is too large for writing into an Outpost 2 map");
 			}
 
 			streamWriter.Write(static_cast<uint32_t>(size));
