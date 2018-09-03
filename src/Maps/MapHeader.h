@@ -2,6 +2,9 @@
 
 #include <cstdint>
 
+// Minimum map version tag that Outpost 2 will accept without error
+extern const int minMapVersion;
+
 #pragma pack(push, 1) // Make sure structure is byte aligned
 
 // Outpost 2 map and save file header

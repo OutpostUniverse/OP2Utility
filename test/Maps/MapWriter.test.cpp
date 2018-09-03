@@ -1,4 +1,5 @@
 #include "Maps/MapWriter.h"
+#include "Maps/MapHeader.h"
 #include "Streams/MemoryWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
@@ -26,7 +27,6 @@ TEST(MapWriter, BlankFilename)
 TEST(MapWriter, VersionTag) {
 	const std::string testFilename("Maps/data/test.map");
 	MapData mapData;
-	const int minVersionTag = 0x1010;
 	
 	// The following 2 tests will require a legitimately constructed Map before running.
 	//mapData.header.versionTag = minVersionTag;
@@ -35,7 +35,7 @@ TEST(MapWriter, VersionTag) {
 	//mapData.header.versionTag = minVersionTag + 1;
 	//EXPECT_NO_THROW(MapWriter::Write(testFilename, mapData));
 
-	mapData.header.versionTag = minVersionTag - 1;
+	mapData.header.versionTag = minMapVersion - 1;
 	EXPECT_THROW(MapWriter::Write(testFilename, mapData), std::runtime_error);
 
 	XFile::DeletePath(testFilename);
