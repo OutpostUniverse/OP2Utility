@@ -49,10 +49,6 @@ namespace MapWriter {
 
 	namespace {
 		void ValidateMap(const MapData& mapData) {
-			if (!mapData.header.VersionTagValid()) {
-				throw std::runtime_error("All instances of version tag in .map and .op2 files must be greater than 0x1010");
-			}
-
 			if (mapData.header.TileCount() != mapData.tiles.size()) {
 				throw std::runtime_error("Header reported tile width * tile height does not match actual tile count");
 			}

@@ -24,19 +24,12 @@ TEST(MapWriter, BlankFilename)
 	EXPECT_THROW(MapWriter::Write("", MapData()), std::runtime_error);
 }
 
-TEST(MapWriter, VersionTag) {
+TEST(MapWriter, AllowInvalidVersionTag) {
 	const std::string testFilename("Maps/data/test.map");
 	MapData mapData;
-	
-	// The following 2 tests will require a legitimately constructed Map before running.
-	//mapData.header.versionTag = minVersionTag;
-	//EXPECT_NO_THROW(MapWriter::Write(testFilename, mapData));
-
-	//mapData.header.versionTag = minVersionTag + 1;
-	//EXPECT_NO_THROW(MapWriter::Write(testFilename, mapData));
 
 	mapData.header.versionTag = minMapVersion - 1;
-	EXPECT_THROW(MapWriter::Write(testFilename, mapData), std::runtime_error);
+	EXPECT_NO_THROW(MapWriter::Write(testFilename, mapData));
 
 	XFile::DeletePath(testFilename);
 }
