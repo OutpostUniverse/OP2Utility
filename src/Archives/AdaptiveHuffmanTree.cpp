@@ -127,7 +127,6 @@ namespace Archives
 	// Raise exception if nodeIndex is out of range
 	void AdaptiveHuffmanTree::VerifyValidNodeIndex(NodeIndex nodeIndex)
 	{
-		// Check that the nodeIndex is in range
 		if (nodeIndex >= nodeCount)
 		{
 			throw std::runtime_error("AdaptiveHuffmanTree NodeIndex of " + std::to_string(nodeIndex)
@@ -183,7 +182,6 @@ namespace Archives
 	// Subsequent branches are stored in higher bits
 	int AdaptiveHuffmanTree::GetEncodedBitString(int code, unsigned int& bitCount)
 	{
-		// Make sure the code is in range
 		VerifyValidDataValue(code);
 
 		// Record the path to the root
