@@ -91,12 +91,7 @@ namespace Archives
 		int curNodeIndex;
 		int blockLeaderIndex;
 
-		// Make sure the code is in range
-		if (code >= terminalNodeCount)
-		{
-			throw std::runtime_error("AdaptiveHuffmanTree DataValue of " + std::to_string(code)
-				+ " is out of range " + std::to_string(terminalNodeCount));
-		}
+		VerifyValidDataValue(code);
 
 		// Get the index of the node containing this code
 		curNodeIndex = parentIndex[code + nodeCount];
@@ -140,6 +135,16 @@ namespace Archives
 		}
 	}
 
+	// Raise exception if code is out of range
+	void AdaptiveHuffmanTree::VerifyValidDataValue(DataValue code)
+	{
+		if (code >= terminalNodeCount)
+		{
+			throw std::runtime_error("AdaptiveHuffmanTree DataValue of " + std::to_string(code)
+				+ " is out of range " + std::to_string(terminalNodeCount));
+		}
+	}
+
 	// Private function to swap two nodes in the Huffman tree.
 	// This is used during tree restructing by UpdateCodeCount.
 	void AdaptiveHuffmanTree::SwapNodes(NodeIndex nodeIndex1, NodeIndex nodeIndex2)
@@ -179,10 +184,7 @@ namespace Archives
 	int AdaptiveHuffmanTree::GetEncodedBitString(int code, unsigned int& bitCount)
 	{
 		// Make sure the code is in range
-		if (code >= terminalNodeCount)
-		{
-			throw std::runtime_error("Code value is out of range");
-		}
+		VerifyValidDataValue(code);
 
 		// Record the path to the root
 		bitCount = 0;

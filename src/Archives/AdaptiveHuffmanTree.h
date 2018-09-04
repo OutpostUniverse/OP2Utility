@@ -36,6 +36,7 @@ namespace Archives
 
 	private:
 		void VerifyValidNodeIndex(NodeIndex nodeIndex);
+		void VerifyValidDataValue(DataValue code);
 		void SwapNodes(NodeIndex nodeIndex1, NodeIndex nodeIndex2);
 
 		// Tree properties
