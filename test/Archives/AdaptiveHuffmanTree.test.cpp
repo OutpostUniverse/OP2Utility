@@ -20,3 +20,25 @@ TEST(AdaptiveHuffmanTreeTests, SimpleTree2) {
 	ASSERT_EQ(0, tree.GetNodeData(leftChild));
 	ASSERT_EQ(1, tree.GetNodeData(rightChild));
 }
+
+
+class AdaptiveHuffmanTreeOutpost2 : public ::testing::Test {
+protected:
+	Archives::AdaptiveHuffmanTree tree{314};
+};
+
+// Test the encoder and decoder against each other
+TEST_F(AdaptiveHuffmanTreeOutpost2, EncodeDecode) {
+	for (unsigned int i = 0; i < 314; ++i) {
+		unsigned int codeLength;
+		auto bitstring = tree.GetEncodedBitString(i, codeLength);
+		auto node = tree.GetRootNodeIndex();
+		for (; codeLength > 0; --codeLength) {
+			ASSERT_FALSE(tree.IsLeaf(node));
+			node = tree.GetChildNode(node, bitstring & 0x01);
+			bitstring >>= 1;
+		}
+		ASSERT_TRUE(tree.IsLeaf(node));
+		ASSERT_EQ(i, tree.GetNodeData(node));
+	}
+}
