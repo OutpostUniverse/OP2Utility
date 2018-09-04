@@ -165,15 +165,13 @@ namespace Archives
 
 
 
-	// **NOTE**: The following procedure is experimental and is not yet in use.
-	//			Nor should it be used yet!
-	/*
 	// Used during compression to get the bitstring to emit for a given code.
-	// The number of bits in the bitstring is returned and the bitstring is placed
-	// in the bitString parameter. The branch to take between the root and a child
-	// of the root is placed in the LSB. Subsequent branches are stored in higher bits
-	// **NOTE**: I may change the bit ordering! (Make that I WILL change the bit ordering)
-	int AdaptiveHuffmanTree::GetEncodedBitString(int code, int &bitString)
+	// Returns the bitstring for a given code
+	// Places the length of the bitstring in the bitCount out parameter
+	// NOTE: Bit order subject to change (and likely will change). Currently:
+	// The branch to take between the root and a child of the root is placed in the LSB
+	// Subsequent branches are stored in higher bits
+	int AdaptiveHuffmanTree::GetEncodedBitString(int code, unsigned int& bitCount)
 	{
 		// Make sure the code is in range
 		if (code >= terminalNodeCount)
@@ -181,20 +179,18 @@ namespace Archives
 			throw std::runtime_error("Code value is out of range");
 		}
 
-		// Get the node containing the given code
-		NodeIndex curNodeIndex = parentIndex[code];
-
 		// Record the path to the root
-		bitString = 0;
-		int bitCount = 0;
+		bitCount = 0;
+		int bitString = 0;
+		NodeIndex curNodeIndex = code;
 		while (curNodeIndex != rootNodeIndex)
 		{
-			bool bBit = curNodeIndex & 0x01;	// Get the direction from parent to current node
+			bool bBit = curNodeIndex & 0x01;  // Get the direction from parent to current node
+			bitString = (bitString << 1) | bBit;  // Pack the bit into the returned string
 			bitCount++;
-			bitString = (bitString << 1) | bBit;// Pack the bit into the returned string
+			curNodeIndex = parentIndex[curNodeIndex];
 		}
 
-		return bitCount;					// Return number of bits in path from root to node
+		return bitString;
 	}
-	*/
 }

@@ -26,10 +26,10 @@ namespace Archives
 		void UpdateCodeCount(DataValue code);		// Perform tree update/restructure
 
 		// Compression routines
-		int GetEncodedBitString(int code, int &bitString);
-		// Retuns the length of the path from the
-		// root node to the node with the given
-		// code and places the path in bitString
+		// NOTE: experimental, API likely to change
+		// Retuns the path from the root node to the node with the given code
+		// Places the path length in bitCount
+		int GetEncodedBitString(int code, unsigned int &bitCount);
 
 	private:
 		void VerifyValidNodeIndex(NodeIndex nodeIndex);
