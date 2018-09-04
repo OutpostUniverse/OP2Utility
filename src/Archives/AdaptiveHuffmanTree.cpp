@@ -88,13 +88,10 @@ namespace Archives
 	// codes a shorter bit encoding).
 	void AdaptiveHuffmanTree::UpdateCodeCount(DataValue code)
 	{
-		int curNodeIndex;
-		int blockLeaderIndex;
-
 		VerifyValidDataValue(code);
 
 		// Get the index of the node containing this code
-		curNodeIndex = parentIndex[code + nodeCount];
+		NodeIndex curNodeIndex = parentIndex[code + nodeCount];
 		subtreeCount[curNodeIndex]++; // Update the node count
 
 		// Propagate the count increase up to the root of the tree
@@ -104,7 +101,7 @@ namespace Archives
 			// Note: the block leader is the "rightmost" node with count equal to the
 			//  count of the current node, BEFORE the count of the current node is
 			//  updated. (The current node has already had it's count updated.)
-			blockLeaderIndex = curNodeIndex;
+			NodeIndex blockLeaderIndex = curNodeIndex;
 			while (subtreeCount[curNodeIndex] > subtreeCount[blockLeaderIndex + 1])
 				blockLeaderIndex++;
 
