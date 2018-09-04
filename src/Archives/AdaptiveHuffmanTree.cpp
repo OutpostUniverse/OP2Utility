@@ -38,6 +38,11 @@ namespace Archives
 
 
 
+	AdaptiveHuffmanTree::NodeType AdaptiveHuffmanTree::TerminalNodeCount()
+	{
+		return terminalNodeCount;
+	}
+
 	// Returns the index of the root node.
 	// All tree searches start at the root node.
 	AdaptiveHuffmanTree::NodeIndex AdaptiveHuffmanTree::GetRootNodeIndex()

@@ -29,7 +29,8 @@ protected:
 
 // Test the encoder and decoder against each other
 TEST_F(AdaptiveHuffmanTreeOutpost2, EncodeDecode) {
-	for (unsigned int i = 0; i < 314; ++i) {
+	auto codeCount = tree.TerminalNodeCount();
+	for (unsigned int i = 0; i < codeCount; ++i) {
 		unsigned int codeLength;
 		auto bitstring = tree.GetEncodedBitString(i, codeLength);
 		auto node = tree.GetRootNodeIndex();

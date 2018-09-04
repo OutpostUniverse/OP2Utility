@@ -15,6 +15,9 @@ namespace Archives
 
 		AdaptiveHuffmanTree(NodeType terminalNodeCount);
 
+		// Tree info
+		NodeType TerminalNodeCount();
+
 		// Decompression routines
 		NodeIndex GetRootNodeIndex();				// Get root of tree to start search at
 		NodeIndex GetChildNode(NodeIndex nodeIndex, bool bRight);
