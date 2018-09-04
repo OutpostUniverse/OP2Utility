@@ -16,6 +16,9 @@
     <ClCompile Include="Maps\MapWriter.test.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
+    <ClCompile Include="Maps\MapHeader.test.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
