@@ -32,12 +32,12 @@ TEST_F(AdaptiveHuffmanTreeOutpost2, EncodeDecode) {
 	auto codeCount = tree.TerminalNodeCount();
 	for (unsigned int i = 0; i < codeCount; ++i) {
 		unsigned int codeLength;
-		auto bitstring = tree.GetEncodedBitString(i, codeLength);
+		auto bitString = tree.GetEncodedBitString(i, codeLength);
 		auto node = tree.GetRootNodeIndex();
 		for (; codeLength > 0; --codeLength) {
 			ASSERT_FALSE(tree.IsLeaf(node));
-			node = tree.GetChildNode(node, bitstring & 0x01);
-			bitstring >>= 1;
+			node = tree.GetChildNode(node, bitString & 0x01);
+			bitString >>= 1;
 		}
 		ASSERT_TRUE(tree.IsLeaf(node));
 		ASSERT_EQ(i, tree.GetNodeData(node));
