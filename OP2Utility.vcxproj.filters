@@ -72,9 +72,6 @@
     <ClInclude Include="src\Maps\TileInfo.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maps\Rect.h">
-      <Filter>Maps</Filter>
-    </ClInclude>
     <ClInclude Include="src\Maps\MapWriter.h">
       <Filter>Maps</Filter>
     </ClInclude>
@@ -128,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="src\Archives\AdaptiveHuffmanTree.h">
       <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rect.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

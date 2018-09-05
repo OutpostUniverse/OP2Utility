@@ -123,7 +123,6 @@
     <ClInclude Include="src\Archives\WaveFile.h" />
     <ClInclude Include="include\OP2Utility.h" />
     <ClInclude Include="src\Maps\CellType.h" />
-    <ClInclude Include="src\Maps\Rect.h" />
     <ClInclude Include="src\Maps\MapData.h" />
     <ClInclude Include="src\Maps\MapHeader.h" />
     <ClInclude Include="src\Maps\MapReader.h" />
@@ -133,6 +132,7 @@
     <ClInclude Include="src\Maps\TileGroup.h" />
     <ClInclude Include="src\Maps\TileInfo.h" />
     <ClInclude Include="src\Maps\TilesetSource.h" />
+    <ClInclude Include="src\Rect.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\Archives\AdaptiveHuffmanTree.h" />
     <ClInclude Include="src\Archives\ArchiveFile.h" />
