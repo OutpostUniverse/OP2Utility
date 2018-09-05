@@ -32,7 +32,7 @@ namespace Archives
 		// NOTE: experimental, API likely to change
 		// Retuns the path from the root node to the node with the given code
 		// Places the path length in bitCount
-		int GetEncodedBitString(int code, unsigned int &bitCount);
+		unsigned int GetEncodedBitString(DataValue code, unsigned int &bitCount);
 
 	private:
 		void VerifyValidNodeIndex(NodeIndex nodeIndex);

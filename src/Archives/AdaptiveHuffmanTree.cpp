@@ -177,17 +177,17 @@ namespace Archives
 	// NOTE: Bit order subject to change (and likely will change). Currently:
 	// The branch to take between the root and a child of the root is placed in the LSB
 	// Subsequent branches are stored in higher bits
-	int AdaptiveHuffmanTree::GetEncodedBitString(int code, unsigned int& bitCount)
+	unsigned int AdaptiveHuffmanTree::GetEncodedBitString(DataValue code, unsigned int& bitCount)
 	{
 		VerifyValidDataValue(code);
 
 		// Record the path to the root
 		bitCount = 0;
-		int bitString = 0;
+		unsigned int bitString = 0;
 		NodeIndex curNodeIndex = code;
 		while (curNodeIndex != rootNodeIndex)
 		{
-			bool bBit = curNodeIndex & 0x01;  // Get the direction from parent to current node
+			unsigned int bBit = curNodeIndex & 1;  // Get the direction from parent to current node
 			bitString = (bitString << 1) | bBit;  // Pack the bit into the returned string
 			bitCount++;
 			curNodeIndex = parentIndex[curNodeIndex];
