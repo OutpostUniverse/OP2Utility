@@ -71,7 +71,7 @@ namespace Archives
 	}
 
 	// Returns the data stored in a terminal node
-	AdaptiveHuffmanTree::DataValue AdaptiveHuffmanTree::GetNodeData(NodeIndex nodeIndex)
+	AdaptiveHuffmanTree::NodeData AdaptiveHuffmanTree::GetNodeData(NodeIndex nodeIndex)
 	{
 		VerifyNodeIndexInBounds(nodeIndex);
 
@@ -86,9 +86,9 @@ namespace Archives
 	// This updates the count for the given code and restructures the tree if needed.
 	// This is used after a tree search to update the tree (gives more frequently used
 	// codes a shorter bit encoding).
-	void AdaptiveHuffmanTree::UpdateCodeCount(DataValue code)
+	void AdaptiveHuffmanTree::UpdateCodeCount(NodeData code)
 	{
-		VerifyDataValueInBounds(code);
+		VerifyNodeDataInBounds(code);
 
 		// Get the index of the node containing this code
 		NodeIndex curNodeIndex = parentIndex[code + nodeCount];
@@ -132,11 +132,11 @@ namespace Archives
 	}
 
 	// Raise exception if code is out of range
-	void AdaptiveHuffmanTree::VerifyDataValueInBounds(DataValue code)
+	void AdaptiveHuffmanTree::VerifyNodeDataInBounds(NodeData code)
 	{
 		if (code >= terminalNodeCount)
 		{
-			throw std::runtime_error("AdaptiveHuffmanTree DataValue of " + std::to_string(code)
+			throw std::runtime_error("AdaptiveHuffmanTree NodeData of " + std::to_string(code)
 				+ " is out of range " + std::to_string(terminalNodeCount));
 		}
 	}
@@ -177,9 +177,9 @@ namespace Archives
 	// NOTE: Bit order subject to change (and likely will change). Currently:
 	// The branch to take between the root and a child of the root is placed in the LSB
 	// Subsequent branches are stored in higher bits
-	unsigned int AdaptiveHuffmanTree::GetEncodedBitString(DataValue code, unsigned int& bitCount)
+	unsigned int AdaptiveHuffmanTree::GetEncodedBitString(NodeData code, unsigned int& bitCount)
 	{
-		VerifyDataValueInBounds(code);
+		VerifyNodeDataInBounds(code);
 
 		// Record the path to the root
 		bitCount = 0;
