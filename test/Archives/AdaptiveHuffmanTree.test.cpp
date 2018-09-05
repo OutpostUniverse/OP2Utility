@@ -6,7 +6,7 @@ TEST(AdaptiveHuffmanTreeTests, SimpleTree2) {
 	// Construct minimum non-degenerate binary tree with 2 data nodes
 	Archives::AdaptiveHuffmanTree tree(2);
 
-	// With 2 data nodes, the root can not be a data node
+	// With 2 data nodes, the root cannot be a data node
 	auto rootIndex = tree.GetRootNodeIndex();
 	ASSERT_FALSE(tree.IsLeaf(rootIndex));
 
