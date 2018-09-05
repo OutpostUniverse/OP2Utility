@@ -36,7 +36,7 @@ TEST_F(AdaptiveHuffmanTreeOutpost2, EncodeDecode) {
 		auto node = tree.GetRootNodeIndex();
 		for (; codeLength > 0; --codeLength) {
 			ASSERT_FALSE(tree.IsLeaf(node));
-			node = tree.GetChildNode(node, bitString & 0x01);
+			node = tree.GetChildNode(node, bitString & 1);
 			bitString >>= 1;
 		}
 		ASSERT_TRUE(tree.IsLeaf(node));
