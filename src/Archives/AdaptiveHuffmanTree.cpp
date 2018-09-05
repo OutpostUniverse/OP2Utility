@@ -38,6 +38,11 @@ namespace Archives
 
 
 
+	AdaptiveHuffmanTree::NodeType AdaptiveHuffmanTree::TerminalNodeCount()
+	{
+		return terminalNodeCount;
+	}
+
 	// Returns the index of the root node.
 	// All tree searches start at the root node.
 	AdaptiveHuffmanTree::NodeIndex AdaptiveHuffmanTree::GetRootNodeIndex()
@@ -49,7 +54,7 @@ namespace Archives
 	// This is used to traverse the tree to a terminal node.
 	AdaptiveHuffmanTree::NodeIndex AdaptiveHuffmanTree::GetChildNode(NodeIndex nodeIndex, bool bRight)
 	{
-		VerifyValidNodeIndex(nodeIndex);
+		VerifyNodeIndexInBounds(nodeIndex);
 
 		// Return the child node index
 		return linkOrData[nodeIndex] + bRight;
@@ -59,16 +64,16 @@ namespace Archives
 	// This is used to know when a tree search has completed.
 	bool AdaptiveHuffmanTree::IsLeaf(NodeIndex nodeIndex)
 	{
-		VerifyValidNodeIndex(nodeIndex);
+		VerifyNodeIndexInBounds(nodeIndex);
 
 		// Return whether or not this is a terminal node
 		return linkOrData[nodeIndex] >= nodeCount;
 	}
 
 	// Returns the data stored in a terminal node
-	AdaptiveHuffmanTree::DataValue AdaptiveHuffmanTree::GetNodeData(NodeIndex nodeIndex)
+	AdaptiveHuffmanTree::NodeData AdaptiveHuffmanTree::GetNodeData(NodeIndex nodeIndex)
 	{
-		VerifyValidNodeIndex(nodeIndex);
+		VerifyNodeIndexInBounds(nodeIndex);
 
 		// Return data stored in node translated back to normal form
 		// Note: This assumes the node is a terminal node
@@ -81,20 +86,12 @@ namespace Archives
 	// This updates the count for the given code and restructures the tree if needed.
 	// This is used after a tree search to update the tree (gives more frequently used
 	// codes a shorter bit encoding).
-	void AdaptiveHuffmanTree::UpdateCodeCount(DataValue code)
+	void AdaptiveHuffmanTree::UpdateCodeCount(NodeData code)
 	{
-		int curNodeIndex;
-		int blockLeaderIndex;
-
-		// Make sure the code is in range
-		if (code >= terminalNodeCount)
-		{
-			throw std::runtime_error("AdaptiveHuffmanTree DataValue of " + std::to_string(code)
-				+ " is out of range " + std::to_string(terminalNodeCount));
-		}
+		VerifyNodeDataInBounds(code);
 
 		// Get the index of the node containing this code
-		curNodeIndex = parentIndex[code + nodeCount];
+		NodeIndex curNodeIndex = parentIndex[code + nodeCount];
 		subtreeCount[curNodeIndex]++; // Update the node count
 
 		// Propagate the count increase up to the root of the tree
@@ -104,7 +101,7 @@ namespace Archives
 			// Note: the block leader is the "rightmost" node with count equal to the
 			//  count of the current node, BEFORE the count of the current node is
 			//  updated. (The current node has already had it's count updated.)
-			blockLeaderIndex = curNodeIndex;
+			NodeIndex blockLeaderIndex = curNodeIndex;
 			while (subtreeCount[curNodeIndex] > subtreeCount[blockLeaderIndex + 1])
 				blockLeaderIndex++;
 
@@ -125,13 +122,22 @@ namespace Archives
 
 
 	// Raise exception if nodeIndex is out of range
-	void AdaptiveHuffmanTree::VerifyValidNodeIndex(NodeIndex nodeIndex)
+	void AdaptiveHuffmanTree::VerifyNodeIndexInBounds(NodeIndex nodeIndex)
 	{
-		// Check that the nodeIndex is in range
 		if (nodeIndex >= nodeCount)
 		{
 			throw std::runtime_error("AdaptiveHuffmanTree NodeIndex of " + std::to_string(nodeIndex)
 				+ " is out of range " + std::to_string(nodeCount));
+		}
+	}
+
+	// Raise exception if code is out of range
+	void AdaptiveHuffmanTree::VerifyNodeDataInBounds(NodeData code)
+	{
+		if (code >= terminalNodeCount)
+		{
+			throw std::runtime_error("AdaptiveHuffmanTree NodeData of " + std::to_string(code)
+				+ " is out of range " + std::to_string(terminalNodeCount));
 		}
 	}
 
@@ -165,36 +171,28 @@ namespace Archives
 
 
 
-	// **NOTE**: The following procedure is experimental and is not yet in use.
-	//			Nor should it be used yet!
-	/*
 	// Used during compression to get the bitstring to emit for a given code.
-	// The number of bits in the bitstring is returned and the bitstring is placed
-	// in the bitString parameter. The branch to take between the root and a child
-	// of the root is placed in the LSB. Subsequent branches are stored in higher bits
-	// **NOTE**: I may change the bit ordering! (Make that I WILL change the bit ordering)
-	int AdaptiveHuffmanTree::GetEncodedBitString(int code, int &bitString)
+	// Returns the bitstring for a given code
+	// Places the length of the bitstring in the bitCount out parameter
+	// NOTE: Bit order subject to change (and likely will change). Currently:
+	// The branch to take between the root and a child of the root is placed in the LSB
+	// Subsequent branches are stored in higher bits
+	unsigned int AdaptiveHuffmanTree::GetEncodedBitString(NodeData code, unsigned int& bitCount)
 	{
-		// Make sure the code is in range
-		if (code >= terminalNodeCount)
-		{
-			throw std::runtime_error("Code value is out of range");
-		}
-
-		// Get the node containing the given code
-		NodeIndex curNodeIndex = parentIndex[code];
+		VerifyNodeDataInBounds(code);
 
 		// Record the path to the root
-		bitString = 0;
-		int bitCount = 0;
+		bitCount = 0;
+		unsigned int bitString = 0;
+		NodeIndex curNodeIndex = code;
 		while (curNodeIndex != rootNodeIndex)
 		{
-			bool bBit = curNodeIndex & 0x01;	// Get the direction from parent to current node
+			unsigned int bBit = curNodeIndex & 1;  // Get the direction from parent to current node
+			bitString = (bitString << 1) | bBit;  // Pack the bit into the returned string
 			bitCount++;
-			bitString = (bitString << 1) | bBit;// Pack the bit into the returned string
+			curNodeIndex = parentIndex[curNodeIndex];
 		}
 
-		return bitCount;					// Return number of bits in path from root to node
+		return bitString;
 	}
-	*/
 }
