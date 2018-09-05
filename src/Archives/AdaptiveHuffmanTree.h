@@ -35,8 +35,8 @@ namespace Archives
 		unsigned int GetEncodedBitString(DataValue code, unsigned int &bitCount);
 
 	private:
-		void VerifyValidNodeIndex(NodeIndex nodeIndex);
-		void VerifyValidDataValue(DataValue code);
+		void VerifyNodeIndexInBounds(NodeIndex nodeIndex);
+		void VerifyDataValueInBounds(DataValue code);
 		void SwapNodes(NodeIndex nodeIndex1, NodeIndex nodeIndex2);
 
 		// Tree properties

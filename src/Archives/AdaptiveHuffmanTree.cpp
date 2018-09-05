@@ -54,7 +54,7 @@ namespace Archives
 	// This is used to traverse the tree to a terminal node.
 	AdaptiveHuffmanTree::NodeIndex AdaptiveHuffmanTree::GetChildNode(NodeIndex nodeIndex, bool bRight)
 	{
-		VerifyValidNodeIndex(nodeIndex);
+		VerifyNodeIndexInBounds(nodeIndex);
 
 		// Return the child node index
 		return linkOrData[nodeIndex] + bRight;
@@ -64,7 +64,7 @@ namespace Archives
 	// This is used to know when a tree search has completed.
 	bool AdaptiveHuffmanTree::IsLeaf(NodeIndex nodeIndex)
 	{
-		VerifyValidNodeIndex(nodeIndex);
+		VerifyNodeIndexInBounds(nodeIndex);
 
 		// Return whether or not this is a terminal node
 		return linkOrData[nodeIndex] >= nodeCount;
@@ -73,7 +73,7 @@ namespace Archives
 	// Returns the data stored in a terminal node
 	AdaptiveHuffmanTree::DataValue AdaptiveHuffmanTree::GetNodeData(NodeIndex nodeIndex)
 	{
-		VerifyValidNodeIndex(nodeIndex);
+		VerifyNodeIndexInBounds(nodeIndex);
 
 		// Return data stored in node translated back to normal form
 		// Note: This assumes the node is a terminal node
@@ -88,7 +88,7 @@ namespace Archives
 	// codes a shorter bit encoding).
 	void AdaptiveHuffmanTree::UpdateCodeCount(DataValue code)
 	{
-		VerifyValidDataValue(code);
+		VerifyDataValueInBounds(code);
 
 		// Get the index of the node containing this code
 		NodeIndex curNodeIndex = parentIndex[code + nodeCount];
@@ -122,7 +122,7 @@ namespace Archives
 
 
 	// Raise exception if nodeIndex is out of range
-	void AdaptiveHuffmanTree::VerifyValidNodeIndex(NodeIndex nodeIndex)
+	void AdaptiveHuffmanTree::VerifyNodeIndexInBounds(NodeIndex nodeIndex)
 	{
 		if (nodeIndex >= nodeCount)
 		{
@@ -132,7 +132,7 @@ namespace Archives
 	}
 
 	// Raise exception if code is out of range
-	void AdaptiveHuffmanTree::VerifyValidDataValue(DataValue code)
+	void AdaptiveHuffmanTree::VerifyDataValueInBounds(DataValue code)
 	{
 		if (code >= terminalNodeCount)
 		{
@@ -179,7 +179,7 @@ namespace Archives
 	// Subsequent branches are stored in higher bits
 	unsigned int AdaptiveHuffmanTree::GetEncodedBitString(DataValue code, unsigned int& bitCount)
 	{
-		VerifyValidDataValue(code);
+		VerifyDataValueInBounds(code);
 
 		// Record the path to the root
 		bitCount = 0;
