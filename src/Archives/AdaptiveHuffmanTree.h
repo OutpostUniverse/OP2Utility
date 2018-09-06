@@ -11,28 +11,32 @@ namespace Archives
 	public:
 		using NodeType = unsigned short;
 		using NodeIndex = NodeType;
-		using DataValue = NodeType;
+		using NodeData = NodeType;
 
 		AdaptiveHuffmanTree(NodeType terminalNodeCount);
+
+		// Tree info
+		NodeType TerminalNodeCount();
 
 		// Decompression routines
 		NodeIndex GetRootNodeIndex();				// Get root of tree to start search at
 		NodeIndex GetChildNode(NodeIndex nodeIndex, bool bRight);
 		// bRight = 1 --> follow right branch
 		bool IsLeaf(NodeIndex nodeIndex);			// Determines if node is terminal node
-		DataValue GetNodeData(NodeIndex nodeIndex);	// Returns the data in a terminal node
+		NodeData GetNodeData(NodeIndex nodeIndex);	// Returns the data in a terminal node
 
 		// Tree restructuring routines
-		void UpdateCodeCount(DataValue code);		// Perform tree update/restructure
+		void UpdateCodeCount(NodeData code);		// Perform tree update/restructure
 
 		// Compression routines
-		int GetEncodedBitString(int code, int &bitString);
-		// Retuns the length of the path from the
-		// root node to the node with the given
-		// code and places the path in bitString
+		// NOTE: experimental, API likely to change
+		// Retuns the path from the root node to the node with the given code
+		// Places the path length in bitCount
+		unsigned int GetEncodedBitString(NodeData code, unsigned int &bitCount);
 
 	private:
-		void VerifyValidNodeIndex(NodeIndex nodeIndex);
+		void VerifyNodeIndexInBounds(NodeIndex nodeIndex);
+		void VerifyNodeDataInBounds(NodeData code);
 		void SwapNodes(NodeIndex nodeIndex1, NodeIndex nodeIndex2);
 
 		// Tree properties

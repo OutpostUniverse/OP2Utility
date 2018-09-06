@@ -16,6 +16,9 @@
     <ClCompile Include="Maps\MapWriter.test.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
+    <ClCompile Include="Archives\AdaptiveHuffmanTree.test.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
     <ClCompile Include="Maps\MapHeader.test.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
@@ -38,6 +41,9 @@
     </Filter>
     <Filter Include="Sprites">
       <UniqueIdentifier>{7c32bea6-a0e5-483a-97b5-8f1a7c0a84fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archives">
+      <UniqueIdentifier>{beb7ce96-9a50-4c40-900e-50de0f3f995b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
