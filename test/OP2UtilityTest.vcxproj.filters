@@ -19,6 +19,12 @@
     <ClCompile Include="Maps\MapHeader.test.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
+    <ClCompile Include="Sprites\ArtReader.test.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprites\ArtWriter.test.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -29,6 +35,9 @@
     </Filter>
     <Filter Include="Maps">
       <UniqueIdentifier>{25da91a1-3f8e-4c48-899f-860901568964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sprites">
+      <UniqueIdentifier>{7c32bea6-a0e5-483a-97b5-8f1a7c0a84fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
