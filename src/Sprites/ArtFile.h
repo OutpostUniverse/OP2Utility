@@ -76,5 +76,5 @@ public:
 	std::vector<ImageMeta> imageMetas;
 	std::vector<Animation> animations;
 
-	void ArtFile::ValidateImageMetadata() const;
+	void ValidateImageMetadata() const;
 };
