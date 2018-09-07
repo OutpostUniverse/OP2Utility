@@ -25,8 +25,19 @@ struct ImageMeta {
 	uint16_t paletteIndex;
 };
 
+struct UnknownArtContainer {
+	UnknownArtContainer() : unknown1(0), unknown2(0), unknown3(0), unknown4(0) {}
+
+	uint32_t unknown1;
+	uint32_t unknown2;
+	uint32_t unknown3;
+	uint32_t unknown4;
+};
+
 // Note: order determined by local pic_index
-struct Picture {
+struct SubFrame {
+	SubFrame() : bitmapIndex(0), unknown(0), frameIndex(0), pixelXOffset(0), pixelYOffset(0) {}
+
 	uint16_t bitmapIndex;
 	uint8_t unknown;
 	uint8_t frameIndex;
@@ -34,15 +45,9 @@ struct Picture {
 	uint16_t pixelYOffset;
 };
 
-struct UnknownArtContainer {
-	uint32_t unknown1;
-	uint32_t unknown2;
-	uint32_t unknown3;
-	uint32_t unknown4;
-};
-
 struct Frame {
-	uint8_t subframes;
+	Frame() : unknown(0), optional1(0), optional2(0), optional3(0), optional4(0) {}
+
 	uint8_t unknown;
 	uint8_t optional1;
 	uint8_t optional2;
@@ -50,7 +55,7 @@ struct Frame {
 	uint8_t optional4;
 
 	// Limited to size of uint16_t MAX
-	std::vector<Picture> pictures;
+	std::vector<SubFrame> subFrames;
 };
 
 struct Animation {
@@ -64,9 +69,7 @@ struct Animation {
 
 	std::vector<Frame> frames;
 
-	uint32_t unknownArtContainerCount;
-
-	std::vector<UnknownArtContainer> unknownArtContainer;
+	std::vector<UnknownArtContainer> unknownContainer;
 };
 
 struct ArtFile

@@ -60,11 +60,7 @@ namespace ArtReader {
 
 	void ReadImageMetadata(Stream::SeekableReader& seekableReader, ArtFile& artFile)
 	{
-		uint32_t imageCount;
-		seekableReader.Read(imageCount);
-
-		artFile.imageMetas.resize(imageCount);
-		seekableReader.Read(artFile.imageMetas);
+		seekableReader.Read<uint32_t>(artFile.imageMetas);
 
 		artFile.ValidateImageMetadata();
 	}
@@ -75,11 +71,11 @@ namespace ArtReader {
 		seekableReader.Read(animationCount);
 		artFile.animations.resize(animationCount);
 
-		uint32_t frameDataCount;
-		seekableReader.Read(frameDataCount);
+		uint32_t frameCount;
+		seekableReader.Read(frameCount);
 
-		uint32_t frameComponentCount;
-		seekableReader.Read(frameComponentCount);
+		uint32_t subFrameCount;
+		seekableReader.Read(subFrameCount);
 
 		uint32_t frameOptionalCount;
 		seekableReader.Read(frameOptionalCount);
@@ -87,6 +83,24 @@ namespace ArtReader {
 		for (uint32_t i = 0; i < animationCount; ++i)
 		{
 			artFile.animations[i] = ReadAnimation(seekableReader);
+		}
+
+		std::size_t actualFrameCount = 0;
+		std::size_t actualSubFrameCount = 0;
+		for (Animation animation : artFile.animations) {
+			actualFrameCount += animation.frames.size();
+
+			for (Frame frame : animation.frames) {
+				actualSubFrameCount += frame.subFrames.size();
+			}
+		}
+
+		if (actualFrameCount != frameCount) {
+			throw std::runtime_error("Frame count does not match");
+		}
+
+		if (actualSubFrameCount != subFrameCount) {
+			throw std::runtime_error("Sub-frame count does not match.");
 		}
 	}
 
@@ -108,32 +122,36 @@ namespace ArtReader {
 			animationMeta.frames[i] = ReadFrame(seekableReader);
 		}
 
-		seekableReader.Read(animationMeta.unknownArtContainerCount);
+		uint32_t unknownContainerCount;
+		seekableReader.Read(unknownContainerCount);
 
-		animationMeta.unknownArtContainer.resize(animationMeta.unknownArtContainerCount);
-		seekableReader.Read(animationMeta.unknownArtContainer);
+		animationMeta.unknownContainer.resize(unknownContainerCount);
+		seekableReader.Read(animationMeta.unknownContainer);
 
 		return animationMeta;
 	}
 
 	Frame ReadFrame(Stream::SeekableReader& seekableReader) {
 		Frame frame;
-		seekableReader.Read(frame.subframes);
+		uint8_t subframeCount;
+		seekableReader.Read(subframeCount);
 		seekableReader.Read(frame.unknown);
 
-		if (frame.subframes & 0x80) {
-			frame.subframes = frame.subframes & 0x7F;
+		if (subframeCount & 0x80) {
+			//frame.subframes = frame.subframes & 0x7F;
 			seekableReader.Read(frame.optional1);
 			seekableReader.Read(frame.optional2);
 		}
 		if (frame.unknown & 0x80) {
-			frame.unknown = frame.unknown & 0x7F;
+			//frame.unknown = frame.unknown & 0x7F;
 			seekableReader.Read(frame.optional3);
 			seekableReader.Read(frame.optional4);
 		}
 
-		frame.pictures.resize(frame.subframes);
-		seekableReader.Read(frame.subframes);
+		frame.subFrames.resize(subframeCount & 0x7F);
+		for (int i = 0; i < (subframeCount & 0x7F); ++i) {
+			seekableReader.Read(frame.subFrames[i]);
+		}
 
 		return frame;
 	}
