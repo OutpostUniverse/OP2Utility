@@ -6,25 +6,19 @@ const std::array<char, 4> PaletteHeader::TagData{ 'd', 'a', 't', 'a' };
 
 PaletteHeader::PaletteHeader() : remainingTagCount(0) {}
 
-PaletteHeader::PaletteHeader(const ArtFile& artFile)  : 
-	overallHeader(SectionHeader(TagSection, 
-		sizeof(overallHeader) + 
-		sizeof(sectionHeader) + 
-		sizeof(remainingTagCount) + 
-		static_cast<uint32_t>(artFile.palettes.size()) * sizeof(decltype(artFile.palettes)::value_type))),
-	sectionHeader(SectionHeader(TagHeader, sizeof(remainingTagCount))),
-	remainingTagCount(1),
-	dataHeader(SectionHeader(TagData, static_cast<uint32_t>(artFile.palettes.size()) * sizeof(decltype(artFile.palettes)::value_type)))
-{ 
-	uint64_t paletteSectionSize =
-		sizeof(overallHeader) +
-		sizeof(sectionHeader) +
-		sizeof(remainingTagCount) +
-		artFile.palettes.size() * sizeof(decltype(artFile.palettes)::value_type);
+PaletteHeader::PaletteHeader(const ArtFile& artFile)  : remainingTagCount(1)
+{
+	uint64_t dataSize = artFile.palettes.size() * sizeof(decltype(artFile.palettes)::value_type);
 
-	if (paletteSectionSize > UINT32_MAX) {
+	uint64_t overallSize = sizeof(overallHeader) + sizeof(sectionHeader) + sizeof(remainingTagCount) + dataSize;
+
+	if (overallSize > UINT32_MAX) {
 		throw std::runtime_error("PRT palettes section is too large.");
 	}
+
+	overallHeader = SectionHeader(TagSection, static_cast<uint32_t>(overallSize));
+	sectionHeader = SectionHeader(SectionHeader(TagHeader, sizeof(remainingTagCount)));
+	dataHeader = SectionHeader(TagData, static_cast<uint32_t>(dataSize));
 }
 
 
