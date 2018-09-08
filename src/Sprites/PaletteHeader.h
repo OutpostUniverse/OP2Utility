@@ -23,4 +23,9 @@ struct PaletteHeader {
 	SectionHeader dataHeader;
 
 	void Validate();
+
+private:
+	static const std::array<char, 4> TagSection;
+	static const std::array<char, 4> TagHeader;
+	static const std::array<char, 4> TagData;
 };

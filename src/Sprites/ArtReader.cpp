@@ -24,7 +24,7 @@ void ArtFile::ReadPalette(Stream::SeekableReader& seekableReader, ArtFile& artFi
 {
 	SectionHeader paletteSectionHeader;
 	seekableReader.Read(paletteSectionHeader);
-	paletteSectionHeader.Validate(PaletteTag::Palette);
+	paletteSectionHeader.Validate(TagPalette);
 
 	artFile.palettes.resize(paletteSectionHeader.length);
 

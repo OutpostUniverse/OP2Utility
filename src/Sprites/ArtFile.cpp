@@ -1,5 +1,7 @@
 #include "ArtFile.h"
 
+const std::array<char, 4> ArtFile::TagPalette{ 'C', 'P', 'A', 'L' };
+
 void ArtFile::ValidateImageMetadata() const
 {
 	for (const auto& imageMeta : imageMetas) {

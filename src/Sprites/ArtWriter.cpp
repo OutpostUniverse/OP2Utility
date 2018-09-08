@@ -27,7 +27,7 @@ void ArtFile::WritePalettes(Stream::SeekableWriter& seekableWriter, const ArtFil
 		throw std::runtime_error("Art file contains too many palettes.");
 	}
 
-	seekableWriter.Write(SectionHeader(PaletteTag::Palette, static_cast<uint32_t>(artFile.palettes.size())));
+	seekableWriter.Write(SectionHeader(TagPalette, static_cast<uint32_t>(artFile.palettes.size())));
 	seekableWriter.Write(PaletteHeader(artFile));
 }
 

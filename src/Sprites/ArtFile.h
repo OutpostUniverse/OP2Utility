@@ -4,6 +4,7 @@
 #include "Animation.h"
 #include "Color.h"
 #include <vector>
+#include <array>
 #include <string>
 #include <cstddef>
 
@@ -42,4 +43,6 @@ private:
 	static void WriteAnimations(Stream::SeekableWriter& seekableWriter, const ArtFile& artFile);
 	static void WriteAnimation(Stream::SeekableWriter& seekableWriter, const Animation& animation);
 	static void WriteFrame(Stream::SeekableWriter& seekableWriter, const Animation::Frame& frame);
+
+	static const std::array<char, 4> TagPalette;
 };
