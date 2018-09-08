@@ -156,6 +156,12 @@
     <ClInclude Include="src\Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Sprites\ImageMeta.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\Animation.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">

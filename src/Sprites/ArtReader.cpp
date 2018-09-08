@@ -12,7 +12,7 @@ namespace ArtReader {
 	void ReadImageMetadata(Stream::SeekableReader& seekableReader, ArtFile& artFile);
 	void ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& artFile);
 	Animation ReadAnimation(Stream::SeekableReader& seekableReader);
-	Frame ReadFrame(Stream::SeekableReader& seekableReader);
+	Animation::Frame ReadFrame(Stream::SeekableReader& seekableReader);
 	//}
 
 
@@ -90,7 +90,7 @@ namespace ArtReader {
 		for (Animation animation : artFile.animations) {
 			actualFrameCount += animation.frames.size();
 
-			for (Frame frame : animation.frames) {
+			for (Animation::Frame frame : animation.frames) {
 				actualSubFrameCount += frame.subFrames.size();
 			}
 		}
@@ -110,8 +110,7 @@ namespace ArtReader {
 
 		seekableReader.Read(animationMeta.unknown);
 		seekableReader.Read(animationMeta.selectionRect);
-		seekableReader.Read(animationMeta.pixelXDisplacement);
-		seekableReader.Read(animationMeta.pixelYDisplacement);
+		seekableReader.Read(animationMeta.pixelDisplacement);
 		seekableReader.Read(animationMeta.unknown2);
 
 		uint32_t frameCount;
@@ -131,19 +130,18 @@ namespace ArtReader {
 		return animationMeta;
 	}
 
-	Frame ReadFrame(Stream::SeekableReader& seekableReader) {
-		Frame frame;
+	Animation::Frame ReadFrame(Stream::SeekableReader& seekableReader) {
+		Animation::Frame frame;
+
 		uint8_t subframeCount;
 		seekableReader.Read(subframeCount);
 		seekableReader.Read(frame.unknown);
 
 		if (subframeCount & 0x80) {
-			//frame.subframes = frame.subframes & 0x7F;
 			seekableReader.Read(frame.optional1);
 			seekableReader.Read(frame.optional2);
 		}
 		if (frame.unknown & 0x80) {
-			//frame.unknown = frame.unknown & 0x7F;
 			seekableReader.Read(frame.optional3);
 			seekableReader.Read(frame.optional4);
 		}
