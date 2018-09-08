@@ -7,7 +7,7 @@
 
 struct Animation {
 	struct Frame {
-		struct SubFrame {
+		struct Subframe {
 			uint16_t bitmapIndex;
 			uint8_t unknown; // Unused by Outpost 2
 			uint8_t frameIndex;
@@ -21,7 +21,7 @@ struct Animation {
 		uint8_t optional4;
 
 		// Limited to size of uint16_t MAX
-		std::vector<SubFrame> subFrames;
+		std::vector<Subframe> subframes;
 	};
 
 	struct UnknownContainer {

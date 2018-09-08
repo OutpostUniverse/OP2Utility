@@ -12,6 +12,7 @@ namespace ArtWriter
 	void WritePalettes(Stream::SeekableWriter& seekableWriter, const ArtFile& artFile);
 	void WriteAnimations(Stream::SeekableWriter& seekableWriter, const ArtFile& artFile);
 	void WriteAnimation(Stream::SeekableWriter& seekableWriter, const Animation& animation);
+	void WriteFrame(Stream::SeekableWriter& seekableWriter, const Animation::Frame& frame);
 	//}
 
 
@@ -86,6 +87,37 @@ namespace ArtWriter
 
 	void WriteAnimation(Stream::SeekableWriter& seekableWriter, const Animation& animation)
 	{
+		seekableWriter.Write(animation.unknown);
+		seekableWriter.Write(animation.selectionRect);
+		seekableWriter.Write(animation.pixelDisplacement);
+		seekableWriter.Write(animation.unknown2);
+		
+		std::size_t frameCount = animation.frames.size();
+		if (frameCount > UINT32_MAX) {
+			throw std::runtime_error("There are too many frames in animation to write");
+		}
+		seekableWriter.Write(frameCount);
 
+		for (const auto& frame : animation.frames) {
+			WriteFrame(seekableWriter, frame);
+		}
+
+		seekableWriter.Write<uint32_t>(animation.unknownContainer);
+	}
+
+	void WriteFrame(Stream::SeekableWriter& seekableWriter, const Animation::Frame& frame) 
+	{
+		std::size_t subframeCount = frame.subframes.size();
+
+		if (subframeCount > UINT8_MAX) {
+			throw std::runtime_error("Too many subframes in frame.");
+		}
+
+		seekableWriter.Write(subframeCount);
+		seekableWriter.Write(frame.unknown);
+		
+		// TODO: Figure out how to write optional values.
+
+		seekableWriter.Write<uint8_t>(frame.subframes);
 	}
 }

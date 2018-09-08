@@ -26,7 +26,7 @@ void ArtFile::CountFrames(std::size_t& frameCount, std::size_t& subframeCount, s
 		frameCount += animation.frames.size();
 		
 		for (Animation::Frame frame : animation.frames) {
-			subframeCount += frame.subFrames.size();
+			subframeCount += frame.subframes.size();
 		}
 	}
 }

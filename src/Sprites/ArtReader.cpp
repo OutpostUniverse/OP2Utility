@@ -91,51 +91,26 @@ namespace ArtReader {
 		VerifyFrameCount(artFile, frameCount, subframeCount, unknownCount);
 	}
 
-	void VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t subframeCount, std::size_t unknownCount) 
-	{
-		std::size_t actualFrameCount = 0;
-		std::size_t actualSubframeCount = 0;
-		std::size_t actualUnknownCount = 0;
-		artFile.CountFrames(actualFrameCount, actualSubframeCount, actualUnknownCount);
-
-		if (actualFrameCount != frameCount) {
-			throw std::runtime_error("Frame count does not match");
-		}
-
-		if (actualSubframeCount != subframeCount) {
-			throw std::runtime_error("Sub-frame count does not match.");
-		}
-
-		// Need to figure out what unknown count is counting before enabling.
-		//if (actualUnknownCount != unknownCount) {
-		//	throw std::runtime_error("Unknown count does not match.");
-		//}
-	}
-
 	Animation ReadAnimation(Stream::SeekableReader& seekableReader)
 	{
-		Animation animationMeta;
+		Animation animation;
 
-		seekableReader.Read(animationMeta.unknown);
-		seekableReader.Read(animationMeta.selectionRect);
-		seekableReader.Read(animationMeta.pixelDisplacement);
-		seekableReader.Read(animationMeta.unknown2);
+		seekableReader.Read(animation.unknown);
+		seekableReader.Read(animation.selectionRect);
+		seekableReader.Read(animation.pixelDisplacement);
+		seekableReader.Read(animation.unknown2);
 
 		uint32_t frameCount;
 		seekableReader.Read(frameCount);
-		animationMeta.frames.resize(frameCount);
+		animation.frames.resize(frameCount);
 
 		for (uint32_t i = 0; i < frameCount; ++i) {
-			animationMeta.frames[i] = ReadFrame(seekableReader);
+			animation.frames[i] = ReadFrame(seekableReader);
 		}
 
-		uint32_t unknownContainerCount;
-		seekableReader.Read(unknownContainerCount);
+		seekableReader.Read<uint32_t>(animation.unknownContainer);
 
-		animationMeta.unknownContainer.resize(unknownContainerCount);
-		seekableReader.Read(animationMeta.unknownContainer);
-
-		return animationMeta;
+		return animation;
 	}
 
 	Animation::Frame ReadFrame(Stream::SeekableReader& seekableReader) {
@@ -158,11 +133,32 @@ namespace ArtReader {
 			seekableReader.Read(frame.optional4);
 		}
 
-		frame.subFrames.resize(subframeCount & 0x7F);
+		frame.subframes.resize(subframeCount & 0x7F);
 		for (int i = 0; i < (subframeCount & 0x7F); ++i) {
-			seekableReader.Read(frame.subFrames[i]);
+			seekableReader.Read(frame.subframes[i]);
 		}
 
 		return frame;
+	}
+
+	void VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t subframeCount, std::size_t unknownCount)
+	{
+		std::size_t actualFrameCount = 0;
+		std::size_t actualSubframeCount = 0;
+		std::size_t actualUnknownCount = 0;
+		artFile.CountFrames(actualFrameCount, actualSubframeCount, actualUnknownCount);
+
+		if (actualFrameCount != frameCount) {
+			throw std::runtime_error("Frame count does not match");
+		}
+
+		if (actualSubframeCount != subframeCount) {
+			throw std::runtime_error("Sub-frame count does not match.");
+		}
+
+		// Need to figure out what unknown count is counting before enabling.
+		//if (actualUnknownCount != unknownCount) {
+		//	throw std::runtime_error("Unknown count does not match.");
+		//}
 	}
 }
