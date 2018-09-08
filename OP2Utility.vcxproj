@@ -132,6 +132,7 @@
     <ClInclude Include="src\Maps\TileGroup.h" />
     <ClInclude Include="src\Maps\TileInfo.h" />
     <ClInclude Include="src\Maps\TilesetSource.h" />
+    <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\Rect.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\Archives\AdaptiveHuffmanTree.h" />

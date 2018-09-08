@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Point.h"
 #include "../Rect.h"
 #include "ImageType.h"
 #include "Color.h"
@@ -27,8 +28,7 @@ struct SubFrame {
 	uint16_t bitmapIndex;
 	uint8_t unknown;
 	uint8_t frameIndex;
-	uint16_t pixelXOffset;
-	uint16_t pixelYOffset;
+	Point16 pixelOffset;
 };
 
 struct Frame {
@@ -45,8 +45,7 @@ struct Frame {
 struct Animation {
 	uint32_t unknown;
 	Rect selectionRect; // pixels
-	uint32_t pixelXDisplacement; // Reverse direction from an offset, origin is center of tile
-	uint32_t pixelYDisplacement; // reverse direction from an offset, origin is center of tile
+	Point32 pixelDisplacement; // Reverse direction from an offset, origin is center of tile
 	uint32_t unknown2; //(0x3C CC/DIRT/Garage/Std. Lab construction/dock, 0x0D spider walking)
 
 	std::vector<Frame> frames;

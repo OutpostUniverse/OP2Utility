@@ -153,6 +153,9 @@
     <ClInclude Include="src\Sprites\ImageType.h">
       <Filter>Sprites</Filter>
     </ClInclude>
+    <ClInclude Include="src\Point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
