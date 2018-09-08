@@ -15,3 +15,18 @@ void ArtFile::ValidateImageMetadata() const
 		}
 	}
 }
+
+void ArtFile::CountFrames(std::size_t& frameCount, std::size_t& subframeCount, std::size_t& unknownCount) const
+{
+	frameCount = 0;
+	subframeCount = 0;
+	unknownCount = 0; //TODO: Figure out what this value is counting. Optional Frame information???
+
+	for (Animation animation : animations) {
+		frameCount += animation.frames.size();
+		
+		for (Animation::Frame frame : animation.frames) {
+			subframeCount += frame.subFrames.size();
+		}
+	}
+}

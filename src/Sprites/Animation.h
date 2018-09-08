@@ -9,7 +9,7 @@ struct Animation {
 	struct Frame {
 		struct SubFrame {
 			uint16_t bitmapIndex;
-			uint8_t unknown;
+			uint8_t unknown; // Unused by Outpost 2
 			uint8_t frameIndex;
 			Point16 pixelOffset;
 		};

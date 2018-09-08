@@ -3,6 +3,7 @@
 #include "ArtFile.h"
 #include "../Streams/FileWriter.h"
 #include <cstdint>
+#include <stdexcept>
 
 namespace ArtWriter
 {
@@ -56,7 +57,26 @@ namespace ArtWriter
 
 		seekableWriter.Write(static_cast<uint32_t>(artFile.animations.size()));
 		
-		// TODO: Write rest of animation counts
+		std::size_t frameCount;
+		std::size_t subframeCount;
+		std::size_t unknownCount;
+		artFile.CountFrames(frameCount, subframeCount, unknownCount);
+
+		if (frameCount > UINT32_MAX) {
+			throw std::runtime_error("There are too many frames to write to file.");
+		}
+
+		if (subframeCount > UINT32_MAX) {
+			throw std::runtime_error("There are too many subframes to write to file.");
+		}
+
+		if (unknownCount > UINT32_MAX) {
+			throw std::runtime_error("There are too many unknown container items to write to file.");
+		}
+
+		seekableWriter.Write(static_cast<uint32_t>(frameCount));
+		seekableWriter.Write(static_cast<uint32_t>(subframeCount));
+		seekableWriter.Write(static_cast<uint32_t>(unknownCount));
 
 		for (const auto& animation : artFile.animations)
 		{
