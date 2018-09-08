@@ -132,16 +132,10 @@
     <ClInclude Include="src\Rect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sprites\ArtReader.h">
-      <Filter>Sprites</Filter>
-    </ClInclude>
     <ClInclude Include="src\Sprites\PaletteHeader.h">
       <Filter>Sprites</Filter>
     </ClInclude>
     <ClInclude Include="src\Sprites\ArtFile.h">
-      <Filter>Sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Sprites\ArtWriter.h">
       <Filter>Sprites</Filter>
     </ClInclude>
     <ClInclude Include="src\Sprites\SectionHeader.h">

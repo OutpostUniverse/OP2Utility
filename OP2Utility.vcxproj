@@ -164,9 +164,7 @@
     <ClCompile Include="src\Streams\MemoryWriter.cpp" />
     <ClCompile Include="src\Streams\MemoryReader.cpp" />
     <ClInclude Include="src\Sprites\Animation.h" />
-    <ClInclude Include="src\Sprites\ArtReader.h" />
     <ClInclude Include="src\Sprites\ArtFile.h" />
-    <ClInclude Include="src\Sprites\ArtWriter.h" />
     <ClInclude Include="src\Sprites\Color.h" />
     <ClInclude Include="src\Sprites\ImageMeta.h" />
     <ClInclude Include="src\Sprites\ImageType.h" />

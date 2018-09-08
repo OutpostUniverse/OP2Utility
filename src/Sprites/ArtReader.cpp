@@ -1,164 +1,142 @@
-#include "ArtReader.h"
 #include "ArtFile.h"
 #include "PaletteHeader.h"
 #include "../Streams/FileReader.h"
 #include <stdexcept>
-#include <vector>
 #include <cstdint>
 #include <cstddef>
 
-namespace ArtReader {
-	// Anonymous namespace to hold private methods
-	//namespace {
-	void ReadPalette(Stream::SeekableReader& seekableReader, ArtFile& artFile);
-	void ReadImageMetadata(Stream::SeekableReader& seekableReader, ArtFile& artFile);
-	void ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& artFile);
-	Animation ReadAnimation(Stream::SeekableReader& seekableReader);
-	Animation::Frame ReadFrame(Stream::SeekableReader& seekableReader);
-	void VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t subframeCount, std::size_t unknownCount);
-	//}
+ArtFile ArtFile::Read(std::string filename) {
+	Stream::FileReader mapReader(filename);
+	return Read(mapReader);
+}
 
+ArtFile ArtFile::Read(Stream::SeekableReader& seekableReader) {
+	ArtFile artFile;
 
-	// ==== Public methohds ====
+	ReadPalette(seekableReader, artFile);
 
+	ReadImageMetadata(seekableReader, artFile);
 
-	ArtFile Read(std::string filename) {
-		Stream::FileReader mapReader(filename);
-		return Read(mapReader);
-	}
+	ReadAnimations(seekableReader, artFile);
 
-	ArtFile Read(Stream::SeekableReader& seekableReader) {
-		ArtFile artFile;
+	return artFile;
+}
 
-		ReadPalette(seekableReader, artFile);
+void ArtFile::ReadPalette(Stream::SeekableReader& seekableReader, ArtFile& artFile)
+{
+	SectionHeader paletteHeader;
+	seekableReader.Read(paletteHeader);
+	paletteHeader.Validate(PaletteTag::Palette);
 
-		ReadImageMetadata(seekableReader, artFile);
+	artFile.palettes.resize(paletteHeader.length);
 
-		ReadAnimations(seekableReader, artFile);
-
-		return artFile;
-	}
-
-
-	// == Private methods ==
-
-
-	void ReadPalette(Stream::SeekableReader& seekableReader, ArtFile& artFile)
-	{
-		SectionHeader paletteHeader;
+	for (uint32_t i = 0; i < paletteHeader.length; ++i) {
+		PaletteHeader paletteHeader;
 		seekableReader.Read(paletteHeader);
-		paletteHeader.Validate(PaletteTag::Palette);
 
-		artFile.palettes.resize(paletteHeader.length);
+		paletteHeader.Validate();
 
-		for (uint32_t i = 0; i < paletteHeader.length; ++i) {
-			PaletteHeader paletteHeader;
-			seekableReader.Read(paletteHeader);
-
-			paletteHeader.Validate();
-
-			seekableReader.Read(artFile.palettes[i]);
-		}
+		seekableReader.Read(artFile.palettes[i]);
 	}
+}
 
-	void ReadImageMetadata(Stream::SeekableReader& seekableReader, ArtFile& artFile)
+void ArtFile::ReadImageMetadata(Stream::SeekableReader& seekableReader, ArtFile& artFile)
+{
+	seekableReader.Read<uint32_t>(artFile.imageMetas);
+
+	artFile.ValidateImageMetadata();
+}
+
+void ArtFile::ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& artFile)
+{
+	uint32_t animationCount;
+	seekableReader.Read(animationCount);
+	artFile.animations.resize(animationCount);
+
+	uint32_t frameCount;
+	seekableReader.Read(frameCount);
+
+	uint32_t subframeCount;
+	seekableReader.Read(subframeCount);
+
+	uint32_t unknownCount;
+	seekableReader.Read(unknownCount);
+
+	for (uint32_t i = 0; i < animationCount; ++i)
 	{
-		seekableReader.Read<uint32_t>(artFile.imageMetas);
-
-		artFile.ValidateImageMetadata();
+		artFile.animations[i] = ReadAnimation(seekableReader);
 	}
 
-	void ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& artFile)
-	{
-		uint32_t animationCount;
-		seekableReader.Read(animationCount);
-		artFile.animations.resize(animationCount);
+	VerifyFrameCount(artFile, frameCount, subframeCount, unknownCount);
+}
 
-		uint32_t frameCount;
-		seekableReader.Read(frameCount);
+Animation ArtFile::ReadAnimation(Stream::SeekableReader& seekableReader)
+{
+	Animation animation;
 
-		uint32_t subframeCount;
-		seekableReader.Read(subframeCount);
+	seekableReader.Read(animation.unknown);
+	seekableReader.Read(animation.selectionRect);
+	seekableReader.Read(animation.pixelDisplacement);
+	seekableReader.Read(animation.unknown2);
 
-		uint32_t unknownCount;
-		seekableReader.Read(unknownCount);
+	uint32_t frameCount;
+	seekableReader.Read(frameCount);
+	animation.frames.resize(frameCount);
 
-		for (uint32_t i = 0; i < animationCount; ++i)
-		{
-			artFile.animations[i] = ReadAnimation(seekableReader);
-		}
-
-		VerifyFrameCount(artFile, frameCount, subframeCount, unknownCount);
+	for (uint32_t i = 0; i < frameCount; ++i) {
+		animation.frames[i] = ReadFrame(seekableReader);
 	}
 
-	Animation ReadAnimation(Stream::SeekableReader& seekableReader)
-	{
-		Animation animation;
+	seekableReader.Read<uint32_t>(animation.unknownContainer);
 
-		seekableReader.Read(animation.unknown);
-		seekableReader.Read(animation.selectionRect);
-		seekableReader.Read(animation.pixelDisplacement);
-		seekableReader.Read(animation.unknown2);
+	return animation;
+}
 
-		uint32_t frameCount;
-		seekableReader.Read(frameCount);
-		animation.frames.resize(frameCount);
+Animation::Frame ArtFile::ReadFrame(Stream::SeekableReader& seekableReader) {
+	Animation::Frame frame;
+	frame.optional1 = 0;
+	frame.optional2 = 0;
+	frame.optional3 = 0;
+	frame.optional4 = 0;
 
-		for (uint32_t i = 0; i < frameCount; ++i) {
-			animation.frames[i] = ReadFrame(seekableReader);
-		}
+	uint8_t subframeCount;
+	seekableReader.Read(subframeCount);
+	seekableReader.Read(frame.unknown);
 
-		seekableReader.Read<uint32_t>(animation.unknownContainer);
-
-		return animation;
+	if (subframeCount & 0x80) {
+		seekableReader.Read(frame.optional1);
+		seekableReader.Read(frame.optional2);
+	}
+	if (frame.unknown & 0x80) {
+		seekableReader.Read(frame.optional3);
+		seekableReader.Read(frame.optional4);
 	}
 
-	Animation::Frame ReadFrame(Stream::SeekableReader& seekableReader) {
-		Animation::Frame frame;
-		frame.optional1 = 0;
-		frame.optional2 = 0;
-		frame.optional3 = 0;
-		frame.optional4 = 0;
-
-		uint8_t subframeCount;
-		seekableReader.Read(subframeCount);
-		seekableReader.Read(frame.unknown);
-
-		if (subframeCount & 0x80) {
-			seekableReader.Read(frame.optional1);
-			seekableReader.Read(frame.optional2);
-		}
-		if (frame.unknown & 0x80) {
-			seekableReader.Read(frame.optional3);
-			seekableReader.Read(frame.optional4);
-		}
-
-		frame.subframes.resize(subframeCount & 0x7F);
-		for (int i = 0; i < (subframeCount & 0x7F); ++i) {
-			seekableReader.Read(frame.subframes[i]);
-		}
-
-		return frame;
+	frame.subframes.resize(subframeCount & 0x7F);
+	for (int i = 0; i < (subframeCount & 0x7F); ++i) {
+		seekableReader.Read(frame.subframes[i]);
 	}
 
-	void VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t subframeCount, std::size_t unknownCount)
-	{
-		std::size_t actualFrameCount = 0;
-		std::size_t actualSubframeCount = 0;
-		std::size_t actualUnknownCount = 0;
-		artFile.CountFrames(actualFrameCount, actualSubframeCount, actualUnknownCount);
+	return frame;
+}
 
-		if (actualFrameCount != frameCount) {
-			throw std::runtime_error("Frame count does not match");
-		}
+void ArtFile::VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t subframeCount, std::size_t unknownCount)
+{
+	std::size_t actualFrameCount = 0;
+	std::size_t actualSubframeCount = 0;
+	std::size_t actualUnknownCount = 0;
+	artFile.CountFrames(actualFrameCount, actualSubframeCount, actualUnknownCount);
 
-		if (actualSubframeCount != subframeCount) {
-			throw std::runtime_error("Sub-frame count does not match.");
-		}
-
-		// Need to figure out what unknown count is counting before enabling.
-		//if (actualUnknownCount != unknownCount) {
-		//	throw std::runtime_error("Unknown count does not match.");
-		//}
+	if (actualFrameCount != frameCount) {
+		throw std::runtime_error("Frame count does not match");
 	}
+
+	if (actualSubframeCount != subframeCount) {
+		throw std::runtime_error("Sub-frame count does not match.");
+	}
+
+	// Need to figure out what unknown count is counting before enabling.
+	//if (actualUnknownCount != unknownCount) {
+	//	throw std::runtime_error("Unknown count does not match.");
+	//}
 }
