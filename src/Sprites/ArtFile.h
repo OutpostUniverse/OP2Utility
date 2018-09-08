@@ -5,7 +5,6 @@
 #include "Color.h"
 #include <vector>
 #include <string>
-#include <cstdint>
 #include <cstddef>
 
 namespace Stream {
@@ -20,7 +19,6 @@ public:
 	std::vector<ImageMeta> imageMetas;
 	std::vector<Animation> animations;
 
-	// Read the contents of an Outpost 2 .prt file
 	static ArtFile Read(std::string filename);
 	static ArtFile Read(Stream::SeekableReader& seekableReader);
 	static void Write(std::string filename, const ArtFile& artFile);

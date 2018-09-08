@@ -14,9 +14,7 @@ ArtFile ArtFile::Read(Stream::SeekableReader& seekableReader) {
 	ArtFile artFile;
 
 	ReadPalette(seekableReader, artFile);
-
 	ReadImageMetadata(seekableReader, artFile);
-
 	ReadAnimations(seekableReader, artFile);
 
 	return artFile;
@@ -24,13 +22,13 @@ ArtFile ArtFile::Read(Stream::SeekableReader& seekableReader) {
 
 void ArtFile::ReadPalette(Stream::SeekableReader& seekableReader, ArtFile& artFile)
 {
-	SectionHeader paletteHeader;
-	seekableReader.Read(paletteHeader);
-	paletteHeader.Validate(PaletteTag::Palette);
+	SectionHeader paletteSectionHeader;
+	seekableReader.Read(paletteSectionHeader);
+	paletteSectionHeader.Validate(PaletteTag::Palette);
 
-	artFile.palettes.resize(paletteHeader.length);
+	artFile.palettes.resize(paletteSectionHeader.length);
 
-	for (uint32_t i = 0; i < paletteHeader.length; ++i) {
+	for (uint32_t i = 0; i < paletteSectionHeader.length; ++i) {
 		PaletteHeader paletteHeader;
 		seekableReader.Read(paletteHeader);
 

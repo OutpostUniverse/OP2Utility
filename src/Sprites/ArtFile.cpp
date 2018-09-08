@@ -1,8 +1,5 @@
 #include "ArtFile.h"
 
-const unsigned int animationUnknown1 = 0x1;
-const unsigned int animationUnknown2 = 0x0;
-
 void ArtFile::ValidateImageMetadata() const
 {
 	for (const auto& imageMeta : imageMetas) {
