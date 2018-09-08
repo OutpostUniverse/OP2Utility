@@ -165,6 +165,8 @@
     <ClInclude Include="src\Sprites\ArtReader.h" />
     <ClInclude Include="src\Sprites\ArtFile.h" />
     <ClInclude Include="src\Sprites\ArtWriter.h" />
+    <ClInclude Include="src\Sprites\Color.h" />
+    <ClInclude Include="src\Sprites\ImageType.h" />
     <ClInclude Include="src\Sprites\PaletteHeader.h" />
     <ClInclude Include="src\Sprites\SectionHeader.h" />
     <ClInclude Include="src\Streams\FileSliceReader.h" />

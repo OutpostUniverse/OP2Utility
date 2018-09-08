@@ -1,7 +1,7 @@
 #include "PaletteHeader.h"
 
 namespace PaletteTag {
-	extern const std::array<char, 4> Palette{ 'C', 'P', 'A', 'L' };
+	const std::array<char, 4> Palette{ 'C', 'P', 'A', 'L' };
 	const std::array<char, 4> Section{ 'P', 'P', 'A', 'L' };
 	const std::array<char, 4> Header{ 'h', 'e', 'a', 'd' };
 	const std::array<char, 4> Data{ 'd', 'a', 't', 'a' };

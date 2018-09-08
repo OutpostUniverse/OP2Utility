@@ -1,23 +1,17 @@
 #pragma once
 
 #include "../Rect.h"
-#include <array>
+#include "ImageType.h"
+#include "Color.h"
 #include <vector>
 #include <cstdint>
-
-struct Color {
-	uint8_t red;
-	uint8_t green;
-	uint8_t blue;
-	uint8_t alpha;
-};
 
 struct ImageMeta {
 	uint32_t scanlineByteWidth; //number of bytes in each scanline of image (this should be the width of the image rounded up to a 32 bit boundary)
 	uint32_t pixelDataOffset; // Offset of the pixel data in the .bmp file
 	uint32_t height; // Height of image in pixels
 	uint32_t width; // Width of image in pixels
-	uint16_t type;
+	ImageType type;
 	uint16_t paletteIndex;
 };
 
@@ -63,7 +57,7 @@ struct Animation {
 struct ArtFile
 {
 public:
-	std::vector<std::array<Color, 256>> palettes;
+	std::vector<Palette> palettes;
 	std::vector<ImageMeta> imageMetas;
 	std::vector<Animation> animations;
 

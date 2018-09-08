@@ -15,4 +15,3 @@ void ArtFile::ValidateImageMetadata() const
 		}
 	}
 }
-
