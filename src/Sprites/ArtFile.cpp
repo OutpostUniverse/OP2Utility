@@ -5,9 +5,9 @@ const std::array<char, 4> ArtFile::TagPalette{ 'C', 'P', 'A', 'L' };
 void ArtFile::ValidateImageMetadata() const
 {
 	for (const auto& imageMeta : imageMetas) {
-		//if (imageMeta.scanlineByteWidth % 32 != 0) {
-		//	throw std::runtime_error("Image scan line byte width is not divisible by 32.");
-		//}
+		if (imageMeta.scanlineByteWidth != imageMeta.width + (4 - imageMeta.width % 4)) {
+			throw std::runtime_error("Image scan line byte width is not valid. It must be the width of the image rounded up to a 4 byte interval.");
+		}
 
 		if (imageMeta.paletteIndex > palettes.size()) {
 			throw std::runtime_error("Image palette index is out of range of available palettes.");
