@@ -20,7 +20,7 @@ struct Animation {
 		uint8_t optional3;
 		uint8_t optional4;
 
-		// Limited to size of uint16_t MAX
+		// Maximum count of items in container is 128
 		std::vector<Subframe> subframes;
 	};
 
