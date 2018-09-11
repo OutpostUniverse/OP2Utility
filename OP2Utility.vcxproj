@@ -165,9 +165,9 @@
     <ClCompile Include="src\Streams\MemoryReader.cpp" />
     <ClInclude Include="src\Sprites\Animation.h" />
     <ClInclude Include="src\Sprites\ArtFile.h" />
+    <ClInclude Include="src\Sprites\BitCount.h" />
     <ClInclude Include="src\Sprites\Color.h" />
     <ClInclude Include="src\Sprites\ImageMeta.h" />
-    <ClInclude Include="src\Sprites\ImageType.h" />
     <ClInclude Include="src\Sprites\PaletteHeader.h" />
     <ClInclude Include="src\Sprites\SectionHeader.h" />
     <ClInclude Include="src\Streams\FileSliceReader.h" />
