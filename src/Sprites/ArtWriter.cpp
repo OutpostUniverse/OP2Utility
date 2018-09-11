@@ -40,16 +40,16 @@ void ArtFile::WriteAnimations(Stream::SeekableWriter& seekableWriter, const ArtF
 	seekableWriter.Write(static_cast<uint32_t>(artFile.animations.size()));
 
 	std::size_t frameCount;
-	std::size_t subframeCount;
+	std::size_t layerCount;
 	std::size_t unknownCount;
-	artFile.CountFrames(frameCount, subframeCount, unknownCount);
+	artFile.CountFrames(frameCount, layerCount, unknownCount);
 
 	if (frameCount > UINT32_MAX) {
 		throw std::runtime_error("There are too many frames to write to file.");
 	}
 
-	if (subframeCount > UINT32_MAX) {
-		throw std::runtime_error("There are too many subframes to write to file.");
+	if (layerCount > UINT32_MAX) {
+		throw std::runtime_error("There are too many layers to write to file.");
 	}
 
 	if (unknownCount > UINT32_MAX) {
@@ -57,7 +57,7 @@ void ArtFile::WriteAnimations(Stream::SeekableWriter& seekableWriter, const ArtF
 	}
 
 	seekableWriter.Write(static_cast<uint32_t>(frameCount));
-	seekableWriter.Write(static_cast<uint32_t>(subframeCount));
+	seekableWriter.Write(static_cast<uint32_t>(layerCount));
 	seekableWriter.Write(static_cast<uint32_t>(unknownCount));
 
 	for (const auto& animation : artFile.animations)
@@ -88,16 +88,16 @@ void ArtFile::WriteAnimation(Stream::SeekableWriter& seekableWriter, const Anima
 
 void ArtFile::WriteFrame(Stream::SeekableWriter& seekableWriter, const Animation::Frame& frame)
 {
-	std::size_t subframeCount = frame.subframes.size();
+	std::size_t layerCount = frame.layers.size();
 
-	if (subframeCount > UINT8_MAX) {
-		throw std::runtime_error("Too many subframes in frame.");
+	if (layerCount > UINT8_MAX) {
+		throw std::runtime_error("Too many layers in frame.");
 	}
 
-	seekableWriter.Write(static_cast<uint8_t>(subframeCount));
+	seekableWriter.Write(static_cast<uint8_t>(layerCount));
 	seekableWriter.Write(frame.unknown);
 
 	// TODO: Figure out how to write optional values.
 
-	seekableWriter.Write<uint8_t>(frame.subframes);
+	seekableWriter.Write<uint8_t>(frame.layers);
 }

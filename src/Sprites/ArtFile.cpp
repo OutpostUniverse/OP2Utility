@@ -26,17 +26,17 @@ void ArtFile::ValidateImageMetadata() const
 	}
 }
 
-void ArtFile::CountFrames(std::size_t& frameCount, std::size_t& subframeCount, std::size_t& unknownCount) const
+void ArtFile::CountFrames(std::size_t& frameCount, std::size_t& layerCount, std::size_t& unknownCount) const
 {
 	frameCount = 0;
-	subframeCount = 0;
+	layerCount = 0;
 	unknownCount = 0; //TODO: Figure out what this value is counting. Optional Frame information???
 
 	for (Animation animation : animations) {
 		frameCount += animation.frames.size();
 		
 		for (Animation::Frame frame : animation.frames) {
-			subframeCount += frame.subframes.size();
+			layerCount += frame.layers.size();
 		}
 	}
 }

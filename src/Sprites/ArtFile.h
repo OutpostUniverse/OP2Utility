@@ -35,7 +35,7 @@ private:
 	static void ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& artFile);
 	static Animation ReadAnimation(Stream::SeekableReader& seekableReader);
 	static Animation::Frame ReadFrame(Stream::SeekableReader& seekableReader);
-	static void VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t subframeCount, std::size_t unknownCount);
+	static void VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t layerCount, std::size_t unknownCount);
 
 
 	// Write Functions
@@ -46,7 +46,7 @@ private:
 
 
 	void ValidateImageMetadata() const;
-	void CountFrames(std::size_t& frameCount, std::size_t& subframeCount, std::size_t& unknownCount) const;
+	void CountFrames(std::size_t& frameCount, std::size_t& layerCount, std::size_t& unknownCount) const;
 
 	static const std::array<char, 4> TagPalette;
 };

@@ -7,7 +7,7 @@
 
 struct Animation {
 	struct Frame {
-		struct Subframe {
+		struct Layer {
 			uint16_t bitmapIndex;
 			uint8_t unknown; // Unused by Outpost 2
 			uint8_t frameIndex;
@@ -21,7 +21,7 @@ struct Animation {
 		uint8_t optional4;
 
 		// Maximum count of items in container is 128
-		std::vector<Subframe> subframes;
+		std::vector<Layer> layers;
 	};
 
 	struct UnknownContainer {

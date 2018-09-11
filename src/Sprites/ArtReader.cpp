@@ -54,8 +54,8 @@ void ArtFile::ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& ar
 	uint32_t frameCount;
 	seekableReader.Read(frameCount);
 
-	uint32_t subframeCount;
-	seekableReader.Read(subframeCount);
+	uint32_t layerCount;
+	seekableReader.Read(layerCount);
 
 	uint32_t unknownCount;
 	seekableReader.Read(unknownCount);
@@ -65,7 +65,7 @@ void ArtFile::ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& ar
 		artFile.animations[i] = ReadAnimation(seekableReader);
 	}
 
-	VerifyFrameCount(artFile, frameCount, subframeCount, unknownCount);
+	VerifyFrameCount(artFile, frameCount, layerCount, unknownCount);
 }
 
 Animation ArtFile::ReadAnimation(Stream::SeekableReader& seekableReader)
@@ -97,11 +97,11 @@ Animation::Frame ArtFile::ReadFrame(Stream::SeekableReader& seekableReader) {
 	frame.optional3 = 0;
 	frame.optional4 = 0;
 
-	uint8_t subframeCount;
-	seekableReader.Read(subframeCount);
+	uint8_t layerCount;
+	seekableReader.Read(layerCount);
 	seekableReader.Read(frame.unknown);
 
-	if (subframeCount & 0x80) {
+	if (layerCount & 0x80) {
 		seekableReader.Read(frame.optional1);
 		seekableReader.Read(frame.optional2);
 	}
@@ -110,26 +110,26 @@ Animation::Frame ArtFile::ReadFrame(Stream::SeekableReader& seekableReader) {
 		seekableReader.Read(frame.optional4);
 	}
 
-	frame.subframes.resize(subframeCount & 0x7F);
-	for (int i = 0; i < (subframeCount & 0x7F); ++i) {
-		seekableReader.Read(frame.subframes[i]);
+	frame.layers.resize(layerCount & 0x7F);
+	for (int i = 0; i < (layerCount & 0x7F); ++i) {
+		seekableReader.Read(frame.layers[i]);
 	}
 
 	return frame;
 }
 
-void ArtFile::VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t subframeCount, std::size_t unknownCount)
+void ArtFile::VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t layerCount, std::size_t unknownCount)
 {
 	std::size_t actualFrameCount = 0;
-	std::size_t actualSubframeCount = 0;
+	std::size_t actualLayerCount = 0;
 	std::size_t actualUnknownCount = 0;
-	artFile.CountFrames(actualFrameCount, actualSubframeCount, actualUnknownCount);
+	artFile.CountFrames(actualFrameCount, actualLayerCount, actualUnknownCount);
 
 	if (actualFrameCount != frameCount) {
 		throw std::runtime_error("Frame count does not match");
 	}
 
-	if (actualSubframeCount != subframeCount) {
+	if (actualLayerCount != layerCount) {
 		throw std::runtime_error("Sub-frame count does not match.");
 	}
 
