@@ -77,7 +77,7 @@ void ArtFile::WriteAnimation(Stream::SeekableWriter& seekableWriter, const Anima
 	if (frameCount > UINT32_MAX) {
 		throw std::runtime_error("There are too many frames in animation to write");
 	}
-	seekableWriter.Write(frameCount);
+	seekableWriter.Write(static_cast<uint32_t>(frameCount));
 
 	for (const auto& frame : animation.frames) {
 		WriteFrame(seekableWriter, frame);
@@ -94,7 +94,7 @@ void ArtFile::WriteFrame(Stream::SeekableWriter& seekableWriter, const Animation
 		throw std::runtime_error("Too many subframes in frame.");
 	}
 
-	seekableWriter.Write(subframeCount);
+	seekableWriter.Write(static_cast<uint8_t>(subframeCount));
 	seekableWriter.Write(frame.unknown);
 
 	// TODO: Figure out how to write optional values.
