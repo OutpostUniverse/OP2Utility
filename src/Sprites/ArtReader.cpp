@@ -97,23 +97,25 @@ Animation::Frame ArtFile::ReadFrame(Stream::SeekableReader& seekableReader) {
 	frame.optional3 = 0;
 	frame.optional4 = 0;
 
-	uint8_t layerCount;
-	seekableReader.Read(layerCount);
-	seekableReader.Read(frame.unknown);
+	LayerMetadata layerMetadata;
+	seekableReader.Read(layerMetadata);
 
-	if (layerCount & 0x80) {
+	UnknownBitfield unknownBitfield;
+	seekableReader.Read(unknownBitfield);
+
+	frame.unknown = unknownBitfield.unknown;
+
+	if (layerMetadata.bReadOptionalData) {
 		seekableReader.Read(frame.optional1);
 		seekableReader.Read(frame.optional2);
 	}
-	if (frame.unknown & 0x80) {
+	if (unknownBitfield.bReadOptionalData) {
 		seekableReader.Read(frame.optional3);
 		seekableReader.Read(frame.optional4);
 	}
 
-	frame.layers.resize(layerCount & 0x7F);
-	for (int i = 0; i < (layerCount & 0x7F); ++i) {
-		seekableReader.Read(frame.layers[i]);
-	}
+	frame.layers.resize(layerMetadata.layerCount);
+	seekableReader.Read(frame.layers);
 
 	return frame;
 }

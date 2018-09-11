@@ -90,11 +90,18 @@ void ArtFile::WriteFrame(Stream::SeekableWriter& seekableWriter, const Animation
 {
 	std::size_t layerCount = frame.layers.size();
 
-	if (layerCount > UINT8_MAX) {
+	//TODO: FIX FACT THAT BITFIELDS ARE NOT BEING WRITTEN CORRECTLY.
+
+	if (layerCount > 128) {
 		throw std::runtime_error("Too many layers in frame.");
 	}
 
 	seekableWriter.Write(static_cast<uint8_t>(layerCount));
+
+	if (frame.unknown > 128) {
+		throw std::runtime_error("Too many unknowns in frame.");
+	}
+
 	seekableWriter.Write(frame.unknown);
 
 	// TODO: Figure out how to write optional values.

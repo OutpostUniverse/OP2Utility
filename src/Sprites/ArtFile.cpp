@@ -37,6 +37,7 @@ void ArtFile::CountFrames(std::size_t& frameCount, std::size_t& layerCount, std:
 		
 		for (Animation::Frame frame : animation.frames) {
 			layerCount += frame.layers.size();
+			//unknownCount += frame.unknown;
 		}
 	}
 }
