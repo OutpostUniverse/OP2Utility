@@ -37,7 +37,7 @@ private:
 	static void ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& artFile);
 	static Animation ReadAnimation(Stream::SeekableReader& seekableReader);
 	static Animation::Frame ReadFrame(Stream::SeekableReader& seekableReader);
-	static void VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t layerCount, std::size_t unknownCount);
+	static void VerifyCountsMatchHeader(const ArtFile& artFile, std::size_t frameCount, std::size_t layerCount, std::size_t unknownCount);
 
 
 	// Write Functions

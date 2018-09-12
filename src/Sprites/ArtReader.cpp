@@ -71,7 +71,7 @@ void ArtFile::ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& ar
 		artFile.animations[i] = ReadAnimation(seekableReader);
 	}
 
-	VerifyFrameCount(artFile, frameCount, layerCount, artFile.unknownAnimationCount);
+	VerifyCountsMatchHeader(artFile, frameCount, layerCount, artFile.unknownAnimationCount);
 }
 
 Animation ArtFile::ReadAnimation(Stream::SeekableReader& seekableReader)
@@ -103,30 +103,25 @@ Animation::Frame ArtFile::ReadFrame(Stream::SeekableReader& seekableReader) {
 	frame.optional3 = 0;
 	frame.optional4 = 0;
 
-	LayerMetadata layerMetadata;
-	seekableReader.Read(layerMetadata);
+	seekableReader.Read(frame.layerMetadata);
+	seekableReader.Read(frame.unknownBitfield);
 
-	UnknownBitfield unknownBitfield;
-	seekableReader.Read(unknownBitfield);
-
-	frame.unknown = unknownBitfield.unknown;
-
-	if (layerMetadata.bReadOptionalData) {
+	if (frame.layerMetadata.bReadOptionalData) {
 		seekableReader.Read(frame.optional1);
 		seekableReader.Read(frame.optional2);
 	}
-	if (unknownBitfield.bReadOptionalData) {
+	if (frame.unknownBitfield.bReadOptionalData) {
 		seekableReader.Read(frame.optional3);
 		seekableReader.Read(frame.optional4);
 	}
 
-	frame.layers.resize(layerMetadata.layerCount);
+	frame.layers.resize(frame.layerMetadata.layerCount);
 	seekableReader.Read(frame.layers);
 
 	return frame;
 }
 
-void ArtFile::VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, std::size_t layerCount, std::size_t unknownCount)
+void ArtFile::VerifyCountsMatchHeader(const ArtFile& artFile, std::size_t frameCount, std::size_t layerCount, std::size_t unknownCount)
 {
 	std::size_t actualFrameCount = 0;
 	std::size_t actualLayerCount = 0;
