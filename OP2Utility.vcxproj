@@ -156,6 +156,7 @@
     <ClCompile Include="src\Sprites\ArtReader.cpp" />
     <ClCompile Include="src\Sprites\ArtFile.cpp" />
     <ClCompile Include="src\Sprites\ArtWriter.cpp" />
+    <ClCompile Include="src\Sprites\OP2BmpLoader.cpp" />
     <ClCompile Include="src\Sprites\PaletteHeader.cpp" />
     <ClCompile Include="src\Sprites\SectionHeader.cpp" />
     <ClCompile Include="src\Streams\FileSliceReader.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="src\Sprites\BitCount.h" />
     <ClInclude Include="src\Sprites\Color.h" />
     <ClInclude Include="src\Sprites\ImageMeta.h" />
+    <ClInclude Include="src\Sprites\OP2BmpLoader.h" />
     <ClInclude Include="src\Sprites\PaletteHeader.h" />
     <ClInclude Include="src\Sprites\SectionHeader.h" />
     <ClInclude Include="src\Streams\FileSliceReader.h" />

@@ -156,6 +156,9 @@
     <ClInclude Include="src\Sprites\BitCount.h">
       <Filter>Sprites</Filter>
     </ClInclude>
+    <ClInclude Include="src\Sprites\OP2BmpLoader.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
@@ -228,6 +231,9 @@
       <Filter>Sprites</Filter>
     </ClCompile>
     <ClCompile Include="src\Sprites\SectionHeader.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\OP2BmpLoader.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
   </ItemGroup>
