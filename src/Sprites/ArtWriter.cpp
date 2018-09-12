@@ -3,6 +3,7 @@
 #include "../Streams/FileWriter.h"
 #include <cstdint>
 #include <stdexcept>
+#include <algorithm>
 
 void ArtFile::Write(std::string filename, const ArtFile& artFile)
 {
@@ -28,7 +29,16 @@ void ArtFile::WritePalettes(Stream::SeekableWriter& seekableWriter, const ArtFil
 	}
 
 	seekableWriter.Write(SectionHeader(TagPalette, static_cast<uint32_t>(artFile.palettes.size())));
-	seekableWriter.Write(PaletteHeader(artFile));
+
+	// Intentially do not pass palette as reference to allow local modification
+	// Switch red and blue color to match Outpost 2 custom format.
+	for (auto pallete : artFile.palettes) {
+		seekableWriter.Write(PaletteHeader(artFile));
+
+		for (auto& color : pallete) {
+			std::swap(color.red, color.blue);
+		}
+	}
 }
 
 void ArtFile::WriteAnimations(Stream::SeekableWriter& seekableWriter, const ArtFile& artFile)

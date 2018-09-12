@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <cstdint>
 #include <cstddef>
+#include <algorithm>
 
 ArtFile ArtFile::Read(std::string filename) {
 	Stream::FileReader mapReader(filename);
@@ -35,6 +36,12 @@ void ArtFile::ReadPalette(Stream::SeekableReader& seekableReader, ArtFile& artFi
 		paletteHeader.Validate();
 
 		seekableReader.Read(artFile.palettes[i]);
+
+		// Rearrange color into standard format. Outpost 2 uses custom color order.
+		for (auto& color : artFile.palettes[i])
+		{
+			std::swap(color.red, color.blue);
+		}
 	}
 }
 
