@@ -64,15 +64,14 @@ void ArtFile::ReadAnimations(Stream::SeekableReader& seekableReader, ArtFile& ar
 	uint32_t layerCount;
 	seekableReader.Read(layerCount);
 
-	uint32_t unknownCount;
-	seekableReader.Read(unknownCount);
+	seekableReader.Read(artFile.unknownAnimationCount);
 
 	for (uint32_t i = 0; i < animationCount; ++i)
 	{
 		artFile.animations[i] = ReadAnimation(seekableReader);
 	}
 
-	VerifyFrameCount(artFile, frameCount, layerCount, unknownCount);
+	VerifyFrameCount(artFile, frameCount, layerCount, artFile.unknownAnimationCount);
 }
 
 Animation ArtFile::ReadAnimation(Stream::SeekableReader& seekableReader)
@@ -142,8 +141,7 @@ void ArtFile::VerifyFrameCount(const ArtFile& artFile, std::size_t frameCount, s
 		throw std::runtime_error("Sub-frame count does not match.");
 	}
 
-	// Need to figure out what unknown count is counting before enabling.
-	//if (actualUnknownCount != unknownCount) {
-	//	throw std::runtime_error("Unknown count does not match.");
-	//}
+	if (actualUnknownCount != unknownCount) {
+		throw std::runtime_error("Unknown count does not match.");
+	}
 }
