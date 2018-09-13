@@ -24,39 +24,77 @@ TEST(ArtWriter, BlankFilename)
 	EXPECT_THROW(ArtFile::Write("", ArtFile()), std::runtime_error);
 }
 
-TEST(ArtWriter, scanLineByteWidth)
-{
+class SimpleArtFile : public ::testing::Test {
+public:
+	inline SimpleArtFile() { 
+		artFile.palettes.push_back(Palette());
+
+		ImageMeta imageMeta;
+		imageMeta.width = 10;
+		imageMeta.scanLineByteWidth = 12;
+		imageMeta.paletteIndex = 0;
+		artFile.imageMetas.push_back(imageMeta);
+	}
+protected:
 	ArtFile artFile;
-	artFile.palettes.push_back(Palette());
+};
 
-	ImageMeta imageMeta;
-	imageMeta.width = 10;
-	imageMeta.scanLineByteWidth = 22;
-	imageMeta.paletteIndex = 0;
-
-	artFile.imageMetas.push_back(imageMeta);
-
+TEST_F(SimpleArtFile, Write_ScanLineByteWidth)
+{
 	std::string filename = "Sprites/data/test.prt";
 
+	// Check no throw if scanLine next 4 byte aligned
+	EXPECT_NO_THROW(ArtFile::Write(filename, artFile));
+
+	// Check throw if scanLine > width && < 4 byte aligned
+	artFile.imageMetas[0].scanLineByteWidth = 11;
+	EXPECT_THROW(ArtFile::Write(filename, artFile), std::runtime_error);
+
+	// Check throw if scanLine > first 4 byte align
+	artFile.imageMetas[0].scanLineByteWidth = 16;
+	EXPECT_THROW(ArtFile::Write(filename, artFile), std::runtime_error);
+
+	// Check throw if scanLine < width but still 4 byte aligned
+	artFile.imageMetas[0].scanLineByteWidth = 8;
 	EXPECT_THROW(ArtFile::Write(filename, artFile), std::runtime_error);
 
 	XFile::DeletePath(filename);
 }
 
-TEST(ArtWriter, paletteIndex) 
+TEST_F(SimpleArtFile, Write_PaletteIndexRange) 
 {
-	ArtFile artFile;
+	std::string filename = "Sprites/data/test.prt";
 
-	ImageMeta imageMeta;
-	imageMeta.width = 10;
-	imageMeta.scanLineByteWidth = 32;
-	imageMeta.paletteIndex = 0;
+	// Check for no throw when ImageMeta.paletteIndex is within palette container's range
+	EXPECT_NO_THROW(ArtFile::Write(filename, artFile));
 
-	artFile.imageMetas.push_back(imageMeta);
+	artFile.palettes.clear();
+
+	// Check for throw due to ImageMeta.paletteIndex outside of palette container's range
+	EXPECT_THROW(ArtFile::Write(filename, artFile), std::runtime_error);
+
+	XFile::DeletePath(filename);
+}
+
+TEST_F(SimpleArtFile, Write_PaletteColors)
+{
+	const uint8_t red = 255;
+	const uint8_t blue = 0;
+	Palette& artFilePalette = artFile.palettes[0];
+	artFilePalette[0] = Color{ red, 0, blue, 0 };
 
 	std::string filename = "Sprites/data/test.prt";
 
-	EXPECT_THROW(ArtFile::Write(filename, artFile), std::runtime_error);
+	EXPECT_NO_THROW(ArtFile::Write(filename, artFile));
+
+	// Check ArtFile palette remains unchanged after write
+	EXPECT_EQ(red, artFilePalette[0].red);
+	EXPECT_EQ(blue, artFilePalette[0].blue);
+
+	// Check ArtFile palette written to disk properly
+	artFile = ArtFile::Read(filename);
+	EXPECT_EQ(red, artFilePalette[0].red);
+	EXPECT_EQ(blue, artFilePalette[0].blue);
 
 	XFile::DeletePath(filename);
 }
