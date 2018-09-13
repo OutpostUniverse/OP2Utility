@@ -51,14 +51,4 @@ private:
 	void CountFrames(std::size_t& frameCount, std::size_t& layerCount, std::size_t& unknownCount) const;
 
 	static const std::array<char, 4> TagPalette;
-
-	struct LayerMetadata {
-		uint8_t layerCount : 7;
-		uint8_t bReadOptionalData : 1;
-	};
-
-	struct UnknownBitfield {
-		uint8_t unknown : 7;
-		uint8_t bReadOptionalData : 1;
-	};
 };

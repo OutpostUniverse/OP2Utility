@@ -7,6 +7,16 @@
 
 struct Animation {
 	struct Frame {
+		struct LayerMetadata {
+			uint8_t layerCount : 7;
+			uint8_t bReadOptionalData : 1;
+		};
+
+		struct UnknownBitfield {
+			uint8_t unknown : 7;
+			uint8_t bReadOptionalData : 1;
+		};
+
 		struct Layer {
 			uint16_t bitmapIndex;
 			uint8_t unknown; // Unused by Outpost 2
@@ -14,7 +24,9 @@ struct Animation {
 			Point16 pixelOffset;
 		};
 
-		uint8_t unknown;
+		LayerMetadata layerMetadata;
+		UnknownBitfield unknownBitfield;
+
 		uint8_t optional1;
 		uint8_t optional2;
 		uint8_t optional3;
