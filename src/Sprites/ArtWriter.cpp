@@ -17,7 +17,7 @@ void ArtFile::Write(Stream::SeekableWriter& seekableWriter, const ArtFile& artFi
 
 	WritePalettes(seekableWriter, artFile);
 
-	seekableWriter.Write(artFile.imageMetas);
+	seekableWriter.Write<uint32_t>(artFile.imageMetas);
 
 	WriteAnimations(seekableWriter, artFile);
 }
@@ -38,6 +38,8 @@ void ArtFile::WritePalettes(Stream::SeekableWriter& seekableWriter, const ArtFil
 		for (auto& color : pallete) {
 			std::swap(color.red, color.blue);
 		}
+
+		seekableWriter.Write(pallete);
 	}
 }
 

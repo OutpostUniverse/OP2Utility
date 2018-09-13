@@ -8,9 +8,9 @@ PaletteHeader::PaletteHeader() : remainingTagCount(0) {}
 
 PaletteHeader::PaletteHeader(const ArtFile& artFile)  : remainingTagCount(1)
 {
-	uint64_t dataSize = artFile.palettes.size() * sizeof(decltype(artFile.palettes)::value_type);
+	uint64_t dataSize = sizeof(Palette);
 
-	uint64_t overallSize = sizeof(overallHeader) + sizeof(sectionHeader) + sizeof(remainingTagCount) + dataSize;
+	uint64_t overallSize = 4 + sizeof(overallHeader) + sizeof(sectionHeader) + sizeof(remainingTagCount) + dataSize;
 
 	if (overallSize > UINT32_MAX) {
 		throw std::runtime_error("PRT palettes section is too large.");
