@@ -80,21 +80,20 @@ TEST_F(SimpleArtFile, Write_PaletteColors)
 {
 	const uint8_t red = 255;
 	const uint8_t blue = 0;
-	Palette& artFilePalette = artFile.palettes[0];
-	artFilePalette[0] = Color{ red, 0, blue, 0 };
+	artFile.palettes[0][0] = Color{ red, 0, blue, 0 };
 
 	std::string filename = "Sprites/data/test.prt";
 
 	EXPECT_NO_THROW(ArtFile::Write(filename, artFile));
 
 	// Check ArtFile palette remains unchanged after write
-	EXPECT_EQ(red, artFilePalette[0].red);
-	EXPECT_EQ(blue, artFilePalette[0].blue);
+	EXPECT_EQ(red, artFile.palettes[0][0].red);
+	EXPECT_EQ(blue, artFile.palettes[0][0].blue);
 
 	// Check ArtFile palette written to disk properly
 	artFile = ArtFile::Read(filename);
-	EXPECT_EQ(red, artFilePalette[0].red);
-	EXPECT_EQ(blue, artFilePalette[0].blue);
+	EXPECT_EQ(red, artFile.palettes[0][0].red);
+	EXPECT_EQ(blue, artFile.palettes[0][0].blue);
 
 	XFile::DeletePath(filename);
 }
