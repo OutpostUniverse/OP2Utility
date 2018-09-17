@@ -47,7 +47,7 @@
     <ClCompile Include="Maps\MapWriter.test.cpp" />
     <ClCompile Include="Sprites\ArtReader.test.cpp" />
     <ClCompile Include="Sprites\ArtWriter.test.cpp" />
-    <ClCompile Include="Sprites\BmpWriter.test.cpp" />
+    <ClCompile Include="Sprites\IndexedBmpWriter.test.cpp" />
     <ClCompile Include="Streams\FileReader.test.cpp" />
     <ClCompile Include="Streams\FileSliceReader.test.cpp" />
     <ClCompile Include="Streams\MemoryStreamReader.test.cpp" />

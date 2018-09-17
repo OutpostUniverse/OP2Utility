@@ -28,7 +28,7 @@
     <ClCompile Include="Sprites\ArtWriter.test.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
-    <ClCompile Include="Sprites\BmpWriter.test.cpp">
+    <ClCompile Include="Sprites\IndexedBmpWriter.test.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
   </ItemGroup>
