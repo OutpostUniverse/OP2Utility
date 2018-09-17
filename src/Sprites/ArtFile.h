@@ -3,7 +3,6 @@
 #include "ImageMeta.h"
 #include "Animation.h"
 #include "Color.h"
-#include "BitCount.h"
 #include <vector>
 #include <array>
 #include <string>
@@ -27,7 +26,7 @@ public:
 	static void Write(std::string filename, const ArtFile& artFile);
 	static void Write(Stream::SeekableWriter&, const ArtFile& artFile);
 
-	BitCount GetBitCount(std::size_t imageIndex);
+	uint16_t GetBitCount(std::size_t imageIndex);
 	void CheckImageIndex(std::size_t index);
 
 private:

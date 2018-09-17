@@ -11,7 +11,7 @@ class OP2BmpLoader
 public:
 	OP2BmpLoader(std::string bmpFilename, std::string artFilename);
 
-	void ExtractImage(std::size_t index);
+	void ExtractImage(std::size_t index, const std::string& filenameOut);
 
 private:
 	// Bmp loader for Outpost 2 specific BMP file
