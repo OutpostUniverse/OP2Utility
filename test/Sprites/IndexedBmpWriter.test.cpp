@@ -12,12 +12,16 @@ TEST(IndexedBmpWriter, WriteMonochrome) {
 	std::string filename = "Sprites/data/MonochromeTest.bmp";
 
 	std::vector<uint8_t> pixels { 255, 255, 255, 0, 0, 0 };
+
+	// Test width 1 byte less than scan line
 	EXPECT_NO_THROW(IndexedBmpWriter::Write(filename, 1, 24, -2, palette, pixels));
 	EXPECT_NO_THROW(IndexedBmpWriter::Write(filename, 1, 24, 2, palette, pixels));
 
+	// Test width equal to scan line
 	pixels = std::vector<uint8_t>{ 255, 255, 255, 255, 0, 0, 0, 0 };
 	EXPECT_NO_THROW(IndexedBmpWriter::Write(filename, 1, 32, -2, palette, pixels));
 
+	// Test width 1 byte greater than scan line
 	pixels = std::vector<uint8_t>{ 255, 255, 255, 255, 255, 0, 0, 0, 0, 0 };
 	EXPECT_NO_THROW(IndexedBmpWriter::Write(filename, 1, 40, -2, palette, pixels));
 
