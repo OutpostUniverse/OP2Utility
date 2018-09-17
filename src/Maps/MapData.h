@@ -5,7 +5,7 @@
 #include "TilesetSource.h"
 #include "TileInfo.h"
 #include "TerrainType.h"
-#include "Rect.h"
+#include "../Rect.h"
 #include "TileGroup.h"
 #include <string>
 #include <vector>

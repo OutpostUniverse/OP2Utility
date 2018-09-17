@@ -20,6 +20,8 @@
 #include "../src/Maps/MapReader.h"
 #include "../src/Maps/MapWriter.h"
 
+#include "../src/Sprites/ArtFile.h"
+
 #include "../src/Streams/FileReader.h"
 #include "../src/Streams/FileSliceReader.h"
 #include "../src/Streams/FileWriter.h"

@@ -25,6 +25,7 @@ namespace MapReader {
 
 	// ==== Public methohds ====
 
+
 	MapData ReadMap(std::string filename)
 	{
 		Stream::FileReader mapReader(filename);
