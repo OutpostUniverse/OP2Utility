@@ -155,7 +155,7 @@ void IndexedBmpWriter::CheckPixelCountWithScanLine(uint16_t bitCount, int32_t wi
 void IndexedBmpWriter::CheckPixelIndices(uint16_t bitCount, std::size_t paletteCount, const std::vector<uint8_t>& pixels)
 {
 	// Check if palette is full
-	if (paletteCount == 2 << bitCount) {
+	if (paletteCount == 1 << bitCount) {
 		return;
 	}
 
