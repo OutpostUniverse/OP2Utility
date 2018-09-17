@@ -46,5 +46,5 @@ private:
 	// @pixelCountIncludingScanLine: 
 	static void CheckPixelCountWithScanLine(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelCountIncludingScanLine);
 
-	static void IndexedBmpWriter::CheckPixelIndices(uint16_t bitCount, std::size_t paletteSize, const std::vector<uint8_t>& pixels);
+	static void CheckPixelIndices(uint16_t bitCount, std::size_t paletteSize, const std::vector<uint8_t>& pixels);
 };
