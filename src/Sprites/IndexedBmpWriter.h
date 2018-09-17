@@ -29,6 +29,8 @@ public:
 private:
 	static void WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette);
 
+	static void WritePixels(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels);
+
 	// If height is a negative number, pixel rows are written top down (as displayed on screen)
 	static void WritePixelsTopDown(Stream::SeekableWriter& fileWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels);
 
@@ -36,7 +38,9 @@ private:
 	static void WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels);
 
 	// Returns pixel row including scan line extension size in bytes
-	static int32_t CalculateScanLineSize(uint16_t bitCount, int32_t width);
+	static int32_t FindScanLineSize(uint16_t bitCount, int32_t width);
+
+	static uint32_t FindBytesOfPixelsPerRow(uint16_t bitCount, int32_t width);
 
 	static void CheckPaletteCount(uint16_t bitCount, std::size_t paletteSize);
 	static void CheckPixelCount(uint16_t bitCount, std::size_t pixelCount, std::size_t pixelArraySize);
