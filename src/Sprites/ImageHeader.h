@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <array>
 
+#pragma pack(push, 1) // Make sure structures are byte aligned
+
 struct ImageHeader
 {
 	static const std::array<uint16_t, 6> validBitCounts;
@@ -39,9 +41,11 @@ struct ImageHeader
 	uint16_t planes;
 	uint16_t bitCount;
 	BmpCompression compression;
-	uint32_t imageSize;
+	uint32_t imageSize; //Size in bytes of pixels. Valid to set to 0 if no compression used.
 	uint32_t xResolution;
 	uint32_t yResolution;
 	uint32_t usedColorMapEntries;
 	uint32_t importantColorCount;
 };
+
+#pragma pack(pop)

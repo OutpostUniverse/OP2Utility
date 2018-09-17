@@ -3,6 +3,8 @@
 #include <array>
 #include <cstdint>
 
+#pragma pack(push, 1) // Make sure structures are byte aligned
+
 struct BmpHeader
 {
 	// @pixelOffset: Offset from start of file to first pixel in image
@@ -19,3 +21,5 @@ private:
 	static const uint16_t reserved1Default = 0;
 	static const uint16_t reserved2Default = 0;
 };
+
+#pragma pack(pop)
