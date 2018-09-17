@@ -3,6 +3,8 @@
 #include <array>
 #include <cstddef>
 
+#pragma pack(push, 1) // Make sure structures are byte aligned
+
 struct SectionHeader
 {
 	SectionHeader();
@@ -18,3 +20,5 @@ struct SectionHeader
 	// Includes sectionHeader
 	inline std::size_t TotalLength() const { return length + tag.size() * sizeof(decltype(tag)::value_type); };
 };
+
+#pragma pack(pop)

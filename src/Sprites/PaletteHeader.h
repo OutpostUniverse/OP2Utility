@@ -13,6 +13,8 @@ namespace PaletteTag {
 	extern const std::array<char, 4> Palette;
 }
 
+#pragma pack(push, 1) // Make sure structures are byte aligned
+
 struct PaletteHeader {
 	PaletteHeader(const ArtFile& artFile);
 	PaletteHeader();
@@ -29,3 +31,5 @@ private:
 	static const std::array<char, 4> TagHeader;
 	static const std::array<char, 4> TagData;
 };
+
+#pragma pack(pop)
