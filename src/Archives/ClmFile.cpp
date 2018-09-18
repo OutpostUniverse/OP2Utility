@@ -60,7 +60,7 @@ namespace Archives
 	{
 		CheckIndexBounds(index);
 
-		auto header = InitializeWaveHeader(index);
+		auto header = InitializeWaveHeader(indexEntries[index].dataLength);
 
 		try
 		{
@@ -80,13 +80,13 @@ namespace Archives
 		}
 	}
 
-	WaveHeader ClmFile::InitializeWaveHeader(std::size_t index)
+	WaveHeader ClmFile::InitializeWaveHeader(uint32_t dataLength)
 	{
 		WaveHeader headerOut;
 
 		headerOut.riffHeader.riffTag = tagRIFF;
 		headerOut.riffHeader.waveTag = tagWAVE;
-		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[index].dataLength;
+		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + dataLength;
 
 		headerOut.formatChunk.fmtTag = tagFMT_;
 		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
@@ -94,7 +94,7 @@ namespace Archives
 		headerOut.formatChunk.waveFormat.cbSize = 0;
 
 		headerOut.dataChunk.formatTag = tagDATA;
-		headerOut.dataChunk.length = indexEntries[index].dataLength;
+		headerOut.dataChunk.length = dataLength;
 
 		return headerOut;
 	}
