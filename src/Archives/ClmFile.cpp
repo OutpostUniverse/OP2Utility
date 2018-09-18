@@ -54,9 +54,9 @@ namespace Archives
 	// Extracts the internal file corresponding to index
 	void ClmFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
-		VerifyIndexInBounds(index);
+		const auto& indexEntry = indexEntries.at(index);
 
-		auto header = InitializeWaveHeader(clmHeader.waveFormat, indexEntries[index].dataLength);
+		auto header = InitializeWaveHeader(clmHeader.waveFormat, indexEntry.dataLength);
 
 		try
 		{
@@ -65,8 +65,8 @@ namespace Archives
 			waveFileWriter.Write(header);
 
 			auto slice = clmFileReader.Slice(
-				indexEntries[index].dataOffset,
-				indexEntries[index].dataLength);
+				indexEntry.dataOffset,
+				indexEntry.dataLength);
 
 			waveFileWriter.Write(slice);
 		}
