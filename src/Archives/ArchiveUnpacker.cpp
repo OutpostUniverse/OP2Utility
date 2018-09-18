@@ -54,11 +54,4 @@ namespace Archives
 	{
 		return OpenStream(GetIndex(name));
 	}
-
-	void ArchiveUnpacker::VerifyIndexInBounds(std::size_t index)
-	{
-		if (index >= m_Count) {
-			throw std::runtime_error("Index " + std::to_string(index) + " is out of bounds in archive " + m_ArchiveFilename + ".");
-		}
-	}
 }
