@@ -52,7 +52,7 @@ namespace Archives
 
 	int VolFile::GetFileOffset(std::size_t index)
 	{
-		return m_IndexEntries[index].dataBlockOffset + 8;
+		return m_IndexEntries[index].dataBlockOffset + sizeof(SectionHeader);
 	}
 
 	int VolFile::GetFilenameOffset(std::size_t index)
