@@ -97,11 +97,10 @@ namespace Archives
 
 	std::unique_ptr<Stream::SeekableReader> ClmFile::OpenStream(std::size_t index)
 	{
-		VerifyIndexInBounds(index);
-
+		const auto& indexEntry = indexEntries.at(index);
 		auto slice = clmFileReader.Slice(
-			indexEntries[index].dataOffset,
-			indexEntries[index].dataLength);
+			indexEntry.dataOffset,
+			indexEntry.dataLength);
 
 		return std::make_unique<Stream::FileSliceReader>(slice);
 	}
