@@ -164,7 +164,7 @@ namespace Archives
 		}
 
 		// Allowing duplicate names when packing may cause unintended results during search and file extraction.
-		CheckSortedContainerForDuplicateNames(names);
+		VerifySortedContainerHasNoDuplicateNames(names);
 
 		// Write the archive header and copy files into the archive
 		WriteArchive(archiveFilename, filesToPackReaders, indexEntries, names, PrepareWaveFormat(waveFormats));

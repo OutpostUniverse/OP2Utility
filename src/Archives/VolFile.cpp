@@ -178,7 +178,7 @@ namespace Archives
 		volInfo.names = GetNamesFromPaths(filesToPack);
 
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
-		CheckSortedContainerForDuplicateNames(volInfo.names);
+		VerifySortedContainerHasNoDuplicateNames(volInfo.names);
 
 		// Open input files and prepare header and indexing info
 		PrepareHeader(volInfo, volumeFilename);
