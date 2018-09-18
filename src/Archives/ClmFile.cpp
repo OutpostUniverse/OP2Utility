@@ -60,8 +60,7 @@ namespace Archives
 	{
 		CheckIndexBounds(index);
 
-		WaveHeader header;
-		InitializeWaveHeader(header, index);
+		auto header = InitializeWaveHeader(index);
 
 		try
 		{
@@ -81,8 +80,10 @@ namespace Archives
 		}
 	}
 
-	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, std::size_t index)
+	WaveHeader ClmFile::InitializeWaveHeader(std::size_t index)
 	{
+		WaveHeader headerOut;
+
 		headerOut.riffHeader.riffTag = tagRIFF;
 		headerOut.riffHeader.waveTag = tagWAVE;
 		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[index].dataLength;
@@ -94,6 +95,8 @@ namespace Archives
 
 		headerOut.dataChunk.formatTag = tagDATA;
 		headerOut.dataChunk.length = indexEntries[index].dataLength;
+
+		return headerOut;
 	}
 
 	std::unique_ptr<Stream::SeekableReader> ClmFile::OpenStream(std::size_t index)
