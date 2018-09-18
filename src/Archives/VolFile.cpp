@@ -29,23 +29,17 @@ namespace Archives
 
 	std::string VolFile::GetName(std::size_t index)
 	{
-		CheckIndexBounds(index);
-
-		return m_StringTable[index];
+		return m_StringTable.at(index);
 	}
 
 	CompressionType VolFile::GetCompressionCode(std::size_t index)
 	{
-		CheckIndexBounds(index);
-
-		return m_IndexEntries[index].compressionType;
+		return m_IndexEntries.at(index).compressionType;
 	}
 
 	uint32_t VolFile::GetSize(std::size_t index)
 	{
-		CheckIndexBounds(index);
-
-		return m_IndexEntries[index].fileSize;
+		return m_IndexEntries.at(index).fileSize;
 	}
 
 
@@ -69,9 +63,7 @@ namespace Archives
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(std::size_t index)
 	{
-		CheckIndexBounds(index);
-
-		archiveFileReader.Seek(m_IndexEntries[index].dataBlockOffset);
+		archiveFileReader.Seek(m_IndexEntries.at(index).dataBlockOffset);
 
 		SectionHeader sectionHeader;
 		archiveFileReader.Read(sectionHeader);
@@ -88,13 +80,13 @@ namespace Archives
 	// Extracts the internal file at the given index to the filename.
 	void VolFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
-		CheckIndexBounds(index);
+		const auto& indexEntry = m_IndexEntries.at(index);
 
-		if (m_IndexEntries[index].compressionType == CompressionType::Uncompressed)
+		if (indexEntry.compressionType == CompressionType::Uncompressed)
 		{
 			ExtractFileUncompressed(index, pathOut);
 		}
-		else if (m_IndexEntries[index].compressionType == CompressionType::LZH)
+		else if (indexEntry.compressionType == CompressionType::LZH)
 		{
 			ExtractFileLzh(index, pathOut);
 		}
@@ -178,7 +170,7 @@ namespace Archives
 		volInfo.names = GetNamesFromPaths(filesToPack);
 
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
-		CheckSortedContainerForDuplicateNames(volInfo.names);
+		VerifySortedContainerHasNoDuplicateNames(volInfo.names);
 
 		// Open input files and prepare header and indexing info
 		PrepareHeader(volInfo, volumeFilename);

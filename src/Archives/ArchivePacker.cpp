@@ -21,7 +21,7 @@ namespace Archives
 		return filenames;
 	}
 
-	void ArchivePacker::CheckSortedContainerForDuplicateNames(const std::vector<std::string>& names)
+	void ArchivePacker::VerifySortedContainerHasNoDuplicateNames(const std::vector<std::string>& names)
 	{
 		for (std::size_t i = 1; i < names.size(); ++i)
 		{

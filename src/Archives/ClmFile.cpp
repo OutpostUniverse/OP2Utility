@@ -41,27 +41,22 @@ namespace Archives
 	// Throws an error if packed file index is not valid.
 	std::string ClmFile::GetName(std::size_t index)
 	{
-		CheckIndexBounds(index);
-
-		return indexEntries[index].GetFilename();
+		return indexEntries.at(index).GetFilename();
 	}
 
 	// Returns the size of the internal file corresponding to index
 	uint32_t ClmFile::GetSize(std::size_t index)
 	{
-		CheckIndexBounds(index);
-
-		return indexEntries[index].dataLength;
+		return indexEntries.at(index).dataLength;
 	}
 
 
 	// Extracts the internal file corresponding to index
 	void ClmFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
-		CheckIndexBounds(index);
+		const auto& indexEntry = indexEntries.at(index);
 
-		WaveHeader header;
-		InitializeWaveHeader(header, index);
+		auto header = InitializeWaveHeader(clmHeader.waveFormat, indexEntry.dataLength);
 
 		try
 		{
@@ -70,8 +65,8 @@ namespace Archives
 			waveFileWriter.Write(header);
 
 			auto slice = clmFileReader.Slice(
-				indexEntries[index].dataOffset,
-				indexEntries[index].dataLength);
+				indexEntry.dataOffset,
+				indexEntry.dataLength);
 
 			waveFileWriter.Write(slice);
 		}
@@ -81,28 +76,31 @@ namespace Archives
 		}
 	}
 
-	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, std::size_t index)
+	WaveHeader ClmFile::InitializeWaveHeader(const WaveFormatEx& waveFormat, uint32_t dataLength)
 	{
+		WaveHeader headerOut;
+
 		headerOut.riffHeader.riffTag = tagRIFF;
 		headerOut.riffHeader.waveTag = tagWAVE;
-		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[index].dataLength;
+		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + dataLength;
 
 		headerOut.formatChunk.fmtTag = tagFMT_;
 		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
-		headerOut.formatChunk.waveFormat = clmHeader.waveFormat;
+		headerOut.formatChunk.waveFormat = waveFormat;
 		headerOut.formatChunk.waveFormat.cbSize = 0;
 
 		headerOut.dataChunk.formatTag = tagDATA;
-		headerOut.dataChunk.length = indexEntries[index].dataLength;
+		headerOut.dataChunk.length = dataLength;
+
+		return headerOut;
 	}
 
 	std::unique_ptr<Stream::SeekableReader> ClmFile::OpenStream(std::size_t index)
 	{
-		CheckIndexBounds(index);
-
+		const auto& indexEntry = indexEntries.at(index);
 		auto slice = clmFileReader.Slice(
-			indexEntries[index].dataOffset,
-			indexEntries[index].dataLength);
+			indexEntry.dataOffset,
+			indexEntry.dataLength);
 
 		return std::make_unique<Stream::FileSliceReader>(slice);
 	}
@@ -164,7 +162,7 @@ namespace Archives
 		}
 
 		// Allowing duplicate names when packing may cause unintended results during search and file extraction.
-		CheckSortedContainerForDuplicateNames(names);
+		VerifySortedContainerHasNoDuplicateNames(names);
 
 		// Write the archive header and copy files into the archive
 		WriteArchive(archiveFilename, filesToPackReaders, indexEntries, names, PrepareWaveFormat(waveFormats));
