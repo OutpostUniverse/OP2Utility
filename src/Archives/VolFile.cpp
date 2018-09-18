@@ -29,9 +29,7 @@ namespace Archives
 
 	std::string VolFile::GetName(std::size_t index)
 	{
-		VerifyIndexInBounds(index);
-
-		return m_StringTable[index];
+		return m_StringTable.at(index);
 	}
 
 	CompressionType VolFile::GetCompressionCode(std::size_t index)
