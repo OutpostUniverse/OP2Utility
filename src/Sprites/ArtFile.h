@@ -28,7 +28,6 @@ public:
 	static void Write(Stream::SeekableWriter&, const ArtFile& artFile);
 
 	BitCount GetBitCount(std::size_t imageIndex);
-	void CheckImageIndex(std::size_t index);
 
 private:
 	// Read Functions
