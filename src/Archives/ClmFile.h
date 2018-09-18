@@ -62,7 +62,7 @@ namespace Archives
 		// Private functions for reading archive
 		void ReadHeader();
 
-		WaveHeader InitializeWaveHeader(uint32_t dataLength);
+		static WaveHeader InitializeWaveHeader(const WaveFormatEx& waveFormat, uint32_t dataLength);
 
 		// Private functions for packing files
 		static void ReadAllWaveHeaders(std::vector<std::unique_ptr<Stream::FileReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
