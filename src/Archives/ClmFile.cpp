@@ -41,17 +41,13 @@ namespace Archives
 	// Throws an error if packed file index is not valid.
 	std::string ClmFile::GetName(std::size_t index)
 	{
-		VerifyIndexInBounds(index);
-
-		return indexEntries[index].GetFilename();
+		return indexEntries.at(index).GetFilename();
 	}
 
 	// Returns the size of the internal file corresponding to index
 	uint32_t ClmFile::GetSize(std::size_t index)
 	{
-		VerifyIndexInBounds(index);
-
-		return indexEntries[index].dataLength;
+		return indexEntries.at(index).dataLength;
 	}
 
 
