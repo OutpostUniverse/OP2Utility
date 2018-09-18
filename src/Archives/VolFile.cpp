@@ -36,16 +36,12 @@ namespace Archives
 
 	CompressionType VolFile::GetCompressionCode(std::size_t index)
 	{
-		VerifyIndexInBounds(index);
-
-		return m_IndexEntries[index].compressionType;
+		return m_IndexEntries.at(index).compressionType;
 	}
 
 	uint32_t VolFile::GetSize(std::size_t index)
 	{
-		VerifyIndexInBounds(index);
-
-		return m_IndexEntries[index].fileSize;
+		return m_IndexEntries.at(index).fileSize;
 	}
 
 
@@ -69,9 +65,7 @@ namespace Archives
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(std::size_t index)
 	{
-		VerifyIndexInBounds(index);
-
-		archiveFileReader.Seek(m_IndexEntries[index].dataBlockOffset);
+		archiveFileReader.Seek(m_IndexEntries.at(index).dataBlockOffset);
 
 		SectionHeader sectionHeader;
 		archiveFileReader.Read(sectionHeader);
@@ -88,13 +82,13 @@ namespace Archives
 	// Extracts the internal file at the given index to the filename.
 	void VolFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
-		VerifyIndexInBounds(index);
+		const auto& indexEntry = m_IndexEntries.at(index);
 
-		if (m_IndexEntries[index].compressionType == CompressionType::Uncompressed)
+		if (indexEntry.compressionType == CompressionType::Uncompressed)
 		{
 			ExtractFileUncompressed(index, pathOut);
 		}
-		else if (m_IndexEntries[index].compressionType == CompressionType::LZH)
+		else if (indexEntry.compressionType == CompressionType::LZH)
 		{
 			ExtractFileLzh(index, pathOut);
 		}
