@@ -54,7 +54,7 @@ namespace Archives
 		};
 
 		// Specify boundary padding for a volume file section
-		enum class VolPadding : uint32_t
+		enum class VolPadding
 		{
 			TwoByte = 0,
 			FourByte = 1
