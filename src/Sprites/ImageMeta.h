@@ -1,13 +1,12 @@
 #pragma once
 
-#include "BitCount.h"
 #include <cstdint>
 
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct ImageMeta {
-	BitCount GetBitCount() const {
-		return type.bShadow ? BitCount::One : BitCount::Eight;
+	unsigned int GetBitCount() const {
+		return type.bShadow ? 1 : 8;
 	}
 
 	struct ImageType {
