@@ -3,11 +3,6 @@
 
 const std::array<char, 4> ArtFile::TagPalette{ 'C', 'P', 'A', 'L' };
 
-BitCount ArtFile::GetBitCount(std::size_t imageIndex) 
-{
-	return imageMetas.at(imageIndex).type.bShadow ? BitCount::One : BitCount::Eight;
-}
-
 void ArtFile::ValidateImageMetadata() const
 {
 	for (const auto& imageMeta : imageMetas) {
