@@ -60,7 +60,7 @@ namespace Archives
 	{
 		CheckIndexBounds(index);
 
-		auto header = InitializeWaveHeader(clmHeader.waveFormat, indexEntries[index].dataLength);
+		auto header = WaveHeader::Create(clmHeader.waveFormat, indexEntries[index].dataLength);
 
 		try
 		{
@@ -78,25 +78,6 @@ namespace Archives
 		{
 			throw std::runtime_error("Error attempting to extracted uncompressed file " + pathOut + ". Internal Error Message: " + e.what());
 		}
-	}
-
-	WaveHeader ClmFile::InitializeWaveHeader(const WaveFormatEx& waveFormat, uint32_t dataLength)
-	{
-		WaveHeader waveHeader;
-
-		waveHeader.riffHeader.riffTag = tagRIFF;
-		waveHeader.riffHeader.waveTag = tagWAVE;
-		waveHeader.riffHeader.chunkSize = sizeof(waveHeader.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + dataLength;
-
-		waveHeader.formatChunk.fmtTag = tagFMT_;
-		waveHeader.formatChunk.formatSize = sizeof(waveHeader.formatChunk.waveFormat);
-		waveHeader.formatChunk.waveFormat = waveFormat;
-		waveHeader.formatChunk.waveFormat.cbSize = 0;
-
-		waveHeader.dataChunk.formatTag = tagDATA;
-		waveHeader.dataChunk.length = dataLength;
-
-		return waveHeader;
 	}
 
 	std::unique_ptr<Stream::SeekableReader> ClmFile::OpenStream(std::size_t index)
