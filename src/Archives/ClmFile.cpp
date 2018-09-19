@@ -82,21 +82,21 @@ namespace Archives
 
 	WaveHeader ClmFile::InitializeWaveHeader(const WaveFormatEx& waveFormat, uint32_t dataLength)
 	{
-		WaveHeader headerOut;
+		WaveHeader waveHeader;
 
-		headerOut.riffHeader.riffTag = tagRIFF;
-		headerOut.riffHeader.waveTag = tagWAVE;
-		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + dataLength;
+		waveHeader.riffHeader.riffTag = tagRIFF;
+		waveHeader.riffHeader.waveTag = tagWAVE;
+		waveHeader.riffHeader.chunkSize = sizeof(waveHeader.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + dataLength;
 
-		headerOut.formatChunk.fmtTag = tagFMT_;
-		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
-		headerOut.formatChunk.waveFormat = waveFormat;
-		headerOut.formatChunk.waveFormat.cbSize = 0;
+		waveHeader.formatChunk.fmtTag = tagFMT_;
+		waveHeader.formatChunk.formatSize = sizeof(waveHeader.formatChunk.waveFormat);
+		waveHeader.formatChunk.waveFormat = waveFormat;
+		waveHeader.formatChunk.waveFormat.cbSize = 0;
 
-		headerOut.dataChunk.formatTag = tagDATA;
-		headerOut.dataChunk.length = dataLength;
+		waveHeader.dataChunk.formatTag = tagDATA;
+		waveHeader.dataChunk.length = dataLength;
 
-		return headerOut;
+		return waveHeader;
 	}
 
 	std::unique_ptr<Stream::SeekableReader> ClmFile::OpenStream(std::size_t index)
