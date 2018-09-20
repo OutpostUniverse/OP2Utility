@@ -65,14 +65,14 @@ void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, uint1
 
 int32_t IndexedBmpWriter::FindScanLineSize(uint16_t bitCount, int32_t width)
 {
-	const uint16_t bytesOfPixelsPerRow = FindBytesOfPixelsPerRow(bitCount, width);
+	const uint16_t bytesOfPixelsPerRow = Calc1BytePitch(bitCount, width);
 
 	return ( (bytesOfPixelsPerRow + 3) & ~3 );
 }
 
 void IndexedBmpWriter::WritePixelsTopDown(Stream::SeekableWriter& fileWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels)
 {
-	const uint16_t bytesOfSetPixelsPerRow = FindBytesOfPixelsPerRow(bitCount, width);
+	const uint16_t bytesOfSetPixelsPerRow = Calc1BytePitch(bitCount, width);
 	std::vector<uint8_t> buffer( (bytesOfSetPixelsPerRow + 3) & ~3 );
 	int index = 0; //Index is in bytes, not necessarily pixels
 
@@ -91,7 +91,7 @@ void IndexedBmpWriter::WritePixelsTopDown(Stream::SeekableWriter& fileWriter, ui
 
 void IndexedBmpWriter::WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels)
 {
-	const uint16_t bytesOfPixelsPerRow = FindBytesOfPixelsPerRow(bitCount, width);
+	const uint16_t bytesOfPixelsPerRow = Calc1BytePitch(bitCount, width);
 	std::vector<uint8_t> buffer( (bytesOfPixelsPerRow + 3) & ~3 );
 	int index = bytesOfPixelsPerRow * height; //Index is in bytes, not necessarily pixels
 
@@ -108,10 +108,10 @@ void IndexedBmpWriter::WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, u
 	}
 }
 
-uint32_t IndexedBmpWriter::FindBytesOfPixelsPerRow(uint16_t bitCount, int32_t width)
+uint32_t IndexedBmpWriter::Calc1BytePitch(uint16_t bitCount, int32_t width)
 {
 	const uint16_t bitsPerByte = 8;
-	return width / (bitsPerByte / bitCount);
+	return width * bitCount / bitsPerByte;
 }
 
 void IndexedBmpWriter::VerifyPaletteCount(uint16_t bitCount, std::size_t paletteSize)

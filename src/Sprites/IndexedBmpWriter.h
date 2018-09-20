@@ -40,7 +40,7 @@ private:
 	// Returns pixel row including scan line extension size in bytes
 	static int32_t FindScanLineSize(uint16_t bitCount, int32_t width);
 
-	static uint32_t FindBytesOfPixelsPerRow(uint16_t bitCount, int32_t width);
+	static uint32_t Calc1BytePitch(uint16_t bitCount, int32_t width);
 
 	static void VerifyPaletteCount(uint16_t bitCount, std::size_t paletteSize);
 	static void VerifyPixelCount(uint16_t bitCount, std::size_t pixelCount, std::size_t pixelArraySize);
