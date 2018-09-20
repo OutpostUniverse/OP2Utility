@@ -8,7 +8,7 @@
 
 void IndexedBmpWriter::WriteScanLineIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithScanLine)
 {
-	ImageHeader::CheckIndexedBitCount(bitCount);
+	ImageHeader::VerifyIndexedBitCount(bitCount);
 	VerifyPaletteCount(bitCount, palette.size());
 	VerifyPixelCountWithScanLine(bitCount, width, height, pixelsWithScanLine.size());
 	VerifyPixelIndices(bitCount, palette.size(), pixelsWithScanLine);
@@ -23,7 +23,7 @@ void IndexedBmpWriter::WriteScanLineIncluded(std::string filename, uint16_t bitC
 // Writes a Bitmap with an indexed color palette
 void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixels)
 {
-	ImageHeader::CheckIndexedBitCount(bitCount);
+	ImageHeader::VerifyIndexedBitCount(bitCount);
 	VerifyPaletteCount(bitCount, palette.size());
 	VerifyPixelCount(bitCount, std::abs(height) * width, pixels.size());
 	VerifyPixelIndices(bitCount, palette.size(), pixels);

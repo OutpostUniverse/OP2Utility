@@ -35,11 +35,11 @@ struct ImageHeader
 	static const std::array<uint16_t, 6> validBitCounts;
 	static const std::array<uint16_t, 3> indexedBitCounts;
 
-	static bool IsValidBitCount(uint16_t bitCount);
+	static bool IsBitCount(uint16_t bitCount);
 	static bool IsIndexedBitCount(uint16_t bitCount);
 
-	static void CheckValidBitCount(uint16_t bitCount);
-	static void CheckIndexedBitCount(uint16_t bitCount);
+	static void VerifyBitCount(uint16_t bitCount);
+	static void VerifyIndexedBitCount(uint16_t bitCount);
 };
 
 #pragma pack(pop)
