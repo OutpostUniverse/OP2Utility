@@ -11,16 +11,16 @@ bool ImageHeader::IsValidBitCount(uint16_t bitCount)
 	return std::find(validBitCounts.begin(), validBitCounts.end(), bitCount) != validBitCounts.end();
 }
 
+bool ImageHeader::IsIndexedBitCount(uint16_t bitCount)
+{
+	return std::find(indexedBitCounts.begin(), indexedBitCounts.end(), bitCount) != indexedBitCounts.end();
+}
+
 void ImageHeader::CheckValidBitCount(uint16_t bitCount)
 {
 	if (!IsValidBitCount(bitCount)) {
 		throw std::runtime_error("A bit count of " + std::to_string(bitCount) + " is not supported");
 	}
-}
-
-bool ImageHeader::IsIndexedBitCount(uint16_t bitCount)
-{
-	return std::find(indexedBitCounts.begin(), indexedBitCounts.end(), bitCount) != indexedBitCounts.end();
 }
 
 void ImageHeader::CheckIndexedBitCount(uint16_t bitCount)
