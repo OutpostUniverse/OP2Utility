@@ -42,13 +42,13 @@ private:
 
 	static uint32_t FindBytesOfPixelsPerRow(uint16_t bitCount, int32_t width);
 
-	static void CheckPaletteCount(uint16_t bitCount, std::size_t paletteSize);
-	static void CheckPixelCount(uint16_t bitCount, std::size_t pixelCount, std::size_t pixelArraySize);
+	static void VerifyPaletteCount(uint16_t bitCount, std::size_t paletteSize);
+	static void VerifyPixelCount(uint16_t bitCount, std::size_t pixelCount, std::size_t pixelArraySize);
 
 	// Check the pixel count is correct if it already includes dummy pixels out to next 4 byte boundary.
 	// @width: Width in pixels. Do not include the scan line in width.
-	// @pixelCountIncludingScanLine: 
-	static void CheckPixelCountWithScanLine(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelCountIncludingScanLine);
+	// @pixelCountIncludingScanLine: Number of pixels including padding pixels to next 4 byte boundary.
+	static void VerifyPixelCountWithScanLine(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelCountIncludingScanLine);
 
-	static void CheckPixelIndices(uint16_t bitCount, std::size_t paletteSize, const std::vector<uint8_t>& pixels);
+	static void VerifyPixelIndices(uint16_t bitCount, std::size_t paletteSize, const std::vector<uint8_t>& pixels);
 };

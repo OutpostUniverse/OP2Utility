@@ -9,9 +9,9 @@
 void IndexedBmpWriter::WriteScanLineIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithScanLine)
 {
 	ImageHeader::CheckIndexedBitCount(bitCount);
-	CheckPaletteCount(bitCount, palette.size());
-	CheckPixelCountWithScanLine(bitCount, width, height, pixelsWithScanLine.size());
-	CheckPixelIndices(bitCount, palette.size(), pixelsWithScanLine);
+	VerifyPaletteCount(bitCount, palette.size());
+	VerifyPixelCountWithScanLine(bitCount, width, height, pixelsWithScanLine.size());
+	VerifyPixelIndices(bitCount, palette.size(), pixelsWithScanLine);
 
 	Stream::FileWriter fileWriter(filename);
 
@@ -24,9 +24,9 @@ void IndexedBmpWriter::WriteScanLineIncluded(std::string filename, uint16_t bitC
 void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixels)
 {
 	ImageHeader::CheckIndexedBitCount(bitCount);
-	CheckPaletteCount(bitCount, palette.size());
-	CheckPixelCount(bitCount, std::abs(height) * width, pixels.size());
-	CheckPixelIndices(bitCount, palette.size(), pixels);
+	VerifyPaletteCount(bitCount, palette.size());
+	VerifyPixelCount(bitCount, std::abs(height) * width, pixels.size());
+	VerifyPixelIndices(bitCount, palette.size(), pixels);
 
 	Stream::FileWriter fileWriter(filename);
 
@@ -114,7 +114,7 @@ uint32_t IndexedBmpWriter::FindBytesOfPixelsPerRow(uint16_t bitCount, int32_t wi
 	return width / (bitsPerByte / bitCount);
 }
 
-void IndexedBmpWriter::CheckPaletteCount(uint16_t bitCount, std::size_t paletteSize)
+void IndexedBmpWriter::VerifyPaletteCount(uint16_t bitCount, std::size_t paletteSize)
 {
 	if (paletteSize > static_cast<uint16_t>(2 << bitCount)) {
 		throw std::runtime_error("Too many colors listed on the indexed palette");
@@ -123,14 +123,14 @@ void IndexedBmpWriter::CheckPaletteCount(uint16_t bitCount, std::size_t paletteS
 
 // pixelContainerSize: Number of entries in the pixel container. 
 //                     Each entry will represent multiple pixels for a 1 or 4 bit count.
-void IndexedBmpWriter::CheckPixelCount(uint16_t bitCount, std::size_t pixelCount, std::size_t pixelContainerSize) 
+void IndexedBmpWriter::VerifyPixelCount(uint16_t bitCount, std::size_t pixelCount, std::size_t pixelContainerSize) 
 {
 	if (pixelCount != pixelContainerSize * (8 / bitCount)) {
 		throw std::runtime_error("Number of expected pixels does not match size of pixel container");
 	}
 }
 
-void IndexedBmpWriter::CheckPixelCountWithScanLine(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelCountIncludingScanLine)
+void IndexedBmpWriter::VerifyPixelCountWithScanLine(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelCountIncludingScanLine)
 {
 	const uint16_t pixelsPerByte = 8 / bitCount;
 
@@ -139,7 +139,7 @@ void IndexedBmpWriter::CheckPixelCountWithScanLine(uint16_t bitCount, int32_t wi
 	}
 }
 
-void IndexedBmpWriter::CheckPixelIndices(uint16_t bitCount, std::size_t paletteCount, const std::vector<uint8_t>& pixels)
+void IndexedBmpWriter::VerifyPixelIndices(uint16_t bitCount, std::size_t paletteCount, const std::vector<uint8_t>& pixels)
 {
 	// Check if palette is full
 	if (paletteCount == 1 << bitCount) {
