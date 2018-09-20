@@ -254,5 +254,8 @@
     <ClCompile Include="src\Sprites\IndexedBmpWriter.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
+    <ClCompile Include="src\Archives\WaveFile.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

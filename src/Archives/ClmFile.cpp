@@ -41,7 +41,7 @@ namespace Archives
 	// Throws an error if packed file index is not valid.
 	std::string ClmFile::GetName(std::size_t index)
 	{
-		CheckIndexBounds(index);
+		VerifyIndexInBounds(index);
 
 		return indexEntries[index].GetFilename();
 	}
@@ -49,7 +49,7 @@ namespace Archives
 	// Returns the size of the internal file corresponding to index
 	uint32_t ClmFile::GetSize(std::size_t index)
 	{
-		CheckIndexBounds(index);
+		VerifyIndexInBounds(index);
 
 		return indexEntries[index].dataLength;
 	}
@@ -58,10 +58,9 @@ namespace Archives
 	// Extracts the internal file corresponding to index
 	void ClmFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
-		CheckIndexBounds(index);
+		VerifyIndexInBounds(index);
 
-		WaveHeader header;
-		InitializeWaveHeader(header, index);
+		auto header = WaveHeader::Create(clmHeader.waveFormat, indexEntries[index].dataLength);
 
 		try
 		{
@@ -81,24 +80,9 @@ namespace Archives
 		}
 	}
 
-	void ClmFile::InitializeWaveHeader(WaveHeader& headerOut, std::size_t index)
-	{
-		headerOut.riffHeader.riffTag = tagRIFF;
-		headerOut.riffHeader.waveTag = tagWAVE;
-		headerOut.riffHeader.chunkSize = sizeof(headerOut.riffHeader.waveTag) + sizeof(FormatChunk) + sizeof(ChunkHeader) + indexEntries[index].dataLength;
-
-		headerOut.formatChunk.fmtTag = tagFMT_;
-		headerOut.formatChunk.formatSize = sizeof(headerOut.formatChunk.waveFormat);
-		headerOut.formatChunk.waveFormat = clmHeader.waveFormat;
-		headerOut.formatChunk.waveFormat.cbSize = 0;
-
-		headerOut.dataChunk.formatTag = tagDATA;
-		headerOut.dataChunk.length = indexEntries[index].dataLength;
-	}
-
 	std::unique_ptr<Stream::SeekableReader> ClmFile::OpenStream(std::size_t index)
 	{
-		CheckIndexBounds(index);
+		VerifyIndexInBounds(index);
 
 		auto slice = clmFileReader.Slice(
 			indexEntries[index].dataOffset,
@@ -164,7 +148,7 @@ namespace Archives
 		}
 
 		// Allowing duplicate names when packing may cause unintended results during search and file extraction.
-		CheckSortedContainerForDuplicateNames(names);
+		VerifySortedContainerHasNoDuplicateNames(names);
 
 		// Write the archive header and copy files into the archive
 		WriteArchive(archiveFilename, filesToPackReaders, indexEntries, names, PrepareWaveFormat(waveFormats));

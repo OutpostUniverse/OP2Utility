@@ -143,6 +143,7 @@
     <ClInclude Include="src\Archives\VolFile.h" />
     <ClCompile Include="src\Archives\ArchivePacker.cpp" />
     <ClCompile Include="src\Archives\ArchiveUnpacker.cpp" />
+    <ClCompile Include="src\Archives\WaveFile.cpp" />
     <ClCompile Include="src\Maps\MapData.cpp" />
     <ClCompile Include="src\Maps\MapHeader.cpp" />
     <ClCompile Include="src\Maps\MapReader.cpp" />

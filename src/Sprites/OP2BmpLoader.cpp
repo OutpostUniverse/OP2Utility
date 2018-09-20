@@ -9,7 +9,7 @@ OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::string artFilename) :
 
 void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOut) 
 {
-	artFile.CheckImageIndex(index);
+	artFile.VerifyImageIndexInBounds(index);
 
 	ImageMeta& imageMeta = artFile.imageMetas[index];
 

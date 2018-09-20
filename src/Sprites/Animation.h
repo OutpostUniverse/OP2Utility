@@ -5,6 +5,8 @@
 #include <vector>
 #include <cstdint>
 
+#pragma pack(push, 1) // Make sure structures are byte aligned
+
 struct Animation {
 	struct Frame {
 		struct LayerMetadata {
@@ -52,3 +54,5 @@ struct Animation {
 
 	std::vector<UnknownContainer> unknownContainer;
 };
+
+#pragma pack(pop)

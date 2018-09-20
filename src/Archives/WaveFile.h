@@ -51,6 +51,8 @@ namespace Archives
 	// http://soundfile.sapp.org/doc/WaveFormat/
 	struct WaveHeader
 	{
+		static WaveHeader Create(const WaveFormatEx& waveFormat, uint32_t dataLength);
+
 		RiffHeader riffHeader;
 		FormatChunk formatChunk;
 		ChunkHeader dataChunk;

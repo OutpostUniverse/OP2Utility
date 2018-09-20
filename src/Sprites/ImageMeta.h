@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#pragma pack(push, 1) // Make sure structures are byte aligned
+
 struct ImageMeta {
 	struct ImageType {
 		uint16_t bGameGraphic : 1;  // 0 = MenuGraphic, 1 = GameGraphic
@@ -21,3 +23,5 @@ struct ImageMeta {
 	ImageType type;
 	uint16_t paletteIndex;
 };
+
+#pragma pack(pop)
