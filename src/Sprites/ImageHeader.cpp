@@ -3,6 +3,24 @@
 #include <stdexcept>
 #include <algorithm>
 
+ImageHeader ImageHeader::Create(int32_t width, int32_t height, uint16_t bitCount)
+{
+	CheckValidBitCount(bitCount);
+
+	return ImageHeader{
+		sizeof(ImageHeader),
+		width,
+		height,
+		defaultPlanes,
+		bitCount,
+		defaultCompression,
+		defaultImageSize,
+		defaultXResolution,
+		defaultYResolution,
+		defaultUsedColorMapEntries,
+		defaultImportantColorCount };
+}
+
 const std::array<uint16_t, 6> ImageHeader::validBitCounts{ 1, 4, 8, 16, 24, 32 };
 const std::array<uint16_t, 3> ImageHeader::indexedBitCounts{ 1, 4, 8 };
 
