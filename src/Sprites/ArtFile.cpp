@@ -12,7 +12,7 @@ BitCount ArtFile::GetBitCount(std::size_t imageIndex)
 	return imageMetas[imageIndex].type.bShadow ? BitCount::One : BitCount::Eight;
 }
 
-void ArtFile::CheckImageIndex(std::size_t index)
+void ArtFile::VerifyImageIndexInBounds(std::size_t index)
 {
 	if (index > imageMetas.size()) {
 		throw std::runtime_error("An index of " + std::to_string(index) + " exceeds range of images");
