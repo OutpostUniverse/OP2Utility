@@ -17,9 +17,9 @@ struct BmpHeader
 	uint32_t pixelOffset;
 
 private:
-	static const std::array<char, 2> headerBM;
-	static const uint16_t reserved1Default = 0;
-	static const uint16_t reserved2Default = 0;
+	static const std::array<char, 2> defaultHeaderType;
+	static const uint16_t defaultReserved1 = 0;
+	static const uint16_t defaultReserved2 = 0;
 };
 
 #pragma pack(pop)
