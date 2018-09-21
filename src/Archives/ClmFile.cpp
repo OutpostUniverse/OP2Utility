@@ -59,8 +59,9 @@ namespace Archives
 	void ClmFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
 		VerifyIndexInBounds(index);
+		const auto& indexEntry = indexEntries[index];
 
-		auto header = WaveHeader::Create(clmHeader.waveFormat, indexEntries[index].dataLength);
+		auto header = WaveHeader::Create(clmHeader.waveFormat, indexEntry.dataLength);
 
 		try
 		{
@@ -69,8 +70,8 @@ namespace Archives
 			waveFileWriter.Write(header);
 
 			auto slice = clmFileReader.Slice(
-				indexEntries[index].dataOffset,
-				indexEntries[index].dataLength);
+				indexEntry.dataOffset,
+				indexEntry.dataLength);
 
 			waveFileWriter.Write(slice);
 		}
@@ -83,10 +84,11 @@ namespace Archives
 	std::unique_ptr<Stream::SeekableReader> ClmFile::OpenStream(std::size_t index)
 	{
 		VerifyIndexInBounds(index);
+		const auto& indexEntry = indexEntries[index];
 
 		auto slice = clmFileReader.Slice(
-			indexEntries[index].dataOffset,
-			indexEntries[index].dataLength);
+			indexEntry.dataOffset,
+			indexEntry.dataLength);
 
 		return std::make_unique<Stream::FileSliceReader>(slice);
 	}
