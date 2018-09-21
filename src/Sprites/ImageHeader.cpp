@@ -13,7 +13,7 @@ ImageHeader ImageHeader::Create(int32_t width, int32_t height, uint16_t bitCount
 		height,
 		defaultPlanes,
 		bitCount,
-		defaultCompression,
+		BmpCompression::Uncompressed,
 		defaultImageSize,
 		defaultXResolution,
 		defaultYResolution,
@@ -22,7 +22,6 @@ ImageHeader ImageHeader::Create(int32_t width, int32_t height, uint16_t bitCount
 }
 
 const uint16_t ImageHeader::defaultPlanes = 1;
-const BmpCompression ImageHeader::defaultCompression = BmpCompression::Uncompressed;
 const uint32_t ImageHeader::defaultImageSize = 0;
 const uint32_t ImageHeader::defaultXResolution = 0;
 const uint32_t ImageHeader::defaultYResolution = 0;

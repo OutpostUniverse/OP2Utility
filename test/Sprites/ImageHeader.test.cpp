@@ -20,7 +20,7 @@ TEST(ImageHeader, Create)
 	EXPECT_EQ(height, imageHeader.height);
 	EXPECT_EQ(ImageHeader::defaultPlanes, imageHeader.defaultPlanes);
 	EXPECT_EQ(bitCount, imageHeader.bitCount);
-	EXPECT_EQ(ImageHeader::defaultCompression, imageHeader.compression);
+	EXPECT_EQ(BmpCompression::Uncompressed, imageHeader.compression);
 	EXPECT_EQ(ImageHeader::defaultImageSize, imageHeader.defaultImageSize);
 	EXPECT_EQ(ImageHeader::defaultXResolution, imageHeader.defaultXResolution);
 	EXPECT_EQ(ImageHeader::defaultYResolution, imageHeader.defaultYResolution);

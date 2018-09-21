@@ -24,7 +24,6 @@ struct ImageHeader
 
 	// Default values
 	static const uint16_t defaultPlanes;
-	static const BmpCompression defaultCompression;
 	static const uint32_t defaultImageSize;
 	static const uint32_t defaultXResolution;
 	static const uint32_t defaultYResolution;
