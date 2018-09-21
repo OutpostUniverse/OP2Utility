@@ -3,6 +3,14 @@
 
 const std::array<char, 4> ArtFile::TagPalette{ 'C', 'P', 'A', 'L' };
 
+
+void ArtFile::VerifyImageIndexInBounds(std::size_t index)
+{
+	if (index > imageMetas.size()) {
+		throw std::runtime_error("An index of " + std::to_string(index) + " exceeds range of images");
+	}
+}
+
 void ArtFile::ValidateImageMetadata() const
 {
 	for (const auto& imageMeta : imageMetas) {

@@ -34,7 +34,7 @@ namespace Archives
 		virtual std::unique_ptr<Stream::SeekableReader> OpenStream(const std::string& name);
 
 	protected:
-		void CheckIndexBounds(std::size_t index);
+		void VerifyIndexInBounds(std::size_t index);
 
 		const std::string m_ArchiveFilename;
 		std::size_t m_Count;

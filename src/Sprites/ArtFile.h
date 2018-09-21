@@ -26,6 +26,8 @@ public:
 	static void Write(std::string filename, const ArtFile& artFile);
 	static void Write(Stream::SeekableWriter&, const ArtFile& artFile);
 
+	void VerifyImageIndexInBounds(std::size_t index);
+
 private:
 	// Read Functions
 	static void ReadPalette(Stream::SeekableReader& seekableReader, ArtFile& artFile);

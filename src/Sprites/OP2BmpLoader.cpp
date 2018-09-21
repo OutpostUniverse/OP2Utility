@@ -6,7 +6,9 @@ OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::string artFilename) :
 
 void OP2BmpLoader::ExtractImage(std::size_t index) 
 {
-	ImageMeta& imageMeta = artFile.imageMetas.at(index);
+	artFile.VerifyImageIndexInBounds(index);
+
+	ImageMeta& imageMeta = artFile.imageMetas[index];
 	auto pixels = GetPixels(imageMeta.pixelDataOffset, imageMeta.scanLineByteWidth * 8 * imageMeta.height);
 
 	// TODO: Save pixels to a BMP file.

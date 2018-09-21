@@ -236,5 +236,8 @@
     <ClCompile Include="src\Sprites\OP2BmpLoader.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
+    <ClCompile Include="src\Archives\WaveFile.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
