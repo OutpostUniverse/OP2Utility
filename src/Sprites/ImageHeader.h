@@ -23,13 +23,13 @@ struct ImageHeader
 	uint32_t importantColorCount;
 
 	// Default values
-	static const uint16_t defaultPlanes = 1;
-	static const BmpCompression defaultCompression = BmpCompression::Uncompressed;
-	static const uint32_t defaultImageSize = 0;
-	static const uint32_t defaultXResolution = 0;
-	static const uint32_t defaultYResolution = 0;
-	static const uint32_t defaultUsedColorMapEntries = 0;
-	static const uint32_t defaultImportantColorCount = 0;
+	static const uint16_t defaultPlanes;
+	static const BmpCompression defaultCompression;
+	static const uint32_t defaultImageSize;
+	static const uint32_t defaultXResolution;
+	static const uint32_t defaultYResolution;
+	static const uint32_t defaultUsedColorMapEntries;
+	static const uint32_t defaultImportantColorCount;
 
 	// BitCount verification
 	static const std::array<uint16_t, 6> validBitCounts;

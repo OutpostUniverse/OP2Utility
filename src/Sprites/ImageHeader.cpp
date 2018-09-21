@@ -21,6 +21,14 @@ ImageHeader ImageHeader::Create(int32_t width, int32_t height, uint16_t bitCount
 		defaultImportantColorCount };
 }
 
+const uint16_t ImageHeader::defaultPlanes = 1;
+const BmpCompression ImageHeader::defaultCompression = BmpCompression::Uncompressed;
+const uint32_t ImageHeader::defaultImageSize = 0;
+const uint32_t ImageHeader::defaultXResolution = 0;
+const uint32_t ImageHeader::defaultYResolution = 0;
+const uint32_t ImageHeader::defaultUsedColorMapEntries = 0;
+const uint32_t ImageHeader::defaultImportantColorCount = 0;
+
 const std::array<uint16_t, 6> ImageHeader::validBitCounts{ 1, 4, 8, 16, 24, 32 };
 const std::array<uint16_t, 3> ImageHeader::indexedBitCounts{ 1, 4, 8 };
 
