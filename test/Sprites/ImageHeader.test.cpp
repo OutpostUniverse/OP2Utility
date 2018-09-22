@@ -55,7 +55,8 @@ TEST(ImageHeader, VerifyBitCount)
 		EXPECT_NO_THROW(ImageHeader::VerifyBitCount(bitCount));
 	}
 	
-	EXPECT_THROW(ImageHeader::VerifyBitCount(21), std::runtime_error);
+	EXPECT_THROW(ImageHeader::VerifyBitCount(0), std::runtime_error);
+	EXPECT_THROW(ImageHeader::VerifyBitCount(3), std::runtime_error);
 }
 
 TEST(ImageHeader, VerifyIndexedBitCount) 
@@ -67,5 +68,6 @@ TEST(ImageHeader, VerifyIndexedBitCount)
 		EXPECT_NO_THROW(ImageHeader::VerifyBitCount(bitCount));
 	}
 
+	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(0), std::runtime_error);
 	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(3), std::runtime_error);
 }
