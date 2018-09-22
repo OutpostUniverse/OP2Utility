@@ -5,7 +5,7 @@
 
 ImageHeader ImageHeader::Create(int32_t width, int32_t height, uint16_t bitCount)
 {
-	VerifyBitCount(bitCount);
+	VerifyValidBitCount(bitCount);
 
 	return ImageHeader{
 		sizeof(ImageHeader),
@@ -31,7 +31,7 @@ const uint32_t ImageHeader::defaultImportantColorCount = 0;
 const std::array<uint16_t, 6> ImageHeader::validBitCounts{ 1, 4, 8, 16, 24, 32 };
 const std::array<uint16_t, 3> ImageHeader::indexedBitCounts{ 1, 4, 8 };
 
-bool ImageHeader::IsBitCount(uint16_t bitCount)
+bool ImageHeader::IsValidBitCount(uint16_t bitCount)
 {
 	return std::find(validBitCounts.begin(), validBitCounts.end(), bitCount) != validBitCounts.end();
 }
@@ -41,9 +41,9 @@ bool ImageHeader::IsIndexedBitCount(uint16_t bitCount)
 	return std::find(indexedBitCounts.begin(), indexedBitCounts.end(), bitCount) != indexedBitCounts.end();
 }
 
-void ImageHeader::VerifyBitCount(uint16_t bitCount)
+void ImageHeader::VerifyValidBitCount(uint16_t bitCount)
 {
-	if (!IsBitCount(bitCount)) {
+	if (!IsValidBitCount(bitCount)) {
 		throw std::runtime_error("A bit count of " + std::to_string(bitCount) + " is not supported");
 	}
 }
