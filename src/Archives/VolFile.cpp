@@ -89,12 +89,13 @@ namespace Archives
 	void VolFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
 		VerifyIndexInBounds(index);
+		const auto& indexEntry = m_IndexEntries[index];
 
-		if (m_IndexEntries[index].compressionType == CompressionType::Uncompressed)
+		if (indexEntry.compressionType == CompressionType::Uncompressed)
 		{
 			ExtractFileUncompressed(index, pathOut);
 		}
-		else if (m_IndexEntries[index].compressionType == CompressionType::LZH)
+		else if (indexEntry.compressionType == CompressionType::LZH)
 		{
 			ExtractFileLzh(index, pathOut);
 		}
