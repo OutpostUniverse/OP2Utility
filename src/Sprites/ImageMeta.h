@@ -5,6 +5,10 @@
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct ImageMeta {
+	unsigned int GetBitCount() const {
+		return type.bShadow ? 1 : 8;
+	}
+
 	struct ImageType {
 		uint16_t bGameGraphic : 1;  // 0 = MenuGraphic, 1 = GameGraphic
 		uint16_t unknown1 : 1; // 2
