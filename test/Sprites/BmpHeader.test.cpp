@@ -9,7 +9,7 @@ TEST(BmpHeader, Create)
 	BmpHeader bmpHeader;
 	EXPECT_NO_THROW(bmpHeader = BmpHeader::Create(fileSize, pixelOffset));
 
-	EXPECT_EQ(BmpHeader::defaultType, bmpHeader.type);
+	EXPECT_EQ(BmpHeader::defaultFileSignature, bmpHeader.fileSignature);
 	EXPECT_EQ(fileSize, bmpHeader.size);
 	EXPECT_EQ(BmpHeader::defaultReserved1, bmpHeader.reserved1);
 	EXPECT_EQ(BmpHeader::defaultReserved2, bmpHeader.reserved2);
