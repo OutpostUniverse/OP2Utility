@@ -20,8 +20,9 @@ namespace Stream {
 class IndexedBmpWriter
 {
 public:
-	// The pixel container includes dummy information to fill each image row out to the next 4 byte memory border
-	static void WriteScanLineIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>&);
+	// The pixel container includes dummy information to fill each image row out to the next 4 byte memory border.
+	// Only supports a 4 byte pitch.
+	static void WritePitchIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>&);
 
 	// Dummy information is inserted at the end of each pixel row to reach the next 4 byte memory border
 	static void Write(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& indexedPixels);
@@ -38,17 +39,17 @@ private:
 	static void WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels);
 
 	// Returns pixel row including scan line extension size in bytes
-	static int32_t FindScanLineSize(uint16_t bitCount, int32_t width);
+	static int32_t CalcScanlinePitch(uint16_t bitCount, int32_t width);
 
-	static uint32_t Calc1BytePitch(uint16_t bitCount, int32_t width);
+	static uint32_t CalcScanlineByteWidth(uint16_t bitCount, int32_t width);
 
-	static void VerifyPaletteCount(uint16_t bitCount, std::size_t paletteSize);
-	static void VerifyPixelCount(uint16_t bitCount, std::size_t pixelCount, std::size_t pixelArraySize);
+	static void VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize);
+	static void VerifyPixelBufferSizeMatchesImageDimensions(uint16_t bitCount, std::size_t pixelCount, std::size_t pixelArraySize);
 
 	// Check the pixel count is correct if it already includes dummy pixels out to next 4 byte boundary.
-	// @width: Width in pixels. Do not include the scan line in width.
-	// @pixelCountIncludingScanLine: Number of pixels including padding pixels to next 4 byte boundary.
-	static void VerifyPixelCountWithScanLine(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelCountIncludingScanLine);
+	// @width: Width in pixels. Do not include the pitch in width.
+	// @pixelCountIncludingPitch: Number of pixels including padding pixels to next 4 byte boundary.
+	static void VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelCountIncludingPitch);
 
-	static void VerifyPixelIndices(uint16_t bitCount, std::size_t paletteSize, const std::vector<uint8_t>& pixels);
+	static void VerifyPixelsContainedInPalette(uint16_t bitCount, std::size_t paletteSize, const std::vector<uint8_t>& pixels);
 };
