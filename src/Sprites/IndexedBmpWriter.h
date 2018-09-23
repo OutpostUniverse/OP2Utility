@@ -22,7 +22,7 @@ class IndexedBmpWriter
 public:
 	// The pixel container includes dummy information to fill each image row out to the next 4 byte memory border.
 	// Only supports a 4 byte pitch.
-	static void WritePixelPaddingIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithPadding);
+	static void WritePixelsIncludingPadding(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithPadding);
 
 	// Dummy information is inserted at the end of each pixel row to reach the next 4 byte memory border
 	static void Write(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& indexedPixels);

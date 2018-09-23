@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <cmath>
 
-void IndexedBmpWriter::WritePixelPaddingIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithPadding)
+void IndexedBmpWriter::WritePixelsIncludingPadding(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithPadding)
 {
 	ImageHeader::VerifyIndexedBitCount(bitCount);
 	VerifyPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
