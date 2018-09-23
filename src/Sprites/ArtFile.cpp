@@ -3,15 +3,6 @@
 
 const std::array<char, 4> ArtFile::TagPalette{ 'C', 'P', 'A', 'L' };
 
-uint16_t ArtFile::GetBitCount(std::size_t imageIndex) 
-{
-	if (imageIndex > imageMetas.size()) {
-		throw std::runtime_error("Index exceeds image count");
-	}
-
-	return imageMetas[imageIndex].type.bShadow ? 1 : 8;
-}
-
 void ArtFile::VerifyImageIndexInBounds(std::size_t index)
 {
 	if (index > imageMetas.size()) {

@@ -26,7 +26,6 @@ public:
 	static void Write(std::string filename, const ArtFile& artFile);
 	static void Write(Stream::SeekableWriter&, const ArtFile& artFile);
 
-	uint16_t GetBitCount(std::size_t imageIndex);
 	void VerifyImageIndexInBounds(std::size_t index);
 
 private:
