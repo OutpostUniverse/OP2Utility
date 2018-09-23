@@ -6,18 +6,18 @@
 #include <stdexcept>
 #include <cmath>
 
-void IndexedBmpWriter::WritePitchIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithPitch)
+void IndexedBmpWriter::WritePixelPaddingIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithPadding)
 {
 	ImageHeader::VerifyIndexedBitCount(bitCount);
 	VerifyPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
-	VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(bitCount, width, height, pixelsWithPitch.size());
-	VerifyPixelsContainedInPalette(bitCount, palette.size(), pixelsWithPitch);
+	VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(bitCount, width, height, pixelsWithPadding.size());
+	VerifyPixelsContainedInPalette(bitCount, palette.size(), pixelsWithPadding);
 
 	Stream::FileWriter fileWriter(filename);
 
 	WriteHeaders(fileWriter, bitCount, width, height, palette);
 	fileWriter.Write(palette);
-	fileWriter.Write(pixelsWithPitch);
+	fileWriter.Write(pixelsWithPadding);
 }
 
 // Writes a Bitmap with an indexed color palette
@@ -139,10 +139,10 @@ void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint
 	}
 }
 
-void IndexedBmpWriter::VerifyPixelsContainedInPalette(uint16_t bitCount, std::size_t paletteCount, const std::vector<uint8_t>& pixels)
+void IndexedBmpWriter::VerifyPixelsContainedInPalette(uint16_t bitCount, std::size_t paletteEntryCount, const std::vector<uint8_t>& pixels)
 {
 	// Check if palette is full
-	if (paletteCount == 1 << bitCount) {
+	if (paletteEntryCount == 1 << bitCount) {
 		return;
 	}
 
@@ -159,7 +159,7 @@ void IndexedBmpWriter::VerifyPixelsContainedInPalette(uint16_t bitCount, std::si
 	}
 
 	for (std::size_t i = 0; i < pixels.size(); ++i) {
-		if (pixels[i] >= paletteCount) {
+		if (pixels[i] >= paletteEntryCount) {
 			throw std::runtime_error("Pixel " + std::to_string(i) + " is outside the range of set palette indices.");
 		}
 	}

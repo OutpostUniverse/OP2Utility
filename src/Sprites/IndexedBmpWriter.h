@@ -22,7 +22,7 @@ class IndexedBmpWriter
 public:
 	// The pixel container includes dummy information to fill each image row out to the next 4 byte memory border.
 	// Only supports a 4 byte pitch.
-	static void WritePitchIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>&);
+	static void WritePixelPaddingIncluded(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithPadding);
 
 	// Dummy information is inserted at the end of each pixel row to reach the next 4 byte memory border
 	static void Write(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& indexedPixels);
@@ -51,5 +51,5 @@ private:
 	// @pixelCountIncludingPitch: Number of pixels including padding pixels to next 4 byte boundary.
 	static void VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelCountIncludingPitch);
 
-	static void VerifyPixelsContainedInPalette(uint16_t bitCount, std::size_t paletteSize, const std::vector<uint8_t>& pixels);
+	static void VerifyPixelsContainedInPalette(uint16_t bitCount, std::size_t paletteEntryCount, const std::vector<uint8_t>& pixels);
 };

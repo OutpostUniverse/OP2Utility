@@ -23,7 +23,7 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 	std::vector<uint8_t> pixelContainer(imageMeta.scanLineByteWidth * imageMeta.height);
 	(*pixels).Read(pixelContainer);
 
-	IndexedBmpWriter::WritePitchIncluded(filenameOut, artFile.GetBitCount(index), imageMeta.width, -1 * imageMeta.height, palette, pixelContainer);
+	IndexedBmpWriter::WritePixelPaddingIncluded(filenameOut, artFile.GetBitCount(index), imageMeta.width, -1 * imageMeta.height, palette, pixelContainer);
 }
 
 std::unique_ptr<Stream::FileSliceReader> OP2BmpLoader::GetPixels(std::size_t startingIndex, std::size_t length)
