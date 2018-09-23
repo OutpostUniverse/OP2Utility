@@ -9,10 +9,6 @@ namespace Stream {
 	class SeekableReader;
 }
 
-namespace PaletteTag {
-	extern const std::array<char, 4> Palette;
-}
-
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct PaletteHeader {
