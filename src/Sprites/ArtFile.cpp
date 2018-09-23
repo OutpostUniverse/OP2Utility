@@ -3,7 +3,6 @@
 
 const std::array<char, 4> ArtFile::TagPalette{ 'C', 'P', 'A', 'L' };
 
-
 void ArtFile::VerifyImageIndexInBounds(std::size_t index)
 {
 	if (index > imageMetas.size()) {

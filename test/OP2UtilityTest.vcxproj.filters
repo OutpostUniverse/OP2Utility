@@ -28,6 +28,15 @@
     <ClCompile Include="Sprites\ArtWriter.test.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
+    <ClCompile Include="Sprites\IndexedBmpWriter.test.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprites\ImageHeader.test.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprites\BmpHeader.test.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

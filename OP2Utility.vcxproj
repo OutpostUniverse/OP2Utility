@@ -157,6 +157,9 @@
     <ClCompile Include="src\Sprites\ArtReader.cpp" />
     <ClCompile Include="src\Sprites\ArtFile.cpp" />
     <ClCompile Include="src\Sprites\ArtWriter.cpp" />
+    <ClCompile Include="src\Sprites\BmpHeader.cpp" />
+    <ClCompile Include="src\Sprites\IndexedBmpWriter.cpp" />
+    <ClCompile Include="src\Sprites\ImageHeader.cpp" />
     <ClCompile Include="src\Sprites\OP2BmpLoader.cpp" />
     <ClCompile Include="src\Sprites\PaletteHeader.cpp" />
     <ClCompile Include="src\Sprites\SectionHeader.cpp" />
@@ -167,8 +170,11 @@
     <ClCompile Include="src\Streams\MemoryReader.cpp" />
     <ClInclude Include="src\Sprites\Animation.h" />
     <ClInclude Include="src\Sprites\ArtFile.h" />
-    <ClInclude Include="src\Sprites\BitCount.h" />
+    <ClInclude Include="src\Sprites\BmpCompression.h" />
+    <ClInclude Include="src\Sprites\BmpHeader.h" />
+    <ClInclude Include="src\Sprites\IndexedBmpWriter.h" />
     <ClInclude Include="src\Sprites\Color.h" />
+    <ClInclude Include="src\Sprites\ImageHeader.h" />
     <ClInclude Include="src\Sprites\ImageMeta.h" />
     <ClInclude Include="src\Sprites\OP2BmpLoader.h" />
     <ClInclude Include="src\Sprites\PaletteHeader.h" />

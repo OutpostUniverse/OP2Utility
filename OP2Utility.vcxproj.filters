@@ -153,10 +153,19 @@
     <ClInclude Include="src\Sprites\Animation.h">
       <Filter>Sprites</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sprites\BitCount.h">
+    <ClInclude Include="src\Sprites\OP2BmpLoader.h">
       <Filter>Sprites</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sprites\OP2BmpLoader.h">
+    <ClInclude Include="src\Sprites\BmpCompression.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\BmpHeader.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\ImageHeader.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\IndexedBmpWriter.h">
       <Filter>Sprites</Filter>
     </ClInclude>
   </ItemGroup>
@@ -234,6 +243,15 @@
       <Filter>Sprites</Filter>
     </ClCompile>
     <ClCompile Include="src\Sprites\OP2BmpLoader.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\BmpHeader.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\ImageHeader.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\IndexedBmpWriter.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
     <ClCompile Include="src\Archives\WaveFile.cpp">

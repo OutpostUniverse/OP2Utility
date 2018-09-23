@@ -5,7 +5,7 @@
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct ImageMeta {
-	unsigned int GetBitCount() const {
+	uint16_t GetBitCount() const {
 		return type.bShadow ? 1 : 8;
 	}
 

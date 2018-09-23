@@ -117,5 +117,5 @@ void ArtFile::WriteFrame(Stream::SeekableWriter& seekableWriter, const Animation
 		seekableWriter.Write(frame.optional4);
 	}
 
-	seekableWriter.Write<uint8_t>(frame.layers);
+	seekableWriter.Write(frame.layers);
 }
