@@ -35,7 +35,7 @@ struct TerrainType
 
 	// 5 groups of 16 tiles. Each group represents a different wall type.
 	// Lava, Microbe, Full Strength Regular, Damaged Regular, and Heavily Damaged Regular.
-	int16_t wall[5][16];
+	uint16_t wall[5][16];
 
 	// First index for lava tiles in Terrain Type.
 	uint16_t lavaTileIndex;
