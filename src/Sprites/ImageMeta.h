@@ -18,6 +18,7 @@ struct ImageMeta {
 		uint16_t unknown4 : 1; // 32
 		uint16_t bTruckBed : 1; // 64
 		uint16_t unknown5 : 1; // 128
+		uint16_t unknown6 : 8;
 	};
 
 	static_assert(2 == sizeof(ImageType), "ImageMeta::ImageType is an unexpected size");
