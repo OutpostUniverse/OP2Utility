@@ -100,7 +100,7 @@ void ArtFile::WriteAnimation(Stream::SeekableWriter& seekableWriter, const Anima
 
 void ArtFile::WriteFrame(Stream::SeekableWriter& seekableWriter, const Animation::Frame& frame)
 {
-	if (frame.layerMetadata.layerCount != frame.layers.size()) {
+	if (frame.layerMetadata.count != frame.layers.size()) {
 		throw std::runtime_error("Recorded layer count must match number of written layers.");
 	}
 

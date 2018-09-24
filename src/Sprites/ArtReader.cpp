@@ -115,7 +115,7 @@ Animation::Frame ArtFile::ReadFrame(Stream::SeekableReader& seekableReader) {
 		seekableReader.Read(frame.optional4);
 	}
 
-	frame.layers.resize(frame.layerMetadata.layerCount);
+	frame.layers.resize(frame.layerMetadata.count);
 	seekableReader.Read(frame.layers);
 
 	return frame;
