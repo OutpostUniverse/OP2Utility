@@ -18,7 +18,10 @@ struct ImageMeta {
 		uint16_t unknown4 : 1; // 32
 		uint16_t bTruckBed : 1; // 64
 		uint16_t unknown5 : 1; // 128
+		uint16_t unknown6 : 8;
 	};
+
+	static_assert(2 == sizeof(ImageType), "ImageMeta::ImageType is an unexpected size");
 
 	uint32_t scanLineByteWidth; //number of bytes in each scan line of image (this should be the width of the image rounded up to a 32 bit boundary)
 	uint32_t pixelDataOffset; // Offset of the pixel data in the .bmp file
@@ -27,5 +30,7 @@ struct ImageMeta {
 	ImageType type;
 	uint16_t paletteIndex;
 };
+
+static_assert(18 + sizeof(ImageMeta::ImageType) == sizeof(ImageMeta), "ImageMeta is an unexpected size");
 
 #pragma pack(pop)

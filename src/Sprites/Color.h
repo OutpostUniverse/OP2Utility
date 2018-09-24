@@ -12,6 +12,8 @@ struct Color {
 	uint8_t alpha;
 };
 
+static_assert(4 == sizeof(Color), "Color is an unexpected size");
+
 #pragma pack(pop)
 
 using Palette = std::array<Color, 256>;

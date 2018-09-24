@@ -49,6 +49,8 @@ namespace Archives
 			void VerifyUnknown() const; // Exception raised if invalid version
 		};
 
+		static_assert(42 + sizeof(WaveFormatEx) == sizeof(ClmHeader), "ClmHeader is an unexpected size");
+
 		struct IndexEntry
 		{
 			std::array<char, 8> filename;
@@ -57,6 +59,8 @@ namespace Archives
 
 			std::string GetFilename() const;
 		};
+
+		static_assert(16 == sizeof(IndexEntry), "ClmFile::IndexEntry is an unexpected size");
 #pragma pack(pop)
 
 		// Private functions for reading archive

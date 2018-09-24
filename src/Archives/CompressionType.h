@@ -1,10 +1,12 @@
 #pragma once
 
+#include <cstdint>
+
 namespace Archives
 {
 	// Represents compression flags used by Outpost 2 .VOL files to compress files
 	// See FileFormat Archive Vol.txt for more details
-	enum class CompressionType : unsigned short
+	enum class CompressionType : uint16_t
 	{
 		Uncompressed = 0x100,
 		RLE = 0x101,  // Run Length Encoded. Currently not supported.

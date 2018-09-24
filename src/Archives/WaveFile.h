@@ -28,12 +28,16 @@ namespace Archives
 		uint16_t cbSize;             /* the count in bytes of the size of extra information (after cbSize) */
 	};
 
+	static_assert(18 == sizeof(WaveFormatEx), "WaveFormatEx is an unexpected size");
+
 	struct RiffHeader
 	{
 		std::array<char, 4> riffTag;
 		uint32_t chunkSize;
 		std::array<char, 4> waveTag;
 	};
+
+	static_assert(12 == sizeof(RiffHeader), "RiffHeader is an unexpected size");
 
 	struct FormatChunk
 	{
@@ -42,11 +46,15 @@ namespace Archives
 		WaveFormatEx waveFormat;
 	};
 
+	static_assert(8 + sizeof(WaveFormatEx) == sizeof(FormatChunk), "FormatChunk is an unexpected size");
+
 	struct ChunkHeader
 	{
 		std::array<char, 4> formatTag;
 		uint32_t length;
 	};
+
+	static_assert(8 == sizeof(ChunkHeader), "ChunkHeader is an unexpected size");
 
 	// http://soundfile.sapp.org/doc/WaveFormat/
 	struct WaveHeader
@@ -57,6 +65,8 @@ namespace Archives
 		FormatChunk formatChunk;
 		ChunkHeader dataChunk;
 	};
+
+	static_assert(sizeof(RiffHeader) + sizeof(FormatChunk) + sizeof(ChunkHeader) == sizeof(WaveHeader), "WaveHeader is an unexpected size");
 
 #pragma pack(pop)
 }
