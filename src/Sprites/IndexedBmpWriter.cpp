@@ -145,7 +145,7 @@ void IndexedBmpWriter::VerifyPixelsContainedInPalette(uint16_t bitCount, std::si
 	// Check if palette is full
 	// G++ will flag warning -Wsign-compare if comparing a signed and unsigned value
 	// MSVC will flag warning C4334 on x64 compilation if bit shift not set to 64 bit integer
-	if (paletteEntryCount == 1ui64 << bitCount) {
+	if (paletteEntryCount == static_cast<uint64_t>(1) << bitCount) {
 		return;
 	}
 
