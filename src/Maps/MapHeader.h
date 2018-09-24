@@ -48,4 +48,6 @@ struct MapHeader
 	}
 };
 
+static_assert(20 == sizeof(MapHeader), "MapHeader is an unexpected size");
+
 #pragma pack(pop)

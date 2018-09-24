@@ -14,10 +14,14 @@ struct Animation {
 			uint8_t bReadOptionalData : 1;
 		};
 
+		static_assert(1 == sizeof(LayerMetadata), "Animation::Frame::LayerMetadata is an unexpected size");
+
 		struct UnknownBitfield {
 			uint8_t unknown : 7;
 			uint8_t bReadOptionalData : 1;
 		};
+
+		static_assert(1 == sizeof(UnknownBitfield), "Animation::Frame::UnknownBitfield is an unexpected size");
 
 		struct Layer {
 			uint16_t bitmapIndex;
@@ -25,6 +29,8 @@ struct Animation {
 			uint8_t frameIndex;
 			Point16 pixelOffset;
 		};
+
+		static_assert(4 + sizeof(Point16), "Animation::Frame::Layer is an unexpected size");
 
 		LayerMetadata layerMetadata;
 		UnknownBitfield unknownBitfield;
@@ -44,6 +50,8 @@ struct Animation {
 		uint32_t unknown3;
 		uint32_t unknown4;
 	};
+
+	static_assert(16 == sizeof(UnknownContainer), "Animation::UnknownContainer is an unexpected size");
 
 	uint32_t unknown;
 	Rect selectionRect; // pixels

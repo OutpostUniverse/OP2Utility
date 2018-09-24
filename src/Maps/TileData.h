@@ -33,4 +33,6 @@ struct TileData
 	int bWallOrBuilding : 1;
 };
 
+static_assert(4 == sizeof(TileData), "TileData is an unexpected size");
+
 #pragma pack(pop)

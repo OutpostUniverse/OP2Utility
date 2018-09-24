@@ -53,6 +53,8 @@ namespace Archives
 			CompressionType compressionType;
 		};
 
+		static_assert(14 == sizeof(IndexEntry), "VolFile::IndexEntry is an unexpected size");
+
 		// Specify boundary padding for a volume file section
 		enum class VolPadding
 		{
@@ -64,13 +66,15 @@ namespace Archives
 		{
 			SectionHeader();
 			SectionHeader(std::array<char, 4> tag, uint32_t length, VolPadding padding = VolPadding::FourByte);
+
 			std::array<char, 4> tag;
 			uint32_t length : 31;
 			VolPadding padding : 1;
 		};
-#pragma pack(pop)
 
-		static_assert(sizeof(SectionHeader) == 8, "SectionHeader not of required size");
+		static_assert(8 == sizeof(SectionHeader), "VolFile::SectionHeader is an unexpected size");
+
+#pragma pack(pop)
 
 		struct CreateVolumeInfo
 		{

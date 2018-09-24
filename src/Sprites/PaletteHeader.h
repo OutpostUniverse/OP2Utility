@@ -28,4 +28,6 @@ private:
 	static const std::array<char, 4> TagData;
 };
 
+static_assert(4 + 3 * sizeof(SectionHeader) == sizeof(PaletteHeader), "PaletteHeader is an unexpected size");
+
 #pragma pack(pop)

@@ -21,4 +21,6 @@ struct BmpHeader
 	static const uint16_t defaultReserved2;
 };
 
+static_assert(14 == sizeof(BmpHeader), "BmpHeader is an unexpected size");
+
 #pragma pack(pop)

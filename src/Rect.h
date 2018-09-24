@@ -12,4 +12,6 @@ struct Rect
 	int32_t y2;
 };
 
+static_assert(16 == sizeof(Rect), "Rect is an unexpected size");
+
 #pragma pack(pop)

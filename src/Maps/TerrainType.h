@@ -13,6 +13,8 @@ struct TileRange
 	uint16_t end;
 };
 
+static_assert(4 == sizeof(TileRange), "TileRange is an unexpected size");
+
 // The properties associated with a range of tiles.
 struct TerrainType
 {
@@ -59,5 +61,7 @@ struct TerrainType
 	// UNKNOWN
 	int16_t unkown[15];
 };
+
+static_assert(248 + 4 * sizeof(TileRange) == sizeof(TerrainType), "TerrainType is an unexpected size");
 
 #pragma pack(pop)

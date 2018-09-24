@@ -21,4 +21,6 @@ struct SectionHeader
 	inline std::size_t TotalLength() const { return length + tag.size() * sizeof(decltype(tag)::value_type); };
 };
 
+static_assert(8 == sizeof(SectionHeader), "SectionHeader is an unexpected size");
+
 #pragma pack(pop)
