@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cmath>
+#include <cstddef>
 
 void IndexedBmpWriter::WritePixelsIncludingPadding(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithPadding)
 {
@@ -38,7 +39,7 @@ void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t wi
 void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
-	std::size_t fileSize = pixelOffset + CalcScanlinePitch(bitCount, width) * std::abs(height);
+	std::size_t fileSize = pixelOffset + CalculatePitch(bitCount, width) * std::abs(height);
 
 	if (fileSize > UINT32_MAX) {
 		throw std::runtime_error("Bitmap size is too large to save to disk.");
@@ -63,16 +64,9 @@ void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, uint1
 	}
 }
 
-int32_t IndexedBmpWriter::CalcScanlinePitch(uint16_t bitCount, int32_t width)
-{
-	const uint16_t bytesOfPixelsPerRow = CalcScanlineByteWidth(bitCount, width);
-
-	return ( (bytesOfPixelsPerRow + 3) & ~3 );
-}
-
 void IndexedBmpWriter::WritePixelsTopDown(Stream::SeekableWriter& fileWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels)
 {
-	const uint16_t bytesOfSetPixelsPerRow = CalcScanlineByteWidth(bitCount, width);
+	const uint16_t bytesOfSetPixelsPerRow = CalcPixelByteWidth(bitCount, width);
 	std::vector<uint8_t> buffer( (bytesOfSetPixelsPerRow + 3) & ~3 );
 	int index = 0; //Index is in bytes, not necessarily pixels
 
@@ -91,7 +85,7 @@ void IndexedBmpWriter::WritePixelsTopDown(Stream::SeekableWriter& fileWriter, ui
 
 void IndexedBmpWriter::WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels)
 {
-	const uint16_t bytesOfPixelsPerRow = CalcScanlineByteWidth(bitCount, width);
+	const uint16_t bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
 	std::vector<uint8_t> buffer( (bytesOfPixelsPerRow + 3) & ~3 );
 	int index = bytesOfPixelsPerRow * height; //Index is in bytes, not necessarily pixels
 
@@ -108,10 +102,17 @@ void IndexedBmpWriter::WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, u
 	}
 }
 
-uint32_t IndexedBmpWriter::CalcScanlineByteWidth(uint16_t bitCount, int32_t width)
+unsigned int IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
+{
+	const uint16_t bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
+
+	return ( (bytesOfPixelsPerRow + 3) & ~3 );
+}
+
+unsigned int IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
 {
 	const uint16_t bitsPerByte = 8;
-	return width * bitCount / bitsPerByte;
+	return ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
 }
 
 void IndexedBmpWriter::VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize)
@@ -130,11 +131,9 @@ void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensions(uint16_t bitC
 	}
 }
 
-void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelCountIncludingPitch)
+void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
 {
-	const uint16_t pixelsPerByte = 8 / bitCount;
-
-	if (pixelCountIncludingPitch * pixelsPerByte != CalcScanlinePitch(bitCount, width) * std::abs(height)) {
+	if (pixelsWithPitchSize != CalculatePitch(bitCount, width) * std::abs(height)) {
 		throw std::runtime_error("An incorrect number of pixels were passed.");
 	}
 }
@@ -142,7 +141,8 @@ void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint
 void IndexedBmpWriter::VerifyPixelsContainedInPalette(uint16_t bitCount, std::size_t paletteEntryCount, const std::vector<uint8_t>& pixels)
 {
 	// Check if palette is full
-	if (paletteEntryCount == 1 << bitCount) {
+	// Use explicit size_t type to avoid compiler warnings for signedness or size
+	if (paletteEntryCount == std::size_t{1} << bitCount) {
 		return;
 	}
 
