@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cmath>
+#include <cstddef>
 
 void IndexedBmpWriter::WritePixelsIncludingPadding(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& pixelsWithPadding)
 {
@@ -143,7 +144,7 @@ void IndexedBmpWriter::VerifyPixelsContainedInPalette(uint16_t bitCount, std::si
 	// Check if palette is full
 	// G++ will flag warning -Wsign-compare if comparing a signed and unsigned value
 	// MSVC will flag warning C4334 on x64 compilation if bit shift not set to 64 bit integer
-	if (paletteEntryCount == 1u << bitCount) {
+	if (paletteEntryCount == std::size_t{1} << bitCount) {
 		return;
 	}
 
