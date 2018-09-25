@@ -111,13 +111,7 @@ void IndexedBmpWriter::WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, u
 unsigned int IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
 {
 	const uint16_t bitsPerByte = 8;
-	uint32_t pixelByteWidth = width * bitCount / bitsPerByte;
-
-	if (width * bitCount % bitsPerByte != 0) {
-		pixelByteWidth += 1;
-	}
-
-	return pixelByteWidth;
+	return ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
 }
 
 void IndexedBmpWriter::VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize)
