@@ -40,7 +40,7 @@ private:
 
 	static unsigned int CalculatePitch(uint16_t bitCount, int32_t width);
 
-	// Does not include Pitch
+	// Does not include padding
 	static unsigned int CalcPixelByteWidth(uint16_t bitCount, int32_t width);
 
 	static void VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize);
