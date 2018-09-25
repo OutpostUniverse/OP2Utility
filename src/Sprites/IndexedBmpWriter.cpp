@@ -63,7 +63,7 @@ void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, uint1
 	}
 }
 
-int32_t IndexedBmpWriter::CalculatePitchSize(uint16_t bitCount, int32_t width)
+unsigned int IndexedBmpWriter::CalculatePitchSize(uint16_t bitCount, int32_t width)
 {
 	const uint16_t bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
 
@@ -108,7 +108,7 @@ void IndexedBmpWriter::WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, u
 	}
 }
 
-uint32_t IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
+unsigned int IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
 {
 	const uint16_t bitsPerByte = 8;
 	uint32_t pixelByteWidth = width * bitCount / bitsPerByte;
@@ -139,7 +139,7 @@ void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensions(uint16_t bitC
 void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
 {
 	// G++ will flag warning -Wsign-compare if comparing a signed and unsigned value
-	if (pixelsWithPitchSize != static_cast<uint32_t>(CalculatePitchSize(bitCount, width) * std::abs(height))) {
+	if (pixelsWithPitchSize != CalculatePitchSize(bitCount, width) * std::abs(height)) {
 		throw std::runtime_error("An incorrect number of pixels were passed.");
 	}
 }
