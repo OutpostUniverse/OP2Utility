@@ -63,13 +63,6 @@ void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, uint1
 	}
 }
 
-unsigned int IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
-{
-	const uint16_t bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
-
-	return ( (bytesOfPixelsPerRow + 3) & ~3 );
-}
-
 void IndexedBmpWriter::WritePixelsTopDown(Stream::SeekableWriter& fileWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels)
 {
 	const uint16_t bytesOfSetPixelsPerRow = CalcPixelByteWidth(bitCount, width);
@@ -106,6 +99,13 @@ void IndexedBmpWriter::WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, u
 
 		index -= bytesOfPixelsPerRow;
 	}
+}
+
+unsigned int IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
+{
+	const uint16_t bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
+
+	return ( (bytesOfPixelsPerRow + 3) & ~3 );
 }
 
 unsigned int IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
