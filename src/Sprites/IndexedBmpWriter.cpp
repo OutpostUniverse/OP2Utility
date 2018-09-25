@@ -138,8 +138,6 @@ void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensions(uint16_t bitC
 
 void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
 {
-	const uint16_t pixelsPerByte = 8 / bitCount;
-
 	// G++ will flag warning -Wsign-compare if comparing a signed and unsigned value
 	if (pixelsWithPitchSize != static_cast<uint32_t>(CalculatePitchSize(bitCount, width) * std::abs(height))) {
 		throw std::runtime_error("An incorrect number of pixels were passed.");
