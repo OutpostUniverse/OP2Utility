@@ -38,7 +38,7 @@ void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t wi
 void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
-	std::size_t fileSize = pixelOffset + CalculatePitchSize(bitCount, width) * std::abs(height);
+	std::size_t fileSize = pixelOffset + CalculatePitch(bitCount, width) * std::abs(height);
 
 	if (fileSize > UINT32_MAX) {
 		throw std::runtime_error("Bitmap size is too large to save to disk.");
@@ -63,7 +63,7 @@ void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, uint1
 	}
 }
 
-unsigned int IndexedBmpWriter::CalculatePitchSize(uint16_t bitCount, int32_t width)
+unsigned int IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
 {
 	const uint16_t bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
 
@@ -139,7 +139,7 @@ void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensions(uint16_t bitC
 void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
 {
 	// G++ will flag warning -Wsign-compare if comparing a signed and unsigned value
-	if (pixelsWithPitchSize != CalculatePitchSize(bitCount, width) * std::abs(height)) {
+	if (pixelsWithPitchSize != CalculatePitch(bitCount, width) * std::abs(height)) {
 		throw std::runtime_error("An incorrect number of pixels were passed.");
 	}
 }

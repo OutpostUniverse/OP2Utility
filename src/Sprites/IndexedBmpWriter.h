@@ -38,7 +38,7 @@ private:
 	// If height is a positive number, the top row of pixels is written at the end of the file 
 	static void WritePixelsBottomUp(Stream::SeekableWriter& fileWriter, uint16_t bitCount, int32_t width, int32_t height, const std::vector<uint8_t>& pixels);
 
-	static unsigned int CalculatePitchSize(uint16_t bitCount, int32_t width);
+	static unsigned int CalculatePitch(uint16_t bitCount, int32_t width);
 
 	// Does not include Pitch
 	static unsigned int CalcPixelByteWidth(uint16_t bitCount, int32_t width);
