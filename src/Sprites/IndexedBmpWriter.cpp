@@ -133,7 +133,6 @@ void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensions(uint16_t bitC
 
 void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
 {
-	// G++ will flag warning -Wsign-compare if comparing a signed and unsigned value
 	if (pixelsWithPitchSize != CalculatePitch(bitCount, width) * std::abs(height)) {
 		throw std::runtime_error("An incorrect number of pixels were passed.");
 	}
@@ -142,8 +141,7 @@ void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint
 void IndexedBmpWriter::VerifyPixelsContainedInPalette(uint16_t bitCount, std::size_t paletteEntryCount, const std::vector<uint8_t>& pixels)
 {
 	// Check if palette is full
-	// G++ will flag warning -Wsign-compare if comparing a signed and unsigned value
-	// MSVC will flag warning C4334 on x64 compilation if bit shift not set to 64 bit integer
+	// Use explicit size_t type to avoid compiler warnings for signedness or size
 	if (paletteEntryCount == std::size_t{1} << bitCount) {
 		return;
 	}
