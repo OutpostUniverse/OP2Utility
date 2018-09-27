@@ -8,8 +8,6 @@
 #include <cstdint>
 #include <cstddef>
 
-enum class BitCount : uint16_t;
-
 namespace Stream {
 	class SeekableWriter;
 }
