@@ -37,15 +37,11 @@ void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint
 
 unsigned int IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
 {
-	const uint16_t bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
+	const uint16_t bitsPerByte = 8;
+	// Does not include padding
+	const uint16_t bytesOfPixelsPerRow = ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
 
 	return ( (bytesOfPixelsPerRow + 3) & ~3 );
-}
-
-unsigned int IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
-{
-	const uint16_t bitsPerByte = 8;
-	return ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
 }
 
 void IndexedBmpWriter::VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize)
