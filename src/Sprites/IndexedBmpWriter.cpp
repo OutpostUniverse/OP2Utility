@@ -5,12 +5,13 @@
 #include <stdexcept>
 #include <cmath>
 
-void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t width, int32_t height, const std::vector<Color>& palette, const std::vector<uint8_t>& indexedPixels)
+void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
 	ImageHeader::VerifyIndexedBitCount(bitCount);
 	VerifyPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
 	VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
-	VerifyPixelsContainedInPalette(bitCount, palette.size(), indexedPixels);
+
+	palette.resize(std::size_t{ 1 } << bitCount, DiscreteColor::Black);
 
 	Stream::FileWriter fileWriter(filename);
 
@@ -55,32 +56,5 @@ void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint
 {
 	if (pixelsWithPitchSize != CalculatePitch(bitCount, width) * std::abs(height)) {
 		throw std::runtime_error("An incorrect number of pixels were passed.");
-	}
-}
-
-void IndexedBmpWriter::VerifyPixelsContainedInPalette(uint16_t bitCount, std::size_t paletteEntryCount, const std::vector<uint8_t>& pixels)
-{
-	// Check if palette is full
-	// Use explicit size_t type to avoid compiler warnings for signedness or size
-	if (paletteEntryCount == std::size_t{1} << bitCount) {
-		return;
-	}
-
-	if (bitCount == 1) {
-		for (const auto& pixelGroup : pixels) {
-			if (pixelGroup > 0) {
-				throw (std::runtime_error("A pixel is outside the range of set palette indices."));
-			}
-		}
-	}
-
-	if (bitCount == 4) {
-		return; //TODO: Support checking 2 bit images
-	}
-
-	for (std::size_t i = 0; i < pixels.size(); ++i) {
-		if (pixels[i] >= paletteEntryCount) {
-			throw std::runtime_error("Pixel " + std::to_string(i) + " is outside the range of set palette indices.");
-		}
 	}
 }
