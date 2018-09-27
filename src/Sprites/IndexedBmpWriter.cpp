@@ -50,7 +50,7 @@ unsigned int IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t wid
 
 void IndexedBmpWriter::VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize)
 {
-	if (paletteSize > static_cast<uint16_t>(2 << bitCount)) {
+	if (paletteSize > std::size_t{ 1 } << bitCount) {
 		throw std::runtime_error("Too many colors listed on the indexed palette");
 	}
 }
