@@ -17,7 +17,8 @@ void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t wi
 
 	WriteHeaders(fileWriter, bitCount, width, height, palette);
 	fileWriter.Write(palette);
-	fileWriter.Write(indexedPixels);
+
+	WritePixels(fileWriter, indexedPixels, width, bitCount);
 }
 
 void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
@@ -36,12 +37,29 @@ void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint
 	seekableWriter.Write(imageHeader);
 }
 
+void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
+{
+	const unsigned int pitch = CalculatePitch(bitCount, width);
+	const unsigned int bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
+	const std::vector<uint8_t> padding(pitch - bytesOfPixelsPerRow, 0);
+
+	for (std::size_t i = 0; i < pixels.size();) {
+		seekableWriter.Write(&pixels[i], bytesOfPixelsPerRow);
+		seekableWriter.Write(padding);
+		i += pitch;
+	}
+}
+
 unsigned int IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
 {
-	const std::size_t bitsPerByte = 8;
-	// Does not include padding
-	const std::size_t bytesOfPixelsPerRow = ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
+	const unsigned int bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
 	return ( (bytesOfPixelsPerRow + 3) & ~3 );
+}
+
+unsigned int IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
+{
+	const unsigned int bitsPerByte = 8;
+	return ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
 }
 
 void IndexedBmpWriter::VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize)
