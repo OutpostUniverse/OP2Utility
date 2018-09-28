@@ -38,10 +38,9 @@ void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint
 
 unsigned int IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
 {
-	const uint16_t bitsPerByte = 8;
+	const std::size_t bitsPerByte = 8;
 	// Does not include padding
-	const uint16_t bytesOfPixelsPerRow = ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
-
+	const std::size_t bytesOfPixelsPerRow = ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
 	return ( (bytesOfPixelsPerRow + 3) & ~3 );
 }
 
