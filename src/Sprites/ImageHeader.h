@@ -39,6 +39,8 @@ struct ImageHeader
 
 	static void VerifyValidBitCount(uint16_t bitCount);
 	static void VerifyIndexedBitCount(uint16_t bitCount);
+
+	void Validate();
 };
 
 static_assert(40 == sizeof(ImageHeader), "ImageHeader is an unexpected size");

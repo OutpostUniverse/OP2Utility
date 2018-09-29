@@ -71,3 +71,34 @@ TEST(ImageHeader, VerifyIndexedBitCount)
 	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(0), std::runtime_error);
 	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(3), std::runtime_error);
 }
+
+TEST(ImageHeader, Validate)
+{
+	ImageHeader imageHeader = ImageHeader::Create(1, 1, 1);
+
+	EXPECT_NO_THROW(imageHeader.Validate());
+
+	imageHeader.headerSize = 0;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.headerSize = sizeof(ImageHeader);
+
+	imageHeader.planes = 0;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.planes = ImageHeader::defaultPlanes;
+
+	imageHeader.bitCount = 3;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.bitCount = 1;
+
+	imageHeader.compression = static_cast<BmpCompression>(14);
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.compression = BmpCompression::Uncompressed;
+
+	imageHeader.usedColorMapEntries = 3;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.usedColorMapEntries = ImageHeader::defaultUsedColorMapEntries;
+
+	imageHeader.importantColorCount = 3;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.importantColorCount = ImageHeader::defaultImportantColorCount;
+}

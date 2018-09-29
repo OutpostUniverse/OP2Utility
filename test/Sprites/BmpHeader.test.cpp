@@ -1,5 +1,6 @@
 #include "../src/Sprites/BmpHeader.h"
 #include <gtest/gtest.h>
+#include <stdexcept>
 
 TEST(BmpHeader, Create)
 {
@@ -14,4 +15,26 @@ TEST(BmpHeader, Create)
 	EXPECT_EQ(BmpHeader::defaultReserved1, bmpHeader.reserved1);
 	EXPECT_EQ(BmpHeader::defaultReserved2, bmpHeader.reserved2);
 	EXPECT_EQ(pixelOffset, bmpHeader.pixelOffset);
+}
+
+TEST(BmpHeader, IsValidFileSignature) 
+{
+	BmpHeader bmpHeader;
+
+	bmpHeader.fileSignature = BmpHeader::defaultFileSignature;
+	EXPECT_TRUE(bmpHeader.IsValidFileSignature());
+
+	bmpHeader.fileSignature[0] = 'b';
+	EXPECT_FALSE(bmpHeader.IsValidFileSignature());
+}
+
+TEST(BmpHeader, VerifyFileSignature)
+{
+	BmpHeader bmpHeader;
+
+	bmpHeader.fileSignature = BmpHeader::defaultFileSignature;
+	EXPECT_NO_THROW(bmpHeader.VerifyFileSignature());
+
+	bmpHeader.fileSignature[0] = 'b';
+	EXPECT_THROW(bmpHeader.VerifyFileSignature(), std::runtime_error);
 }
