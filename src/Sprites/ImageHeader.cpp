@@ -54,3 +54,29 @@ void ImageHeader::VerifyIndexedBitCount(uint16_t bitCount)
 		throw std::runtime_error("A bit count of " + std::to_string(bitCount) + " does not support an indexed palette");
 	}
 }
+
+void ImageHeader::Validate()
+{
+	if (headerSize != sizeof(ImageHeader)) {
+		throw std::runtime_error("Image Header must be equal to " + std::to_string(sizeof(ImageHeader)));
+	}
+
+	if (planes != defaultPlanes) {
+		throw std::runtime_error("Planes must be equal to " + std::to_string(defaultPlanes));
+	}
+
+	VerifyValidBitCount(bitCount);
+
+	auto compressionCast = static_cast<uint32_t>(compression);
+	if (compressionCast > 13) {
+		throw std::runtime_error("A compression value of " + std::to_string(compressionCast) + " is invalid");
+	}
+
+	if (usedColorMapEntries > std::size_t{ 1 } << bitCount) {
+		throw std::runtime_error("Used color map entries is greater than possible range of color map (palette)");
+	}
+
+	if (importantColorCount > std::size_t{ 1 } << bitCount) {
+		throw std::runtime_error("Important Color Count is greater than possible range of color map (palette)");
+	}
+}
