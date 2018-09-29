@@ -25,10 +25,10 @@ private:
 
 	static void WritePixels(Stream::SeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount);
 
-	static unsigned int CalculatePitch(uint16_t bitCount, int32_t width);
+	static std::size_t CalculatePitch(uint16_t bitCount, int32_t width);
 
 	// Does not include padding
-	static unsigned int CalcPixelByteWidth(uint16_t bitCount, int32_t width);
+	static std::size_t CalcPixelByteWidth(uint16_t bitCount, int32_t width);
 
 	static void VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize);
 

@@ -30,8 +30,8 @@ void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint
 		throw std::runtime_error("Bitmap size is too large to save to disk.");
 	}
 
-	BmpHeader bmpHeader = BmpHeader::Create(static_cast<uint32_t>(fileSize), static_cast<uint32_t>(pixelOffset));
-	ImageHeader imageHeader = ImageHeader::Create(width, height, bitCount);
+	auto bmpHeader = BmpHeader::Create(static_cast<uint32_t>(fileSize), static_cast<uint32_t>(pixelOffset));
+	auto imageHeader = ImageHeader::Create(width, height, bitCount);
 
 	seekableWriter.Write(bmpHeader);
 	seekableWriter.Write(imageHeader);
@@ -39,8 +39,8 @@ void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint
 
 void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
 {
-	const unsigned int pitch = CalculatePitch(bitCount, width);
-	const unsigned int bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
+	const auto pitch = CalculatePitch(bitCount, width);
+	const auto bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
 	const std::vector<uint8_t> padding(pitch - bytesOfPixelsPerRow, 0);
 
 	for (std::size_t i = 0; i < pixels.size();) {
@@ -50,15 +50,15 @@ void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, const
 	}
 }
 
-unsigned int IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
+std::size_t IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
 {
-	const unsigned int bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
+	const auto bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
 	return ( (bytesOfPixelsPerRow + 3) & ~3 );
 }
 
-unsigned int IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
+std::size_t IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
 {
-	const unsigned int bitsPerByte = 8;
+	const std::size_t bitsPerByte = 8;
 	return ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
 }
 
