@@ -23,6 +23,7 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 	std::vector<uint8_t> pixelContainer(imageMeta.scanLineByteWidth * imageMeta.height);
 	(*pixels).Read(pixelContainer);
 
+	// Outpost 2 stores pixels in normal raster scan order (top-down). This requires a negative height for BMP file format.
 	IndexedBmpWriter::Write(filenameOut, imageMeta.GetBitCount(), imageMeta.width, -1 * imageMeta.height, palette, pixelContainer);
 }
 
