@@ -6,7 +6,7 @@
 #include <vector>
 #include <cstdint>
 
-TEST(IndexedBmpWriter, Write)
+TEST(IndexedBmpWriter, WriteAllPalettizedBitDepths)
 {
 	const std::string filename = "Sprites/data/BitmapTest.bmp";
 	const std::vector<uint8_t> pixels(4, 0);
@@ -23,7 +23,7 @@ TEST(IndexedBmpWriter, Write)
 	XFile::DeletePath(filename);
 }
 
-TEST(IndexedBmpWriter, InvalidBitCount)
+TEST(IndexedBmpWriter, InvalidBitCountThrows)
 {
 	const std::vector<Color> palette(8);
 	const std::vector<uint8_t> pixels(4, 0);
@@ -35,7 +35,7 @@ TEST(IndexedBmpWriter, InvalidBitCount)
 	XFile::DeletePath(filename);
 }
 
-TEST(IndexedBmpWriter, TooManyPaletteEntries)
+TEST(IndexedBmpWriter, TooManyPaletteEntriesThrows)
 {
 	const std::vector<Color> palette(3);
 	const std::vector<uint8_t> pixels(4, 0);
@@ -46,7 +46,18 @@ TEST(IndexedBmpWriter, TooManyPaletteEntries)
 	XFile::DeletePath(filename);
 }
 
-TEST(IndexedBmpWriter, IncorrectPixelPadding)
+TEST(IndexedBmpWriter, WritePartiallyFilledPalette)
+{
+	const std::vector<Color> palette(1);
+	const std::vector<uint8_t> pixels(4, 0);
+	const std::string filename("Sprites/data/PaletteRangeTest.bmp");
+
+	EXPECT_NO_THROW(IndexedBmpWriter::Write(filename, 1, 1, 1, palette, pixels));
+
+	XFile::DeletePath(filename);
+}
+
+TEST(IndexedBmpWriter, IncorrectPixelPaddingThrows)
 {
 	const std::vector<Color> palette(2);
 	const std::string filename("Sprites/data/IncorrectPixelPaddingTest.bmp");
