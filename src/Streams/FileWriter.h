@@ -29,6 +29,6 @@ namespace Stream
 
 	private:
 		const std::string filename;
-		std::fstream file;
+		std::ofstream file;
 	};
 }
