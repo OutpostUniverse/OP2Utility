@@ -42,4 +42,9 @@ TEST(Color, CompareNotEqual) {
 	EXPECT_NE(DiscreteColor::Green, DiscreteColor::Red);
 	EXPECT_NE(DiscreteColor::Blue, DiscreteColor::Red);
 	EXPECT_NE(DiscreteColor::Blue, DiscreteColor::Green);
+
+	// Primary and Black differ (1 component differs)
+	EXPECT_NE(DiscreteColor::Red, DiscreteColor::Black);
+	EXPECT_NE(DiscreteColor::Green, DiscreteColor::Black);
+	EXPECT_NE(DiscreteColor::Blue, DiscreteColor::Black);
 }
