@@ -1,7 +1,7 @@
 #include "../src/Sprites/Color.h"
 #include <gtest/gtest.h>
 
-TEST(Color, CompareEquality) {
+TEST(Color, CompareEqual) {
 	// Note: Internally EXPECT_EQ uses `operator ==`
 	//       EXPECT_EQ has better error formatting than calling == explicitly
 
@@ -17,7 +17,7 @@ TEST(Color, CompareEquality) {
 	EXPECT_FALSE(DiscreteColor::Black == DiscreteColor::White);
 }
 
-TEST(Color, CompareEqualityWithNewlyConstructedValue) {
+TEST(Color, CompareEqualWithNewlyConstructedValue) {
 	// Construct these non-inline so as to not interfere with macro expansion
 	// (Preprocessor gets confused when C++ grammar ","s appear on the same line)
 	const Color Black{ 0, 0, 0, 0 };
@@ -56,7 +56,7 @@ TEST(Color, CompareNotEqual) {
 	EXPECT_NE(DiscreteColor::Blue, DiscreteColor::Magenta);
 }
 
-TEST(Color, CompareTransparent) {
+TEST(Color, CompareEqualNotEqualTransparent) {
 	// Transparent color should be equal with itself
 	EXPECT_EQ(DiscreteColor::TransparentBlack, DiscreteColor::TransparentBlack);
 	EXPECT_EQ(DiscreteColor::TransparentWhite, DiscreteColor::TransparentWhite);
