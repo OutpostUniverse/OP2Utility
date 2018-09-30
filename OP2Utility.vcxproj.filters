@@ -257,5 +257,8 @@
     <ClCompile Include="src\Archives\WaveFile.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sprites\Color.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -48,6 +48,7 @@
     <ClCompile Include="Sprites\ArtReader.test.cpp" />
     <ClCompile Include="Sprites\ArtWriter.test.cpp" />
     <ClCompile Include="Sprites\BmpHeader.test.cpp" />
+    <ClCompile Include="Sprites\Color.test.cpp" />
     <ClCompile Include="Sprites\ImageHeader.test.cpp" />
     <ClCompile Include="Sprites\IndexedBmpWriter.test.cpp" />
     <ClCompile Include="Streams\FileReader.test.cpp" />
