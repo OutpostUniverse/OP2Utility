@@ -26,3 +26,20 @@ TEST(Color, CompareEqualityWithNewlyConstructedValue) {
 	EXPECT_EQ(DiscreteColor::Black, Black);
 	EXPECT_EQ(DiscreteColor::White, White);
 }
+
+TEST(Color, CompareNotEqual) {
+	// Note: Internally EXPECT_NE check `operator !=`
+	//       EXPECT_NE has better error formatting than calling != explicitly
+
+	// Black and white are distinct (3 components differ)
+	EXPECT_NE(DiscreteColor::Black, DiscreteColor::White);
+	EXPECT_NE(DiscreteColor::White, DiscreteColor::Black);
+
+	// Primary colors are distinct (2 components differ)
+	EXPECT_NE(DiscreteColor::Red, DiscreteColor::Green);
+	EXPECT_NE(DiscreteColor::Red, DiscreteColor::Blue);
+	EXPECT_NE(DiscreteColor::Green, DiscreteColor::Blue);
+	EXPECT_NE(DiscreteColor::Green, DiscreteColor::Red);
+	EXPECT_NE(DiscreteColor::Blue, DiscreteColor::Red);
+	EXPECT_NE(DiscreteColor::Blue, DiscreteColor::Green);
+}

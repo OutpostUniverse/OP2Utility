@@ -17,6 +17,7 @@ static_assert(4 == sizeof(Color), "Color is an unexpected size");
 #pragma pack(pop)
 
 bool operator==(const Color& lhs, const Color& rhs);
+bool operator!=(const Color& lhs, const Color& rhs);
 
 using Palette = std::array<Color, 256>;
 

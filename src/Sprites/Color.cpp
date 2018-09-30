@@ -6,3 +6,7 @@ bool operator==(const Color& lhs, const Color& rhs) {
 		(lhs.blue == rhs.blue) &&
 		(lhs.alpha == rhs.alpha);
 }
+
+bool operator!=(const Color& lhs, const Color& rhs) {
+	return !operator==(lhs, rhs);
+}
