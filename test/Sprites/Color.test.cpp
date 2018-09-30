@@ -55,3 +55,13 @@ TEST(Color, CompareNotEqual) {
 	EXPECT_NE(DiscreteColor::Blue, DiscreteColor::Cyan);
 	EXPECT_NE(DiscreteColor::Blue, DiscreteColor::Magenta);
 }
+
+TEST(Color, CompareTransparent) {
+	// Transparent color should be equal with itself
+	EXPECT_EQ(DiscreteColor::TransparentBlack, DiscreteColor::TransparentBlack);
+	EXPECT_EQ(DiscreteColor::TransparentWhite, DiscreteColor::TransparentWhite);
+
+	// Transparent color should not compare equal with non-transparent version
+	EXPECT_NE(DiscreteColor::TransparentBlack, DiscreteColor::Black);
+	EXPECT_NE(DiscreteColor::TransparentWhite, DiscreteColor::White);
+}
