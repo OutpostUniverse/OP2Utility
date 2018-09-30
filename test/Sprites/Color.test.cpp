@@ -28,7 +28,7 @@ TEST(Color, CompareEqualWithNewlyConstructedValue) {
 }
 
 TEST(Color, CompareNotEqual) {
-	// Note: Internally EXPECT_NE check `operator !=`
+	// Note: Internally EXPECT_NE uses `operator !=`
 	//       EXPECT_NE has better error formatting than calling != explicitly
 
 	// Black and white are distinct (3 components differ)
