@@ -1,11 +1,32 @@
 #include "FileWriter.h"
 #include <stdexcept>
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
 
 namespace Stream
 {
-	FileWriter::FileWriter(const std::string& filename) :
+	std::ios_base::openmode FileWriter::TranslateFlags(const std::string& filename, FileWriter::OpenMode openMode) {
+		if ((openMode & FileWriter::OpenMode::FailIfExist) != 0 && fs::exists(filename)) {
+			throw std::runtime_error("File OpenMode::FailIfExist specified, but file exists: " + filename);
+		}
+		if ((openMode & FileWriter::OpenMode::FailIfNoExist) != 0 && !fs::exists(filename)) {
+			throw std::runtime_error("File OpenMode::FailIfNoExist specified, but file does not exist: " + filename);
+		}
+
+		std::ios_base::openmode iosOpenMode = std::ios_base::out | std::ios_base::binary;
+		if ((openMode & OpenMode::PreserveContents) == 0) {
+			iosOpenMode |= std::ios_base::trunc;
+		}
+		if ((openMode & OpenMode::Append) != 0) {
+			iosOpenMode |= std::ios_base::ate;
+		}
+		return iosOpenMode;
+	}
+
+
+	FileWriter::FileWriter(const std::string& filename, OpenMode openMode) :
 		filename(filename),
-		file(filename, std::ios::trunc | std::ios::out | std::ios::binary)
+		file(filename, TranslateFlags(filename, openMode))
 	{
 		if (!file.is_open()) {
 			throw std::runtime_error("File could not be opened.");
