@@ -58,19 +58,14 @@ void ImageHeader::VerifyIndexedBitCount(uint16_t bitCount)
 void ImageHeader::Validate()
 {
 	if (headerSize != sizeof(ImageHeader)) {
-		throw std::runtime_error("Image Header must be equal to " + std::to_string(sizeof(ImageHeader)));
+		throw std::runtime_error("Image Header size must be equal to " + std::to_string(sizeof(ImageHeader)));
 	}
 
 	if (planes != DefaultPlanes) {
-		throw std::runtime_error("Planes must be equal to " + std::to_string(DefaultPlanes));
+		throw std::runtime_error("Image format not supported: only single plane images are supported, but this image has " + std::to_string(DefaultPlanes));
 	}
 
 	VerifyValidBitCount(bitCount);
-
-	auto compressionCast = static_cast<uint32_t>(compression);
-	if (compressionCast > 13) {
-		throw std::runtime_error("A compression value of " + std::to_string(compressionCast) + " is invalid");
-	}
 
 	if (usedColorMapEntries > std::size_t{ 1 } << bitCount) {
 		throw std::runtime_error("Used color map entries is greater than possible range of color map (palette)");

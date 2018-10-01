@@ -90,10 +90,6 @@ TEST(ImageHeader, Validate)
 	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
 	imageHeader.bitCount = 1;
 
-	imageHeader.compression = static_cast<BmpCompression>(14);
-	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
-	imageHeader.compression = BmpCompression::Uncompressed;
-
 	imageHeader.usedColorMapEntries = 3;
 	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
 	imageHeader.usedColorMapEntries = ImageHeader::DefaultUsedColorMapEntries;
