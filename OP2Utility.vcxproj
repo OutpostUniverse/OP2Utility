@@ -158,6 +158,7 @@
     <ClCompile Include="src\Sprites\ArtFile.cpp" />
     <ClCompile Include="src\Sprites\ArtWriter.cpp" />
     <ClCompile Include="src\Sprites\BmpHeader.cpp" />
+    <ClCompile Include="src\Sprites\Color.cpp" />
     <ClCompile Include="src\Sprites\IndexedBmpWriter.cpp" />
     <ClCompile Include="src\Sprites\ImageHeader.cpp" />
     <ClCompile Include="src\Sprites\OP2BmpLoader.cpp" />
