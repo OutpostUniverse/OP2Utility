@@ -37,6 +37,7 @@
     <ClCompile Include="Sprites\BmpHeader.test.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
+    <ClCompile Include="Rect.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

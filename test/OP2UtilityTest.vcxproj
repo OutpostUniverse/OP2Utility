@@ -45,6 +45,7 @@
     <ClCompile Include="Maps\MapHeader.test.cpp" />
     <ClCompile Include="Maps\MapReader.test.cpp" />
     <ClCompile Include="Maps\MapWriter.test.cpp" />
+    <ClCompile Include="Rect.test.cpp" />
     <ClCompile Include="Sprites\ArtReader.test.cpp" />
     <ClCompile Include="Sprites\ArtWriter.test.cpp" />
     <ClCompile Include="Sprites\BmpHeader.test.cpp" />
