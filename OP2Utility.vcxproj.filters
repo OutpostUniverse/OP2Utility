@@ -28,6 +28,9 @@
     <Filter Include="Sprites">
       <UniqueIdentifier>{5ca1d992-113b-41f2-8b0b-4af1a79f47f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Bitmaps">
+      <UniqueIdentifier>{ed1d2b3b-c69f-43f8-97ac-f3357f736acf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\XFile.h">
@@ -141,9 +144,6 @@
     <ClInclude Include="src\Sprites\SectionHeader.h">
       <Filter>Sprites</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sprites\Color.h">
-      <Filter>Sprites</Filter>
-    </ClInclude>
     <ClInclude Include="src\Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -156,17 +156,20 @@
     <ClInclude Include="src\Sprites\OP2BmpLoader.h">
       <Filter>Sprites</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sprites\BmpCompression.h">
-      <Filter>Sprites</Filter>
+    <ClInclude Include="src\Bitmaps\BmpCompression.h">
+      <Filter>Bitmaps</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sprites\BmpHeader.h">
-      <Filter>Sprites</Filter>
+    <ClInclude Include="src\Bitmaps\BmpHeader.h">
+      <Filter>Bitmaps</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sprites\ImageHeader.h">
-      <Filter>Sprites</Filter>
+    <ClInclude Include="src\Bitmaps\Color.h">
+      <Filter>Bitmaps</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sprites\IndexedBmpWriter.h">
-      <Filter>Sprites</Filter>
+    <ClInclude Include="src\Bitmaps\ImageHeader.h">
+      <Filter>Bitmaps</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bitmaps\IndexedBmpWriter.h">
+      <Filter>Bitmaps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -245,20 +248,20 @@
     <ClCompile Include="src\Sprites\OP2BmpLoader.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sprites\BmpHeader.cpp">
-      <Filter>Sprites</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Sprites\ImageHeader.cpp">
-      <Filter>Sprites</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Sprites\IndexedBmpWriter.cpp">
-      <Filter>Sprites</Filter>
-    </ClCompile>
     <ClCompile Include="src\Archives\WaveFile.cpp">
       <Filter>Archives</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sprites\Color.cpp">
-      <Filter>Sprites</Filter>
+    <ClCompile Include="src\Bitmaps\BmpHeader.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmaps\Color.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmaps\ImageHeader.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmaps\IndexedBmpWriter.cpp">
+      <Filter>Bitmaps</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

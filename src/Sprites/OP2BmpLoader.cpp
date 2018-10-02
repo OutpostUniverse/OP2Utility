@@ -1,6 +1,6 @@
 #include "OP2BmpLoader.h"
-#include "ImageHeader.h"
-#include "IndexedBmpWriter.h"
+#include "../Bitmaps/ImageHeader.h"
+#include "../Bitmaps/IndexedBmpWriter.h"
 #include <stdexcept>
 #include <algorithm>
 #include <limits>

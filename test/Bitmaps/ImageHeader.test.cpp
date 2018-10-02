@@ -1,4 +1,4 @@
-#include "../src/Sprites/ImageHeader.h"
+#include "../src/Bitmaps/ImageHeader.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
 #include <cstdint>

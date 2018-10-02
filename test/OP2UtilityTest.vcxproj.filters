@@ -28,17 +28,17 @@
     <ClCompile Include="Sprites\ArtWriter.test.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
-    <ClCompile Include="Sprites\IndexedBmpWriter.test.cpp">
-      <Filter>Sprites</Filter>
+    <ClCompile Include="Bitmaps\BmpHeader.test.cpp">
+      <Filter>Bitmaps</Filter>
     </ClCompile>
-    <ClCompile Include="Sprites\ImageHeader.test.cpp">
-      <Filter>Sprites</Filter>
+    <ClCompile Include="Bitmaps\Color.test.cpp">
+      <Filter>Bitmaps</Filter>
     </ClCompile>
-    <ClCompile Include="Sprites\BmpHeader.test.cpp">
-      <Filter>Sprites</Filter>
+    <ClCompile Include="Bitmaps\ImageHeader.test.cpp">
+      <Filter>Bitmaps</Filter>
     </ClCompile>
-    <ClCompile Include="Sprites\Color.test.cpp">
-      <Filter>Sprites</Filter>
+    <ClCompile Include="Bitmaps\IndexedBmpWriter.test.cpp">
+      <Filter>Bitmaps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +56,9 @@
     </Filter>
     <Filter Include="Archives">
       <UniqueIdentifier>{beb7ce96-9a50-4c40-900e-50de0f3f995b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bitmaps">
+      <UniqueIdentifier>{8d918ded-fd11-43cf-acbc-d72b04b9e30a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
