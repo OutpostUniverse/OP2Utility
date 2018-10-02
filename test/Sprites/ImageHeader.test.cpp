@@ -18,19 +18,19 @@ TEST(ImageHeader, Create)
 	EXPECT_EQ(sizeof(ImageHeader), imageHeader.headerSize);
 	EXPECT_EQ(width, imageHeader.width);
 	EXPECT_EQ(height, imageHeader.height);
-	EXPECT_EQ(ImageHeader::defaultPlanes, imageHeader.defaultPlanes);
+	EXPECT_EQ(ImageHeader::DefaultPlanes, imageHeader.DefaultPlanes);
 	EXPECT_EQ(bitCount, imageHeader.bitCount);
 	EXPECT_EQ(BmpCompression::Uncompressed, imageHeader.compression);
-	EXPECT_EQ(ImageHeader::defaultImageSize, imageHeader.defaultImageSize);
-	EXPECT_EQ(ImageHeader::defaultXResolution, imageHeader.defaultXResolution);
-	EXPECT_EQ(ImageHeader::defaultYResolution, imageHeader.defaultYResolution);
-	EXPECT_EQ(ImageHeader::defaultUsedColorMapEntries, imageHeader.defaultUsedColorMapEntries);
-	EXPECT_EQ(ImageHeader::defaultImportantColorCount, imageHeader.defaultImportantColorCount);
+	EXPECT_EQ(ImageHeader::DefaultImageSize, imageHeader.DefaultImageSize);
+	EXPECT_EQ(ImageHeader::DefaultXResolution, imageHeader.DefaultXResolution);
+	EXPECT_EQ(ImageHeader::DefaultYResolution, imageHeader.DefaultYResolution);
+	EXPECT_EQ(ImageHeader::DefaultUsedColorMapEntries, imageHeader.DefaultUsedColorMapEntries);
+	EXPECT_EQ(ImageHeader::DefaultImportantColorCount, imageHeader.DefaultImportantColorCount);
 }
 
 TEST(ImageHeader, IsValidBitCount)
 {
-	for (auto bitCount : ImageHeader::validBitCounts) {
+	for (auto bitCount : ImageHeader::ValidBitCounts) {
 		EXPECT_TRUE(ImageHeader::IsValidBitCount(bitCount));
 	}
 
@@ -39,7 +39,7 @@ TEST(ImageHeader, IsValidBitCount)
 
 TEST(ImageHeader, IsIndexedBitCount)
 {
-	for (auto bitCount : ImageHeader::indexedBitCounts) {
+	for (auto bitCount : ImageHeader::IndexedBitCounts) {
 		EXPECT_TRUE(ImageHeader::IsIndexedBitCount(bitCount));
 
 		// Ensure Indexed Bit Count is also a valid general BitCount
@@ -51,7 +51,7 @@ TEST(ImageHeader, IsIndexedBitCount)
 
 TEST(ImageHeader, VerifyValidBitCount)
 {
-	for (auto bitCount : ImageHeader::validBitCounts) {
+	for (auto bitCount : ImageHeader::ValidBitCounts) {
 		EXPECT_NO_THROW(ImageHeader::VerifyValidBitCount(bitCount));
 	}
 	
@@ -61,7 +61,7 @@ TEST(ImageHeader, VerifyValidBitCount)
 
 TEST(ImageHeader, VerifyIndexedBitCount) 
 {
-	for (auto bitCount : ImageHeader::indexedBitCounts) {
+	for (auto bitCount : ImageHeader::IndexedBitCounts) {
 		EXPECT_NO_THROW(ImageHeader::VerifyIndexedBitCount(bitCount));
 
 		// Ensure Indexed Bit Count is also a valid general BitCount
@@ -70,4 +70,31 @@ TEST(ImageHeader, VerifyIndexedBitCount)
 
 	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(0), std::runtime_error);
 	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(3), std::runtime_error);
+}
+
+TEST(ImageHeader, Validate)
+{
+	ImageHeader imageHeader = ImageHeader::Create(1, 1, 1);
+
+	EXPECT_NO_THROW(imageHeader.Validate());
+
+	imageHeader.headerSize = 0;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.headerSize = sizeof(ImageHeader);
+
+	imageHeader.planes = 0;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.planes = ImageHeader::DefaultPlanes;
+
+	imageHeader.bitCount = 3;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.bitCount = 1;
+
+	imageHeader.usedColorMapEntries = 3;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.usedColorMapEntries = ImageHeader::DefaultUsedColorMapEntries;
+
+	imageHeader.importantColorCount = 3;
+	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
+	imageHeader.importantColorCount = ImageHeader::DefaultImportantColorCount;
 }

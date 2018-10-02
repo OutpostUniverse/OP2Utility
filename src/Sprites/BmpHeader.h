@@ -16,9 +16,12 @@ struct BmpHeader
 	uint16_t reserved2;
 	uint32_t pixelOffset;
 
-	static const std::array<char, 2> defaultFileSignature;
-	static const uint16_t defaultReserved1;
-	static const uint16_t defaultReserved2;
+	static const std::array<char, 2> FileSignature;
+	static const uint16_t DefaultReserved1;
+	static const uint16_t DefaultReserved2;
+
+	bool IsValidFileSignature();
+	void VerifyFileSignature();
 };
 
 static_assert(14 == sizeof(BmpHeader), "BmpHeader is an unexpected size");

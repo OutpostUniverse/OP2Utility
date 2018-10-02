@@ -23,22 +23,24 @@ struct ImageHeader
 	uint32_t importantColorCount;
 
 	// Default values
-	static const uint16_t defaultPlanes;
-	static const uint32_t defaultImageSize;
-	static const uint32_t defaultXResolution;
-	static const uint32_t defaultYResolution;
-	static const uint32_t defaultUsedColorMapEntries;
-	static const uint32_t defaultImportantColorCount;
+	static const uint16_t DefaultPlanes;
+	static const uint32_t DefaultImageSize;
+	static const uint32_t DefaultXResolution;
+	static const uint32_t DefaultYResolution;
+	static const uint32_t DefaultUsedColorMapEntries;
+	static const uint32_t DefaultImportantColorCount;
 
 	// BitCount verification
-	static const std::array<uint16_t, 6> validBitCounts;
-	static const std::array<uint16_t, 3> indexedBitCounts;
+	static const std::array<uint16_t, 6> ValidBitCounts;
+	static const std::array<uint16_t, 3> IndexedBitCounts;
 
 	static bool IsValidBitCount(uint16_t bitCount);
 	static bool IsIndexedBitCount(uint16_t bitCount);
 
 	static void VerifyValidBitCount(uint16_t bitCount);
 	static void VerifyIndexedBitCount(uint16_t bitCount);
+
+	void Validate();
 };
 
 static_assert(40 == sizeof(ImageHeader), "ImageHeader is an unexpected size");
