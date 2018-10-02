@@ -62,7 +62,7 @@ void ImageHeader::Validate()
 	}
 
 	if (planes != DefaultPlanes) {
-		throw std::runtime_error("Image format not supported: only single plane images are supported, but this image has " + std::to_string(DefaultPlanes));
+		throw std::runtime_error("Image format not supported: only single plane images are supported, but this image has " + std::to_string(planes));
 	}
 
 	VerifyValidBitCount(bitCount);
