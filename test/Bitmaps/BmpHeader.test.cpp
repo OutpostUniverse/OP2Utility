@@ -1,4 +1,4 @@
-#include "../src/Sprites/BmpHeader.h"
+#include "../src/Bitmaps/BmpHeader.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
 
