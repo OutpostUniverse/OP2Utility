@@ -6,13 +6,20 @@ namespace fs = std::experimental::filesystem;
 namespace Stream
 {
 	std::ios_base::openmode FileWriter::TranslateFlags(const std::string& filename, FileWriter::OpenMode openMode) {
-		if ((openMode & FileWriter::OpenMode::FailIfExist) != 0 && fs::exists(filename)) {
-			throw std::runtime_error("File OpenMode::FailIfExist specified, but file exists: " + filename);
-		}
-		if ((openMode & FileWriter::OpenMode::FailIfNoExist) != 0 && !fs::exists(filename)) {
-			throw std::runtime_error("File OpenMode::FailIfNoExist specified, but file does not exist: " + filename);
+		// Check for bad flag combinations
+		if ((openMode & FileWriter::OpenMode::FailIfExist) != 0 && (openMode & FileWriter::OpenMode::FailIfNoExist) != 0) {
+			throw std::runtime_error("Bad open mode for file write. Can not specify file be both pre-existing and not pre-existing. Filename: " + filename);
 		}
 
+		// File existance checks
+		if ((openMode & FileWriter::OpenMode::FailIfExist) != 0 && fs::exists(filename)) {
+			throw std::runtime_error("Bad open mode for file write. File required to be not pre-existing, but already exists. Filename: " + filename);
+		}
+		if ((openMode & FileWriter::OpenMode::FailIfNoExist) != 0 && !fs::exists(filename)) {
+			throw std::runtime_error("Bad open mode for file write. File required to be pre-existing, but does not currently exist. Filename: " + filename);
+		}
+
+		// Translate flags to ios_base flags
 		std::ios_base::openmode iosOpenMode = std::ios_base::out | std::ios_base::binary;
 		if ((openMode & OpenMode::PreserveContents) == 0) {
 			iosOpenMode |= std::ios_base::trunc;
@@ -29,7 +36,7 @@ namespace Stream
 		file(filename, TranslateFlags(filename, openMode))
 	{
 		if (!file.is_open()) {
-			throw std::runtime_error("File could not be opened.");
+			throw std::runtime_error("File could not be opened. Filename: " + filename);
 		}
 	}
 
