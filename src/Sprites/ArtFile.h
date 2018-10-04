@@ -2,7 +2,7 @@
 
 #include "ImageMeta.h"
 #include "Animation.h"
-#include "Color.h"
+#include "../Bitmaps/Color.h"
 #include <vector>
 #include <array>
 #include <string>

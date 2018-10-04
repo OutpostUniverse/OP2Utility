@@ -1,4 +1,4 @@
-#include "../src/Sprites/Color.h"
+#include "../src/Bitmaps/Color.h"
 #include <gtest/gtest.h>
 
 TEST(Color, CompareEqual) {
