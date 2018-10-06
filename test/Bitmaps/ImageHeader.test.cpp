@@ -37,16 +37,11 @@ TEST(ImageHeader, IsValidBitCount)
 	EXPECT_FALSE(ImageHeader::IsValidBitCount(21));
 }
 
-TEST(ImageHeader, IsIndexedBitCount)
+TEST(ImageHeader, IsIndexedImage)
 {
-	for (auto bitCount : ImageHeader::IndexedBitCounts) {
-		EXPECT_TRUE(ImageHeader::IsIndexedBitCount(bitCount));
-
-		// Ensure Indexed Bit Count is also a valid general BitCount
-		EXPECT_TRUE(ImageHeader::IsValidBitCount(bitCount));
-	}
-
-	EXPECT_FALSE(ImageHeader::IsIndexedBitCount(3));
+	EXPECT_TRUE(ImageHeader::IsIndexedImage(2));
+	EXPECT_TRUE(ImageHeader::IsIndexedImage(8));
+	EXPECT_FALSE(ImageHeader::IsIndexedImage(16));
 }
 
 TEST(ImageHeader, VerifyValidBitCount)
@@ -57,19 +52,6 @@ TEST(ImageHeader, VerifyValidBitCount)
 	
 	EXPECT_THROW(ImageHeader::VerifyValidBitCount(0), std::runtime_error);
 	EXPECT_THROW(ImageHeader::VerifyValidBitCount(3), std::runtime_error);
-}
-
-TEST(ImageHeader, VerifyIndexedBitCount) 
-{
-	for (auto bitCount : ImageHeader::IndexedBitCounts) {
-		EXPECT_NO_THROW(ImageHeader::VerifyIndexedBitCount(bitCount));
-
-		// Ensure Indexed Bit Count is also a valid general BitCount
-		EXPECT_NO_THROW(ImageHeader::VerifyValidBitCount(bitCount));
-	}
-
-	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(0), std::runtime_error);
-	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(3), std::runtime_error);
 }
 
 TEST(ImageHeader, Validate)
