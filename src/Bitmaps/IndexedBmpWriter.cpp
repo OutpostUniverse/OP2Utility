@@ -7,18 +7,22 @@
 
 void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
+	Stream::FileWriter fileWriter(filename);
+	WriteIndexed(fileWriter, bitCount, width, height, palette, indexedPixels);
+}
+
+void BitmapFile::WriteIndexed(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
+{
 	VerifyIndexedImage(bitCount);
 	VerifyPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
 	VerifyPixelSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
 
 	palette.resize(std::size_t{ 1 } << bitCount, DiscreteColor::Black);
 
-	Stream::FileWriter fileWriter(filename);
+	WriteHeaders(seekableWriter, bitCount, width, height, palette);
+	seekableWriter.Write(palette);
 
-	WriteHeaders(fileWriter, bitCount, width, height, palette);
-	fileWriter.Write(palette);
-
-	WritePixels(fileWriter, indexedPixels, width, bitCount);
+	WritePixels(seekableWriter, indexedPixels, width, bitCount);
 }
 
 void BitmapFile::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)

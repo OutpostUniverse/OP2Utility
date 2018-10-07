@@ -19,7 +19,7 @@ class BitmapFile
 public:
 	// @indexedPixels: Must include padding to fill each image row out to the next 4 byte memory border (pitch).
 	static void WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
-
+	static void WriteIndexed(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
 
 private:
 	static void VerifyIndexedImage(uint16_t bitCount);
