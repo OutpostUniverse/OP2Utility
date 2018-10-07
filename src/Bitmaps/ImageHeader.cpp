@@ -29,29 +29,21 @@ const uint32_t ImageHeader::DefaultUsedColorMapEntries = 0;
 const uint32_t ImageHeader::DefaultImportantColorCount = 0;
 
 const std::array<uint16_t, 6> ImageHeader::ValidBitCounts{ 1, 4, 8, 16, 24, 32 };
-const std::array<uint16_t, 3> ImageHeader::IndexedBitCounts{ 1, 4, 8 };
 
 bool ImageHeader::IsValidBitCount(uint16_t bitCount)
 {
 	return std::find(ValidBitCounts.begin(), ValidBitCounts.end(), bitCount) != ValidBitCounts.end();
 }
 
-bool ImageHeader::IsIndexedBitCount(uint16_t bitCount)
+bool ImageHeader::IsIndexedImage(uint16_t bitCount)
 {
-	return std::find(IndexedBitCounts.begin(), IndexedBitCounts.end(), bitCount) != IndexedBitCounts.end();
+	return bitCount <= 8;
 }
 
 void ImageHeader::VerifyValidBitCount(uint16_t bitCount)
 {
 	if (!IsValidBitCount(bitCount)) {
 		throw std::runtime_error("A bit count of " + std::to_string(bitCount) + " is not supported");
-	}
-}
-
-void ImageHeader::VerifyIndexedBitCount(uint16_t bitCount)
-{
-	if (!IsIndexedBitCount(bitCount)) {
-		throw std::runtime_error("A bit count of " + std::to_string(bitCount) + " does not support an indexed palette");
 	}
 }
 

@@ -7,7 +7,7 @@
 
 void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
-	ImageHeader::VerifyIndexedBitCount(bitCount);
+	VerifyIndexedImage(bitCount);
 	VerifyPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
 	VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
 
@@ -35,6 +35,13 @@ void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint
 
 	seekableWriter.Write(bmpHeader);
 	seekableWriter.Write(imageHeader);
+}
+
+void IndexedBmpWriter::VerifyIndexedImage(uint16_t bitCount)
+{
+	if (!ImageHeader::IsIndexedImage(bitCount)) {
+		throw std::runtime_error("Unable to write an non-indexed bitmap file. Bit count is " + std::to_string(bitCount) + " but must be 8 or less");
+	}
 }
 
 void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)

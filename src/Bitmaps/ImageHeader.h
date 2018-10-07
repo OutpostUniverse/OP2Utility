@@ -32,13 +32,11 @@ struct ImageHeader
 
 	// BitCount verification
 	static const std::array<uint16_t, 6> ValidBitCounts;
-	static const std::array<uint16_t, 3> IndexedBitCounts;
 
 	static bool IsValidBitCount(uint16_t bitCount);
-	static bool IsIndexedBitCount(uint16_t bitCount);
+	static bool IsIndexedImage(uint16_t bitCount);
 
 	static void VerifyValidBitCount(uint16_t bitCount);
-	static void VerifyIndexedBitCount(uint16_t bitCount);
 
 	void Validate();
 };
