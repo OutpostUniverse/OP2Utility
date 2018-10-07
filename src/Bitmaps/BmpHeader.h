@@ -20,8 +20,8 @@ struct BmpHeader
 	static const uint16_t DefaultReserved1;
 	static const uint16_t DefaultReserved2;
 
-	bool IsValidFileSignature();
-	void VerifyFileSignature();
+	bool IsValidFileSignature() const;
+	void VerifyFileSignature() const;
 };
 
 static_assert(14 == sizeof(BmpHeader), "BmpHeader is an unexpected size");
