@@ -62,7 +62,7 @@ void ImageHeader::VerifyValidBitCount(uint16_t bitCount)
 	}
 }
 
-void ImageHeader::Validate()
+void ImageHeader::Validate() const
 {
 	if (headerSize != sizeof(ImageHeader)) {
 		throw std::runtime_error("Image Header size must be equal to " + std::to_string(sizeof(ImageHeader)));

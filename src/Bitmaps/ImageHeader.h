@@ -42,7 +42,7 @@ struct ImageHeader
 	void VerifyValidBitCount() const;
 	static void VerifyValidBitCount(uint16_t bitCount);
 
-	void Validate();
+	void Validate() const;
 };
 
 static_assert(40 == sizeof(ImageHeader), "ImageHeader is an unexpected size");
