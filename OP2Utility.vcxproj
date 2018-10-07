@@ -153,6 +153,7 @@
     <ClCompile Include="src\Bitmaps\BmpHeader.cpp" />
     <ClCompile Include="src\Bitmaps\Color.cpp" />
     <ClCompile Include="src\Bitmaps\ImageHeader.cpp" />
+    <ClCompile Include="src\Bitmaps\IndexedBmpReader.cpp" />
     <ClCompile Include="src\Bitmaps\IndexedBmpWriter.cpp" />
     <ClCompile Include="src\Maps\MapData.cpp" />
     <ClCompile Include="src\Maps\MapHeader.cpp" />

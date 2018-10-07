@@ -1,6 +1,5 @@
 #include "BitmapFile.h"
 #include "../Streams/FileWriter.h"
-#include "../Streams/SeekableReader.h"
 #include <stdexcept>
 #include <cmath>
 
@@ -12,7 +11,7 @@ void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t w
 
 void BitmapFile::WriteIndexed(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
-	VerifyIndexedImageForWriting(bitCount);
+	VerifyIndexedImageForSerialization(bitCount);
 	VerifyIndexedPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
 	VerifyPixelSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
 
@@ -38,13 +37,6 @@ void BitmapFile::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t b
 
 	seekableWriter.Write(bmpHeader);
 	seekableWriter.Write(imageHeader);
-}
-
-void BitmapFile::VerifyIndexedImageForWriting(uint16_t bitCount)
-{
-	if (!ImageHeader::IsIndexedImage(bitCount)) {
-		throw std::runtime_error("Unable to write a non-indexed bitmap file. Bit count is " + std::to_string(bitCount) + " but must be 8 or less");
-	}
 }
 
 void BitmapFile::WritePixels(Stream::SeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)

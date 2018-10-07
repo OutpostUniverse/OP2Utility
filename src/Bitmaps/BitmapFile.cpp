@@ -25,3 +25,10 @@ void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCoun
 		throw std::runtime_error("The size of pixels does not match the image's height time pitch");
 	}
 }
+
+void BitmapFile::VerifyIndexedImageForSerialization(uint16_t bitCount)
+{
+	if (!ImageHeader::IsIndexedImage(bitCount)) {
+		throw std::runtime_error("Unable to read/write a non-indexed bitmap file. Bit count is " + std::to_string(bitCount) + " but must be 8 or less");
+	}
+}
