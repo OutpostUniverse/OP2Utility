@@ -5,11 +5,11 @@
 #include <stdexcept>
 #include <cmath>
 
-void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
+void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
 	VerifyIndexedImage(bitCount);
 	VerifyPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
-	VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
+	VerifyPixelSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
 
 	palette.resize(std::size_t{ 1 } << bitCount, DiscreteColor::Black);
 
@@ -21,7 +21,7 @@ void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t wi
 	WritePixels(fileWriter, indexedPixels, width, bitCount);
 }
 
-void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
+void BitmapFile::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
 	std::size_t fileSize = pixelOffset + ImageHeader::CalculatePitch(bitCount, width) * std::abs(height);
@@ -37,14 +37,14 @@ void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint
 	seekableWriter.Write(imageHeader);
 }
 
-void IndexedBmpWriter::VerifyIndexedImage(uint16_t bitCount)
+void BitmapFile::VerifyIndexedImage(uint16_t bitCount)
 {
 	if (!ImageHeader::IsIndexedImage(bitCount)) {
 		throw std::runtime_error("Unable to write an non-indexed bitmap file. Bit count is " + std::to_string(bitCount) + " but must be 8 or less");
 	}
 }
 
-void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
+void BitmapFile::WritePixels(Stream::SeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
 {
 	const auto pitch = ImageHeader::CalculatePitch(bitCount, width);
 	const auto bytesOfPixelsPerRow = ImageHeader::CalcPixelByteWidth(bitCount, width);
@@ -57,16 +57,9 @@ void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, const
 	}
 }
 
-void IndexedBmpWriter::VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize)
+void BitmapFile::VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize)
 {
 	if (paletteSize > std::size_t{ 1 } << bitCount) {
 		throw std::runtime_error("Too many colors listed on the indexed palette");
-	}
-}
-
-void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
-{
-	if (pixelsWithPitchSize != ImageHeader::CalculatePitch(bitCount, width) * std::abs(height)) {
-		throw std::runtime_error("An incorrect number of pixels were passed.");
 	}
 }
