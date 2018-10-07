@@ -2,6 +2,23 @@
 #include <stdexcept>
 #include <cmath>
 
+void BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount() const
+{
+	return BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount(imageHeader.bitCount, palette.size());
+}
+
+void BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize)
+{
+	if (paletteSize > std::size_t{ 1 } << bitCount) {
+		throw std::runtime_error("Too many colors listed on the indexed palette");
+	}
+}
+
+void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch() const
+{
+	BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(imageHeader.bitCount, imageHeader.width, imageHeader.height, pixels.size());
+}
+
 void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
 {
 	if (pixelsWithPitchSize != ImageHeader::CalculatePitch(bitCount, width) * std::abs(height)) {
