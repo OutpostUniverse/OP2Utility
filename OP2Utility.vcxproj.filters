@@ -168,7 +168,7 @@
     <ClInclude Include="src\Bitmaps\ImageHeader.h">
       <Filter>Bitmaps</Filter>
     </ClInclude>
-    <ClInclude Include="src\Bitmaps\IndexedBmpWriter.h">
+    <ClInclude Include="src\Bitmaps\BitmapFile.h">
       <Filter>Bitmaps</Filter>
     </ClInclude>
   </ItemGroup>
