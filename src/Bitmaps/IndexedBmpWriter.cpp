@@ -24,7 +24,7 @@ void IndexedBmpWriter::Write(std::string filename, uint16_t bitCount, int32_t wi
 void IndexedBmpWriter::WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
-	std::size_t fileSize = pixelOffset + CalculatePitch(bitCount, width) * std::abs(height);
+	std::size_t fileSize = pixelOffset + ImageHeader::CalculatePitch(bitCount, width) * std::abs(height);
 
 	if (fileSize > UINT32_MAX) {
 		throw std::runtime_error("Bitmap size is too large to save to disk.");
@@ -46,8 +46,8 @@ void IndexedBmpWriter::VerifyIndexedImage(uint16_t bitCount)
 
 void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
 {
-	const auto pitch = CalculatePitch(bitCount, width);
-	const auto bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
+	const auto pitch = ImageHeader::CalculatePitch(bitCount, width);
+	const auto bytesOfPixelsPerRow = ImageHeader::CalcPixelByteWidth(bitCount, width);
 	const std::vector<uint8_t> padding(pitch - bytesOfPixelsPerRow, 0);
 
 	for (std::size_t i = 0; i < pixels.size();) {
@@ -55,18 +55,6 @@ void IndexedBmpWriter::WritePixels(Stream::SeekableWriter& seekableWriter, const
 		seekableWriter.Write(padding);
 		i += pitch;
 	}
-}
-
-std::size_t IndexedBmpWriter::CalculatePitch(uint16_t bitCount, int32_t width)
-{
-	const auto bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
-	return ( (bytesOfPixelsPerRow + 3) & ~3 );
-}
-
-std::size_t IndexedBmpWriter::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
-{
-	const std::size_t bitsPerByte = 8;
-	return ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
 }
 
 void IndexedBmpWriter::VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize)
@@ -78,7 +66,7 @@ void IndexedBmpWriter::VerifyPaletteSizeDoesNotExceedBitCount(uint16_t bitCount,
 
 void IndexedBmpWriter::VerifyPixelBufferSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
 {
-	if (pixelsWithPitchSize != CalculatePitch(bitCount, width) * std::abs(height)) {
+	if (pixelsWithPitchSize != ImageHeader::CalculatePitch(bitCount, width) * std::abs(height)) {
 		throw std::runtime_error("An incorrect number of pixels were passed.");
 	}
 }

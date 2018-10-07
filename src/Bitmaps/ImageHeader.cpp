@@ -62,6 +62,28 @@ void ImageHeader::VerifyValidBitCount(uint16_t bitCount)
 	}
 }
 
+std::size_t ImageHeader::CalculatePitch() const
+{
+	return ImageHeader::CalculatePitch(bitCount, width);
+}
+
+std::size_t ImageHeader::CalculatePitch(uint16_t bitCount, int32_t width)
+{
+	const auto bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
+	return (bytesOfPixelsPerRow + 3) & ~3;
+}
+
+std::size_t ImageHeader::CalcPixelByteWidth() const
+{
+	return ImageHeader::CalcPixelByteWidth(bitCount, width);
+}
+
+std::size_t ImageHeader::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
+{
+	const std::size_t bitsPerByte = 8;
+	return ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
+}
+
 void ImageHeader::Validate() const
 {
 	if (headerSize != sizeof(ImageHeader)) {
