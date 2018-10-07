@@ -149,6 +149,7 @@
     <ClCompile Include="src\Archives\ArchivePacker.cpp" />
     <ClCompile Include="src\Archives\ArchiveUnpacker.cpp" />
     <ClCompile Include="src\Archives\WaveFile.cpp" />
+    <ClCompile Include="src\Bitmaps\BitmapFile.cpp" />
     <ClCompile Include="src\Bitmaps\BmpHeader.cpp" />
     <ClCompile Include="src\Bitmaps\Color.cpp" />
     <ClCompile Include="src\Bitmaps\ImageHeader.cpp" />

@@ -263,5 +263,8 @@
     <ClCompile Include="src\Bitmaps\IndexedBmpWriter.cpp">
       <Filter>Bitmaps</Filter>
     </ClCompile>
+    <ClCompile Include="src\Bitmaps\BitmapFile.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

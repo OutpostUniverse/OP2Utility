@@ -29,7 +29,7 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 		throw std::runtime_error("Image height is too large to fit in standard bitmap file format.");
 	}
 
-	IndexedBmpWriter::Write(filenameOut, imageMeta.GetBitCount(), imageMeta.width, -static_cast<int32_t>(imageMeta.height), palette, pixelContainer);
+	BitmapFile::WriteIndexed(filenameOut, imageMeta.GetBitCount(), imageMeta.width, -static_cast<int32_t>(imageMeta.height), palette, pixelContainer);
 }
 
 std::unique_ptr<Stream::FileSliceReader> OP2BmpLoader::GetPixels(std::size_t startingIndex, std::size_t length)
