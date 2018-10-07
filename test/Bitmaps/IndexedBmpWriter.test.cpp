@@ -1,5 +1,5 @@
 #include "../src/Bitmaps/Color.h"
-#include "../src/Bitmaps/IndexedBmpWriter.h"
+#include "../src/Bitmaps/BitmapFile.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
 #include <string>

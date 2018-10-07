@@ -1,4 +1,4 @@
-#include "IndexedBmpWriter.h"
+#include "BitmapFile.h"
 #include "ImageHeader.h"
 #include "../Streams/FileWriter.h"
 #include "../Streams/SeekableReader.h"
