@@ -30,14 +30,29 @@ const uint32_t ImageHeader::DefaultImportantColorCount = 0;
 
 const std::array<uint16_t, 6> ImageHeader::ValidBitCounts{ 1, 4, 8, 16, 24, 32 };
 
+bool ImageHeader::IsValidBitCount() const
+{
+	return ImageHeader::IsValidBitCount(bitCount);
+}
+
 bool ImageHeader::IsValidBitCount(uint16_t bitCount)
 {
 	return std::find(ValidBitCounts.begin(), ValidBitCounts.end(), bitCount) != ValidBitCounts.end();
 }
 
+bool ImageHeader::IsIndexedImage() const
+{
+	return ImageHeader::IsIndexedImage(bitCount);
+}
+
 bool ImageHeader::IsIndexedImage(uint16_t bitCount)
 {
 	return bitCount <= 8;
+}
+
+void ImageHeader::VerifyValidBitCount() const
+{
+	return ImageHeader::VerifyValidBitCount(bitCount);
 }
 
 void ImageHeader::VerifyValidBitCount(uint16_t bitCount)

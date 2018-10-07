@@ -34,14 +34,28 @@ TEST(ImageHeader, IsValidBitCount)
 		EXPECT_TRUE(ImageHeader::IsValidBitCount(bitCount));
 	}
 
-	EXPECT_FALSE(ImageHeader::IsValidBitCount(21));
+	EXPECT_FALSE(ImageHeader::IsValidBitCount(3));
+
+	// Test non-static version of function
+	ImageHeader imageHeader;
+	imageHeader.bitCount = 1;
+	EXPECT_TRUE(imageHeader.IsValidBitCount());
+	imageHeader.bitCount = 3;
+	EXPECT_FALSE(imageHeader.IsValidBitCount());
 }
 
 TEST(ImageHeader, IsIndexedImage)
 {
-	EXPECT_TRUE(ImageHeader::IsIndexedImage(2));
+	EXPECT_TRUE(ImageHeader::IsIndexedImage(1));
 	EXPECT_TRUE(ImageHeader::IsIndexedImage(8));
 	EXPECT_FALSE(ImageHeader::IsIndexedImage(16));
+
+	// Test non-static version of function
+	ImageHeader imageHeader;
+	imageHeader.bitCount = 1;
+	EXPECT_TRUE(imageHeader.IsIndexedImage());
+	imageHeader.bitCount = 16;
+	EXPECT_FALSE(imageHeader.IsIndexedImage());
 }
 
 TEST(ImageHeader, VerifyValidBitCount)
@@ -52,6 +66,13 @@ TEST(ImageHeader, VerifyValidBitCount)
 	
 	EXPECT_THROW(ImageHeader::VerifyValidBitCount(0), std::runtime_error);
 	EXPECT_THROW(ImageHeader::VerifyValidBitCount(3), std::runtime_error);
+
+	// Test non-static version of function
+	ImageHeader imageHeader;
+	imageHeader.bitCount = 1;
+	EXPECT_NO_THROW(imageHeader.VerifyValidBitCount());
+	imageHeader.bitCount = 3;
+	EXPECT_THROW(imageHeader.VerifyValidBitCount(), std::runtime_error);
 }
 
 TEST(ImageHeader, Validate)
