@@ -2,6 +2,7 @@
 #include <string>
 #include <stdexcept>
 #include <algorithm>
+#include <cstring>
 
 ImageHeader ImageHeader::Create(int32_t width, int32_t height, uint16_t bitCount)
 {
@@ -103,4 +104,12 @@ void ImageHeader::Validate() const
 	if (importantColorCount > std::size_t{ 1 } << bitCount) {
 		throw std::runtime_error("Important Color Count is greater than possible range of color map (palette)");
 	}
+}
+
+bool operator==(const ImageHeader& lhs, const ImageHeader& rhs) {
+	return std::memcmp(&lhs, &rhs, sizeof(lhs)) == 0;
+}
+
+bool operator!=(const ImageHeader& lhs, const ImageHeader& rhs) {
+	return !operator==(lhs, rhs);
 }

@@ -53,3 +53,6 @@ private:
 	static void WriteHeaders(Stream::SeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette);
 	static void WritePixels(Stream::SeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount);
 };
+
+bool operator==(const BitmapFile& lhs, const BitmapFile& rhs);
+bool operator!=(const BitmapFile& lhs, const BitmapFile& rhs);

@@ -30,3 +30,21 @@ TEST(BitmapFile, VerifyPixelSizeMatchesImageDimensionsWithPitch)
 	bitmapFile.pixels.resize(1, 0);
 	EXPECT_THROW(bitmapFile.VerifyPixelSizeMatchesImageDimensionsWithPitch(), std::runtime_error);
 }
+
+TEST(BitmapFile, Equality)
+{
+	BitmapFile bitmapFile1;
+	bitmapFile1.bmpHeader = BmpHeader::Create(1, 1);
+	bitmapFile1.imageHeader = ImageHeader::Create(1, 1, 1);
+	bitmapFile1.palette.resize(2, DiscreteColor::Black);
+	bitmapFile1.pixels.resize(1, 0);
+	
+	auto bitmapFile2 = bitmapFile1;
+
+	EXPECT_TRUE(bitmapFile1 == bitmapFile2);
+	EXPECT_FALSE(bitmapFile1 != bitmapFile2);
+
+	bitmapFile1.pixels[0] = 1;
+	EXPECT_FALSE(bitmapFile1 == bitmapFile2);
+	EXPECT_TRUE(bitmapFile1 != bitmapFile2);
+}

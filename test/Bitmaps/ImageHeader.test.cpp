@@ -142,3 +142,16 @@ TEST(ImageHeader, Validate)
 	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
 	imageHeader.importantColorCount = ImageHeader::DefaultImportantColorCount;
 }
+
+TEST(ImageHeader, Equality)
+{
+	auto imageHeader1 = ImageHeader::Create(1, 1, 1);
+	auto imageHeader2 = ImageHeader::Create(1, 1, 1);
+
+	EXPECT_TRUE(imageHeader1 == imageHeader2);
+	EXPECT_FALSE(imageHeader1 != imageHeader2);
+
+	imageHeader2.bitCount = 8;
+	EXPECT_FALSE(imageHeader1 == imageHeader2);
+	EXPECT_TRUE(imageHeader1 != imageHeader2);
+}

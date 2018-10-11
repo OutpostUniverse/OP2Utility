@@ -55,3 +55,6 @@ struct ImageHeader
 static_assert(40 == sizeof(ImageHeader), "ImageHeader is an unexpected size");
 
 #pragma pack(pop)
+
+bool operator==(const ImageHeader& lhs, const ImageHeader& rhs);
+bool operator!=(const ImageHeader& lhs, const ImageHeader& rhs);

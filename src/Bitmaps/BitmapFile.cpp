@@ -32,3 +32,14 @@ void BitmapFile::VerifyIndexedImageForSerialization(uint16_t bitCount)
 		throw std::runtime_error("Unable to read/write a non-indexed bitmap file. Bit count is " + std::to_string(bitCount) + " but must be 8 or less");
 	}
 }
+
+bool operator==(const BitmapFile& lhs, const BitmapFile& rhs) {
+	return lhs.bmpHeader == rhs.bmpHeader && 
+		lhs.imageHeader == rhs.imageHeader && 
+		lhs.palette == rhs.palette &&
+		lhs.pixels == rhs.pixels;
+}
+
+bool operator!=(const BitmapFile& lhs, const BitmapFile& rhs) {
+	return !operator==(lhs, rhs);
+}

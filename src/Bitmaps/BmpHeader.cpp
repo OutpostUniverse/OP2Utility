@@ -21,3 +21,11 @@ void BmpHeader::VerifyFileSignature() const
 		throw std::runtime_error("BmpHeader does not contain a proper File Signature (Magic Number).");
 	}
 }
+
+bool operator==(const BmpHeader& lhs, const BmpHeader& rhs) {
+	return std::memcmp(&lhs, &rhs, sizeof(lhs)) == 0;
+}
+
+bool operator!=(const BmpHeader& lhs, const BmpHeader& rhs) {
+	return !operator==(lhs, rhs);
+}
