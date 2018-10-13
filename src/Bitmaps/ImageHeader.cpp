@@ -97,13 +97,26 @@ void ImageHeader::Validate() const
 
 	VerifyValidBitCount(bitCount);
 
-	if (usedColorMapEntries > std::size_t{ 1 } << bitCount) {
+	if (usedColorMapEntries > CalcMaxIndexedPaletteSize()) {
 		throw std::runtime_error("Used color map entries is greater than possible range of color map (palette)");
 	}
 
-	if (importantColorCount > std::size_t{ 1 } << bitCount) {
+	if (importantColorCount > CalcMaxIndexedPaletteSize()) {
 		throw std::runtime_error("Important Color Count is greater than possible range of color map (palette)");
 	}
+}
+
+std::size_t ImageHeader::CalcMaxIndexedPaletteSize() const {
+	return CalcMaxIndexedPaletteSize(bitCount);
+}
+
+std::size_t ImageHeader::CalcMaxIndexedPaletteSize(uint16_t bitCount)
+{
+	if (!ImageHeader::IsIndexedImage(bitCount)) {
+		throw std::runtime_error("Bit count does not have an associated max palette size");
+	}
+
+	return std::size_t{ 1 } << bitCount;
 }
 
 bool operator==(const ImageHeader& lhs, const ImageHeader& rhs) {

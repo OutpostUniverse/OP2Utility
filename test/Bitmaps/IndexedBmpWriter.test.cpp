@@ -6,23 +6,6 @@
 #include <vector>
 #include <cstdint>
 
-TEST(BitmapFile, WriteAllPalettizedBitDepths)
-{
-	const std::string filename = "Sprites/data/BitmapTest.bmp";
-	const std::vector<uint8_t> pixels(4, 0);
-
-	std::vector<Color> palette(2);
-	EXPECT_NO_THROW(BitmapFile::WriteIndexed(filename, 1, 1, 1, palette, pixels));
-
-	palette.resize(16);
-	EXPECT_NO_THROW(BitmapFile::WriteIndexed(filename, 4, 1, 1, palette, pixels));
-
-	palette.resize(256);
-	EXPECT_NO_THROW(BitmapFile::WriteIndexed(filename, 8, 1, 1, palette, pixels));
-
-	XFile::DeletePath(filename);
-}
-
 TEST(BitmapFile, InvalidBitCountThrows)
 {
 	const std::vector<Color> palette(8);

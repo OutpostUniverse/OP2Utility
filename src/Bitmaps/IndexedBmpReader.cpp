@@ -54,7 +54,7 @@ void BitmapFile::ReadPalette(Stream::SeekableReader& seekableReader, BitmapFile&
 		bitmapFile.palette.resize(bitmapFile.imageHeader.usedColorMapEntries);
 	}
 	else {
-		bitmapFile.palette.resize(std::size_t{ 1 } << bitmapFile.imageHeader.bitCount);
+		bitmapFile.palette.resize(bitmapFile.imageHeader.CalcMaxIndexedPaletteSize());
 	}
 
 	seekableReader.Read(bitmapFile.palette);

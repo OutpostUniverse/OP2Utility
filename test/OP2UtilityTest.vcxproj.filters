@@ -44,9 +44,6 @@
     <ClCompile Include="Bitmaps\BitmapFile.test.cpp">
       <Filter>Bitmaps</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmaps\IndexedBmpReader.test.cpp">
-      <Filter>Bitmaps</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

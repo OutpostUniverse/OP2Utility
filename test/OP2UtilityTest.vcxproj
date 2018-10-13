@@ -46,7 +46,6 @@
     <ClCompile Include="Bitmaps\BmpHeader.test.cpp" />
     <ClCompile Include="Bitmaps\Color.test.cpp" />
     <ClCompile Include="Bitmaps\ImageHeader.test.cpp" />
-    <ClCompile Include="Bitmaps\IndexedBmpReader.test.cpp" />
     <ClCompile Include="Bitmaps\IndexedBmpWriter.test.cpp" />
     <ClCompile Include="Maps\MapHeader.test.cpp" />
     <ClCompile Include="Maps\MapReader.test.cpp" />

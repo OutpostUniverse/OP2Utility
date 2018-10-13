@@ -3,6 +3,18 @@
 #include <stdexcept>
 #include <cmath>
 
+void BitmapFile::WriteIndexed(std::string filename, const BitmapFile& bitmapFile)
+{
+	// Test all properties that are auto-generated as correct when writing bitmap piecemeal
+	if (bitmapFile.imageHeader.compression != BmpCompression::Uncompressed) {
+		throw std::runtime_error("Unable to write compressed bitmap files");
+	}
+
+	bitmapFile.Validate();
+
+	WriteIndexed(filename, bitmapFile.imageHeader.bitCount, bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, bitmapFile.palette, bitmapFile.pixels);
+}
+
 void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
 	Stream::FileWriter fileWriter(filename);
@@ -15,7 +27,7 @@ void BitmapFile::WriteIndexed(Stream::SeekableWriter& seekableWriter, uint16_t b
 	VerifyIndexedPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
 	VerifyPixelSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
 
-	palette.resize(std::size_t{ 1 } << bitCount, DiscreteColor::Black);
+	palette.resize(ImageHeader::CalcMaxIndexedPaletteSize(bitCount), DiscreteColor::Black);
 
 	WriteHeaders(seekableWriter, bitCount, width, height, palette);
 	seekableWriter.Write(palette);

@@ -49,6 +49,9 @@ struct ImageHeader
 	std::size_t CalcPixelByteWidth() const;
 	static std::size_t CalcPixelByteWidth(uint16_t bitCount, int32_t width);
 
+	std::size_t CalcMaxIndexedPaletteSize() const;
+	static std::size_t CalcMaxIndexedPaletteSize(uint16_t bitCount);
+
 	void Validate() const;
 };
 
