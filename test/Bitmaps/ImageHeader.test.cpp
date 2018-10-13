@@ -34,19 +34,28 @@ TEST(ImageHeader, IsValidBitCount)
 		EXPECT_TRUE(ImageHeader::IsValidBitCount(bitCount));
 	}
 
-	EXPECT_FALSE(ImageHeader::IsValidBitCount(21));
+	EXPECT_FALSE(ImageHeader::IsValidBitCount(3));
+
+	// Test non-static version of function
+	ImageHeader imageHeader;
+	imageHeader.bitCount = 1;
+	EXPECT_TRUE(imageHeader.IsValidBitCount());
+	imageHeader.bitCount = 3;
+	EXPECT_FALSE(imageHeader.IsValidBitCount());
 }
 
-TEST(ImageHeader, IsIndexedBitCount)
+TEST(ImageHeader, IsIndexedImage)
 {
-	for (auto bitCount : ImageHeader::IndexedBitCounts) {
-		EXPECT_TRUE(ImageHeader::IsIndexedBitCount(bitCount));
+	EXPECT_TRUE(ImageHeader::IsIndexedImage(1));
+	EXPECT_TRUE(ImageHeader::IsIndexedImage(8));
+	EXPECT_FALSE(ImageHeader::IsIndexedImage(16));
 
-		// Ensure Indexed Bit Count is also a valid general BitCount
-		EXPECT_TRUE(ImageHeader::IsValidBitCount(bitCount));
-	}
-
-	EXPECT_FALSE(ImageHeader::IsIndexedBitCount(3));
+	// Test non-static version of function
+	ImageHeader imageHeader;
+	imageHeader.bitCount = 1;
+	EXPECT_TRUE(imageHeader.IsIndexedImage());
+	imageHeader.bitCount = 16;
+	EXPECT_FALSE(imageHeader.IsIndexedImage());
 }
 
 TEST(ImageHeader, VerifyValidBitCount)
@@ -57,19 +66,54 @@ TEST(ImageHeader, VerifyValidBitCount)
 	
 	EXPECT_THROW(ImageHeader::VerifyValidBitCount(0), std::runtime_error);
 	EXPECT_THROW(ImageHeader::VerifyValidBitCount(3), std::runtime_error);
+
+	// Test non-static version of function
+	ImageHeader imageHeader;
+	imageHeader.bitCount = 1;
+	EXPECT_NO_THROW(imageHeader.VerifyValidBitCount());
+	imageHeader.bitCount = 3;
+	EXPECT_THROW(imageHeader.VerifyValidBitCount(), std::runtime_error);
 }
 
-TEST(ImageHeader, VerifyIndexedBitCount) 
+TEST(ImageHeader, CalculatePitch)
 {
-	for (auto bitCount : ImageHeader::IndexedBitCounts) {
-		EXPECT_NO_THROW(ImageHeader::VerifyIndexedBitCount(bitCount));
+	EXPECT_EQ(4, ImageHeader::CalculatePitch(1, 1));
+	EXPECT_EQ(4, ImageHeader::CalculatePitch(1, 32));
+	EXPECT_EQ(8, ImageHeader::CalculatePitch(1, 33));
 
-		// Ensure Indexed Bit Count is also a valid general BitCount
-		EXPECT_NO_THROW(ImageHeader::VerifyValidBitCount(bitCount));
-	}
+	EXPECT_EQ(4, ImageHeader::CalculatePitch(4, 1));
+	EXPECT_EQ(4, ImageHeader::CalculatePitch(4, 8));
+	EXPECT_EQ(8, ImageHeader::CalculatePitch(4, 9));
 
-	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(0), std::runtime_error);
-	EXPECT_THROW(ImageHeader::VerifyIndexedBitCount(3), std::runtime_error);
+	EXPECT_EQ(4, ImageHeader::CalculatePitch(8, 1));
+	EXPECT_EQ(4, ImageHeader::CalculatePitch(8, 4));
+	EXPECT_EQ(8, ImageHeader::CalculatePitch(8, 5));
+
+	// Test non-static version of function
+	ImageHeader imageHeader;
+	imageHeader.bitCount = 1;
+	imageHeader.width = 1;
+	EXPECT_EQ(4, imageHeader.CalculatePitch());
+}
+
+TEST(ImageHeader, CalcByteWidth)
+{
+	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(1, 1));
+	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(1, 8));
+	EXPECT_EQ(2, ImageHeader::CalcPixelByteWidth(1, 9));
+
+	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(4, 1));
+	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(4, 2));
+	EXPECT_EQ(2, ImageHeader::CalcPixelByteWidth(4, 3));
+
+	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(8, 1));
+	EXPECT_EQ(2, ImageHeader::CalcPixelByteWidth(8, 2));
+
+	// Test non-static version of function
+	ImageHeader imageHeader;
+	imageHeader.bitCount = 1;
+	imageHeader.width = 1;
+	EXPECT_EQ(1, imageHeader.CalcPixelByteWidth());
 }
 
 TEST(ImageHeader, Validate)
@@ -97,4 +141,17 @@ TEST(ImageHeader, Validate)
 	imageHeader.importantColorCount = 3;
 	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
 	imageHeader.importantColorCount = ImageHeader::DefaultImportantColorCount;
+}
+
+TEST(ImageHeader, Equality)
+{
+	auto imageHeader1 = ImageHeader::Create(1, 1, 1);
+	auto imageHeader2 = ImageHeader::Create(1, 1, 1);
+
+	EXPECT_TRUE(imageHeader1 == imageHeader2);
+	EXPECT_FALSE(imageHeader1 != imageHeader2);
+
+	imageHeader2.bitCount = 8;
+	EXPECT_FALSE(imageHeader1 == imageHeader2);
+	EXPECT_TRUE(imageHeader1 != imageHeader2);
 }

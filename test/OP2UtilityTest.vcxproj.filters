@@ -41,6 +41,9 @@
       <Filter>Bitmaps</Filter>
     </ClCompile>
     <ClCompile Include="Rect.test.cpp" />
+    <ClCompile Include="Bitmaps\BitmapFile.test.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

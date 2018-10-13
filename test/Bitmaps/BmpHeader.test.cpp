@@ -38,3 +38,16 @@ TEST(BmpHeader, VerifyFileSignature)
 	bmpHeader.fileSignature[0] = 'b';
 	EXPECT_THROW(bmpHeader.VerifyFileSignature(), std::runtime_error);
 }
+
+TEST(BitmapHeader, Equality)
+{
+	auto bmpHeader1 = BmpHeader::Create(1, 1);
+	auto bmpHeader2 = BmpHeader::Create(1, 1);
+
+	EXPECT_TRUE(bmpHeader1 == bmpHeader2);
+	EXPECT_FALSE(bmpHeader1 != bmpHeader2);
+
+	bmpHeader2.size = 2;
+	EXPECT_FALSE(bmpHeader1 == bmpHeader2);
+	EXPECT_TRUE(bmpHeader1 != bmpHeader2);
+}

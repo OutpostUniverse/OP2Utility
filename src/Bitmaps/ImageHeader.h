@@ -32,17 +32,32 @@ struct ImageHeader
 
 	// BitCount verification
 	static const std::array<uint16_t, 6> ValidBitCounts;
-	static const std::array<uint16_t, 3> IndexedBitCounts;
 
+	bool IsValidBitCount() const;
 	static bool IsValidBitCount(uint16_t bitCount);
-	static bool IsIndexedBitCount(uint16_t bitCount);
 
+	bool IsIndexedImage() const;
+	static bool IsIndexedImage(uint16_t bitCount);
+
+	void VerifyValidBitCount() const;
 	static void VerifyValidBitCount(uint16_t bitCount);
-	static void VerifyIndexedBitCount(uint16_t bitCount);
 
-	void Validate();
+	std::size_t CalculatePitch() const;
+	static std::size_t CalculatePitch(uint16_t bitCount, int32_t width);
+
+	// Does not include padding
+	std::size_t CalcPixelByteWidth() const;
+	static std::size_t CalcPixelByteWidth(uint16_t bitCount, int32_t width);
+
+	std::size_t CalcMaxIndexedPaletteSize() const;
+	static std::size_t CalcMaxIndexedPaletteSize(uint16_t bitCount);
+
+	void Validate() const;
 };
 
 static_assert(40 == sizeof(ImageHeader), "ImageHeader is an unexpected size");
 
 #pragma pack(pop)
+
+bool operator==(const ImageHeader& lhs, const ImageHeader& rhs);
+bool operator!=(const ImageHeader& lhs, const ImageHeader& rhs);

@@ -126,7 +126,7 @@
     <ClInclude Include="src\Bitmaps\BmpHeader.h" />
     <ClInclude Include="src\Bitmaps\Color.h" />
     <ClInclude Include="src\Bitmaps\ImageHeader.h" />
-    <ClInclude Include="src\Bitmaps\IndexedBmpWriter.h" />
+    <ClInclude Include="src\Bitmaps\BitmapFile.h" />
     <ClInclude Include="src\Maps\CellType.h" />
     <ClInclude Include="src\Maps\MapData.h" />
     <ClInclude Include="src\Maps\MapHeader.h" />
@@ -149,9 +149,11 @@
     <ClCompile Include="src\Archives\ArchivePacker.cpp" />
     <ClCompile Include="src\Archives\ArchiveUnpacker.cpp" />
     <ClCompile Include="src\Archives\WaveFile.cpp" />
+    <ClCompile Include="src\Bitmaps\BitmapFile.cpp" />
     <ClCompile Include="src\Bitmaps\BmpHeader.cpp" />
     <ClCompile Include="src\Bitmaps\Color.cpp" />
     <ClCompile Include="src\Bitmaps\ImageHeader.cpp" />
+    <ClCompile Include="src\Bitmaps\IndexedBmpReader.cpp" />
     <ClCompile Include="src\Bitmaps\IndexedBmpWriter.cpp" />
     <ClCompile Include="src\Maps\MapData.cpp" />
     <ClCompile Include="src\Maps\MapHeader.cpp" />
