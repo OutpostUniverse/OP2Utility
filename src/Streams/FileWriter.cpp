@@ -10,6 +10,9 @@ namespace Stream
 		if ((openMode & FileWriter::OpenMode::FailIfExist) != 0 && (openMode & FileWriter::OpenMode::FailIfNoExist) != 0) {
 			throw std::runtime_error("Bad open mode for file write. Can not specify file be both pre-existing and not pre-existing. Filename: " + filename);
 		}
+		if ((openMode & FileWriter::OpenMode::Truncate) != 0 && (openMode & FileWriter::OpenMode::Append) != 0) {
+			throw std::runtime_error("Bad open mode for file write. Can not specify file be opened both for append, and to truncate existing contents. Filename: " + filename);
+		}
 
 		// File existance checks
 		if ((openMode & FileWriter::OpenMode::FailIfExist) != 0 && fs::exists(filename)) {
