@@ -21,7 +21,7 @@ namespace Stream
 
 		// Translate flags to ios_base flags
 		std::ios_base::openmode iosOpenMode = std::ios_base::out | std::ios_base::binary;
-		if ((openMode & OpenMode::PreserveContents) == 0) {
+		if ((openMode & OpenMode::Truncate) != 0) {
 			iosOpenMode |= std::ios_base::trunc;
 		}
 		if ((openMode & OpenMode::Append) != 0) {
