@@ -8,10 +8,10 @@ namespace Stream
 	std::ios_base::openmode FileWriter::TranslateFlags(const std::string& filename, FileWriter::OpenMode openMode) {
 		// Check for bad flag combinations
 		if ((openMode & FileWriter::OpenMode::FailIfExist) != 0 && (openMode & FileWriter::OpenMode::FailIfNoExist) != 0) {
-			throw std::runtime_error("Bad open mode for file write. Can not specify file be both pre-existing and not pre-existing. Filename: " + filename);
+			throw std::invalid_argument("Bad open mode for file write. Can not specify file be both pre-existing and not pre-existing. Filename: " + filename);
 		}
 		if ((openMode & FileWriter::OpenMode::Truncate) != 0 && (openMode & FileWriter::OpenMode::Append) != 0) {
-			throw std::runtime_error("Bad open mode for file write. Can not specify file be opened both for append, and to truncate existing contents. Filename: " + filename);
+			throw std::invalid_argument("Bad open mode for file write. Can not specify file be opened both for append, and to truncate existing contents. Filename: " + filename);
 		}
 
 		// File existance checks
