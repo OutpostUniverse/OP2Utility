@@ -30,6 +30,9 @@ public:
 	// Returns an empty string if file is not located in an archive file in the ResourceManager's working directory.
 	std::string FindContainingArchiveFile(const std::string& filename);
 
+	// Returns a list of all loaded archives
+	std::vector<std::string> GetArchiveFilenames();
+
 private:
 	std::vector<std::unique_ptr<Archives::ArchiveFile>> ArchiveFiles;
 
