@@ -1,51 +1,30 @@
-#include <string.h>
 #include "HuffLZ.h"
+#include <cstring>
 
 namespace Archives
 {
 	// Constructs the object around an existing bit stream
-	HuffLZ::HuffLZ(BitStream *bitStream)
+	HuffLZ::HuffLZ(const BitStreamReader& bitStream) :
+		m_BitStreamReader(bitStream),
+		m_AdaptiveHuffmanTree(AdaptiveHuffmanTree(314)),
+		m_BuffWriteIndex(0),
+		m_BuffReadIndex(0),
+		m_EOS(false)
 	{
-		m_ContructedBitStream = 0;				// Don't need to delete stream in destructor
-		m_BitStream = bitStream;				// Store a reference to the bit stream
-		m_HuffTree = new AdaptHuffTree(314);	// Construct the Adaptive Huffman tree
-		m_BuffWriteIndex = 0;
-		m_BuffReadIndex = 0;
-		m_EOS = false;
+		InitializeDecompressBuffer();
+	}
 
+	void HuffLZ::InitializeDecompressBuffer() {
 		// Initialize the decompress buffer to spaces
-		memset(m_DecompressBuffer, ' ', 4096);
+		std::memset(m_DecompressBuffer, ' ', 4096);
 	}
-
-	// Creates an internal bit stream for the buffer
-	HuffLZ::HuffLZ(std::size_t bufferSize, void *buffer)
-	{
-		// Construct the BitStream object
-		m_BitStream = new BitStream(bufferSize, buffer);
-		m_ContructedBitStream = m_BitStream;	// Remeber to delete this in the destructor
-
-		m_HuffTree = new AdaptHuffTree(314);	// Construct the Adaptive Huffman tree
-		m_BuffWriteIndex = 0;
-		m_BuffReadIndex = 0;
-		m_EOS = false;
-
-		// Initialize the decompress buffer to spaces
-		memset(m_DecompressBuffer, ' ', 4096);
-	}
-
-	HuffLZ::~HuffLZ()
-	{
-		delete m_ContructedBitStream;
-		delete m_HuffTree;
-	}
-
 
 
 	// Copies up to bufferSize bytes into buffer from the decoded data. If not enough
 	// data is available to fill the buffer, more of the input is decompressed up to
 	// the end of the input stream or until the buffer is filled. Returns the total
 	// number of bytes that were copied.
-	std::size_t HuffLZ::GetData(std::size_t bufferSize, char *buffer)
+	std::size_t HuffLZ::GetData(char *buffer, std::size_t bufferSize)
 	{
 		std::size_t numBytesCopied;
 		std::size_t numBytesTotal = 0;
@@ -55,7 +34,7 @@ namespace Archives
 		FillDecompressBuffer();
 
 		// Copy what is currently available
-		numBytesCopied = CopyAvailableData(bufferSize, buffer);
+		numBytesCopied = CopyAvailableData(buffer, bufferSize);
 		numBytesTotal += numBytesCopied;
 		bufferSize -= numBytesCopied;
 
@@ -63,7 +42,7 @@ namespace Archives
 		while (bufferSize && !m_EOS)
 		{
 			FillDecompressBuffer();		// Decompress a bunch
-			numBytesCopied = CopyAvailableData(bufferSize, &buffer[numBytesTotal]);
+			numBytesCopied = CopyAvailableData(&buffer[numBytesTotal], bufferSize);
 			numBytesTotal += numBytesCopied;
 			bufferSize -= numBytesCopied;
 		}
@@ -125,7 +104,7 @@ namespace Archives
 
 	// Copies all available data into buff up to a maximum of size bytes
 	// This routine handles the case when the copy must wrap around the circular buffer
-	std::size_t HuffLZ::CopyAvailableData(std::size_t size, char *buff)
+	std::size_t HuffLZ::CopyAvailableData(char *buff, std::size_t size)
 	{
 		std::size_t numBytesToCopy;
 		std::size_t numBytesTotal = 0;
@@ -148,7 +127,7 @@ namespace Archives
 			}
 
 			// Copy what is already decompressed into the output buffer
-			memcpy(buff, &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
+			std::memcpy(buff, &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
 			numBytesTotal = numBytesToCopy;	// Update number of bytes copied
 			size -= numBytesToCopy;			// Update space left in buffer
 			// Update read index and wrap around 4096
@@ -166,7 +145,7 @@ namespace Archives
 		if (numBytesToCopy > 0)
 		{
 			// Copy what is already decompressed into the output buffer
-			memcpy(&buff[numBytesTotal], &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
+			std::memcpy(&buff[numBytesTotal], &m_DecompressBuffer[m_BuffReadIndex], numBytesToCopy);
 			numBytesTotal += numBytesToCopy;// Update number of bytes copied
 			// Update read index (Note: no need to wrap around 4096 here)
 			m_BuffReadIndex = (m_BuffReadIndex + numBytesToCopy);
@@ -181,13 +160,13 @@ namespace Archives
 	bool HuffLZ::DecompressCode()
 	{
 		unsigned short code;
-		int start;
-		int offset;
+		unsigned int start;
+		unsigned int offset;
 
 		// Get the next code
 		code = GetNextCode();
 		// Update the tree
-		m_HuffTree->UpdateCodeCount(code);
+		m_AdaptiveHuffmanTree.UpdateCodeCount(code);
 
 		// Determine if the code is an ASCII code or a repeat block code
 		if (code < 256)
@@ -211,7 +190,7 @@ namespace Archives
 		}
 
 		// Check for the end of the stream
-		return m_BitStream->EndOfStream();
+		return m_BitStreamReader.EndOfStream();
 	}
 
 
@@ -222,81 +201,64 @@ namespace Archives
 		bool bBit;
 
 		// Use bitstream to find a terminal node
-		nodeIndex = m_HuffTree->GetRootNodeIndex();
-		while (!m_HuffTree->IsLeaf(nodeIndex))
+		nodeIndex = m_AdaptiveHuffmanTree.GetRootNodeIndex();
+		while (!m_AdaptiveHuffmanTree.IsLeaf(nodeIndex))
 		{
-			bBit = m_BitStream->ReadNextBit();
-			nodeIndex = m_HuffTree->GetChildNode(nodeIndex, bBit);
+			bBit = m_BitStreamReader.ReadNextBit();
+			nodeIndex = m_AdaptiveHuffmanTree.GetChildNode(nodeIndex, bBit);
 		}
 
-		return m_HuffTree->GetNodeData(nodeIndex);
+		return m_AdaptiveHuffmanTree.GetNodeData(nodeIndex);
 	}
 
-	// Determines the offset to the start of a repeated block. (This one is a little weird)
-	int HuffLZ::GetRepeatOffset()
+	// Determines the offset to the start of a repeated block
+	//
+	// Reads a variable length code from the bit stream (9-14 bits)
+	// Smaller offsets have a shorter bit code
+	// Returns a 12-bit offset (0..4095)
+	unsigned int HuffLZ::GetRepeatOffset()
 	{
 		// Get the next 8 bits
-		int offset = m_BitStream->ReadNext8Bits();
+		unsigned int offset = m_BitStreamReader.ReadNext8Bits();
+		auto modifiers = GetOffsetModifiers(offset);
 
 		// Read in the extra bits
-		for (int numExtraBits = GetNumExtraBits(offset); numExtraBits; numExtraBits--) {
-			offset = (offset << 1) + m_BitStream->ReadNextBit();
-		}
-		offset &= 0x3F;			// Mask upper bits (keep lower 6)
-
-		// Apply the modifier
-		offset |= (GetOffsetBitMod(offset) << 6);	// Set upper 6 bits (12 bit number -> buffer size is 4096)
-
-		return offset;			// Return the offset to the start of the repeated block
-	}
-
-	// Determine how many more bits to read in
-	int HuffLZ::GetNumExtraBits(int offset) const
-	{
-		if (offset < 0x20) {
-			return 1;
-		}
-		if (offset < 0x50) {
-			return 2;
-		}
-		if (offset < 0x90) {
-			return 3;
-		}
-		if (offset < 0xC0) {
-			return 4;
-		}
-		if (offset < 0xF0) {
-			return 5;
+		for (auto i = modifiers.extraBitCount; i; --i) {
+			offset = (offset << 1) + m_BitStreamReader.ReadNextBit();
 		}
 
-		return 6;
-	}
+		// Set upper 6 bits and preserve lower 6 bits (0x3F = 0011 1111)
+		// Result is a 12-bit number with range 0..4095
+		offset = (modifiers.offsetUpperBits << 6) | (offset & 0x3F);
 
-	// Determine how to modify bits to get real offset
-	int HuffLZ::GetOffsetBitMod(int offset) const
-	{
-		if (offset < 0x20) {
-			return 0;
-		}
-		if (offset < 0x50) {
-			return ((offset - 0x20) >> 4) + 1;
-		}
-		if (offset < 0x90) {
-			return ((offset - 0x50) >> 3) + 4;
-		}
-		if (offset < 0xC0) {
-			return ((offset - 0x90) >> 2) + 0x0C;
-		}
-		if (offset < 0xF0) {
-			return ((offset - 0xC0) >> 1) + 0x18;
-		}
-
-		return offset - 0xC0;
+		return offset;
 	}
 
 	void HuffLZ::WriteCharToBuffer(char c)
 	{
 		m_DecompressBuffer[m_BuffWriteIndex] = c;			// Write the char to the buffer
 		m_BuffWriteIndex = (m_BuffWriteIndex + 1) & 0x0FFF;	// Wrap around 4096
+	}
+
+
+
+	HuffLZ::OffsetModifiers HuffLZ::GetOffsetModifiers(unsigned int offset) {
+		if (offset < 0x20) {
+			return { 1, 0 };
+		}
+		if (offset < 0x50) {
+			return { 2, ((offset - 0x20) >> 4) + 1 };
+		}
+		if (offset < 0x90) {
+			return { 3, ((offset - 0x50) >> 3) + 4 };
+		}
+		if (offset < 0xC0) {
+			return { 4, ((offset - 0x90) >> 2) + 0x0C };
+		}
+		if (offset < 0xF0) {
+			return { 5, ((offset - 0xC0) >> 1) + 0x18 };
+		}
+
+		return { 6, offset - 0xC0 };
 	}
 }

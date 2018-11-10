@@ -1,0 +1,18 @@
+image: Visual Studio 2017
+configuration:
+  - Release
+platform:
+  - x86
+  - x64
+cache:
+  # Cache Nuget packages in "packages" folder. Break cache if "packages.config" is updated.
+  - packages -> **\packages.config
+before_build: nuget restore
+build:
+  project: OP2Utility.sln
+test_script:
+  - echo Current working directory = '%CD%'
+  - echo Test exe path = '%APPVEYOR_BUILD_FOLDER%\%PLATFORM%\%CONFIGURATION%\OP2UtilityTest.exe'
+  - cd %APPVEYOR_BUILD_FOLDER%\test
+  - '%APPVEYOR_BUILD_FOLDER%\%PLATFORM%\%CONFIGURATION%\OP2UtilityTest.exe'
+  - cd %APPVEYOR_BUILD_FOLDER%

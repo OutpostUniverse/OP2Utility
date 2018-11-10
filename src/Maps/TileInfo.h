@@ -21,4 +21,6 @@ struct TileInfo
 	uint16_t animationDelay;
 };
 
+static_assert(8 == sizeof(TileInfo), "TileInfo is an unexpected size");
+
 #pragma pack(pop)

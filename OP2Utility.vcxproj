@@ -84,6 +84,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -108,6 +109,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -120,8 +122,12 @@
     <ClInclude Include="src\Archives\CompressionType.h" />
     <ClInclude Include="src\Archives\WaveFile.h" />
     <ClInclude Include="include\OP2Utility.h" />
+    <ClInclude Include="src\Bitmaps\BmpCompression.h" />
+    <ClInclude Include="src\Bitmaps\BmpHeader.h" />
+    <ClInclude Include="src\Bitmaps\Color.h" />
+    <ClInclude Include="src\Bitmaps\ImageHeader.h" />
+    <ClInclude Include="src\Bitmaps\BitmapFile.h" />
     <ClInclude Include="src\Maps\CellType.h" />
-    <ClInclude Include="src\Maps\ClipRect.h" />
     <ClInclude Include="src\Maps\MapData.h" />
     <ClInclude Include="src\Maps\MapHeader.h" />
     <ClInclude Include="src\Maps\MapReader.h" />
@@ -131,38 +137,60 @@
     <ClInclude Include="src\Maps\TileGroup.h" />
     <ClInclude Include="src\Maps\TileInfo.h" />
     <ClInclude Include="src\Maps\TilesetSource.h" />
+    <ClInclude Include="src\Point.h" />
+    <ClInclude Include="src\Rect.h" />
     <ClInclude Include="src\ResourceManager.h" />
-    <ClInclude Include="src\Archives\AdaptHuffTree.h" />
+    <ClInclude Include="src\Archives\AdaptiveHuffmanTree.h" />
     <ClInclude Include="src\Archives\ArchiveFile.h" />
-    <ClInclude Include="src\Archives\BitStream.h" />
+    <ClInclude Include="src\Archives\BitStreamReader.h" />
     <ClInclude Include="src\Archives\ClmFile.h" />
     <ClInclude Include="src\Archives\HuffLZ.h" />
     <ClInclude Include="src\Archives\VolFile.h" />
     <ClCompile Include="src\Archives\ArchivePacker.cpp" />
     <ClCompile Include="src\Archives\ArchiveUnpacker.cpp" />
+    <ClCompile Include="src\Archives\WaveFile.cpp" />
+    <ClCompile Include="src\Bitmaps\BitmapFile.cpp" />
+    <ClCompile Include="src\Bitmaps\BmpHeader.cpp" />
+    <ClCompile Include="src\Bitmaps\Color.cpp" />
+    <ClCompile Include="src\Bitmaps\ImageHeader.cpp" />
+    <ClCompile Include="src\Bitmaps\IndexedBmpReader.cpp" />
+    <ClCompile Include="src\Bitmaps\IndexedBmpWriter.cpp" />
     <ClCompile Include="src\Maps\MapData.cpp" />
+    <ClCompile Include="src\Maps\MapHeader.cpp" />
     <ClCompile Include="src\Maps\MapReader.cpp" />
     <ClCompile Include="src\Maps\MapWriter.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
-    <ClCompile Include="src\Archives\AdaptHuffTree.cpp" />
-    <ClCompile Include="src\Archives\BitStream.cpp" />
+    <ClCompile Include="src\Archives\AdaptiveHuffmanTree.cpp" />
+    <ClCompile Include="src\Archives\BitStreamReader.cpp" />
     <ClCompile Include="src\Archives\ClmFile.cpp" />
     <ClCompile Include="src\Archives\HuffLZ.cpp" />
     <ClCompile Include="src\Archives\VolFile.cpp" />
+    <ClCompile Include="src\Sprites\ArtReader.cpp" />
+    <ClCompile Include="src\Sprites\ArtFile.cpp" />
+    <ClCompile Include="src\Sprites\ArtWriter.cpp" />
+    <ClCompile Include="src\Sprites\OP2BmpLoader.cpp" />
+    <ClCompile Include="src\Sprites\PaletteHeader.cpp" />
+    <ClCompile Include="src\Sprites\SectionHeader.cpp" />
     <ClCompile Include="src\Streams\FileSliceReader.cpp" />
-    <ClCompile Include="src\Streams\FileStreamReader.cpp" />
-    <ClCompile Include="src\Streams\FileStreamWriter.cpp" />
-    <ClCompile Include="src\Streams\MemoryStreamWriter.cpp" />
-    <ClCompile Include="src\Streams\MemoryStreamReader.cpp" />
+    <ClCompile Include="src\Streams\FileReader.cpp" />
+    <ClCompile Include="src\Streams\FileWriter.cpp" />
+    <ClCompile Include="src\Streams\MemoryWriter.cpp" />
+    <ClCompile Include="src\Streams\MemoryReader.cpp" />
+    <ClInclude Include="src\Sprites\Animation.h" />
+    <ClInclude Include="src\Sprites\ArtFile.h" />
+    <ClInclude Include="src\Sprites\ImageMeta.h" />
+    <ClInclude Include="src\Sprites\OP2BmpLoader.h" />
+    <ClInclude Include="src\Sprites\PaletteHeader.h" />
+    <ClInclude Include="src\Sprites\SectionHeader.h" />
     <ClInclude Include="src\Streams\FileSliceReader.h" />
-    <ClInclude Include="src\Streams\FileStreamReader.h" />
-    <ClInclude Include="src\Streams\FileStreamWriter.h" />
-    <ClInclude Include="src\Streams\MemoryStreamReader.h" />
-    <ClInclude Include="src\Streams\MemoryStreamWriter.h" />
-    <ClInclude Include="src\Streams\SeekableStreamReader.h" />
-    <ClInclude Include="src\Streams\SeekableStreamWriter.h" />
-    <ClInclude Include="src\Streams\StreamReader.h" />
-    <ClInclude Include="src\Streams\StreamWriter.h" />
+    <ClInclude Include="src\Streams\FileReader.h" />
+    <ClInclude Include="src\Streams\FileWriter.h" />
+    <ClInclude Include="src\Streams\MemoryReader.h" />
+    <ClInclude Include="src\Streams\MemoryWriter.h" />
+    <ClInclude Include="src\Streams\SeekableReader.h" />
+    <ClInclude Include="src\Streams\SeekableWriter.h" />
+    <ClInclude Include="src\Streams\Reader.h" />
+    <ClInclude Include="src\Streams\Writer.h" />
     <ClInclude Include="src\StringHelper.h" />
     <ClInclude Include="src\XFile.h" />
     <ClCompile Include="src\StringHelper.cpp" />

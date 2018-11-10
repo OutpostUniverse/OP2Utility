@@ -25,6 +25,12 @@
     <Filter Include="include">
       <UniqueIdentifier>{bbe3dfd0-4ce7-4087-811f-d9560e6c074d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sprites">
+      <UniqueIdentifier>{5ca1d992-113b-41f2-8b0b-4af1a79f47f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bitmaps">
+      <UniqueIdentifier>{ed1d2b3b-c69f-43f8-97ac-f3357f736acf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\XFile.h">
@@ -39,13 +45,7 @@
     <ClInclude Include="src\Archives\CompressionType.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="src\Archives\AdaptHuffTree.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
     <ClInclude Include="src\Archives\ArchiveFile.h">
-      <Filter>Archives</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Archives\BitStream.h">
       <Filter>Archives</Filter>
     </ClInclude>
     <ClInclude Include="src\Archives\ClmFile.h">
@@ -78,9 +78,6 @@
     <ClInclude Include="src\Maps\TileInfo.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maps\ClipRect.h">
-      <Filter>Maps</Filter>
-    </ClInclude>
     <ClInclude Include="src\Maps\MapWriter.h">
       <Filter>Maps</Filter>
     </ClInclude>
@@ -96,30 +93,6 @@
     <ClInclude Include="src\Archives\WaveFile.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="src\Streams\StreamReader.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\StreamWriter.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\FileStreamWriter.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\MemoryStreamWriter.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\SeekableStreamWriter.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\SeekableStreamReader.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\FileStreamReader.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Streams\MemoryStreamReader.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
     <ClInclude Include="src\Streams\FileSliceReader.h">
       <Filter>Streams</Filter>
     </ClInclude>
@@ -128,6 +101,75 @@
     </ClInclude>
     <ClInclude Include="src\Maps\TilesetSource.h">
       <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\FileReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\FileWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\MemoryReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\MemoryWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\SeekableReader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\SeekableWriter.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\Reader.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Streams\Writer.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Archives\BitStreamReader.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Archives\AdaptiveHuffmanTree.h">
+      <Filter>Archives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\PaletteHeader.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\ArtFile.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\SectionHeader.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\ImageMeta.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\Animation.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprites\OP2BmpLoader.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bitmaps\BmpCompression.h">
+      <Filter>Bitmaps</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bitmaps\BmpHeader.h">
+      <Filter>Bitmaps</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bitmaps\Color.h">
+      <Filter>Bitmaps</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bitmaps\ImageHeader.h">
+      <Filter>Bitmaps</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bitmaps\BitmapFile.h">
+      <Filter>Bitmaps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -139,12 +181,6 @@
     </ClCompile>
     <ClCompile Include="src\ResourceManager.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Archives\AdaptHuffTree.cpp">
-      <Filter>Archives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Archives\BitStream.cpp">
-      <Filter>Archives</Filter>
     </ClCompile>
     <ClCompile Include="src\Archives\ClmFile.cpp">
       <Filter>Archives</Filter>
@@ -170,20 +206,68 @@
     <ClCompile Include="src\Maps\MapReader.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
-    <ClCompile Include="src\Streams\FileStreamWriter.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Streams\MemoryStreamWriter.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Streams\FileStreamReader.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Streams\MemoryStreamReader.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
     <ClCompile Include="src\Streams\FileSliceReader.cpp">
       <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Streams\FileReader.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Streams\FileWriter.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Streams\MemoryReader.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Streams\MemoryWriter.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Archives\BitStreamReader.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Archives\AdaptiveHuffmanTree.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Maps\MapHeader.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\ArtReader.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\PaletteHeader.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\ArtFile.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\ArtWriter.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\SectionHeader.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprites\OP2BmpLoader.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Archives\WaveFile.cpp">
+      <Filter>Archives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmaps\BmpHeader.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmaps\Color.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmaps\ImageHeader.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmaps\IndexedBmpWriter.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmaps\BitmapFile.cpp">
+      <Filter>Bitmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmaps\IndexedBmpReader.cpp">
+      <Filter>Bitmaps</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Streams/StreamReader.h"
-#include "../Streams/StreamWriter.h"
+#include "../Streams/Reader.h"
+#include "../Streams/Writer.h"
 #include <string>
 #include <vector>
 
@@ -23,7 +23,7 @@ namespace Archives
 
 		// Throws an error if 2 names are identical, case insensitve.
 		// names must be presorted.
-		static void CheckSortedContainerForDuplicateNames(const std::vector<std::string>& names);
+		static void VerifySortedContainerHasNoDuplicateNames(const std::vector<std::string>& names);
 
 		// Compares 2 filenames case insensitive to determine which comes first alphabetically.
 		// Does not compare the entire path, but only the filename.

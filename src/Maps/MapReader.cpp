@@ -1,5 +1,5 @@
 #include "MapReader.h"
-#include "../Streams/FileStreamReader.h"
+#include "../Streams/FileReader.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -11,14 +11,13 @@
 namespace MapReader {
 	// Anonymous namespace to hold private methods
 	namespace {
-		void SkipSaveGameHeader(SeekableStreamReader& streamReader);
-		void ReadTiles(StreamReader& streamReader, MapData& mapData);
-		void ReadTilesetSources(StreamReader& streamReader, MapData& mapData);
-		void ReadTilesetHeader(StreamReader& streamReader);
-		void ReadTileInfo(StreamReader& streamReader, MapData& mapData);
-		void ReadVersionTag(StreamReader& streamReader);
-		void ReadTileGroups(StreamReader& streamReader, MapData& mapData);
-		TileGroup ReadTileGroup(StreamReader& streamReader);
+		void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
+		void ReadTiles(Stream::Reader& streamReader, MapData& mapData);
+		void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData);
+		void ReadTilesetHeader(Stream::Reader& streamReader);
+		void ReadVersionTag(Stream::Reader& streamReader);
+		void ReadTileGroups(Stream::Reader& streamReader, MapData& mapData);
+		TileGroup ReadTileGroup(Stream::Reader& streamReader);
 
 		const std::array<char, 10> tilesetHeader{ "TILE SET\x1a" };
 	}
@@ -27,26 +26,23 @@ namespace MapReader {
 	// ==== Public methohds ====
 
 
-	MapData Read(std::string filename, bool savedGame)
+	MapData ReadMap(std::string filename)
 	{
-		FileStreamReader mapReader(filename);
-		return Read(mapReader, savedGame);
+		Stream::FileReader mapReader(filename);
+		return ReadMap(mapReader);
 	}
 
-	MapData Read(SeekableStreamReader& streamReader, bool savedGame)
+	MapData ReadMap(Stream::SeekableReader& streamReader)
 	{
 		MapData mapData;
-
-		if (savedGame) {
-			SkipSaveGameHeader(streamReader);
-		}
 
 		streamReader.Read(mapData.header);
 		ReadTiles(streamReader, mapData);
 		streamReader.Read(mapData.clipRect);
 		ReadTilesetSources(streamReader, mapData);
 		ReadTilesetHeader(streamReader);
-		ReadTileInfo(streamReader, mapData);
+		streamReader.Read<uint32_t>(mapData.tileInfos);
+		streamReader.Read<uint32_t>(mapData.terrainTypes);
 		ReadVersionTag(streamReader);
 		ReadVersionTag(streamReader);
 		ReadTileGroups(streamReader, mapData);
@@ -54,23 +50,35 @@ namespace MapReader {
 		return mapData;
 	}
 
+	MapData ReadSavedGame(std::string filename)
+	{
+		Stream::FileReader mapReader(filename);
+		return ReadSavedGame(mapReader);
+	}
+
+	MapData ReadSavedGame(Stream::SeekableReader& streamReader)
+	{
+		SkipSaveGameHeader(streamReader);
+		return ReadMap(streamReader);
+	}
+
 
 	// == Private methods ==
 
 
 	namespace {
-		void SkipSaveGameHeader(SeekableStreamReader& streamReader)
+		void SkipSaveGameHeader(Stream::SeekableReader& streamReader)
 		{
 			streamReader.SeekRelative(0x1E025);
 		}
 
-		void ReadTiles(StreamReader& streamReader, MapData& mapData)
+		void ReadTiles(Stream::Reader& streamReader, MapData& mapData)
 		{
 			mapData.tiles.resize(mapData.header.TileCount());
-			streamReader.Read(&mapData.tiles[0], mapData.tiles.size() * sizeof(TileData));
+			streamReader.Read(mapData.tiles);
 		}
 
-		void ReadTilesetHeader(StreamReader& streamReader)
+		void ReadTilesetHeader(Stream::Reader& streamReader)
 		{
 			std::array<char, 10> buffer;
 			streamReader.Read(buffer);
@@ -80,9 +88,9 @@ namespace MapReader {
 			}
 		}
 
-		void ReadTilesetSources(StreamReader& streamReader, MapData& mapData)
+		void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData)
 		{
-			mapData.tilesetSources.resize(static_cast<std::size_t>(mapData.header.numTilesets));
+			mapData.tilesetSources.resize(static_cast<std::size_t>(mapData.header.tilesetCount));
 
 			for (auto& tilesetSource : mapData.tilesetSources)
 			{
@@ -98,21 +106,7 @@ namespace MapReader {
 			}
 		}
 
-		void ReadTileInfo(StreamReader& streamReader, MapData& mapData)
-		{
-			uint32_t numTileInfo;
-			streamReader.Read(numTileInfo);
-
-			mapData.tileInfos.resize(numTileInfo);
-			streamReader.Read(&mapData.tileInfos[0], numTileInfo * sizeof(TileInfo));
-
-			uint32_t numTerrainTypes;
-			streamReader.Read(numTerrainTypes);
-			mapData.terrainTypes.resize(numTerrainTypes);
-			streamReader.Read(&mapData.terrainTypes[0], numTerrainTypes * sizeof(TerrainType));
-		}
-
-		void ReadVersionTag(StreamReader& streamReader)
+		void ReadVersionTag(Stream::Reader& streamReader)
 		{
 			uint32_t versionTag;
 			streamReader.Read(versionTag);
@@ -123,7 +117,7 @@ namespace MapReader {
 			}
 		}
 
-		void ReadTileGroups(StreamReader& streamReader, MapData& mapData)
+		void ReadTileGroups(Stream::Reader& streamReader, MapData& mapData)
 		{
 			uint32_t numTileGroups;
 			streamReader.Read(numTileGroups);
@@ -136,7 +130,7 @@ namespace MapReader {
 			}
 		}
 
-		TileGroup ReadTileGroup(StreamReader& streamReader)
+		TileGroup ReadTileGroup(Stream::Reader& streamReader)
 		{
 			TileGroup tileGroup;
 

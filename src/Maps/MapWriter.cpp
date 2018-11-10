@@ -1,5 +1,5 @@
 #include "MapWriter.h"
-#include "../Streams/FileStreamWriter.h"
+#include "../Streams/FileWriter.h"
 #include <cstdint>
 #include <cstddef>
 #include <stdexcept>
@@ -9,10 +9,10 @@
 namespace MapWriter {
 	// Anonymous namespace to hold private methods
 	namespace {
-		void WriteHeader(StreamWriter& streamWriter, const MapHeader& header);
-		void WriteTilesetSources(StreamWriter& streamWriter, const std::vector<TilesetSource>& tilesetSources);
-		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups);
-		void WriteContainerSize(StreamWriter& streamWriter, std::size_t size);
+		void ValidateMap(const MapData& mapData);
+		void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources);
+		void WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups);
+		void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
 	}
 
 
@@ -21,14 +21,16 @@ namespace MapWriter {
 
 	void Write(const std::string& filename, const MapData& mapData)
 	{
-		FileStreamWriter mapWriter(filename);
+		Stream::FileWriter mapWriter(filename);
 		Write(mapWriter, mapData);
 	}
 
-	void Write(StreamWriter& streamWriter, const MapData& mapData)
+	void Write(Stream::Writer& streamWriter, const MapData& mapData)
 	{
-		WriteHeader(streamWriter, mapData.header);
-		streamWriter.Write(&mapData.tiles[0], mapData.tiles.size() * sizeof(TileData));
+		ValidateMap(mapData);
+
+		streamWriter.Write(mapData.header);
+		streamWriter.Write(mapData.tiles);
 		streamWriter.Write(mapData.clipRect);
 		WriteTilesetSources(streamWriter, mapData.tilesetSources);
 		streamWriter.Write("TILE SET\x1a", 10);
@@ -46,16 +48,17 @@ namespace MapWriter {
 
 
 	namespace {
-		void WriteHeader(StreamWriter& streamWriter, const MapHeader& header)
-		{
-			if (!header.VersionTagValid()) {
-				throw std::runtime_error("All instances of version tag in .map and .op2 files must be greater than 0x1010.");
+		void ValidateMap(const MapData& mapData) {
+			if (mapData.header.TileCount() != mapData.tiles.size()) {
+				throw std::runtime_error("Header reported tile width * tile height does not match actual tile count");
 			}
 
-			streamWriter.Write(header);
+			if (mapData.header.tilesetCount != mapData.tilesetSources.size()) {
+				throw std::runtime_error("Header reported tileset count does not match actual tileset sources");
+			}
 		}
 
-		void WriteTilesetSources(StreamWriter& streamWriter, const std::vector<TilesetSource>& tilesetSources)
+		void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources)
 		{
 			for (const auto& tilesetSource : tilesetSources)
 			{
@@ -69,7 +72,7 @@ namespace MapWriter {
 			}
 		}
 
-		void WriteTileGroups(StreamWriter& streamWriter, const std::vector<TileGroup>& tileGroups)
+		void WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups)
 		{
 			WriteContainerSize(streamWriter, tileGroups.size());
 			// tileGroups.size is checked to ensure it is below UINT32_MAX by previous call to WriteContainerSize.
@@ -89,10 +92,10 @@ namespace MapWriter {
 		}
 
 		// Outpost 2 map files represent container sizes as 4 byte values
-		void WriteContainerSize(StreamWriter& streamWriter, std::size_t size)
+		void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size)
 		{
 			if (size > UINT32_MAX) {
-				throw std::runtime_error("Container size is too large for writing into an Outpost 2 maps.");
+				throw std::runtime_error("Container size is too large for writing into an Outpost 2 map");
 			}
 
 			streamWriter.Write(static_cast<uint32_t>(size));

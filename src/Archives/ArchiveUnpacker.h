@@ -5,9 +5,11 @@
 #include <cstdint>
 #include <cstddef>
 
-class SeekableStreamReader;
-class StreamReader;
-class StreamWriter;
+namespace Stream {
+	class SeekableReader;
+	class Reader;
+	class Writer;
+}
 
 namespace Archives
 {
@@ -21,18 +23,18 @@ namespace Archives
 		uint64_t GetVolumeFileSize() const { return m_ArchiveFileSize; };
 		std::size_t GetCount() const { return m_Count; };
 		bool Contains(const std::string& name);
-		std::size_t GetIndex(const std::string& name);
 		void ExtractFile(const std::string& name, const std::string& pathOut);
 
+		virtual std::size_t GetIndex(const std::string& name);
 		virtual std::string GetName(std::size_t index) = 0;
 		virtual uint32_t GetSize(std::size_t index) = 0;
 		virtual void ExtractFile(std::size_t index, const std::string& pathOut) = 0;
 		virtual void ExtractAllFiles(const std::string& destDirectory);
-		virtual std::unique_ptr<SeekableStreamReader> OpenStream(std::size_t index) = 0;
-		virtual std::unique_ptr<SeekableStreamReader> OpenStream(const std::string& name);
+		virtual std::unique_ptr<Stream::SeekableReader> OpenStream(std::size_t index) = 0;
+		virtual std::unique_ptr<Stream::SeekableReader> OpenStream(const std::string& name);
 
 	protected:
-		void CheckIndexBounds(std::size_t index);
+		void VerifyIndexInBounds(std::size_t index);
 
 		const std::string m_ArchiveFilename;
 		std::size_t m_Count;

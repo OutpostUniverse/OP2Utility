@@ -13,6 +13,8 @@ struct TileRange
 	uint16_t end;
 };
 
+static_assert(4 == sizeof(TileRange), "TileRange is an unexpected size");
+
 // The properties associated with a range of tiles.
 struct TerrainType
 {
@@ -33,7 +35,7 @@ struct TerrainType
 
 	// 5 groups of 16 tiles. Each group represents a different wall type.
 	// Lava, Microbe, Full Strength Regular, Damaged Regular, and Heavily Damaged Regular.
-	short wall[5][16];
+	uint16_t wall[5][16];
 
 	// First index for lava tiles in Terrain Type.
 	uint16_t lavaTileIndex;
@@ -59,5 +61,7 @@ struct TerrainType
 	// UNKNOWN
 	int16_t unkown[15];
 };
+
+static_assert(248 + 4 * sizeof(TileRange) == sizeof(TerrainType), "TerrainType is an unexpected size");
 
 #pragma pack(pop)

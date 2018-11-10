@@ -29,21 +29,21 @@ namespace Archives
 
 	std::string VolFile::GetName(std::size_t index)
 	{
-		CheckIndexBounds(index);
+		VerifyIndexInBounds(index);
 
 		return m_StringTable[index];
 	}
 
 	CompressionType VolFile::GetCompressionCode(std::size_t index)
 	{
-		CheckIndexBounds(index);
+		VerifyIndexInBounds(index);
 
 		return m_IndexEntries[index].compressionType;
 	}
 
 	uint32_t VolFile::GetSize(std::size_t index)
 	{
-		CheckIndexBounds(index);
+		VerifyIndexInBounds(index);
 
 		return m_IndexEntries[index].fileSize;
 	}
@@ -52,7 +52,7 @@ namespace Archives
 
 	int VolFile::GetFileOffset(std::size_t index)
 	{
-		return m_IndexEntries[index].dataBlockOffset + 8;
+		return m_IndexEntries[index].dataBlockOffset + sizeof(SectionHeader);
 	}
 
 	int VolFile::GetFilenameOffset(std::size_t index)
@@ -60,16 +60,16 @@ namespace Archives
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<SeekableStreamReader> VolFile::OpenStream(std::size_t index)
+	std::unique_ptr<Stream::SeekableReader> VolFile::OpenStream(std::size_t index)
 	{
 		SectionHeader sectionHeader = GetSectionHeader(index);
 
-		return std::make_unique<FileSliceReader>(archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length)));
+		return std::make_unique<Stream::FileSliceReader>(archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length)));
 	}
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(std::size_t index)
 	{
-		CheckIndexBounds(index);
+		VerifyIndexInBounds(index);
 
 		archiveFileReader.Seek(m_IndexEntries[index].dataBlockOffset);
 
@@ -88,13 +88,14 @@ namespace Archives
 	// Extracts the internal file at the given index to the filename.
 	void VolFile::ExtractFile(std::size_t index, const std::string& pathOut)
 	{
-		CheckIndexBounds(index);
+		VerifyIndexInBounds(index);
+		const auto& indexEntry = m_IndexEntries[index];
 
-		if (m_IndexEntries[index].compressionType == CompressionType::Uncompressed)
+		if (indexEntry.compressionType == CompressionType::Uncompressed)
 		{
 			ExtractFileUncompressed(index, pathOut);
 		}
-		else if (m_IndexEntries[index].compressionType == CompressionType::LZH)
+		else if (indexEntry.compressionType == CompressionType::LZH)
 		{
 			ExtractFileLzh(index, pathOut);
 		}
@@ -109,8 +110,8 @@ namespace Archives
 		{
 			// Calling GetSectionHeader moves the streamReader's position to just past the SectionHeader
 			SectionHeader sectionHeader = GetSectionHeader(index);
-			FileSliceReader slice = archiveFileReader.Slice(sectionHeader.length);
-			FileStreamWriter fileStreamWriter(pathOut);
+			auto slice = archiveFileReader.Slice(sectionHeader.length);
+			Stream::FileWriter fileStreamWriter(pathOut);
 			fileStreamWriter.Write(slice);
 		}
 		catch (const std::exception& e)
@@ -129,11 +130,11 @@ namespace Archives
 			// Load data into temporary memory buffer
 			std::size_t length = sectionHeader.length;
 			std::vector<uint8_t> buffer(length);
-			archiveFileReader.Read(buffer.data(), length);
+			archiveFileReader.Read(buffer);
 
-			HuffLZ decompressor(length, buffer.data());
+			HuffLZ decompressor(BitStreamReader(buffer.data(), length));
 
-			FileStreamWriter fileStreamWriter(pathOut);
+			Stream::FileWriter fileStreamWriter(pathOut);
 
 			do
 			{
@@ -178,7 +179,7 @@ namespace Archives
 		volInfo.names = GetNamesFromPaths(filesToPack);
 
 		// Allowing duplicate names when packing may cause unintended results during binary search and file extraction.
-		CheckSortedContainerForDuplicateNames(volInfo.names);
+		VerifySortedContainerHasNoDuplicateNames(volInfo.names);
 
 		// Open input files and prepare header and indexing info
 		PrepareHeader(volInfo, volumeFilename);
@@ -188,13 +189,13 @@ namespace Archives
 
 	void VolFile::WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo)
 	{
-		FileStreamWriter volWriter(filename);
+		Stream::FileWriter volWriter(filename);
 
 		WriteHeader(volWriter, volInfo);
 		WriteFiles(volWriter, volInfo);
 	}
 
-	void VolFile::WriteFiles(StreamWriter& volWriter, CreateVolumeInfo &volInfo)
+	void VolFile::WriteFiles(Stream::Writer& volWriter, CreateVolumeInfo &volInfo)
 	{
 		// Write each file header and contents
 		for (std::size_t i = 0; i < volInfo.fileCount(); ++i)
@@ -215,7 +216,7 @@ namespace Archives
 		}
 	}
 
-	void VolFile::WriteHeader(StreamWriter& volWriter, const CreateVolumeInfo &volInfo)
+	void VolFile::WriteHeader(Stream::Writer& volWriter, const CreateVolumeInfo &volInfo)
 	{
 		// Write the header
 		volWriter.Write(SectionHeader(TagVOL_, volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 24));
@@ -225,7 +226,7 @@ namespace Archives
 		// Write the string table
 		volWriter.Write(SectionHeader(TagVOLS, volInfo.paddedStringTableLength));
 
-		volWriter.Write(&volInfo.stringTableLength, sizeof(volInfo.stringTableLength));
+		volWriter.Write(volInfo.stringTableLength);
 
 		// Write out all internal file name strings (including NULL terminator)
 		for (std::size_t i = 0; i < volInfo.fileCount(); ++i) {
@@ -250,7 +251,7 @@ namespace Archives
 
 		for (const auto& filename : volInfo.filesToPack) {
 			try {
-				volInfo.fileStreamReaders.push_back(std::make_unique<FileStreamReader>(filename));
+				volInfo.fileStreamReaders.push_back(std::make_unique<Stream::FileReader>(filename));
 			}
 			catch (const std::exception& e) {
 				throw std::runtime_error("Error attempting to open " + filename +
@@ -377,11 +378,11 @@ namespace Archives
 	void VolFile::ReadStringTable()
 	{
 		uint32_t actualStringTableLength;
-		archiveFileReader.Read(&actualStringTableLength, sizeof(actualStringTableLength));
+		archiveFileReader.Read(actualStringTableLength);
 
 		std::string charBuffer;
 		charBuffer.resize(actualStringTableLength);
-		archiveFileReader.Read(&charBuffer[0], actualStringTableLength);
+		archiveFileReader.Read(charBuffer);
 
 		m_StringTable.push_back("");
 		for (std::size_t i = 0; i < charBuffer.size(); ++i)
