@@ -167,3 +167,15 @@ std::string ResourceManager::FindContainingArchiveFile(const std::string& filena
 
 	return std::string();
 }
+
+std::vector<std::string> ResourceManager::GetArchiveFilenames()
+{
+	std::vector<std::string> archiveFilenames;
+	archiveFilenames.reserve(ArchiveFiles.size());
+
+	for (const auto& archiveFile : ArchiveFiles)
+	{
+		archiveFilenames.push_back(archiveFile->GetVolumeFilename());
+	}
+	return archiveFilenames;
+}
