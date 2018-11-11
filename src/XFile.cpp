@@ -172,22 +172,15 @@ bool XFile::PathsAreEqual(std::string pathStr1, std::string pathStr2)
 
 std::string XFile::GetDirectory(const std::string& pathStr)
 {
+	if (pathStr.size() == 0) {
+		return "";
+	}
+	if (pathStr.back() == '/') {
+		return pathStr;
+	}
+
 	fs::path p(pathStr);
-
-	if (p.has_relative_path())
-	{
-		if (p.relative_path() == p.filename()) {
-			return "./";
-		}
-
-		return p.remove_filename().relative_path().string();
-	}
-
-	if (p.has_root_path()) {
-		return p.remove_filename().root_path().string();
-	}
-
-	return "./";
+	return p.parent_path().string() + "/";
 }
 
 void XFile::DeletePath(const std::string& pathStr)
