@@ -21,6 +21,11 @@ namespace Stream
 			Default = CanOpenExisting | CanOpenNew | Truncate,
 		};
 
+		// Note: A Time-of-check to time-of-use race condition may exist when
+		// certain OpenMode flags are cleared:
+		//   CanOpenExisting
+		//   CanOpenNew
+		// If both flags are specified, no race condition can occur
 		FileWriter(const std::string& filename, OpenMode openMode = OpenMode::Default);
 		~FileWriter() override;
 
