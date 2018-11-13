@@ -13,12 +13,12 @@ namespace Stream
 	public:
 		// Open mode bit flags
 		enum OpenMode {
-			FailIfExist = 0b0000'0001,
-			FailIfNoExist = 0b0000'0010,
+			CanOpenExisting = 0b0000'0001,
+			CanOpenNew = 0b0000'0010,
 			Truncate = 0b0000'0100,
 			Append = 0b0000'1000,
 
-			Default = Truncate,
+			Default = CanOpenExisting | CanOpenNew | Truncate,
 		};
 
 		FileWriter(const std::string& filename, OpenMode openMode = OpenMode::Default);
