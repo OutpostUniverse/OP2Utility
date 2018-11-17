@@ -245,7 +245,7 @@ namespace Archives
 		const WaveFormatEx& waveFormat)
 	{
 		// ClmFile cannot contain more than 32 bit size internal file count.
-		ClmHeader header(waveFormat, static_cast<uint32_t>(names.size()));
+		ClmHeader header = ClmHeader::MakeHeader(waveFormat, static_cast<uint32_t>(names.size()));
 
 		Stream::FileWriter clmFileWriter(archiveFilename);
 
@@ -315,12 +315,16 @@ namespace Archives
 	const std::array<char, 32> standardFileVersion { "OP2 Clump File Version 1.0\x01A\0\0\0\0" };
 	const std::array<char, 6> standardUnknown { 0, 0, 0, 0, 1, 0 };
 
-	ClmFile::ClmHeader::ClmHeader(WaveFormatEx waveFormat, uint32_t packedFilesCount) {
-		fileVersion = standardFileVersion;
-		unknown = standardUnknown;
+	ClmFile::ClmHeader ClmFile::ClmHeader::MakeHeader(WaveFormatEx waveFormat, uint32_t packedFilesCount) {
+		ClmHeader header;
 
-		this->waveFormat = waveFormat;
-		this->packedFilesCount = packedFilesCount;
+		header.fileVersion = standardFileVersion;
+		header.unknown = standardUnknown;
+
+		header.waveFormat = waveFormat;
+		header.packedFilesCount = packedFilesCount;
+
+		return header;
 	}
 
 	bool ClmFile::ClmHeader::CheckFileVersion() const {
