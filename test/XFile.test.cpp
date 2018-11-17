@@ -1,5 +1,7 @@
 #include "../src/XFile.h"
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <regex>
 
 
 TEST(XFileGetDirectory, EmptyPath) {
@@ -37,3 +39,16 @@ TEST(XFileGetDirectory, WindowsAbsolutePathToDirectory) {
 	EXPECT_EQ("C:/a/b/", XFile::GetDirectory("C:/a/b/"));
 }
 #endif
+
+
+TEST(XFileGetFilesFromDirectory, EmptyPath) {
+	EXPECT_THAT(XFile::GetFilesFromDirectory(""), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilesFromDirectory("", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilesFromDirectory("", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+}
+
+TEST(XFileGetFilesFromDirectory, ExplicitCurrentDirectory) {
+	EXPECT_THAT(XFile::GetFilesFromDirectory("./"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilesFromDirectory("./", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilesFromDirectory("./", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+}
