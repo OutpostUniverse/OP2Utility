@@ -22,12 +22,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
-# Install Google Test
+# Install Google Test (source package and build dependencies)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
     libgtest-dev \
   && rm -rf /var/lib/apt/lists/*
 
+# Compile and install Google Test
 ARG gtestBuildDir=/tmp/gtest/
 RUN mkdir -p ${gtestBuildDir} && \
   cd ${gtestBuildDir} && \
