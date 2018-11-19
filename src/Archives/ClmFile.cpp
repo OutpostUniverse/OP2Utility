@@ -316,15 +316,7 @@ namespace Archives
 	const std::array<char, 6> standardUnknown { 0, 0, 0, 0, 1, 0 };
 
 	ClmFile::ClmHeader ClmFile::ClmHeader::MakeHeader(WaveFormatEx waveFormat, uint32_t packedFilesCount) {
-		ClmHeader header;
-
-		header.fileVersion = standardFileVersion;
-		header.unknown = standardUnknown;
-
-		header.waveFormat = waveFormat;
-		header.packedFilesCount = packedFilesCount;
-
-		return header;
+		return ClmHeader{ standardFileVersion,  waveFormat, standardUnknown, packedFilesCount };
 	}
 
 	bool ClmFile::ClmHeader::CheckFileVersion() const {
