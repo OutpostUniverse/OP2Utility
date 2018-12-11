@@ -11,11 +11,11 @@ struct Rect
 	int32_t x2;
 	int32_t y2;
 
-	inline const int32_t Width() {
+	inline int32_t Width() const {
 		return x2 - x1;
 	}
 
-	inline const int32_t Height() {
+	inline int32_t Height() const {
 		return y2 - y1;
 	}
 };
