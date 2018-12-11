@@ -18,6 +18,13 @@ struct Rect
 	inline int32_t Height() const {
 		return y2 - y1;
 	}
+
+	bool operator==(const Rect& rhs) const {
+		return (x1 == rhs.x1) && (y1 == rhs.y1) && (x2 == rhs.x2) && (y2 == rhs.y2);
+	}
+	bool operator!=(const Rect& rhs) const {
+		return !(*this == rhs);
+	}
 };
 
 static_assert(16 == sizeof(Rect), "Rect is an unexpected size");
