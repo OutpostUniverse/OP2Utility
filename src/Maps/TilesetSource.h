@@ -15,6 +15,11 @@ struct TilesetSource
 
 	// Number of Tiles in set (represented on BMP).
 	uint32_t numTiles;
+
+
+	bool IsEmpty() const {
+		return (numTiles == 0) || tilesetFilename.empty();
+	}
 };
 
 #pragma pack(pop)
