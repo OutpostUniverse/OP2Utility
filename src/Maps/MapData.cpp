@@ -38,6 +38,8 @@ void MapData::TrimTilesetSources()
 		),
 		tilesetSources.end()
 	);
+
+	header.tilesetCount = tilesetSources.size();
 }
 
 
