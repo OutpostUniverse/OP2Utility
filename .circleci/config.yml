@@ -5,5 +5,5 @@ jobs:
       - image: outpostuniverse/circleci-gcc-clang-googletest
     steps:
       - checkout
-      - run: make -k CXX=g++
-      - run: make check CXX=g++
+      - run: make -k CXX=clang++
+      - run: make check CXX=clang++
