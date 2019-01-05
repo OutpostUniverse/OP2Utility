@@ -56,12 +56,19 @@ clean-all:
 
 
 GTESTDIR := $(BUILDDIR)/gtest
+GMOCKDIR := $(BUILDDIR)/gmock
 
 .PHONY:gtest
 gtest:
 	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++14" /usr/src/gtest/
+	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" /usr/src/gtest/
 	make -C $(GTESTDIR)
+
+.PHONY:gmock
+gmock:
+	mkdir -p $(GMOCKDIR)
+	cd $(GMOCKDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" /usr/src/gmock/
+	make -C $(GMOCKDIR)
 
 
 TESTDIR := test
@@ -69,7 +76,7 @@ TESTOBJDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
-TESTLDFLAGS := -L./ -L$(GTESTDIR)
+TESTLDFLAGS := -L./ -L$(GTESTDIR) -L$(GMOCKDIR)
 TESTLIBS := -lgtest -lgtest_main -lpthread -lOP2Utility -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
