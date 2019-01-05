@@ -30,6 +30,7 @@ script:
   # Use -k to continue after errors, ensuring full build log with all errors
   - make -k
   - make gtest
+  - make gmock
   - make check
 notifications:
   email: false
