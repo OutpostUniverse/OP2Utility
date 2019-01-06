@@ -46,7 +46,7 @@ public:
 	inline int32_t GetVersionTag() const { return versionTag; };
 	inline bool IsSavedGame() const { return isSavedGame; };
 	inline uint32_t MapTileWidth() const { return mapTileWidth; };
-	inline uint32_t HeightInTiles() const { return mapTileHeight; };
+	inline uint32_t MapTileHeight() const { return mapTileHeight; };
 
 	// Total number of tiles on map.
 	inline std::size_t TileCount() const
