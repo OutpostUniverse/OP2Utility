@@ -6,10 +6,10 @@ TEST(MapHeader, VersionTagValid) {
 
 	EXPECT_TRUE(mapHeader.VersionTagValid());
 
-	mapHeader.versionTag = minMapVersion + 1;
+	mapHeader.versionTag = MapHeader::MinMapVersion + 1;
 	EXPECT_TRUE(mapHeader.VersionTagValid());
 
-	mapHeader.versionTag = minMapVersion - 1;
+	mapHeader.versionTag = MapHeader::MinMapVersion - 1;
 	EXPECT_FALSE(mapHeader.VersionTagValid());
 }
 

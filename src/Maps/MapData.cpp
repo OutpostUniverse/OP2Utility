@@ -4,7 +4,7 @@
 #include <algorithm>
 
 MapData::MapData() :
-	versionTag(minMapVersion),
+	versionTag(MapHeader::MinMapVersion),
 	isSavedGame(false),
 	mapTileWidth(0),
 	mapTileHeight(0) { }

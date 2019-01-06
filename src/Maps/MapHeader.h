@@ -2,15 +2,15 @@
 
 #include <cstdint>
 
-// Minimum map version tag that Outpost 2 will accept without error
-extern const uint32_t minMapVersion;
-
 #pragma pack(push, 1) // Make sure structure is byte aligned
 
 // Outpost 2 map and save file header
 struct MapHeader
 {
 	MapHeader();
+
+	// Minimum map version tag that Outpost 2 will accept without error
+	static const uint32_t MinMapVersion = 0x1010;
 
 	// The map's version tag.
 	// It must be >= to 0x1010 or Outpost 2 will abort loading the map.
