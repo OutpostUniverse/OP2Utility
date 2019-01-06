@@ -14,6 +14,12 @@
 
 enum class CellType;
 
+namespace Stream {
+	class Writer;
+	class Reader;
+	class SeekableReader;
+}
+
 // FILE FORMAT DOCUMENTATION:
 //     Outpost2SVN\OllyDbg\InternalData\FileFormat SavedGame and Map.txt.
 
@@ -28,6 +34,13 @@ public:
 	MapData(const MapHeader& mapHeader);
 
 	MapHeader CreateHeader() const;
+
+	static void Write(const std::string& filename, const MapData& mapData);
+	static void Write(Stream::Writer& mapStream, const MapData& mapData);
+	static MapData ReadMap(std::string filename);
+	static MapData ReadMap(Stream::SeekableReader& seekableReader);
+	static MapData ReadSavedGame(std::string filename);
+	static MapData ReadSavedGame(Stream::SeekableReader& seekableReader);
 
 	inline void SetVersionTag(int32_t versionTag) { MapData::versionTag = versionTag; };
 	inline int32_t GetVersionTag() const { return versionTag; };
@@ -75,4 +88,17 @@ private:
 
 	std::size_t GetTileIndex(std::size_t x, std::size_t y) const;
 	uint32_t GetWidthInTilesLog2(uint32_t widthInTiles) const;
+
+	// Write
+	static void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources);
+	static void WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups);
+	static void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
+
+	// Read
+	static void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
+	static void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData, std::size_t tilesetCount);
+	static void ReadTilesetHeader(Stream::Reader& streamReader);
+	static void ReadVersionTag(Stream::Reader& streamReader);
+	static void ReadTileGroups(Stream::Reader& streamReader, MapData& mapData);
+	static TileGroup ReadTileGroup(Stream::Reader& streamReader);
 };

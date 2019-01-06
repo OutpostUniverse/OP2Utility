@@ -78,13 +78,7 @@
     <ClInclude Include="src\Maps\TileInfo.h">
       <Filter>Maps</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maps\MapWriter.h">
-      <Filter>Maps</Filter>
-    </ClInclude>
     <ClInclude Include="src\Maps\TileGroup.h">
-      <Filter>Maps</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Maps\MapReader.h">
       <Filter>Maps</Filter>
     </ClInclude>
     <ClInclude Include="src\Maps\CellType.h">
