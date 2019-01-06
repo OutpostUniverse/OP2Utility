@@ -11,7 +11,22 @@ namespace Stream
 	class FileWriter : public SeekableWriter
 	{
 	public:
-		FileWriter(const std::string& filename);
+		// Open mode bit flags
+		enum OpenMode {
+			CanOpenExisting = 0b0000'0001,
+			CanOpenNew = 0b0000'0010,
+			Truncate = 0b0000'0100,
+			Append = 0b0000'1000,
+
+			Default = CanOpenExisting | CanOpenNew | Truncate,
+		};
+
+		// Note: A Time-of-check to time-of-use race condition may exist when
+		// certain OpenMode flags are cleared:
+		//   CanOpenExisting
+		//   CanOpenNew
+		// If both flags are specified, no race condition can occur
+		FileWriter(const std::string& filename, OpenMode openMode = OpenMode::Default);
 		~FileWriter() override;
 
 		// SeekableWriter methods
@@ -26,6 +41,8 @@ namespace Stream
 
 	protected:
 		void WriteImplementation(const void* buffer, std::size_t size) override;
+
+		static std::ios_base::openmode TranslateFlags(const std::string& filename, OpenMode openMode);
 
 	private:
 		const std::string filename;

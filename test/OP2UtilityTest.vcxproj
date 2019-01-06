@@ -47,8 +47,10 @@
     <ClCompile Include="Bitmaps\Color.test.cpp" />
     <ClCompile Include="Bitmaps\ImageHeader.test.cpp" />
     <ClCompile Include="Bitmaps\IndexedBmpWriter.test.cpp" />
+    <ClCompile Include="Maps\MapData.test.cpp" />
     <ClCompile Include="Maps\MapHeader.test.cpp" />
     <ClCompile Include="Maps\MapReader.test.cpp" />
+    <ClCompile Include="Maps\MapTilesetSource.test.cpp" />
     <ClCompile Include="Maps\MapWriter.test.cpp" />
     <ClCompile Include="Rect.test.cpp" />
     <ClCompile Include="Sprites\ArtReader.test.cpp" />
@@ -81,7 +83,6 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -100,7 +101,6 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;X64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>

@@ -11,7 +11,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
-            - libgtest-dev
+            - google-mock
     - os: linux
       env: CXX=clang++-6.0 CC=clang-6.0
       addons:
@@ -22,12 +22,12 @@ matrix:
           packages:
             - clang-6.0
             - libstdc++-6-dev
-            - libgtest-dev
+            - google-mock
 
 script:
   # Use -k to continue after errors, ensuring full build log with all errors
   - make -k
-  - make gtest
+  - make gmock
   - make check
 notifications:
   email: false

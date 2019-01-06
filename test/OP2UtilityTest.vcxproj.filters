@@ -40,10 +40,16 @@
     <ClCompile Include="Bitmaps\IndexedBmpWriter.test.cpp">
       <Filter>Bitmaps</Filter>
     </ClCompile>
-    <ClCompile Include="Rect.test.cpp" />
     <ClCompile Include="Bitmaps\BitmapFile.test.cpp">
       <Filter>Bitmaps</Filter>
     </ClCompile>
+    <ClCompile Include="Maps\MapData.test.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="Maps\MapTilesetSource.test.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="Rect.test.cpp" />
     <ClCompile Include="XFile.test.cpp" />
   </ItemGroup>
   <ItemGroup>

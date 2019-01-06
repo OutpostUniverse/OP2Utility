@@ -1,5 +1,6 @@
 #include "MapData.h"
 #include "CellType.h"
+#include <algorithm>
 
 std::size_t MapData::GetTileInfoIndex(std::size_t x, std::size_t y) const
 {
@@ -25,6 +26,20 @@ std::size_t MapData::GetTilesetIndex(std::size_t x, std::size_t y) const
 std::size_t MapData::GetImageIndex(std::size_t x, std::size_t y) const
 {
 	return tileInfos[GetTileInfoIndex(x, y)].tileIndex;
+}
+
+void MapData::TrimTilesetSources()
+{
+	tilesetSources.erase(
+		std::remove_if(
+			tilesetSources.begin(),
+			tilesetSources.end(),
+			[](TilesetSource tilesetSource) { return tilesetSource.IsEmpty(); }
+		),
+		tilesetSources.end()
+	);
+
+	header.tilesetCount = tilesetSources.size();
 }
 
 
