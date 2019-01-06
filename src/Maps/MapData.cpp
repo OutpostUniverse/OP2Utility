@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <stdexcept>
 
 MapData::MapData() :
 	versionTag(minMapVersion),
