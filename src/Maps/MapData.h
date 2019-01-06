@@ -20,10 +20,10 @@ enum class CellType;
 // ALT IMPLEMENTATION (with COM support)
 //     Outpost2SVN\MapEditor\OP2Editor.
 
-//Represents the data stored in an Outpost 2 map file.
-struct MapData
+//An Outpost 2 map file.
+class MapData
 {
-	MapHeader header;
+public:
 
 	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
 	std::vector<TileData> tiles;
