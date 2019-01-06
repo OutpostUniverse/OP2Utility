@@ -87,7 +87,7 @@ private:
 	std::size_t GetTileIndex(std::size_t x, std::size_t y) const;
 
 	// Write
-	MapHeader MapData::CreateHeader() const;
+	MapHeader CreateHeader() const;
 	uint32_t GetWidthInTilesLog2(uint32_t widthInTiles) const;
 	static void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources);
 	static void WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups);
