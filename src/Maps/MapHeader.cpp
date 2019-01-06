@@ -1,6 +1,6 @@
 #include "MapHeader.h"
 
-extern const int minMapVersion = 0x1010;
+extern const uint32_t minMapVersion = 0x1010;
 
 MapHeader::MapHeader() :
 	versionTag(minMapVersion),

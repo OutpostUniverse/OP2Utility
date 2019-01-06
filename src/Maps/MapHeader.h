@@ -3,7 +3,7 @@
 #include <cstdint>
 
 // Minimum map version tag that Outpost 2 will accept without error
-extern const int minMapVersion;
+extern const uint32_t minMapVersion;
 
 #pragma pack(push, 1) // Make sure structure is byte aligned
 
