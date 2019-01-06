@@ -24,6 +24,22 @@ enum class CellType;
 class MapData
 {
 public:
+	MapData();
+	MapData(const MapHeader& mapHeader);
+
+	MapHeader CreateHeader() const;
+
+	inline void SetVersionTag(int32_t versionTag) { MapData::versionTag = versionTag; };
+	inline int32_t GetVersionTag() const { return versionTag; };
+	inline bool IsSavedGame() const { return isSavedGame; };
+	inline uint32_t MapTileWidth() const { return mapTileWidth; };
+	inline uint32_t HeightInTiles() const { return mapTileHeight; };
+
+	// Total number of tiles on map.
+	inline std::size_t TileCount() const
+	{
+		return tiles.size();
+	};
 
 	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
 	std::vector<TileData> tiles;
@@ -52,5 +68,11 @@ public:
 	void TrimTilesetSources();
 
 private:
+	int32_t versionTag;
+	bool isSavedGame;
+	uint32_t mapTileWidth;
+	uint32_t mapTileHeight;
+
 	std::size_t GetTileIndex(std::size_t x, std::size_t y) const;
+	uint32_t GetWidthInTilesLog2(uint32_t widthInTiles) const;
 };

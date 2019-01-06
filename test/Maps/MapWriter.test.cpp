@@ -28,7 +28,7 @@ TEST(MapWriter, AllowInvalidVersionTag) {
 	const std::string testFilename("Maps/data/test.map");
 	MapData mapData;
 
-	mapData.header.versionTag = minMapVersion - 1;
+	mapData.SetVersionTag(minMapVersion - 1);
 	EXPECT_NO_THROW(MapWriter::Write(testFilename, mapData));
 
 	XFile::DeletePath(testFilename);

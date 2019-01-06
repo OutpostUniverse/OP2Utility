@@ -9,7 +9,6 @@
 namespace MapWriter {
 	// Anonymous namespace to hold private methods
 	namespace {
-		void ValidateMap(const MapData& mapData);
 		void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources);
 		void WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups);
 		void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
@@ -27,9 +26,9 @@ namespace MapWriter {
 
 	void Write(Stream::Writer& streamWriter, const MapData& mapData)
 	{
-		ValidateMap(mapData);
+		MapHeader mapHeader = mapData.CreateHeader();
 
-		streamWriter.Write(mapData.header);
+		streamWriter.Write(mapHeader);
 		streamWriter.Write(mapData.tiles);
 		streamWriter.Write(mapData.clipRect);
 		WriteTilesetSources(streamWriter, mapData.tilesetSources);
@@ -37,8 +36,8 @@ namespace MapWriter {
 		streamWriter.Write<uint32_t>(mapData.tileInfos);
 		streamWriter.Write<uint32_t>(mapData.terrainTypes);
 
-		streamWriter.Write(mapData.header.versionTag);
-		streamWriter.Write(mapData.header.versionTag);
+		streamWriter.Write(mapHeader.versionTag);
+		streamWriter.Write(mapHeader.versionTag);
 
 		WriteTileGroups(streamWriter, mapData.tileGroups);
 	}
@@ -48,16 +47,6 @@ namespace MapWriter {
 
 
 	namespace {
-		void ValidateMap(const MapData& mapData) {
-			if (mapData.header.TileCount() != mapData.tiles.size()) {
-				throw std::runtime_error("Header reported tile width * tile height does not match actual tile count");
-			}
-
-			if (mapData.header.tilesetCount != mapData.tilesetSources.size()) {
-				throw std::runtime_error("Header reported tileset count does not match actual tileset sources");
-			}
-		}
-
 		void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources)
 		{
 			for (const auto& tilesetSource : tilesetSources)

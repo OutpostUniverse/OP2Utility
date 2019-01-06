@@ -12,8 +12,7 @@ namespace MapReader {
 	// Anonymous namespace to hold private methods
 	namespace {
 		void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
-		void ReadTiles(Stream::Reader& streamReader, MapData& mapData);
-		void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData);
+		void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData, std::size_t tilesetCount);
 		void ReadTilesetHeader(Stream::Reader& streamReader);
 		void ReadVersionTag(Stream::Reader& streamReader);
 		void ReadTileGroups(Stream::Reader& streamReader, MapData& mapData);
@@ -34,12 +33,16 @@ namespace MapReader {
 
 	MapData ReadMap(Stream::SeekableReader& streamReader)
 	{
-		MapData mapData;
+		MapHeader mapHeader;
+		streamReader.Read(mapHeader);
+		
+		MapData mapData(mapHeader);
+		
+		mapData.tiles.resize(mapHeader.TileCount());
+		streamReader.Read(mapData.tiles);
 
-		streamReader.Read(mapData.header);
-		ReadTiles(streamReader, mapData);
 		streamReader.Read(mapData.clipRect);
-		ReadTilesetSources(streamReader, mapData);
+		ReadTilesetSources(streamReader, mapData, static_cast<std::size_t>(mapHeader.tilesetCount));
 		ReadTilesetHeader(streamReader);
 		streamReader.Read<uint32_t>(mapData.tileInfos);
 		streamReader.Read<uint32_t>(mapData.terrainTypes);
@@ -72,12 +75,6 @@ namespace MapReader {
 			streamReader.SeekRelative(0x1E025);
 		}
 
-		void ReadTiles(Stream::Reader& streamReader, MapData& mapData)
-		{
-			mapData.tiles.resize(mapData.header.TileCount());
-			streamReader.Read(mapData.tiles);
-		}
-
 		void ReadTilesetHeader(Stream::Reader& streamReader)
 		{
 			std::array<char, 10> buffer;
@@ -88,9 +85,9 @@ namespace MapReader {
 			}
 		}
 
-		void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData)
+		void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData, std::size_t tilesetCount)
 		{
-			mapData.tilesetSources.resize(static_cast<std::size_t>(mapData.header.tilesetCount));
+			mapData.tilesetSources.resize(tilesetCount);
 
 			for (auto& tilesetSource : mapData.tilesetSources)
 			{
