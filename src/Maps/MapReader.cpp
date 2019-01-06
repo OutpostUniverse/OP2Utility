@@ -13,7 +13,7 @@ MapData MapData::ReadMap(std::string filename)
 	return ReadMap(mapReader);
 }
 
-MapData MapData::ReadMap(Stream::SeekableReader& streamReader)
+MapData MapData::ReadMap(Stream::Reader& streamReader)
 {
 	MapHeader mapHeader;
 	streamReader.Read(mapHeader);
