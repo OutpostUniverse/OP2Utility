@@ -1,6 +1,9 @@
 #include "MapData.h"
+#include "MapHeader.h"
 #include "../Streams/FileWriter.h"
 #include <stdexcept>
+#include <cmath>
+#include <limits>
 
 void MapData::Write(const std::string& filename, const MapData& mapData)
 {
@@ -28,6 +31,36 @@ void MapData::Write(Stream::Writer& streamWriter, const MapData& mapData)
 
 
 // == Private methods ==
+
+MapHeader MapData::CreateHeader() const
+{
+	MapHeader mapHeader;
+
+	mapHeader.versionTag = versionTag;
+	mapHeader.bSavedGame = isSavedGame;
+	mapHeader.lgMapTileWidth = GetWidthInTilesLog2(mapTileWidth);
+	mapHeader.mapTileHeight = mapTileHeight;
+
+	if (tilesetSources.size() > std::numeric_limits<decltype(MapHeader::tilesetCount)>::max()) {
+		throw std::runtime_error("Too many tilesets contained in map");
+	}
+
+	mapHeader.tilesetCount = static_cast<uint32_t>(tilesetSources.size());
+
+	return mapHeader;
+}
+
+uint32_t MapData::GetWidthInTilesLog2(uint32_t widthInTiles) const
+{
+	auto lgWidthInTiles = std::log2(widthInTiles);
+
+	double integerPart;
+	if (std::modf(lgWidthInTiles, &integerPart) != 0.0) {
+		throw std::runtime_error("Width of map in tiles must create an integer value when taking log2");
+	}
+
+	return static_cast<uint32_t>(lgWidthInTiles);
+}
 
 void MapData::WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources)
 {

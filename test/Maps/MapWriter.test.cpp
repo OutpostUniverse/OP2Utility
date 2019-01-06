@@ -1,4 +1,5 @@
 #include "Maps/MapData.h"
+#include "Maps/MapHeader.h"
 #include "Streams/MemoryWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>

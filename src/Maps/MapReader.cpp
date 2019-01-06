@@ -1,4 +1,5 @@
 #include "MapData.h"
+#include "MapHeader.h"
 #include "../Streams/FileReader.h"
 #include <iostream>
 #include <stdexcept>
@@ -17,9 +18,13 @@ MapData MapData::ReadMap(Stream::Reader& streamReader)
 {
 	MapHeader mapHeader;
 	streamReader.Read(mapHeader);
-		
-	MapData mapData(mapHeader);
-		
+
+	MapData mapData;
+	mapData.versionTag = mapHeader.versionTag;
+	mapData.isSavedGame = mapHeader.bSavedGame;
+	mapData.mapTileWidth = mapHeader.MapTileWidth();
+	mapData.mapTileHeight = mapHeader.mapTileHeight;
+
 	mapData.tiles.resize(mapHeader.TileCount());
 	streamReader.Read(mapData.tiles);
 

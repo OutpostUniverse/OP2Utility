@@ -1,6 +1,5 @@
 #pragma once
 
-#include "MapHeader.h"
 #include "TileData.h"
 #include "TilesetSource.h"
 #include "TileInfo.h"
@@ -13,6 +12,8 @@
 #include <cstdint>
 
 enum class CellType;
+
+struct MapHeader;
 
 namespace Stream {
 	class Writer;
@@ -31,9 +32,6 @@ class MapData
 {
 public:
 	MapData();
-	MapData(const MapHeader& mapHeader);
-
-	MapHeader CreateHeader() const;
 
 	static void Write(const std::string& filename, const MapData& mapData);
 	static void Write(Stream::Writer& mapStream, const MapData& mapData);
@@ -87,9 +85,10 @@ private:
 	uint32_t mapTileHeight;
 
 	std::size_t GetTileIndex(std::size_t x, std::size_t y) const;
-	uint32_t GetWidthInTilesLog2(uint32_t widthInTiles) const;
 
 	// Write
+	MapHeader MapData::CreateHeader() const;
+	uint32_t GetWidthInTilesLog2(uint32_t widthInTiles) const;
 	static void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources);
 	static void WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups);
 	static void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
