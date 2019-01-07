@@ -38,7 +38,7 @@ struct MapHeader
 
 	bool VersionTagValid() const
 	{
-		return versionTag >= 0x1010;
+		return versionTag >= MinMapVersion;
 	}
 
 	// Total number of tiles on map.
