@@ -1,6 +1,7 @@
 #include "MapData.h"
 #include "MapHeader.h"
 #include "../Streams/FileWriter.h"
+#include "../BitTwiddle.h"
 #include <stdexcept>
 #include <cmath>
 #include <limits>
@@ -53,14 +54,11 @@ MapHeader MapData::CreateHeader() const
 
 uint32_t MapData::GetWidthInTilesLog2(uint32_t widthInTiles) const
 {
-	auto lgWidthInTiles = std::log2(widthInTiles);
-
-	double integerPart;
-	if (std::modf(lgWidthInTiles, &integerPart) != 0.0) {
-		throw std::runtime_error("Width of map in tiles must create an integer value when taking log2");
+	//if (!IsPowerOf2(widthInTiles)) {
+	if (widthInTiles && !IsPowerOf2(widthInTiles)) {
+		throw std::runtime_error("Map width in tiles must be a power of 2");
 	}
-
-	return static_cast<uint32_t>(lgWidthInTiles);
+	return Log2OfPowerOf2(widthInTiles);
 }
 
 void MapData::WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources)
