@@ -165,6 +165,9 @@
     <ClInclude Include="src\Bitmaps\BitmapFile.h">
       <Filter>Bitmaps</Filter>
     </ClInclude>
+    <ClInclude Include="src\BitTwiddle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
@@ -262,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="src\Bitmaps\IndexedBmpReader.cpp">
       <Filter>Bitmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BitTwiddle.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

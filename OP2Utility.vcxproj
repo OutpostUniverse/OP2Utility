@@ -127,6 +127,7 @@
     <ClInclude Include="src\Bitmaps\Color.h" />
     <ClInclude Include="src\Bitmaps\ImageHeader.h" />
     <ClInclude Include="src\Bitmaps\BitmapFile.h" />
+    <ClInclude Include="src\BitTwiddle.h" />
     <ClInclude Include="src\Maps\CellType.h" />
     <ClInclude Include="src\Maps\MapData.h" />
     <ClInclude Include="src\Maps\MapHeader.h" />
@@ -153,6 +154,7 @@
     <ClCompile Include="src\Bitmaps\ImageHeader.cpp" />
     <ClCompile Include="src\Bitmaps\IndexedBmpReader.cpp" />
     <ClCompile Include="src\Bitmaps\IndexedBmpWriter.cpp" />
+    <ClCompile Include="src\BitTwiddle.cpp" />
     <ClCompile Include="src\Maps\MapData.cpp" />
     <ClCompile Include="src\Maps\MapHeader.cpp" />
     <ClCompile Include="src\Maps\MapReader.cpp" />

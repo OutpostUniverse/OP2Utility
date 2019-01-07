@@ -50,6 +50,7 @@
     <ClCompile Include="Maps\MapTilesetSource.test.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
+    <ClCompile Include="BitTwiddle.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
