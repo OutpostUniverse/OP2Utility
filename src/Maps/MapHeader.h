@@ -11,10 +11,11 @@ struct MapHeader
 
 	// Minimum map version tag that Outpost 2 will accept without error
 	static const uint32_t MinMapVersion = 0x1010;
+
+	// Default map version tag used by original Outpost 2 maps
 	static const uint32_t CurrentMapVersion = 0x1011;
 
-	// The map's version tag.
-	// It must be >= to 0x1010 or Outpost 2 will abort loading the map.
+	// The map's version tag must be >= MinMapVersion or Outpost 2 will abort loading the map.
 	int32_t versionTag;
 
 	// True if file represents a saved game instead of a map file.
