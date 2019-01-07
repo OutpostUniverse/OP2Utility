@@ -5,14 +5,15 @@
 #include <cmath>
 #include <limits>
 
-void MapData::Write(const std::string& filename, const MapData& mapData)
+void MapData::Write(const std::string& filename) const
 {
 	Stream::FileWriter mapWriter(filename);
-	Write(mapWriter, mapData);
+	this->Write(mapWriter);
 }
 
-void MapData::Write(Stream::Writer& streamWriter, const MapData& mapData)
+void MapData::Write(Stream::Writer& streamWriter) const
 {
+	const MapData& mapData = *this;
 	MapHeader mapHeader = mapData.CreateHeader();
 
 	streamWriter.Write(mapHeader);

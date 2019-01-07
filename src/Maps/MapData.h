@@ -33,12 +33,13 @@ class MapData
 public:
 	MapData();
 
-	static void Write(const std::string& filename, const MapData& mapData);
-	static void Write(Stream::Writer& mapStream, const MapData& mapData);
 	static MapData ReadMap(std::string filename);
 	static MapData ReadMap(Stream::Reader& seekableReader);
 	static MapData ReadSavedGame(std::string filename);
 	static MapData ReadSavedGame(Stream::SeekableReader& seekableReader);
+
+	void Write(const std::string& filename) const;
+	void Write(Stream::Writer& mapStream) const;
 
 	inline void SetVersionTag(int32_t versionTag) { MapData::versionTag = versionTag; };
 	inline int32_t GetVersionTag() const { return versionTag; };
