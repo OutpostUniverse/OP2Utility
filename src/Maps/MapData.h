@@ -41,7 +41,7 @@ public:
 	void Write(const std::string& filename) const;
 	void Write(Stream::Writer& mapStream) const;
 
-	inline void SetVersionTag(int32_t versionTag) { MapData::versionTag = versionTag; };
+	inline void SetVersionTag(int32_t versionTag) { this->versionTag = versionTag; };
 	inline int32_t GetVersionTag() const { return versionTag; };
 	inline bool IsSavedGame() const { return isSavedGame; };
 	inline uint32_t MapTileWidth() const { return mapTileWidth; };
