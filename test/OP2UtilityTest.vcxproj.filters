@@ -44,6 +44,7 @@
     <ClCompile Include="Bitmaps\BitmapFile.test.cpp">
       <Filter>Bitmaps</Filter>
     </ClCompile>
+    <ClCompile Include="XFile.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
