@@ -21,6 +21,7 @@
 #include "../src/Maps/MapWriter.h"
 
 #include "../src/Sprites/ArtFile.h"
+#include "../src/Bitmaps/BitmapFile.h"
 
 #include "../src/Streams/FileReader.h"
 #include "../src/Streams/FileSliceReader.h"

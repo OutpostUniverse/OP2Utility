@@ -45,6 +45,12 @@
       <Filter>Bitmaps</Filter>
     </ClCompile>
     <ClCompile Include="XFile.test.cpp" />
+    <ClCompile Include="Maps\MapData.test.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="Maps\MapTilesetSource.test.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

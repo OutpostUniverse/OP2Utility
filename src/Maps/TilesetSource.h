@@ -15,6 +15,19 @@ struct TilesetSource
 
 	// Number of Tiles in set (represented on BMP).
 	uint32_t numTiles;
+
+
+	bool operator==(const TilesetSource& rhs) const {
+		return numTiles == rhs.numTiles && tilesetFilename == rhs.tilesetFilename;
+	}
+
+	bool operator!=(const TilesetSource& rhs) const {
+		return !(*this == rhs);
+	}
+
+	bool IsEmpty() const {
+		return (numTiles == 0) || tilesetFilename.empty();
+	}
 };
 
 #pragma pack(pop)

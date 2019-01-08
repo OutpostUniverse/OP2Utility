@@ -49,6 +49,8 @@ public:
 	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
 	std::size_t GetImageIndex(std::size_t x, std::size_t y) const;
 
+	void TrimTilesetSources();
+
 private:
 	std::size_t GetTileIndex(std::size_t x, std::size_t y) const;
 };

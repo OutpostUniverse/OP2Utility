@@ -34,9 +34,6 @@ namespace Archives
 #pragma pack(push, 1)
 		struct ClmHeader
 		{
-			ClmHeader() {};
-			ClmHeader(WaveFormatEx waveFormatEx, uint32_t packFileCount);
-
 			std::array<char, 32> fileVersion;
 			WaveFormatEx waveFormat;
 			std::array<char, 6> unknown;
@@ -47,6 +44,8 @@ namespace Archives
 
 			void VerifyFileVersion() const; // Exception raised if invalid version
 			void VerifyUnknown() const; // Exception raised if invalid version
+
+			static ClmHeader MakeHeader(WaveFormatEx waveFormatEx, uint32_t packFileCount);
 		};
 
 		static_assert(42 + sizeof(WaveFormatEx) == sizeof(ClmHeader), "ClmHeader is an unexpected size");
