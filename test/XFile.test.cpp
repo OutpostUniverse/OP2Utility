@@ -1,7 +1,11 @@
 #include "../src/XFile.h"
 #include <gtest/gtest.h>
+
+// Disable due to lack of Google Mock in the Windows CI environment
+#ifndef _WIN32
 #include <gmock/gmock.h>
 #include <regex>
+#endif
 
 
 TEST(XFileGetDirectory, EmptyPath) {
