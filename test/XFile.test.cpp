@@ -28,7 +28,8 @@ TEST(XFileGetDirectory, PosixAbsolutePathToDirectory) {
 	EXPECT_EQ("/a/b/", XFile::GetDirectory("/a/b/"));
 }
 
-#ifdef _WIN32
+// The follow two tests use paths that only apply to Windows (yet still pass on Linux)
+
 TEST(XFileGetDirectory, WindowsAbsolutePathToFile) {
 	EXPECT_EQ("C:/a/", XFile::GetDirectory("C:/a/file.ext"));
 	EXPECT_EQ("C:/a/b/", XFile::GetDirectory("C:/a/b/file.ext"));
@@ -38,7 +39,6 @@ TEST(XFileGetDirectory, WindowsAbsolutePathToDirectory) {
 	EXPECT_EQ("C:/a/", XFile::GetDirectory("C:/a/"));
 	EXPECT_EQ("C:/a/b/", XFile::GetDirectory("C:/a/b/"));
 }
-#endif
 
 
 TEST(XFileGetFilesFromDirectory, EmptyPath) {
