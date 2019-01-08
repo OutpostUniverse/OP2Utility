@@ -151,13 +151,13 @@ std::string XFile::RemoveFilename(const std::string& pathStr)
 {
 	fs::path p(pathStr);
 
-	// 6JAN19: If pathStr is only a filename ie 'ashes.map', 
+	// 6JAN19: If pathStr is only a filename ie 'ashes.map',
 	// then path::remove_filename will not remove the filename on MSVC
 	if (p.filename() == p) {
 		return "./";
 	}
 
-	return fs::path(pathStr).remove_filename().string();
+	return fs::path(pathStr).remove_filename().generic_string();
 }
 
 bool XFile::PathsAreEqual(std::string pathStr1, std::string pathStr2)
