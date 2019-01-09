@@ -95,7 +95,7 @@ void MapData::ReadVersionTag(Stream::Reader& streamReader)
 
 	if (versionTag < MapHeader::MinMapVersion)
 	{
-		std::cerr << "All instances of version tag in .map and .op2 files should be greater than 0x1010.";
+		std::cerr << "All instances of version tag in .map and .op2 files should be greater than " + std::to_string(MapHeader::MinMapVersion);
 	}
 }
 
