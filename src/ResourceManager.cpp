@@ -38,7 +38,7 @@ std::unique_ptr<Stream::SeekableReader> ResourceManager::GetResourceStream(const
 	{
 		std::string internalArchiveFilename = XFile::GetFilename(filename);
 
-		if (archiveFile->Contains(filename)) {
+		if (archiveFile->Contains(internalArchiveFilename)) {
 			auto index = archiveFile->GetIndex(internalArchiveFilename);
 			return archiveFile->OpenStream(index);
 		}

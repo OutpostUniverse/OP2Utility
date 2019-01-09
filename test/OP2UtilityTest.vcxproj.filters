@@ -40,7 +40,6 @@
     <ClCompile Include="Bitmaps\IndexedBmpWriter.test.cpp">
       <Filter>Bitmaps</Filter>
     </ClCompile>
-    <ClCompile Include="Rect.test.cpp" />
     <ClCompile Include="Bitmaps\BitmapFile.test.cpp">
       <Filter>Bitmaps</Filter>
     </ClCompile>
@@ -51,6 +50,8 @@
       <Filter>Maps</Filter>
     </ClCompile>
     <ClCompile Include="BitTwiddle.test.cpp" />
+    <ClCompile Include="Rect.test.cpp" />
+    <ClCompile Include="XFile.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
