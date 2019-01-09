@@ -1,6 +1,13 @@
 #include "MapData.h"
+#include "MapHeader.h"
 #include "CellType.h"
 #include <algorithm>
+
+MapData::MapData() :
+	versionTag(MapHeader::MinMapVersion),
+	isSavedGame(false),
+	mapTileWidth(0),
+	mapTileHeight(0) { }
 
 std::size_t MapData::GetTileInfoIndex(std::size_t x, std::size_t y) const
 {
@@ -38,8 +45,6 @@ void MapData::TrimTilesetSources()
 		),
 		tilesetSources.end()
 	);
-
-	header.tilesetCount = tilesetSources.size();
 }
 
 
@@ -48,5 +53,5 @@ std::size_t MapData::GetTileIndex(std::size_t x, std::size_t y) const
 {
 	auto lowerX = x & 0x1F; // ... 0001 1111
 	auto upperX = x >> 5;   // ... 1110 0000
-	return (upperX * header.mapTileHeight + y) * 32 + lowerX;
+	return (upperX * mapTileHeight + y) * 32 + lowerX;
 }

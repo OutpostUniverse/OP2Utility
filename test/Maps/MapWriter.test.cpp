@@ -1,4 +1,4 @@
-#include "Maps/MapWriter.h"
+#include "Maps/MapData.h"
 #include "Maps/MapHeader.h"
 #include "Streams/MemoryWriter.h"
 #include "XFile.h"
@@ -10,26 +10,26 @@ TEST(MapWriter, EmptyMapData)
 {
 	// Write to File
 	const std::string testFilename("Maps/data/test.map");
-	EXPECT_NO_THROW(MapWriter::Write(testFilename, MapData()));
+	EXPECT_NO_THROW(MapData().Write(testFilename));
 	XFile::DeletePath(testFilename);
 
 	// Write to Memory
 	std::vector<char> buffer(1024);
 	Stream::MemoryWriter memoryWriter(buffer.data(), buffer.size() * sizeof(decltype(buffer)::value_type));
-	EXPECT_NO_THROW(MapWriter::Write(memoryWriter, MapData()));
+	EXPECT_NO_THROW(MapData().Write(memoryWriter));
 }
 
 TEST(MapWriter, BlankFilename)
 {
-	EXPECT_THROW(MapWriter::Write("", MapData()), std::runtime_error);
+	EXPECT_THROW(MapData().Write(""), std::runtime_error);
 }
 
 TEST(MapWriter, AllowInvalidVersionTag) {
 	const std::string testFilename("Maps/data/test.map");
 	MapData mapData;
 
-	mapData.header.versionTag = minMapVersion - 1;
-	EXPECT_NO_THROW(MapWriter::Write(testFilename, mapData));
+	mapData.SetVersionTag(MapHeader::MinMapVersion - 1);
+	EXPECT_NO_THROW(MapData().Write(testFilename));
 
 	XFile::DeletePath(testFilename);
 }

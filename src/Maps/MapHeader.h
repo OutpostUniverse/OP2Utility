@@ -2,9 +2,6 @@
 
 #include <cstdint>
 
-// Minimum map version tag that Outpost 2 will accept without error
-extern const int minMapVersion;
-
 #pragma pack(push, 1) // Make sure structure is byte aligned
 
 // Outpost 2 map and save file header
@@ -12,8 +9,13 @@ struct MapHeader
 {
 	MapHeader();
 
-	// The map's version tag.
-	// It must be >= to 0x1010 or Outpost 2 will abort loading the map.
+	// Minimum map version tag that Outpost 2 will accept without error
+	static const uint32_t MinMapVersion = 0x1010;
+
+	// Default map version tag used by original Outpost 2 maps
+	static const uint32_t CurrentMapVersion = 0x1011;
+
+	// The map's version tag must be >= MinMapVersion or Outpost 2 will abort loading the map.
 	int32_t versionTag;
 
 	// True if file represents a saved game instead of a map file.
@@ -38,7 +40,7 @@ struct MapHeader
 
 	bool VersionTagValid() const
 	{
-		return versionTag >= 0x1010;
+		return versionTag >= MinMapVersion;
 	}
 
 	// Total number of tiles on map.
