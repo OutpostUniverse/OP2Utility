@@ -44,7 +44,6 @@
     <ClCompile Include="Bitmaps\BitmapFile.test.cpp">
       <Filter>Bitmaps</Filter>
     </ClCompile>
-    <ClCompile Include="XFile.test.cpp" />
     <ClCompile Include="Maps\MapData.test.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
