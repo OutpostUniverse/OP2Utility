@@ -8,6 +8,17 @@
 #endif
 
 
+TEST(XFileReplaceFilename, ReplaceFilename) {
+	EXPECT_EQ(XFile::ReplaceFilename("./Old.map", "New.map"), "./New.map");
+	EXPECT_EQ(XFile::ReplaceFilename("Old.map", "New.map"), "New.map");
+	EXPECT_EQ(XFile::ReplaceFilename("C:/Old.map", "New.map"), "C:/New.map");
+	EXPECT_EQ(XFile::ReplaceFilename("C:/Directory/Old.map", "New.map"), "C:/Directory/New.map");
+	EXPECT_EQ(XFile::ReplaceFilename("../Old.map", "New.map"), "../New.map");
+	EXPECT_EQ(XFile::ReplaceFilename("Directory/Old.map", "New.map"), "Directory/New.map");
+	EXPECT_EQ(XFile::ReplaceFilename("./Directory/Old.map", "New.map"), "./Directory/New.map");
+	EXPECT_EQ(XFile::ReplaceFilename("Old Space.map", "New Space.map"), "New Space.map");
+}
+
 TEST(XFileGetDirectory, EmptyPath) {
 	EXPECT_EQ("", XFile::GetDirectory(""));
 }
