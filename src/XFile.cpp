@@ -126,7 +126,7 @@ std::string XFile::ReplaceFilename(const std::string& pathStr, const std::string
 		return filenameStr;
 	}
 
-	return fs::path(pathStr).replace_filename(filenameStr).generic_string();
+	return p.replace_filename(filenameStr).generic_string();
 }
 
 std::string XFile::AppendSubDirectory(const std::string& pathStr, const std::string& subDirectory)
