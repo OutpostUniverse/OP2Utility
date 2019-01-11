@@ -147,11 +147,6 @@ std::string XFile::GetFilename(const std::string& pathStr)
 	return fs::path(pathStr).filename().string();
 }
 
-std::string XFile::RemoveFilename(const std::string& pathStr)
-{
-	return fs::path(pathStr).remove_filename().string();
-}
-
 bool XFile::PathsAreEqual(std::string pathStr1, std::string pathStr2)
 {
 	StringHelper::ConvertToUpper(pathStr1);

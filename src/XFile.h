@@ -40,8 +40,6 @@ namespace XFile
 
 	std::string GetFilename(const std::string& pathStr);
 
-	std::string RemoveFilename(const std::string& pathStr);
-
 	bool PathsAreEqual(std::string pathStr1, std::string pathStr2);
 
 	bool IsRootPath(const std::string& pathStr);
