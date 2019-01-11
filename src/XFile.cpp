@@ -122,11 +122,11 @@ bool XFile::IsRootPath(const std::string& pathStr)
 std::string XFile::ReplaceFilename(const std::string& pathStr, const std::string& filenameStr)
 {
 	fs::path p(pathStr);
-	fs::path filename = fs::path(filenameStr).filename();
+	if (p.filename() == pathStr) {
+		return filenameStr;
+	}
 
-	// Brett208 22JUL17: There seems to be a bug in path.replace_filename that removes a directory if it has a space in it on MSVC.
-
-	return p.string() + "/" + filename.string();
+	return fs::path(pathStr).replace_filename(filenameStr).generic_string();
 }
 
 std::string XFile::AppendSubDirectory(const std::string& pathStr, const std::string& subDirectory)
