@@ -7,7 +7,8 @@
 
 using namespace Archives;
 
-ResourceManager::ResourceManager(const std::string& archiveDirectory)
+ResourceManager::ResourceManager(const std::string& archiveDirectory) :
+	directory(archiveDirectory)
 {
 	auto volFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".vol");
 
@@ -26,8 +27,9 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory)
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
 std::unique_ptr<Stream::SeekableReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
 {
-	if (XFile::PathExists(filename)) {
-		return std::make_unique<Stream::FileReader>(filename);
+	const std::string path = XFile::ReplaceFilename(directory, filename);
+	if (XFile::PathExists(path)) {
+		return std::make_unique<Stream::FileReader>(path);
 	}
 
 	if (!accessArchives) {
@@ -47,7 +49,7 @@ std::unique_ptr<Stream::SeekableReader> ResourceManager::GetResourceStream(const
 	return nullptr;
 }
 
-std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& directory, const std::string& filenameRegexStr, bool accessArchives)
+std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& filenameRegexStr, bool accessArchives)
 {
 	std::regex filenameRegex(filenameRegexStr, std::regex_constants::icase);
 
@@ -70,7 +72,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& dir
 	return filenames;
 }
 
-std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::string& directory, const std::string& extension, bool accessArchives)
+std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::string& extension, bool accessArchives)
 {
 	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(directory, extension);
 
@@ -84,7 +86,7 @@ std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::strin
 		{
 			std::string internalFilename = archiveFile->GetName(i);
 
-			if (XFile::ExtensionMatches(internalFilename, extension) && !DuplicateFilename(filenames, internalFilename)) {
+			if (XFile::ExtensionMatches(internalFilename, extension) && !IsDuplicateFilename(filenames, internalFilename)) {
 				filenames.push_back(internalFilename);
 			}
 		}
@@ -128,7 +130,7 @@ bool ResourceManager::ExtractSpecificFile(const std::string& filename, bool over
 	return false;
 }
 
-void ResourceManager::ExtractAllOfFileType(const std::string& directory, const std::string& extension, bool overwrite)
+void ResourceManager::ExtractAllOfFileType(const std::string& extension, bool overwrite)
 {
 	for (const auto& archiveFile : ArchiveFiles)
 	{
@@ -141,14 +143,12 @@ void ResourceManager::ExtractAllOfFileType(const std::string& directory, const s
 	}
 }
 
-bool ResourceManager::DuplicateFilename(std::vector<std::string>& currentFilenames, std::string pathToCheck)
+bool ResourceManager::IsDuplicateFilename(std::vector<std::string>& currentFilenames, std::string filenameToCheck)
 {
 	// Brett: When called on a large loop of filenames (60 or more), this function will create a bottleneck.
 
-	std::string filename = XFile::GetFilename(pathToCheck);
-
 	for (const auto& currentFilename : currentFilenames) {
-		if (XFile::PathsAreEqual(XFile::GetFilename(currentFilename), filename)) {
+		if (XFile::PathsAreEqual(XFile::GetFilename(currentFilename), filenameToCheck)) {
 			return true;
 		}
 	}
