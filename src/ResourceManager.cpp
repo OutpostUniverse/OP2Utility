@@ -126,7 +126,7 @@ bool ResourceManager::IsDuplicateFilename(std::vector<std::string>& currentFilen
 	return false;
 }
 
-std::string ResourceManager::FindContainingArchiveFile(const std::string& filename)
+std::string ResourceManager::FindContainingArchive(const std::string& filename)
 {
 	for (const auto& archiveFile : ArchiveFiles)
 	{
