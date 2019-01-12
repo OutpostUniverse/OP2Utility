@@ -113,36 +113,6 @@ bool ResourceManager::ExistsInArchives(const std::string& filename, std::size_t&
 	return false;
 }
 
-bool ResourceManager::ExtractSpecificFile(const std::string& filename, bool overwrite)
-{
-	if (!overwrite && XFile::PathExists(filename)) {
-		return true;
-	}
-
-	std::size_t archiveIndex;
-	std::size_t internalIndex;
-	if (ExistsInArchives(filename, archiveIndex, internalIndex))
-	{
-		ArchiveFiles[archiveIndex]->ExtractFile(internalIndex, filename);
-		return true;
-	}
-
-	return false;
-}
-
-void ResourceManager::ExtractAllOfFileType(const std::string& extension, bool overwrite)
-{
-	for (const auto& archiveFile : ArchiveFiles)
-	{
-		for (std::size_t i = 0; i < archiveFile->GetCount(); ++i)
-		{
-			if (XFile::ExtensionMatches(archiveFile->GetName(i), extension)) {
-				archiveFile->ExtractFile(i, archiveFile->GetName(i));
-			}
-		}
-	}
-}
-
 bool ResourceManager::IsDuplicateFilename(std::vector<std::string>& currentFilenames, std::string filenameToCheck)
 {
 	// Brett: When called on a large loop of filenames (60 or more), this function will create a bottleneck.
