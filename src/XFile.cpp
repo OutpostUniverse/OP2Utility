@@ -122,9 +122,12 @@ bool XFile::IsRootPath(const std::string& pathStr)
 std::string XFile::ReplaceFilename(const std::string& pathStr, const std::string& filenameStr)
 {
 	fs::path p(pathStr);
+
+#if _WIN32 || _WIN64 
 	if (p.filename() == pathStr) {
 		return filenameStr;
 	}
+#endif
 
 	return p.replace_filename(filenameStr).generic_string();
 }
