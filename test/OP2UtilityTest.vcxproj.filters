@@ -43,15 +43,15 @@
     <ClCompile Include="Bitmaps\BitmapFile.test.cpp">
       <Filter>Bitmaps</Filter>
     </ClCompile>
-    <ClCompile Include="Maps\MapData.test.cpp">
-      <Filter>Maps</Filter>
-    </ClCompile>
     <ClCompile Include="Maps\MapTilesetSource.test.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
     <ClCompile Include="BitTwiddle.test.cpp" />
     <ClCompile Include="Rect.test.cpp" />
     <ClCompile Include="XFile.test.cpp" />
+    <ClCompile Include="Maps\Map.test.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

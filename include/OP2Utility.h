@@ -16,7 +16,7 @@
 #include "../src/Archives/ClmFile.h"
 #include "../src/Archives/VolFile.h"
 
-#include "../src/Maps/MapData.h"
+#include "../src/Maps/Map.h"
 
 #include "../src/Sprites/ArtFile.h"
 #include "../src/Bitmaps/BitmapFile.h"

@@ -48,7 +48,7 @@
     <ClCompile Include="Bitmaps\ImageHeader.test.cpp" />
     <ClCompile Include="Bitmaps\IndexedBmpWriter.test.cpp" />
     <ClCompile Include="BitTwiddle.test.cpp" />
-    <ClCompile Include="Maps\MapData.test.cpp" />
+    <ClCompile Include="Maps\Map.test.cpp" />
     <ClCompile Include="Maps\MapHeader.test.cpp" />
     <ClCompile Include="Maps\MapReader.test.cpp" />
     <ClCompile Include="Maps\MapTilesetSource.test.cpp" />

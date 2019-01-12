@@ -1,4 +1,4 @@
-#include "MapData.h"
+#include "Map.h"
 #include "MapHeader.h"
 #include "../Streams/FileReader.h"
 #include <iostream>
@@ -8,45 +8,45 @@
 
 const std::array<char, 10> tilesetHeader{ "TILE SET\x1a" };
 
-MapData MapData::ReadMap(std::string filename)
+Map Map::ReadMap(std::string filename)
 {
 	Stream::FileReader mapReader(filename);
 	return ReadMap(mapReader);
 }
 
-MapData MapData::ReadMap(Stream::Reader& streamReader)
+Map Map::ReadMap(Stream::Reader& streamReader)
 {
 	MapHeader mapHeader;
 	streamReader.Read(mapHeader);
 
-	MapData mapData;
-	mapData.versionTag = mapHeader.versionTag;
-	mapData.isSavedGame = mapHeader.bSavedGame;
-	mapData.mapTileWidth = mapHeader.MapTileWidth();
-	mapData.mapTileHeight = mapHeader.mapTileHeight;
+	Map map;
+	map.versionTag = mapHeader.versionTag;
+	map.isSavedGame = mapHeader.bSavedGame;
+	map.mapTileWidth = mapHeader.MapTileWidth();
+	map.mapTileHeight = mapHeader.mapTileHeight;
 
-	mapData.tiles.resize(mapHeader.TileCount());
-	streamReader.Read(mapData.tiles);
+	map.tiles.resize(mapHeader.TileCount());
+	streamReader.Read(map.tiles);
 
-	streamReader.Read(mapData.clipRect);
-	ReadTilesetSources(streamReader, mapData, static_cast<std::size_t>(mapHeader.tilesetCount));
+	streamReader.Read(map.clipRect);
+	ReadTilesetSources(streamReader, map, static_cast<std::size_t>(mapHeader.tilesetCount));
 	ReadTilesetHeader(streamReader);
-	streamReader.Read<uint32_t>(mapData.tileInfos);
-	streamReader.Read<uint32_t>(mapData.terrainTypes);
+	streamReader.Read<uint32_t>(map.tileInfos);
+	streamReader.Read<uint32_t>(map.terrainTypes);
 	ReadVersionTag(streamReader);
 	ReadVersionTag(streamReader);
-	ReadTileGroups(streamReader, mapData);
+	ReadTileGroups(streamReader, map);
 
-	return mapData;
+	return map;
 }
 
-MapData MapData::ReadSavedGame(std::string filename)
+Map Map::ReadSavedGame(std::string filename)
 {
 	Stream::FileReader mapReader(filename);
 	return ReadSavedGame(mapReader);
 }
 
-MapData MapData::ReadSavedGame(Stream::SeekableReader& streamReader)
+Map Map::ReadSavedGame(Stream::SeekableReader& streamReader)
 {
 	SkipSaveGameHeader(streamReader);
 	return ReadMap(streamReader);
@@ -55,12 +55,12 @@ MapData MapData::ReadSavedGame(Stream::SeekableReader& streamReader)
 
 // == Private methods ==
 
-void MapData::SkipSaveGameHeader(Stream::SeekableReader& streamReader)
+void Map::SkipSaveGameHeader(Stream::SeekableReader& streamReader)
 {
 	streamReader.SeekRelative(0x1E025);
 }
 
-void MapData::ReadTilesetHeader(Stream::Reader& streamReader)
+void Map::ReadTilesetHeader(Stream::Reader& streamReader)
 {
 	std::array<char, 10> buffer;
 	streamReader.Read(buffer);
@@ -70,11 +70,11 @@ void MapData::ReadTilesetHeader(Stream::Reader& streamReader)
 	}
 }
 
-void MapData::ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData, std::size_t tilesetCount)
+void Map::ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t tilesetCount)
 {
-	mapData.tilesetSources.resize(tilesetCount);
+	map.tilesetSources.resize(tilesetCount);
 
-	for (auto& tilesetSource : mapData.tilesetSources)
+	for (auto& tilesetSource : map.tilesetSources)
 	{
 		streamReader.Read<uint32_t>(tilesetSource.tilesetFilename);
 
@@ -88,7 +88,7 @@ void MapData::ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData,
 	}
 }
 
-void MapData::ReadVersionTag(Stream::Reader& streamReader)
+void Map::ReadVersionTag(Stream::Reader& streamReader)
 {
 	uint32_t versionTag;
 	streamReader.Read(versionTag);
@@ -99,7 +99,7 @@ void MapData::ReadVersionTag(Stream::Reader& streamReader)
 	}
 }
 
-void MapData::ReadTileGroups(Stream::Reader& streamReader, MapData& mapData)
+void Map::ReadTileGroups(Stream::Reader& streamReader, Map& map)
 {
 	uint32_t numTileGroups;
 	streamReader.Read(numTileGroups);
@@ -108,11 +108,11 @@ void MapData::ReadTileGroups(Stream::Reader& streamReader, MapData& mapData)
 
 	for (uint32_t i = 0; i < numTileGroups; ++i)
 	{
-		mapData.tileGroups.push_back(ReadTileGroup(streamReader));
+		map.tileGroups.push_back(ReadTileGroup(streamReader));
 	}
 }
 
-TileGroup MapData::ReadTileGroup(Stream::Reader& streamReader)
+TileGroup Map::ReadTileGroup(Stream::Reader& streamReader)
 {
 	TileGroup tileGroup;
 

@@ -63,9 +63,6 @@
     <ClInclude Include="src\Archives\ArchivePacker.h">
       <Filter>Archives</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maps\MapData.h">
-      <Filter>Maps</Filter>
-    </ClInclude>
     <ClInclude Include="src\Maps\MapHeader.h">
       <Filter>Maps</Filter>
     </ClInclude>
@@ -168,6 +165,9 @@
     <ClInclude Include="src\BitTwiddle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Maps\Map.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
@@ -193,9 +193,6 @@
     </ClCompile>
     <ClCompile Include="src\Archives\ArchivePacker.cpp">
       <Filter>Archives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Maps\MapData.cpp">
-      <Filter>Maps</Filter>
     </ClCompile>
     <ClCompile Include="src\Maps\MapWriter.cpp">
       <Filter>Maps</Filter>
@@ -268,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="src\BitTwiddle.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Maps\Map.cpp">
+      <Filter>Maps</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
