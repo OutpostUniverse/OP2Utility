@@ -126,12 +126,12 @@ bool ResourceManager::IsDuplicateFilename(std::vector<std::string>& currentFilen
 	return false;
 }
 
-std::string ResourceManager::FindContainingArchive(const std::string& filename)
+std::string ResourceManager::FindContainingArchivePath(const std::string& filename)
 {
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 		if (archiveFile->Contains(filename)) {
-			return XFile::GetFilename(archiveFile->GetVolumeFilename());
+			return XFile::ReplaceFilename(resourceRootDir, XFile::GetFilename(archiveFile->GetVolumeFilename()));
 		}
 	}
 
