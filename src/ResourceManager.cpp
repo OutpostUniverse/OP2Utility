@@ -8,7 +8,7 @@
 using namespace Archives;
 
 ResourceManager::ResourceManager(const std::string& archiveDirectory) :
-	directory(archiveDirectory)
+	resourceRootDir(archiveDirectory)
 {
 	auto volFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".vol");
 
@@ -27,7 +27,7 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
 std::unique_ptr<Stream::SeekableReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
 {
-	const std::string path = XFile::ReplaceFilename(directory, filename);
+	const std::string path = XFile::ReplaceFilename(resourceRootDir, filename);
 	if (XFile::PathExists(path)) {
 		return std::make_unique<Stream::FileReader>(path);
 	}
@@ -53,7 +53,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& fil
 {
 	std::regex filenameRegex(filenameRegexStr, std::regex_constants::icase);
 
-	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(directory, filenameRegex);
+	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(resourceRootDir, filenameRegex);
 
 	if (!accessArchives) {
 		return filenames;
@@ -74,7 +74,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& fil
 
 std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::string& extension, bool accessArchives)
 {
-	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(directory, extension);
+	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(resourceRootDir, extension);
 
 	if (!accessArchives) {
 		return filenames;
