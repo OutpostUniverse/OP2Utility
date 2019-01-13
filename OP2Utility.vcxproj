@@ -129,7 +129,7 @@
     <ClInclude Include="src\Bitmaps\BitmapFile.h" />
     <ClInclude Include="src\BitTwiddle.h" />
     <ClInclude Include="src\Maps\CellType.h" />
-    <ClInclude Include="src\Maps\MapData.h" />
+    <ClInclude Include="src\Maps\Map.h" />
     <ClInclude Include="src\Maps\MapHeader.h" />
     <ClInclude Include="src\Maps\TerrainType.h" />
     <ClInclude Include="src\Maps\TileData.h" />
@@ -155,7 +155,7 @@
     <ClCompile Include="src\Bitmaps\IndexedBmpReader.cpp" />
     <ClCompile Include="src\Bitmaps\IndexedBmpWriter.cpp" />
     <ClCompile Include="src\BitTwiddle.cpp" />
-    <ClCompile Include="src\Maps\MapData.cpp" />
+    <ClCompile Include="src\Maps\Map.cpp" />
     <ClCompile Include="src\Maps\MapHeader.cpp" />
     <ClCompile Include="src\Maps\MapReader.cpp" />
     <ClCompile Include="src\Maps\MapWriter.cpp" />

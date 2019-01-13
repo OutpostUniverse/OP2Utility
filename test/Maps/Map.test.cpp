@@ -1,8 +1,8 @@
-#include "Maps/MapData.h"
+#include "Maps/Map.h"
 #include <gtest/gtest.h>
 
-TEST(MapData, TrimTilesetSources) {
-	MapData map;
+TEST(Map, TrimTilesetSources) {
+	Map map;
 
 	map.tilesetSources = {
 		{"well0000.bmp", 1},

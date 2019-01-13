@@ -1,41 +1,41 @@
-#include "MapData.h"
+#include "Map.h"
 #include "MapHeader.h"
 #include "CellType.h"
 #include <algorithm>
 
-MapData::MapData() :
+Map::Map() :
 	versionTag(MapHeader::MinMapVersion),
 	isSavedGame(false),
 	mapTileWidth(0),
 	mapTileHeight(0) { }
 
-std::size_t MapData::GetTileInfoIndex(std::size_t x, std::size_t y) const
+std::size_t Map::GetTileInfoIndex(std::size_t x, std::size_t y) const
 {
 	return tiles[GetTileIndex(x, y)].tileIndex;
 }
 
-CellType MapData::GetCellType(std::size_t x, std::size_t y) const
+CellType Map::GetCellType(std::size_t x, std::size_t y) const
 {
 	return tiles[GetTileIndex(x, y)].cellType;
 }
 
-bool MapData::GetLavaPossible(std::size_t x, std::size_t y) const
+bool Map::GetLavaPossible(std::size_t x, std::size_t y) const
 {
 	return tiles[GetTileIndex(x, y)].bLavaPossible;
 }
 
 
-std::size_t MapData::GetTilesetIndex(std::size_t x, std::size_t y) const
+std::size_t Map::GetTilesetIndex(std::size_t x, std::size_t y) const
 {
 	return tileInfos[GetTileInfoIndex(x, y)].tilesetIndex;
 }
 
-std::size_t MapData::GetImageIndex(std::size_t x, std::size_t y) const
+std::size_t Map::GetImageIndex(std::size_t x, std::size_t y) const
 {
 	return tileInfos[GetTileInfoIndex(x, y)].tileIndex;
 }
 
-void MapData::TrimTilesetSources()
+void Map::TrimTilesetSources()
 {
 	tilesetSources.erase(
 		std::remove_if(
@@ -49,7 +49,7 @@ void MapData::TrimTilesetSources()
 
 
 // Helper method to handle complex tile data indexing
-std::size_t MapData::GetTileIndex(std::size_t x, std::size_t y) const
+std::size_t Map::GetTileIndex(std::size_t x, std::size_t y) const
 {
 	auto lowerX = x & 0x1F; // ... 0001 1111
 	auto upperX = x >> 5;   // ... 1110 0000

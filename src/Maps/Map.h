@@ -28,15 +28,15 @@ namespace Stream {
 //     Outpost2SVN\MapEditor\OP2Editor.
 
 //An Outpost 2 map file.
-class MapData
+class Map
 {
 public:
-	MapData();
+	Map();
 
-	static MapData ReadMap(std::string filename);
-	static MapData ReadMap(Stream::Reader& seekableReader);
-	static MapData ReadSavedGame(std::string filename);
-	static MapData ReadSavedGame(Stream::SeekableReader& seekableReader);
+	static Map ReadMap(std::string filename);
+	static Map ReadMap(Stream::Reader& seekableReader);
+	static Map ReadSavedGame(std::string filename);
+	static Map ReadSavedGame(Stream::SeekableReader& seekableReader);
 
 	void Write(const std::string& filename) const;
 	void Write(Stream::Writer& mapStream) const;
@@ -96,9 +96,9 @@ private:
 
 	// Read
 	static void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
-	static void ReadTilesetSources(Stream::Reader& streamReader, MapData& mapData, std::size_t tilesetCount);
+	static void ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t tilesetCount);
 	static void ReadTilesetHeader(Stream::Reader& streamReader);
 	static void ReadVersionTag(Stream::Reader& streamReader);
-	static void ReadTileGroups(Stream::Reader& streamReader, MapData& mapData);
+	static void ReadTileGroups(Stream::Reader& streamReader, Map& map);
 	static TileGroup ReadTileGroup(Stream::Reader& streamReader);
 };
