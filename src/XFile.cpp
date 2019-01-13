@@ -123,7 +123,7 @@ std::string XFile::ReplaceFilename(const std::string& pathStr, const std::string
 {
 	fs::path p(pathStr);
 
-#if _WIN32 || _WIN64 
+#if _WIN32 // MSVC will return unexpected results when passing only a filename into replace_filename
 	if (p.filename() == pathStr) {
 		return filenameStr;
 	}
