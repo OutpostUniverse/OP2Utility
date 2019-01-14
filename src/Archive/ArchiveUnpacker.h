@@ -11,7 +11,7 @@ namespace Stream {
 	class Writer;
 }
 
-namespace Archives
+namespace Archive
 {
 	class ArchiveUnpacker
 	{

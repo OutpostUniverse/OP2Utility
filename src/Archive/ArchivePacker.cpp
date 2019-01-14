@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <array>
 
-namespace Archives
+namespace Archive
 {
 	ArchivePacker::ArchivePacker() { }
 	ArchivePacker::~ArchivePacker() { }

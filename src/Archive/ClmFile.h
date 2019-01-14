@@ -10,7 +10,7 @@
 #include <array>
 #include <memory>
 
-namespace Archives
+namespace Archive
 {
 	class ClmFile : public ArchiveFile
 	{

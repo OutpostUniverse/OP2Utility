@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace Archives
+namespace Archive
 {
 	// This is designed for use in the .vol file decompressor
 	class BitStreamReader

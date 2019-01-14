@@ -4,7 +4,7 @@
 
 TEST(AdaptiveHuffmanTreeTests, SimpleTree2) {
 	// Construct minimum non-degenerate binary tree with 2 data nodes
-	Archives::AdaptiveHuffmanTree tree(2);
+	Archive::AdaptiveHuffmanTree tree(2);
 
 	// With 2 data nodes, the root cannot be a data node
 	auto rootIndex = tree.GetRootNodeIndex();
@@ -24,7 +24,7 @@ TEST(AdaptiveHuffmanTreeTests, SimpleTree2) {
 
 class AdaptiveHuffmanTreeOutpost2 : public ::testing::Test {
 protected:
-	Archives::AdaptiveHuffmanTree tree{314};
+	Archive::AdaptiveHuffmanTree tree{314};
 };
 
 // Test the encoder and decoder against each other

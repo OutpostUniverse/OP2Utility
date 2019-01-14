@@ -11,7 +11,7 @@
 #include <array>
 #include <memory>
 
-namespace Archives
+namespace Archive
 {
 	class VolFile : public ArchiveFile
 	{

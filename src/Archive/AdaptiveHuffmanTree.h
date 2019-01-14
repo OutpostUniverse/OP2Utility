@@ -1,6 +1,6 @@
 #include <vector>
 
-namespace Archives
+namespace Archive
 {
 	// The Huffman Tree stores codes in the terminal nodes of the (binary) tree.
 	// The tree is initially balanced with codes 0 to terminalNodeCount-1 in the

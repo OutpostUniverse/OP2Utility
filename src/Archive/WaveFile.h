@@ -3,7 +3,7 @@
 #include <array>
 #include <cstdint>
 
-namespace Archives
+namespace Archive
 {
 	const std::array<char, 4> tagRIFF{ 'R', 'I', 'F', 'F' };
 	const std::array<char, 4> tagWAVE{ 'W', 'A', 'V', 'E' };

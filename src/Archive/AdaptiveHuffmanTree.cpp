@@ -3,7 +3,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace Archives
+namespace Archive
 {
 	// Creates an (adaptive) Huffman tree with terminalNodeCount at the bottom.
 	AdaptiveHuffmanTree::AdaptiveHuffmanTree(NodeType terminalNodeCount) :

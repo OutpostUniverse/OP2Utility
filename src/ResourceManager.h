@@ -36,7 +36,7 @@ public:
 	std::vector<std::string> GetArchiveFilenames();
 
 private:
-	std::vector<std::unique_ptr<Archives::ArchiveFile>> ArchiveFiles;
+	std::vector<std::unique_ptr<Archive::ArchiveFile>> ArchiveFiles;
 
 	bool ExistsInArchives(const std::string& filename, std::size_t& archiveIndexOut, std::size_t& internalIndexOut);
 	bool DuplicateFilename(std::vector<std::string>& currentFilenames, std::string pathToCheck);

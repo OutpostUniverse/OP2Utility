@@ -5,7 +5,7 @@
 #include "XFile.h"
 #include <regex>
 
-using namespace Archives;
+using namespace Archive;
 
 ResourceManager::ResourceManager(const std::string& archiveDirectory)
 {

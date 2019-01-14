@@ -6,7 +6,7 @@
 #include <climits>
 #include <typeinfo>
 
-namespace Archives
+namespace Archive
 {
 	// Volume section header tags
 	const std::array<char, 4> TagVOL_{ 'V', 'O', 'L', ' ' }; // Volume file tag

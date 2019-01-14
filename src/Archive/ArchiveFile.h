@@ -3,7 +3,7 @@
 #include "ArchivePacker.h"
 #include "ArchiveUnpacker.h"
 
-namespace Archives
+namespace Archive
 {
 	class ArchiveFile : public ArchiveUnpacker, public ArchivePacker
 	{

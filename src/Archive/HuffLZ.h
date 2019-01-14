@@ -5,7 +5,7 @@
 #include "BitStreamReader.h"
 #include <cstddef>
 
-namespace Archives
+namespace Archive
 {
 	class HuffLZ
 	{

@@ -1,6 +1,6 @@
 #include "WaveFile.h"
 
-namespace Archives
+namespace Archive
 {
 	WaveHeader WaveHeader::Create(const WaveFormatEx& waveFormat, uint32_t dataLength)
 	{
