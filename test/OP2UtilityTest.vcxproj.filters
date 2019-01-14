@@ -1,84 +1,87 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Streams\MemoryStreamReader.test.cpp">
-      <Filter>Streams</Filter>
+    <ClCompile Include="Stream\MemoryStreamReader.test.cpp">
+      <Filter>Stream</Filter>
     </ClCompile>
-    <ClCompile Include="Streams\FileReader.test.cpp">
-      <Filter>Streams</Filter>
+    <ClCompile Include="Stream\FileReader.test.cpp">
+      <Filter>Stream</Filter>
     </ClCompile>
-    <ClCompile Include="Streams\FileSliceReader.test.cpp">
-      <Filter>Streams</Filter>
+    <ClCompile Include="Stream\FileSliceReader.test.cpp">
+      <Filter>Stream</Filter>
     </ClCompile>
-    <ClCompile Include="Maps\MapReader.test.cpp">
-      <Filter>Maps</Filter>
+    <ClCompile Include="Map\MapReader.test.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Maps\MapWriter.test.cpp">
-      <Filter>Maps</Filter>
+    <ClCompile Include="Map\MapWriter.test.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Archives\AdaptiveHuffmanTree.test.cpp">
-      <Filter>Archives</Filter>
+    <ClCompile Include="Archive\AdaptiveHuffmanTree.test.cpp">
+      <Filter>Archive</Filter>
     </ClCompile>
-    <ClCompile Include="Maps\MapHeader.test.cpp">
-      <Filter>Maps</Filter>
+    <ClCompile Include="Map\MapHeader.test.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Sprites\ArtReader.test.cpp">
-      <Filter>Sprites</Filter>
+    <ClCompile Include="Sprite\ArtReader.test.cpp">
+      <Filter>Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="Sprites\ArtWriter.test.cpp">
-      <Filter>Sprites</Filter>
+    <ClCompile Include="Sprite\ArtWriter.test.cpp">
+      <Filter>Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmaps\BmpHeader.test.cpp">
-      <Filter>Bitmaps</Filter>
+    <ClCompile Include="Bitmap\BmpHeader.test.cpp">
+      <Filter>Bitmap</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmaps\Color.test.cpp">
-      <Filter>Bitmaps</Filter>
+    <ClCompile Include="Bitmap\Color.test.cpp">
+      <Filter>Bitmap</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmaps\ImageHeader.test.cpp">
-      <Filter>Bitmaps</Filter>
+    <ClCompile Include="Bitmap\ImageHeader.test.cpp">
+      <Filter>Bitmap</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmaps\IndexedBmpWriter.test.cpp">
-      <Filter>Bitmaps</Filter>
+    <ClCompile Include="Bitmap\IndexedBmpWriter.test.cpp">
+      <Filter>Bitmap</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmaps\BitmapFile.test.cpp">
-      <Filter>Bitmaps</Filter>
+    <ClCompile Include="Bitmap\BitmapFile.test.cpp">
+      <Filter>Bitmap</Filter>
     </ClCompile>
-    <ClCompile Include="Maps\MapTilesetSource.test.cpp">
-      <Filter>Maps</Filter>
+    <ClCompile Include="Map\Map.test.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\MapTilesetSource.test.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="BitTwiddle.test.cpp" />
     <ClCompile Include="Rect.test.cpp" />
     <ClCompile Include="XFile.test.cpp" />
-    <ClCompile Include="Maps\Map.test.cpp">
-      <Filter>Maps</Filter>
+    <ClCompile Include="Stream\FileWriter.test.cpp">
+      <Filter>Stream</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Streams">
+    <Filter Include="Stream">
       <UniqueIdentifier>{f07f4252-ca5e-4f5b-94cb-8df3794157fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Maps">
+    <Filter Include="Map">
       <UniqueIdentifier>{25da91a1-3f8e-4c48-899f-860901568964}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sprites">
+    <Filter Include="Sprite">
       <UniqueIdentifier>{7c32bea6-a0e5-483a-97b5-8f1a7c0a84fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archives">
+    <Filter Include="Archive">
       <UniqueIdentifier>{beb7ce96-9a50-4c40-900e-50de0f3f995b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Bitmaps">
+    <Filter Include="Bitmap">
       <UniqueIdentifier>{8d918ded-fd11-43cf-acbc-d72b04b9e30a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Streams\SeekableReader.test.h">
-      <Filter>Streams</Filter>
+    <ClInclude Include="Stream\SeekableReader.test.h">
+      <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="Streams\Reader.test.h">
-      <Filter>Streams</Filter>
+    <ClInclude Include="Stream\Reader.test.h">
+      <Filter>Stream</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

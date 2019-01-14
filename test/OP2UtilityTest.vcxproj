@@ -41,24 +41,25 @@
     <OutDir>$(SolutionDir)x86\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="Archives\AdaptiveHuffmanTree.test.cpp" />
-    <ClCompile Include="Bitmaps\BitmapFile.test.cpp" />
-    <ClCompile Include="Bitmaps\BmpHeader.test.cpp" />
-    <ClCompile Include="Bitmaps\Color.test.cpp" />
-    <ClCompile Include="Bitmaps\ImageHeader.test.cpp" />
-    <ClCompile Include="Bitmaps\IndexedBmpWriter.test.cpp" />
+    <ClCompile Include="Archive\AdaptiveHuffmanTree.test.cpp" />
+    <ClCompile Include="Bitmap\BitmapFile.test.cpp" />
+    <ClCompile Include="Bitmap\BmpHeader.test.cpp" />
+    <ClCompile Include="Bitmap\Color.test.cpp" />
+    <ClCompile Include="Bitmap\ImageHeader.test.cpp" />
+    <ClCompile Include="Bitmap\IndexedBmpWriter.test.cpp" />
     <ClCompile Include="BitTwiddle.test.cpp" />
-    <ClCompile Include="Maps\Map.test.cpp" />
-    <ClCompile Include="Maps\MapHeader.test.cpp" />
-    <ClCompile Include="Maps\MapReader.test.cpp" />
-    <ClCompile Include="Maps\MapTilesetSource.test.cpp" />
-    <ClCompile Include="Maps\MapWriter.test.cpp" />
+    <ClCompile Include="Map\Map.test.cpp" />
+    <ClCompile Include="Map\MapHeader.test.cpp" />
+    <ClCompile Include="Map\MapReader.test.cpp" />
+    <ClCompile Include="Map\MapTilesetSource.test.cpp" />
+    <ClCompile Include="Map\MapWriter.test.cpp" />
     <ClCompile Include="Rect.test.cpp" />
-    <ClCompile Include="Sprites\ArtReader.test.cpp" />
-    <ClCompile Include="Sprites\ArtWriter.test.cpp" />
-    <ClCompile Include="Streams\FileReader.test.cpp" />
-    <ClCompile Include="Streams\FileSliceReader.test.cpp" />
-    <ClCompile Include="Streams\MemoryStreamReader.test.cpp" />
+    <ClCompile Include="Sprite\ArtReader.test.cpp" />
+    <ClCompile Include="Sprite\ArtWriter.test.cpp" />
+    <ClCompile Include="Stream\FileReader.test.cpp" />
+    <ClCompile Include="Stream\FileSliceReader.test.cpp" />
+    <ClCompile Include="Stream\FileWriter.test.cpp" />
+    <ClCompile Include="Stream\MemoryStreamReader.test.cpp" />
     <ClCompile Include="XFile.test.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -70,8 +71,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Streams\Reader.test.h" />
-    <ClInclude Include="Streams\SeekableReader.test.h" />
+    <ClInclude Include="Stream\Reader.test.h" />
+    <ClInclude Include="Stream\SeekableReader.test.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
