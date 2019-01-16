@@ -122,11 +122,14 @@ bool XFile::IsRootPath(const std::string& pathStr)
 std::string XFile::ReplaceFilename(const std::string& pathStr, const std::string& filenameStr)
 {
 	fs::path p(pathStr);
+
+#if _WIN32 // MSVC will return unexpected results when passing only a filename into replace_filename
 	if (p.filename() == pathStr) {
 		return filenameStr;
 	}
+#endif
 
-	return fs::path(pathStr).replace_filename(filenameStr).generic_string();
+	return p.replace_filename(filenameStr).generic_string();
 }
 
 std::string XFile::AppendSubDirectory(const std::string& pathStr, const std::string& subDirectory)

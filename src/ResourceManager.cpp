@@ -1,11 +1,11 @@
 #include "ResourceManager.h"
-#include "Archives/VolFile.h"
-#include "Archives/ClmFile.h"
-#include "Streams/SeekableReader.h"
+#include "Archive/VolFile.h"
+#include "Archive/ClmFile.h"
+#include "Stream/SeekableReader.h"
 #include "XFile.h"
 #include <regex>
 
-using namespace Archives;
+using namespace Archive;
 
 ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 	resourceRootDir(archiveDirectory)

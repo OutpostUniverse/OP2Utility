@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Archives/ArchiveFile.h"
+#include "Archive/ArchiveFile.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -29,7 +29,7 @@ public:
 
 private:
 	const std::string resourceRootDir;
-	std::vector<std::unique_ptr<Archives::ArchiveFile>> ArchiveFiles;
+	std::vector<std::unique_ptr<Archive::ArchiveFile>> ArchiveFiles;
 
 	bool ExistsInArchives(const std::string& filename, std::size_t& archiveIndexOut, std::size_t& internalIndexOut);
 	bool IsDuplicateFilename(std::vector<std::string>& currentFilenames, std::string filenameToCheck);

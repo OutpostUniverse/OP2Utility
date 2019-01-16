@@ -12,20 +12,20 @@
  - Cross platform file system support
 */
 
-#include "../src/Archives/ArchiveFile.h"
-#include "../src/Archives/ClmFile.h"
-#include "../src/Archives/VolFile.h"
+#include "../src/Archive/ArchiveFile.h"
+#include "../src/Archive/ClmFile.h"
+#include "../src/Archive/VolFile.h"
 
-#include "../src/Maps/MapData.h"
+#include "../src/Map/Map.h"
 
-#include "../src/Sprites/ArtFile.h"
-#include "../src/Bitmaps/BitmapFile.h"
+#include "../src/Sprite/ArtFile.h"
+#include "../src/Bitmap/BitmapFile.h"
 
-#include "../src/Streams/FileReader.h"
-#include "../src/Streams/FileSliceReader.h"
-#include "../src/Streams/FileWriter.h"
-#include "../src/Streams/MemoryReader.h"
-#include "../src/Streams/MemoryWriter.h"
+#include "../src/Stream/FileReader.h"
+#include "../src/Stream/FileSliceReader.h"
+#include "../src/Stream/FileWriter.h"
+#include "../src/Stream/MemoryReader.h"
+#include "../src/Stream/MemoryWriter.h"
 
 #include "../src/ResourceManager.h"
 #include "../src/StringHelper.h"
