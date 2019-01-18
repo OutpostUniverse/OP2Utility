@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "SavedGameDataSection2.h"
 #include "MapHeader.h"
 #include "../Stream/FileReader.h"
 #include <iostream>
@@ -14,7 +15,7 @@ Map Map::ReadMap(std::string filename)
 	return ReadMap(mapReader);
 }
 
-Map Map::ReadMap(Stream::Reader& streamReader)
+Map Map::ReadMap(Stream::SeekableReader& streamReader)
 {
 	MapHeader mapHeader;
 	streamReader.Read(mapHeader);
@@ -34,8 +35,17 @@ Map Map::ReadMap(Stream::Reader& streamReader)
 	streamReader.Read<uint32_t>(map.tileInfos);
 	streamReader.Read<uint32_t>(map.terrainTypes);
 	ReadVersionTag(streamReader);
+
+	if (map.IsSavedGame()) {
+		ReadSavedGameSecondChunk(streamReader);
+	}
+
 	ReadVersionTag(streamReader);
-	ReadTileGroups(streamReader, map);
+	
+	if (!map.IsSavedGame()) {
+		ReadTileGroups(streamReader, map);
+	}
+	
 
 	return map;
 }
@@ -97,6 +107,31 @@ void Map::ReadVersionTag(Stream::Reader& streamReader)
 	{
 		std::cerr << "All instances of version tag in .map and .op2 files should be greater than " + std::to_string(MapHeader::MinMapVersion);
 	}
+}
+
+void Map::ReadSavedGameSecondChunk(Stream::SeekableReader& streamReader)
+{
+	SavedGameDataSection2 savedGameData;
+
+	streamReader.Read(savedGameData.unitCount);
+	streamReader.Read(savedGameData.unknown1);
+	streamReader.Read(savedGameData.unknown2);
+	streamReader.Read(savedGameData.unknown3);
+	streamReader.Read(savedGameData.sizeOfUnit);
+
+	streamReader.Read(savedGameData.objectCount1);
+	streamReader.Read(savedGameData.objectCount2);
+
+	savedGameData.objects1.resize(512 * savedGameData.objectCount1);
+	streamReader.Read(savedGameData.objects1);
+	savedGameData.objects2.resize(savedGameData.objectCount2);
+	streamReader.Read(savedGameData.objects2);
+
+	streamReader.Read(savedGameData.unitID1);
+	streamReader.Read(savedGameData.unitID2);
+
+	//streamReader.Read(savedGameData.unitRecord);
+	streamReader.SeekRelative(0x3BF88);
 }
 
 void Map::ReadTileGroups(Stream::Reader& streamReader, Map& map)

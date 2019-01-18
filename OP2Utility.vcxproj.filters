@@ -171,6 +171,9 @@
     <ClInclude Include="src\Map\Map.h">
       <Filter>Map</Filter>
     </ClInclude>
+    <ClInclude Include="src\Map\SavedGameDataSection2.h">
+      <Filter>Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
