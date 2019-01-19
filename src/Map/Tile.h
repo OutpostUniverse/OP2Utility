@@ -10,8 +10,8 @@ struct Tile
 	// Determines movement speed of tile, or if tile is bulldozed, walled, tubed, or has rubble.
 	CellType cellType : 5;
 
-	// The tile's associated index in the TileInfo array.
-	// TileInfo lists general properties associated with a tile.
+	// The tile's associated index in the TileMapping array.
+	// TileMapping lists general properties associated with a tile.
 	unsigned int tileIndex : 11;
 
 	// Index of the unit that occupies the tile.

@@ -63,7 +63,7 @@ public:
 	std::vector<TilesetSource> tilesetSources;
 
 	// Metadata about each available tile from the tile set sources.
-	std::vector<TileInfo> tileInfos;
+	std::vector<TileMapping> tileMappings;
 
 	// Listing of properties grouped by terrain type. Properties apply to a given range of tiles.
 	std::vector<TerrainType> terrainTypes;
@@ -71,7 +71,7 @@ public:
 	std::vector<TileGroup> tileGroups;
 
 public:
-	std::size_t GetTileInfoIndex(std::size_t x, std::size_t y) const;
+	std::size_t GetTileMappingIndex(std::size_t x, std::size_t y) const;
 	CellType GetCellType(std::size_t x, std::size_t y) const;
 	bool GetLavaPossible(std::size_t x, std::size_t y) const;
 	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;

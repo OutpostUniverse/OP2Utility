@@ -22,7 +22,7 @@ void Map::Write(Stream::Writer& streamWriter) const
 	streamWriter.Write(map.clipRect);
 	WriteTilesetSources(streamWriter, map.tilesetSources);
 	streamWriter.Write("TILE SET\x1a", 10);
-	streamWriter.Write<uint32_t>(map.tileInfos);
+	streamWriter.Write<uint32_t>(map.tileMappings);
 	streamWriter.Write<uint32_t>(map.terrainTypes);
 
 	streamWriter.Write(mapHeader.versionTag);
