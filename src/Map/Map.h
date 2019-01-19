@@ -34,7 +34,7 @@ public:
 	Map();
 
 	static Map ReadMap(std::string filename);
-	static Map ReadMap(Stream::SeekableReader& seekableReader);
+	static Map ReadMap(Stream::Reader& seekableReader);
 	static Map ReadSavedGame(std::string filename);
 	static Map ReadSavedGame(Stream::SeekableReader& seekableReader);
 
@@ -95,11 +95,12 @@ private:
 	static void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
 
 	// Read
+	static Map Map::ReadMapBeginning(Stream::Reader& streamReader);
 	static void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
 	static void ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t tilesetCount);
 	static void ReadTilesetHeader(Stream::Reader& streamReader);
 	static void ReadVersionTag(Stream::Reader& streamReader);
-	static void ReadSavedGameSecondChunk(Stream::SeekableReader& streamReader);
+	static void ReadSavedGameSection2(Stream::SeekableReader& streamReader);
 	static void ReadTileGroups(Stream::Reader& streamReader, Map& map);
 	static TileGroup ReadTileGroup(Stream::Reader& streamReader);
 };

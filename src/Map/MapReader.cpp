@@ -15,7 +15,50 @@ Map Map::ReadMap(std::string filename)
 	return ReadMap(mapReader);
 }
 
-Map Map::ReadMap(Stream::SeekableReader& streamReader)
+Map Map::ReadMap(Stream::Reader& streamReader)
+{
+	Map map = ReadMapBeginning(streamReader);
+
+	ReadVersionTag(streamReader);
+	ReadVersionTag(streamReader);
+
+	ReadTileGroups(streamReader, map);
+
+	return map;
+}
+
+Map Map::ReadSavedGame(std::string filename)
+{
+	Stream::FileReader mapReader(filename);
+	return ReadSavedGame(mapReader);
+}
+
+Map Map::ReadSavedGame(Stream::SeekableReader& streamReader)
+{
+	SkipSaveGameHeader(streamReader);
+
+	Map map = ReadMapBeginning(streamReader);
+	
+	ReadVersionTag(streamReader);
+
+	ReadSavedGameSection2(streamReader);
+	
+	ReadVersionTag(streamReader);
+
+	// TODO: Read data after final version tag.
+
+	return map;
+}
+
+
+// == Private methods ==
+
+void Map::SkipSaveGameHeader(Stream::SeekableReader& streamReader)
+{
+	streamReader.SeekRelative(0x1E025);
+}
+
+Map Map::ReadMapBeginning(Stream::Reader& streamReader)
 {
 	MapHeader mapHeader;
 	streamReader.Read(mapHeader);
@@ -34,40 +77,8 @@ Map Map::ReadMap(Stream::SeekableReader& streamReader)
 	ReadTilesetHeader(streamReader);
 	streamReader.Read<uint32_t>(map.tileInfos);
 	streamReader.Read<uint32_t>(map.terrainTypes);
-	ReadVersionTag(streamReader);
-
-	if (map.IsSavedGame()) {
-		ReadSavedGameSecondChunk(streamReader);
-	}
-
-	ReadVersionTag(streamReader);
-	
-	if (!map.IsSavedGame()) {
-		ReadTileGroups(streamReader, map);
-	}
-	
 
 	return map;
-}
-
-Map Map::ReadSavedGame(std::string filename)
-{
-	Stream::FileReader mapReader(filename);
-	return ReadSavedGame(mapReader);
-}
-
-Map Map::ReadSavedGame(Stream::SeekableReader& streamReader)
-{
-	SkipSaveGameHeader(streamReader);
-	return ReadMap(streamReader);
-}
-
-
-// == Private methods ==
-
-void Map::SkipSaveGameHeader(Stream::SeekableReader& streamReader)
-{
-	streamReader.SeekRelative(0x1E025);
 }
 
 void Map::ReadTilesetHeader(Stream::Reader& streamReader)
@@ -109,7 +120,7 @@ void Map::ReadVersionTag(Stream::Reader& streamReader)
 	}
 }
 
-void Map::ReadSavedGameSecondChunk(Stream::SeekableReader& streamReader)
+void Map::ReadSavedGameSection2(Stream::SeekableReader& streamReader)
 {
 	SavedGameDataSection2 savedGameData;
 
