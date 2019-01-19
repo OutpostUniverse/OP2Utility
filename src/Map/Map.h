@@ -97,7 +97,7 @@ private:
 	static void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
 
 	// Read
-	static Map Map::ReadMapBeginning(Stream::Reader& streamReader);
+	static Map ReadMapBeginning(Stream::Reader& streamReader);
 	static void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
 	static void ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t tilesetCount);
 	static void ReadTilesetHeader(Stream::Reader& streamReader);
