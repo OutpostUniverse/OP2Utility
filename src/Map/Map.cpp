@@ -2,6 +2,7 @@
 #include "MapHeader.h"
 #include "CellType.h"
 #include <algorithm>
+#include <stdexcept>
 
 Map::Map() :
 	versionTag(MapHeader::MinMapVersion),
