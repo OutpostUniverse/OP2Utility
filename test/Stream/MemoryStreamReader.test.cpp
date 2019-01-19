@@ -1,5 +1,5 @@
 #include "Reader.test.h"
-#include "SeekableReader.test.h"
+#include "BiDirectionalSeekableReader.test.h"
 #include "Stream/MemoryReader.h"
 #include <array>
 

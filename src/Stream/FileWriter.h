@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SeekableWriter.h"
+#include "BiDirectionalSeekableWriter.h"
 #include <string>
 #include <fstream>
 #include <cstddef>

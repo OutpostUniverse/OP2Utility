@@ -187,8 +187,8 @@
     <ClInclude Include="src\Stream\FileWriter.h" />
     <ClInclude Include="src\Stream\MemoryReader.h" />
     <ClInclude Include="src\Stream\MemoryWriter.h" />
-    <ClInclude Include="src\Stream\SeekableReader.h" />
-    <ClInclude Include="src\Stream\SeekableWriter.h" />
+    <ClInclude Include="src\Stream\BiDirectionalSeekableReader.h" />
+    <ClInclude Include="src\Stream\BiDirectionalSeekableWriter.h" />
     <ClInclude Include="src\Stream\Reader.h" />
     <ClInclude Include="src\Stream\Writer.h" />
     <ClInclude Include="src\StringHelper.h" />

@@ -108,12 +108,6 @@
     <ClInclude Include="src\Stream\MemoryWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\SeekableReader.h">
-      <Filter>Stream</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Stream\SeekableWriter.h">
-      <Filter>Stream</Filter>
-    </ClInclude>
     <ClInclude Include="src\Stream\Reader.h">
       <Filter>Stream</Filter>
     </ClInclude>
@@ -170,6 +164,12 @@
     </ClInclude>
     <ClInclude Include="src\Map\Map.h">
       <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Stream\BiDirectionalSeekableReader.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Stream\BiDirectionalSeekableWriter.h">
+      <Filter>Stream</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

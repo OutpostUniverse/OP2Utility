@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SeekableReader.h"
+#include "BiDirectionalSeekableReader.h"
 #include <cstddef>
 #include <cstdint>
 
