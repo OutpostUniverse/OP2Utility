@@ -54,7 +54,7 @@ public:
 	};
 
 	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
-	std::vector<TileData> tiles;
+	std::vector<Tile> tiles;
 
 	// Represents playable area of the map.
 	Rect clipRect;
