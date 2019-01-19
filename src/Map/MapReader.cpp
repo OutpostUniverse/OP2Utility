@@ -57,7 +57,7 @@ Map Map::ReadSavedGame(Stream::SeekableReader& streamReader)
 
 void Map::SkipSaveGameHeader(Stream::SeekableReader& streamReader)
 {
-	streamReader.SeekRelative(0x1E025);
+	streamReader.SeekForward(0x1E025);
 }
 
 void Map::ReadTilesetHeader(Stream::Reader& streamReader)

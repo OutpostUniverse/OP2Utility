@@ -72,16 +72,25 @@ namespace Stream
 		fileStreamReader.Seek(startingOffset + position);
 	}
 
-	void FileSliceReader::SeekRelative(int64_t offset)
+	void FileSliceReader::SeekForward(uint64_t offset)
 	{
-		if (Position() + offset < startingOffset ||
-			Position() + offset > startingOffset + sliceLength)
+		if (Position() + offset > startingOffset + sliceLength)
 		{
-			throw std::runtime_error("A relative offset of " + std::to_string(offset) +
+			throw std::runtime_error("A forward offset of " + std::to_string(offset) +
 				" would place the position of the FileSliceReader outside the slice bounds of file " + fileStreamReader.GetFilename());
 		}
 
-		fileStreamReader.SeekRelative(offset);
+		fileStreamReader.SeekForward(offset);
+	}
+
+	void FileSliceReader::SeekBackward(uint64_t offset)
+	{
+		if (Position() + offset < startingOffset) {
+			throw std::runtime_error("A backward offset of " + std::to_string(offset) +
+				" would place the position of the FileSliceReader outside the slice bounds of file " + fileStreamReader.GetFilename());
+		}
+
+		fileStreamReader.SeekBackward(offset);
 	}
 
 	FileSliceReader FileSliceReader::Slice(uint64_t sliceLength)
@@ -89,7 +98,7 @@ namespace Stream
 		FileSliceReader slice = Slice(startingOffset + Position(), sliceLength);
 
 		// Wait until slice is successfully created before seeking forward.
-		SeekRelative(sliceLength);
+		SeekForward(sliceLength);
 
 		return slice;
 	}

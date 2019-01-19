@@ -38,8 +38,13 @@ namespace Stream
 		this->offset = static_cast<std::size_t>(offset);
 	}
 
-	void MemoryWriter::SeekRelative(int64_t offset)
+	void MemoryWriter::SeekForward(uint64_t offset)
 	{
 		Seek(this->offset + offset);
+	}
+
+	void MemoryWriter::SeekBackward(uint64_t offset)
+	{
+		Seek(this->offset - offset);
 	}
 }

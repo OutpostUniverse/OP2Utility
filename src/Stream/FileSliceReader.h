@@ -19,8 +19,10 @@ namespace Stream
 		// SeekableReader methods
 		uint64_t Length() override;
 		uint64_t Position() override;
+
 		void Seek(uint64_t position) override;
-		void SeekRelative(int64_t offset) override;
+		void SeekForward(uint64_t offset) override;
+		void SeekBackward(uint64_t offset) override;
 
 		FileSliceReader Slice(uint64_t sliceLength);
 		FileSliceReader Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const;

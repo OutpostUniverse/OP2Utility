@@ -26,12 +26,16 @@ INSTANTIATE_TYPED_TEST_CASE_P(MemoryReader, SimpleSeekableReader, Stream::Memory
 
 TEST(MemoryStreamReaderTest, ZeroSizeStreamHasSafeOperations) {
 	Stream::MemoryReader stream(nullptr, 0);
+	
 	// Length and position
 	EXPECT_EQ(0, stream.Length());
 	EXPECT_EQ(0, stream.Position());
+	
 	// Seek to current position (should not cause error)
 	ASSERT_NO_THROW(stream.Seek(0));
-	ASSERT_NO_THROW(stream.SeekRelative(0));
+	ASSERT_NO_THROW(stream.SeekForward(0));
+	ASSERT_NO_THROW(stream.SeekBackward(0));
+	
 	// Read 0 bytes
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
 	EXPECT_EQ(0, stream.ReadPartial(nullptr, 0));
@@ -52,9 +56,12 @@ TEST_F(EmptyMemoryStreamReader, ZeroSizeStreamHasSafeOperations) {
 	// Length and position
 	EXPECT_EQ(0, stream.Length());
 	EXPECT_EQ(0, stream.Position());
+
 	// Seek to current position (should not cause error)
 	ASSERT_NO_THROW(stream.Seek(0));
-	ASSERT_NO_THROW(stream.SeekRelative(0));
+	ASSERT_NO_THROW(stream.SeekForward(0));
+	ASSERT_NO_THROW(stream.SeekBackward(0));
+
 	// Read 0 bytes
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
 	EXPECT_EQ(0, stream.ReadPartial(nullptr, 0));
@@ -85,6 +92,6 @@ TEST_F(SimpleMemoryReader, ReadOutOfBoundsPreservesPosition) {
 
 TEST_F(SimpleMemoryReader, SeekRelativeOutOfBoundsEndPreservesPosition) {
 	auto position = stream.Position();
-	EXPECT_THROW(stream.SeekRelative(6), std::runtime_error);
+	EXPECT_THROW(stream.SeekForward(6), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
 }
