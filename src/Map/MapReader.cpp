@@ -19,8 +19,8 @@ Map Map::ReadMap(Stream::Reader& streamReader)
 {
 	Map map = ReadMapBeginning(streamReader);
 
-	ReadVersionTag(streamReader);
-	ReadVersionTag(streamReader);
+	ReadVersionTag(streamReader, map.versionTag);
+	ReadVersionTag(streamReader, map.versionTag);
 
 	ReadTileGroups(streamReader, map);
 
@@ -39,11 +39,11 @@ Map Map::ReadSavedGame(Stream::SeekableReader& streamReader)
 
 	Map map = ReadMapBeginning(streamReader);
 	
-	ReadVersionTag(streamReader);
+	ReadVersionTag(streamReader, map.versionTag);
 
 	ReadSavedGameSection2(streamReader);
 	
-	ReadVersionTag(streamReader);
+	ReadVersionTag(streamReader, map.versionTag);
 
 	// TODO: Read data after final version tag.
 
@@ -110,12 +110,17 @@ void Map::ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t
 	}
 }
 
-void Map::ReadVersionTag(Stream::Reader& streamReader)
+void Map::ReadVersionTag(Stream::Reader& streamReader, uint32_t lastVersionTag)
 {
-	uint32_t versionTag;
-	streamReader.Read(versionTag);
+	uint32_t nextVersionTag;
+	streamReader.Read(nextVersionTag);
 
-	CheckMinVersionTag(versionTag);
+	CheckMinVersionTag(nextVersionTag);
+
+	if (nextVersionTag != lastVersionTag) {
+		throw std::runtime_error("Mismatched version tags detected. Version tag 1: " + 
+			std::to_string(lastVersionTag) + ". Version tag 2: " + std::to_string(nextVersionTag));
+	}
 }
 
 void Map::ReadSavedGameSection2(Stream::SeekableReader& streamReader)

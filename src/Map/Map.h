@@ -101,7 +101,7 @@ private:
 	static void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
 	static void ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t tilesetCount);
 	static void ReadTilesetHeader(Stream::Reader& streamReader);
-	static void ReadVersionTag(Stream::Reader& streamReader);
+	static void ReadVersionTag(Stream::Reader& streamReader, uint32_t lastVersionTag);
 	static void ReadSavedGameSection2(Stream::SeekableReader& streamReader);
 	static void ReadTileGroups(Stream::Reader& streamReader, Map& map);
 	static TileGroup ReadTileGroup(Stream::Reader& streamReader);
