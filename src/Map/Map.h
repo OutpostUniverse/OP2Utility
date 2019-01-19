@@ -77,6 +77,8 @@ public:
 	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
 	std::size_t GetImageIndex(std::size_t x, std::size_t y) const;
 
+	static void CheckMinVersionTag(uint32_t versionTag);
+
 	void TrimTilesetSources();
 
 private:

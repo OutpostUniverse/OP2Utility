@@ -62,6 +62,7 @@ Map Map::ReadMapBeginning(Stream::Reader& streamReader)
 {
 	MapHeader mapHeader;
 	streamReader.Read(mapHeader);
+	CheckMinVersionTag(mapHeader.versionTag);
 
 	Map map;
 	map.versionTag = mapHeader.versionTag;
@@ -114,14 +115,7 @@ void Map::ReadVersionTag(Stream::Reader& streamReader)
 	uint32_t versionTag;
 	streamReader.Read(versionTag);
 
-	if (versionTag < MapHeader::MinMapVersion)
-	{
-		throw std::runtime_error(
-			"All instances of version tag in .map and .op2 files should be greater than " +
-			std::to_string(MapHeader::MinMapVersion) + ".\n" +
-			"Found version tag is " + std::to_string(versionTag) + "."
-		);
-	}
+	CheckMinVersionTag(versionTag);
 }
 
 void Map::ReadSavedGameSection2(Stream::SeekableReader& streamReader)
