@@ -2,7 +2,7 @@
 
 #include "Tile.h"
 #include "TilesetSource.h"
-#include "TileInfo.h"
+#include "TileMapping.h"
 #include "TerrainType.h"
 #include "../Rect.h"
 #include "TileGroup.h"

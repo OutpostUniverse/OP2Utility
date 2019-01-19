@@ -72,9 +72,6 @@
     <ClInclude Include="src\Map\TerrainType.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="src\Map\TileInfo.h">
-      <Filter>Map</Filter>
-    </ClInclude>
     <ClInclude Include="src\Map\TileGroup.h">
       <Filter>Map</Filter>
     </ClInclude>
@@ -169,6 +166,9 @@
       <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="src\Map\Tile.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map\TileMapping.h">
       <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
