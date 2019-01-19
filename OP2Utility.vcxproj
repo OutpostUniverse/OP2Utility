@@ -132,7 +132,7 @@
     <ClInclude Include="src\Map\Map.h" />
     <ClInclude Include="src\Map\MapHeader.h" />
     <ClInclude Include="src\Map\TerrainType.h" />
-    <ClInclude Include="src\Map\TileData.h" />
+    <ClInclude Include="src\Map\Tile.h" />
     <ClInclude Include="src\Map\TileGroup.h" />
     <ClInclude Include="src\Map\TileInfo.h" />
     <ClInclude Include="src\Map\TilesetSource.h" />

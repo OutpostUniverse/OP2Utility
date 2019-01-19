@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TileData.h"
+#include "Tile.h"
 #include "TilesetSource.h"
 #include "TileInfo.h"
 #include "TerrainType.h"
