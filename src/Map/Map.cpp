@@ -11,7 +11,7 @@ Map::Map() :
 
 std::size_t Map::GetTileMappingIndex(std::size_t x, std::size_t y) const
 {
-	return tiles[GetTileIndex(x, y)].tileIndex;
+	return tiles[GetTileIndex(x, y)].tileMappingIndex;
 }
 
 CellType Map::GetCellType(std::size_t x, std::size_t y) const
