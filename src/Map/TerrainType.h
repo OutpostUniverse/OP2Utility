@@ -59,6 +59,6 @@ struct TerrainType
 	int16_t unknown[15];
 };
 
-static_assert(248 + 4 * sizeof(Range16) == sizeof(TerrainType), "TerrainType is an unexpected size");
+static_assert(264 == sizeof(TerrainType), "TerrainType is an unexpected size");
 
 #pragma pack(pop)
