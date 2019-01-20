@@ -144,7 +144,6 @@ void Map::ReadSavedGameSection2(Stream::SeekableReader& streamReader)
 	streamReader.Read(savedGameData.unitID1);
 	streamReader.Read(savedGameData.unitID2);
 
-	savedGameData.unitRecord.resize(2047);
 	streamReader.Read(savedGameData.unitRecord);
 }
 

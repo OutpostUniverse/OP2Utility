@@ -30,5 +30,5 @@ struct SavedGameDataSection2
 	std::vector<uint32_t> objects2;
 	uint32_t unitID1;
 	uint32_t unitID2;
-	std::vector<UnitRecord> unitRecord;
+	std::array<UnitRecord, 2047> unitRecord;
 };
