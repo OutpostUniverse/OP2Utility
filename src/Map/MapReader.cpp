@@ -76,7 +76,7 @@ Map Map::ReadMapBeginning(Stream::Reader& streamReader)
 	streamReader.Read(map.clipRect);
 	ReadTilesetSources(streamReader, map, static_cast<std::size_t>(mapHeader.tilesetCount));
 	ReadTilesetHeader(streamReader);
-	streamReader.Read<uint32_t>(map.tileInfos);
+	streamReader.Read<uint32_t>(map.tileMappings);
 	streamReader.Read<uint32_t>(map.terrainTypes);
 
 	return map;

@@ -10,9 +10,9 @@ Map::Map() :
 	mapTileWidth(0),
 	mapTileHeight(0) { }
 
-std::size_t Map::GetTileInfoIndex(std::size_t x, std::size_t y) const
+std::size_t Map::GetTileMappingIndex(std::size_t x, std::size_t y) const
 {
-	return tiles[GetTileIndex(x, y)].tileIndex;
+	return tiles[GetTileIndex(x, y)].tileMappingIndex;
 }
 
 CellType Map::GetCellType(std::size_t x, std::size_t y) const
@@ -28,12 +28,12 @@ bool Map::GetLavaPossible(std::size_t x, std::size_t y) const
 
 std::size_t Map::GetTilesetIndex(std::size_t x, std::size_t y) const
 {
-	return tileInfos[GetTileInfoIndex(x, y)].tilesetIndex;
+	return tileMappings[GetTileMappingIndex(x, y)].tilesetIndex;
 }
 
 std::size_t Map::GetImageIndex(std::size_t x, std::size_t y) const
 {
-	return tileInfos[GetTileInfoIndex(x, y)].tileIndex;
+	return tileMappings[GetTileMappingIndex(x, y)].tileGraphicIndex;
 }
 
 void Map::TrimTilesetSources()

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "TileData.h"
+#include "Tile.h"
 #include "TilesetSource.h"
-#include "TileInfo.h"
+#include "TileMapping.h"
 #include "TerrainType.h"
 #include "../Rect.h"
 #include "TileGroup.h"
@@ -54,7 +54,7 @@ public:
 	};
 
 	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
-	std::vector<TileData> tiles;
+	std::vector<Tile> tiles;
 
 	// Represents playable area of the map.
 	Rect clipRect;
@@ -63,7 +63,7 @@ public:
 	std::vector<TilesetSource> tilesetSources;
 
 	// Metadata about each available tile from the tile set sources.
-	std::vector<TileInfo> tileInfos;
+	std::vector<TileMapping> tileMappings;
 
 	// Listing of properties grouped by terrain type. Properties apply to a given range of tiles.
 	std::vector<TerrainType> terrainTypes;
@@ -71,7 +71,7 @@ public:
 	std::vector<TileGroup> tileGroups;
 
 public:
-	std::size_t GetTileInfoIndex(std::size_t x, std::size_t y) const;
+	std::size_t GetTileMappingIndex(std::size_t x, std::size_t y) const;
 	CellType GetCellType(std::size_t x, std::size_t y) const;
 	bool GetLavaPossible(std::size_t x, std::size_t y) const;
 	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
