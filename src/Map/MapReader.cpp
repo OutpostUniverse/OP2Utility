@@ -136,7 +136,7 @@ void Map::ReadSavedGameSection2(Stream::SeekableReader& streamReader)
 	streamReader.Read(savedGameData.objectCount1);
 	streamReader.Read(savedGameData.objectCount2);
 
-	savedGameData.objects1.resize(512 * savedGameData.objectCount1);
+	savedGameData.objects1.resize(savedGameData.objectCount1);
 	streamReader.Read(savedGameData.objects1);
 	savedGameData.objects2.resize(savedGameData.objectCount2);
 	streamReader.Read(savedGameData.objects2);
