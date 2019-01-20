@@ -71,6 +71,11 @@ std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directo
 	// Brett208 6Aug17: Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
 	auto pathStr = directory.length() > 0 ? directory : "./";
 
+	// 20Jan19: On MSVC, the directory_iterator will not find files if passed '/'.
+	if (pathStr == "/") {
+		pathStr = "./";
+	}
+
 	std::vector<std::string> filenames;
 	for (const auto& entry : fs::directory_iterator(pathStr)) {
 		filenames.push_back(entry.path().string());
