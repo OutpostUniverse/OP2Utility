@@ -32,7 +32,7 @@ std::size_t Map::GetTilesetIndex(std::size_t x, std::size_t y) const
 
 std::size_t Map::GetImageIndex(std::size_t x, std::size_t y) const
 {
-	return tileMappings[GetTileMappingIndex(x, y)].tileIndex;
+	return tileMappings[GetTileMappingIndex(x, y)].tileGraphicsIndex;
 }
 
 void Map::TrimTilesetSources()

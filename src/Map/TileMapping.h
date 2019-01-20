@@ -11,7 +11,7 @@ struct TileMapping
 	uint16_t tilesetIndex;
 
 	// The tile index within the tile set.
-	uint16_t tileIndex;
+	uint16_t tileGraphicsIndex;
 
 	// The number of tiles following this index that may be used to represent the tile
 	// for an animation sequence.
