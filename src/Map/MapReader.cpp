@@ -144,8 +144,8 @@ void Map::ReadSavedGameSection2(Stream::SeekableReader& streamReader)
 	streamReader.Read(savedGameData.unitID1);
 	streamReader.Read(savedGameData.unitID2);
 
-	//streamReader.Read(savedGameData.unitRecord);
-	streamReader.SeekRelative(0x3BF88);
+	savedGameData.unitRecord.resize(2047);
+	streamReader.Read(savedGameData.unitRecord);
 }
 
 void Map::ReadTileGroups(Stream::Reader& streamReader, Map& map)
