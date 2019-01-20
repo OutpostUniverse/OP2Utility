@@ -4,22 +4,19 @@
 
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
-struct TileRange
+struct Range16
 {
-	// First tile index in range.
 	uint16_t start;
-
-	// Last tile index in range.
 	uint16_t end;
 };
 
-static_assert(4 == sizeof(TileRange), "TileRange is an unexpected size");
+static_assert(4 == sizeof(Range16), "Range16 is an unexpected size");
 
 // The properties associated with a range of tiles.
 struct TerrainType
 {
 	// Range of tile mappings the TerrainType applies to.
-	TileRange tileMappingRange;
+	Range16 tileMappingRange;
 
 	// The first tile mapping index that represents bulldozed versions of the terrain type.
 	// The rest of the bulldozed tiles appear consecutively after the first index.
@@ -56,12 +53,12 @@ struct TerrainType
 	// Scorch comes from meteor impact or vehicle destruction. Not all tiles may be scorched.
 	uint16_t scorchedTileMappingIndex;
 
-	TileRange scorchedRange[3];
+	Range16 scorchedRange[3];
 
 	// UNKNOWN
 	int16_t unknown[15];
 };
 
-static_assert(248 + 4 * sizeof(TileRange) == sizeof(TerrainType), "TerrainType is an unexpected size");
+static_assert(248 + 4 * sizeof(Range16) == sizeof(TerrainType), "TerrainType is an unexpected size");
 
 #pragma pack(pop)
