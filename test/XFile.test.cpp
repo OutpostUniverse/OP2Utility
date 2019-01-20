@@ -68,5 +68,10 @@ TEST(XFileGetFilesFromDirectory, ExplicitCurrentDirectory) {
 	EXPECT_THAT(XFile::GetFilesFromDirectory("./"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 	EXPECT_THAT(XFile::GetFilesFromDirectory("./", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 	EXPECT_THAT(XFile::GetFilesFromDirectory("./", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	
+	
+	EXPECT_THAT(XFile::GetFilesFromDirectory("/"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilesFromDirectory("/", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilesFromDirectory("/", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 }
 #endif
