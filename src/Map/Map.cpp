@@ -2,6 +2,7 @@
 #include "MapHeader.h"
 #include "CellType.h"
 #include <algorithm>
+#include <stdexcept>
 
 Map::Map() :
 	versionTag(MapHeader::MinMapVersion),
@@ -9,9 +10,9 @@ Map::Map() :
 	mapTileWidth(0),
 	mapTileHeight(0) { }
 
-std::size_t Map::GetTileInfoIndex(std::size_t x, std::size_t y) const
+std::size_t Map::GetTileMappingIndex(std::size_t x, std::size_t y) const
 {
-	return tiles[GetTileIndex(x, y)].tileIndex;
+	return tiles[GetTileIndex(x, y)].tileMappingIndex;
 }
 
 CellType Map::GetCellType(std::size_t x, std::size_t y) const
@@ -27,12 +28,12 @@ bool Map::GetLavaPossible(std::size_t x, std::size_t y) const
 
 std::size_t Map::GetTilesetIndex(std::size_t x, std::size_t y) const
 {
-	return tileInfos[GetTileInfoIndex(x, y)].tilesetIndex;
+	return tileMappings[GetTileMappingIndex(x, y)].tilesetIndex;
 }
 
 std::size_t Map::GetImageIndex(std::size_t x, std::size_t y) const
 {
-	return tileInfos[GetTileInfoIndex(x, y)].tileIndex;
+	return tileMappings[GetTileMappingIndex(x, y)].tileGraphicIndex;
 }
 
 void Map::TrimTilesetSources()
@@ -54,4 +55,16 @@ std::size_t Map::GetTileIndex(std::size_t x, std::size_t y) const
 	auto lowerX = x & 0x1F; // ... 0001 1111
 	auto upperX = x >> 5;   // ... 1110 0000
 	return (upperX * mapTileHeight + y) * 32 + lowerX;
+}
+
+void Map::CheckMinVersionTag(uint32_t versionTag)
+{
+	if (versionTag < MapHeader::MinMapVersion)
+	{
+		throw std::runtime_error(
+			"All instances of version tag in .map and .op2 files should be greater than " +
+			std::to_string(MapHeader::MinMapVersion) + ".\n" +
+			"Found version tag is " + std::to_string(versionTag) + "."
+		);
+	}
 }

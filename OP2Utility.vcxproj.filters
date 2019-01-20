@@ -69,13 +69,7 @@
     <ClInclude Include="src\Map\MapHeader.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="src\Map\TileData.h">
-      <Filter>Map</Filter>
-    </ClInclude>
     <ClInclude Include="src\Map\TerrainType.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Map\TileInfo.h">
       <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="src\Map\TileGroup.h">
@@ -170,6 +164,15 @@
     </ClInclude>
     <ClInclude Include="src\Stream\BiDirectionalSeekableWriter.h">
       <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map\Tile.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map\TileMapping.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map\SavedGameDataSection2.h">
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
