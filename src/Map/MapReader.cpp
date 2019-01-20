@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "SavedGameDataSection2.h"
 #include "MapHeader.h"
 #include "../Stream/FileReader.h"
 #include <iostream>
@@ -16,8 +17,52 @@ Map Map::ReadMap(std::string filename)
 
 Map Map::ReadMap(Stream::Reader& streamReader)
 {
+	Map map = ReadMapBeginning(streamReader);
+
+	ReadVersionTag(streamReader, map.versionTag);
+	ReadVersionTag(streamReader, map.versionTag);
+
+	ReadTileGroups(streamReader, map);
+
+	return map;
+}
+
+Map Map::ReadSavedGame(std::string filename)
+{
+	Stream::FileReader mapReader(filename);
+	return ReadSavedGame(mapReader);
+}
+
+Map Map::ReadSavedGame(Stream::SeekableReader& streamReader)
+{
+	SkipSaveGameHeader(streamReader);
+
+	Map map = ReadMapBeginning(streamReader);
+	
+	ReadVersionTag(streamReader, map.versionTag);
+
+	ReadSavedGameSection2(streamReader);
+	
+	ReadVersionTag(streamReader, map.versionTag);
+
+	// TODO: Read data after final version tag.
+
+	return map;
+}
+
+
+// == Private methods ==
+
+void Map::SkipSaveGameHeader(Stream::SeekableReader& streamReader)
+{
+	streamReader.SeekRelative(0x1E025);
+}
+
+Map Map::ReadMapBeginning(Stream::Reader& streamReader)
+{
 	MapHeader mapHeader;
 	streamReader.Read(mapHeader);
+	CheckMinVersionTag(mapHeader.versionTag);
 
 	Map map;
 	map.versionTag = mapHeader.versionTag;
@@ -33,31 +78,8 @@ Map Map::ReadMap(Stream::Reader& streamReader)
 	ReadTilesetHeader(streamReader);
 	streamReader.Read<uint32_t>(map.tileInfos);
 	streamReader.Read<uint32_t>(map.terrainTypes);
-	ReadVersionTag(streamReader);
-	ReadVersionTag(streamReader);
-	ReadTileGroups(streamReader, map);
 
 	return map;
-}
-
-Map Map::ReadSavedGame(std::string filename)
-{
-	Stream::FileReader mapReader(filename);
-	return ReadSavedGame(mapReader);
-}
-
-Map Map::ReadSavedGame(Stream::SeekableReader& streamReader)
-{
-	SkipSaveGameHeader(streamReader);
-	return ReadMap(streamReader);
-}
-
-
-// == Private methods ==
-
-void Map::SkipSaveGameHeader(Stream::SeekableReader& streamReader)
-{
-	streamReader.SeekRelative(0x1E025);
 }
 
 void Map::ReadTilesetHeader(Stream::Reader& streamReader)
@@ -88,19 +110,41 @@ void Map::ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t
 	}
 }
 
-void Map::ReadVersionTag(Stream::Reader& streamReader)
+void Map::ReadVersionTag(Stream::Reader& streamReader, uint32_t lastVersionTag)
 {
-	uint32_t versionTag;
-	streamReader.Read(versionTag);
+	uint32_t nextVersionTag;
+	streamReader.Read(nextVersionTag);
 
-	if (versionTag < MapHeader::MinMapVersion)
-	{
-		throw std::runtime_error(
-			"All instances of version tag in .map and .op2 files should be greater than " +
-			std::to_string(MapHeader::MinMapVersion) + ".\n" +
-			"Found version tag is " + std::to_string(versionTag) + "."
-		);
+	CheckMinVersionTag(nextVersionTag);
+
+	if (nextVersionTag != lastVersionTag) {
+		throw std::runtime_error("Mismatched version tags detected. Version tag 1: " + 
+			std::to_string(lastVersionTag) + ". Version tag 2: " + std::to_string(nextVersionTag));
 	}
+}
+
+void Map::ReadSavedGameSection2(Stream::SeekableReader& streamReader)
+{
+	SavedGameDataSection2 savedGameData;
+
+	streamReader.Read(savedGameData.unitCount);
+	streamReader.Read(savedGameData.unknown1);
+	streamReader.Read(savedGameData.unknown2);
+	streamReader.Read(savedGameData.unknown3);
+	streamReader.Read(savedGameData.sizeOfUnit);
+
+	streamReader.Read(savedGameData.objectCount1);
+	streamReader.Read(savedGameData.objectCount2);
+
+	savedGameData.objects1.resize(savedGameData.objectCount1);
+	streamReader.Read(savedGameData.objects1);
+	savedGameData.objects2.resize(savedGameData.objectCount2);
+	streamReader.Read(savedGameData.objects2);
+
+	streamReader.Read(savedGameData.unitID1);
+	streamReader.Read(savedGameData.unitID2);
+
+	streamReader.Read(savedGameData.unitRecord);
 }
 
 void Map::ReadTileGroups(Stream::Reader& streamReader, Map& map)
