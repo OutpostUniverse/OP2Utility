@@ -77,6 +77,8 @@ public:
 	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
 	std::size_t GetImageIndex(std::size_t x, std::size_t y) const;
 
+	static void CheckMinVersionTag(uint32_t versionTag);
+
 	void TrimTilesetSources();
 
 private:
@@ -95,10 +97,12 @@ private:
 	static void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
 
 	// Read
+	static Map ReadMapBeginning(Stream::Reader& streamReader);
 	static void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
 	static void ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t tilesetCount);
 	static void ReadTilesetHeader(Stream::Reader& streamReader);
-	static void ReadVersionTag(Stream::Reader& streamReader);
+	static void ReadVersionTag(Stream::Reader& streamReader, uint32_t lastVersionTag);
+	static void ReadSavedGameSection2(Stream::SeekableReader& streamReader);
 	static void ReadTileGroups(Stream::Reader& streamReader, Map& map);
 	static TileGroup ReadTileGroup(Stream::Reader& streamReader);
 };
