@@ -6,7 +6,7 @@
 #include <cstddef>
 
 namespace Stream {
-	class SeekableReader;
+	class BiDirectionalSeekableReader;
 	class Reader;
 	class Writer;
 }
@@ -30,8 +30,8 @@ namespace Archive
 		virtual uint32_t GetSize(std::size_t index) = 0;
 		virtual void ExtractFile(std::size_t index, const std::string& pathOut) = 0;
 		virtual void ExtractAllFiles(const std::string& destDirectory);
-		virtual std::unique_ptr<Stream::SeekableReader> OpenStream(std::size_t index) = 0;
-		virtual std::unique_ptr<Stream::SeekableReader> OpenStream(const std::string& name);
+		virtual std::unique_ptr<Stream::BiDirectionalSeekableReader> OpenStream(std::size_t index) = 0;
+		virtual std::unique_ptr<Stream::BiDirectionalSeekableReader> OpenStream(const std::string& name);
 
 	protected:
 		void VerifyIndexInBounds(std::size_t index);

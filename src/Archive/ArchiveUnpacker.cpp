@@ -50,7 +50,7 @@ namespace Archive
 		ExtractFile(GetIndex(name), pathOut);
 	}
 
-	std::unique_ptr<Stream::SeekableReader> ArchiveUnpacker::OpenStream(const std::string& name)
+	std::unique_ptr<Stream::BiDirectionalSeekableReader> ArchiveUnpacker::OpenStream(const std::string& name)
 	{
 		return OpenStream(GetIndex(name));
 	}

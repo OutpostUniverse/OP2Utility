@@ -5,7 +5,7 @@
 
 namespace Stream
 {
-	class SeekableWriter : public Writer
+	class BiDirectionalSeekableWriter : public Writer
 	{
 	public:
 		// Get the size of the stream

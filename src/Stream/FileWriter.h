@@ -8,7 +8,7 @@
 
 namespace Stream
 {
-	class FileWriter : public SeekableWriter
+	class FileWriter : public BiDirectionalSeekableWriter
 	{
 	public:
 		// Open mode bit flags
