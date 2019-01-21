@@ -68,7 +68,7 @@ namespace Stream
 			throw std::runtime_error("Change in offset puts read position beyond possible bounds of file " + filename);
 		}
 
-		file.seekg(Position() + offset);
+		file.seekg(newPosition);
 	}
 
 	void FileReader::SeekBackward(uint64_t offset)
