@@ -85,7 +85,7 @@ namespace Stream
 
 	void FileSliceReader::SeekBackward(uint64_t offset)
 	{
-		if (Position() + offset < startingOffset) {
+		if (Position() - offset < startingOffset) {
 			throw std::runtime_error("A backward offset of " + std::to_string(offset) +
 				" would place the position of the FileSliceReader outside the slice bounds of file " + fileStreamReader.GetFilename());
 		}
