@@ -186,6 +186,8 @@
     <ClInclude Include="src\Stream\FileSliceReader.h" />
     <ClInclude Include="src\Stream\FileReader.h" />
     <ClInclude Include="src\Stream\FileWriter.h" />
+    <ClInclude Include="src\Stream\ForwardSeekableReader.h" />
+    <ClInclude Include="src\Stream\ForwardSeekableWriter.h" />
     <ClInclude Include="src\Stream\MemoryReader.h" />
     <ClInclude Include="src\Stream\MemoryWriter.h" />
     <ClInclude Include="src\Stream\BiDirectionalSeekableReader.h" />
