@@ -34,12 +34,12 @@ public:
 	Map();
 
 	static Map ReadMap(std::string filename);
-	static Map ReadMap(Stream::Reader& seekableReader);
+	static Map ReadMap(Stream::Reader& streamReader);
 	static Map ReadSavedGame(std::string filename);
 	static Map ReadSavedGame(Stream::SeekableReader& seekableReader);
 
 	void Write(const std::string& filename) const;
-	void Write(Stream::Writer& mapStream) const;
+	void Write(Stream::Writer& streamWriter) const;
 
 	inline void SetVersionTag(int32_t versionTag) { this->versionTag = versionTag; };
 	inline int32_t GetVersionTag() const { return versionTag; };
