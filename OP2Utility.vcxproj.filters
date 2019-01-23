@@ -159,12 +159,6 @@
     <ClInclude Include="src\Map\Map.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\BiDirectionalSeekableReader.h">
-      <Filter>Stream</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Stream\BiDirectionalSeekableWriter.h">
-      <Filter>Stream</Filter>
-    </ClInclude>
     <ClInclude Include="src\Map\Tile.h">
       <Filter>Map</Filter>
     </ClInclude>
@@ -178,6 +172,12 @@
       <Filter>Stream</Filter>
     </ClInclude>
     <ClInclude Include="src\Stream\ForwardSeekableWriter.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Stream\BidirectionalSeekableReader.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Stream\BidirectionalSeekableWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
   </ItemGroup>

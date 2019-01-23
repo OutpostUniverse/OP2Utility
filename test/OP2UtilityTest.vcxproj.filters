@@ -80,7 +80,7 @@
     <ClInclude Include="Stream\Reader.test.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="Stream\BiDirectionalSeekableReader.test.h">
+    <ClInclude Include="Stream\BidirectionalSeekableReader.test.h">
       <Filter>Stream</Filter>
     </ClInclude>
   </ItemGroup>
