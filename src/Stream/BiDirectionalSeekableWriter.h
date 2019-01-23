@@ -5,7 +5,7 @@
 
 namespace Stream
 {
-	class BiDirectionalSeekableWriter : public ForwardSeekableWriter
+	class BidirectionalSeekableWriter : public ForwardSeekableWriter
 	{
 	public:
 		// Seek to absolute position, given as offset from beginning of stream

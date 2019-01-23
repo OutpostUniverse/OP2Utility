@@ -21,7 +21,7 @@ void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t w
 	WriteIndexed(fileWriter, bitCount, width, height, palette, indexedPixels);
 }
 
-void BitmapFile::WriteIndexed(Stream::BiDirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
+void BitmapFile::WriteIndexed(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
 	VerifyIndexedImageForSerialization(bitCount);
 	VerifyIndexedPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
@@ -35,7 +35,7 @@ void BitmapFile::WriteIndexed(Stream::BiDirectionalSeekableWriter& seekableWrite
 	WritePixels(seekableWriter, indexedPixels, width, bitCount);
 }
 
-void BitmapFile::WriteHeaders(Stream::BiDirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
+void BitmapFile::WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
 	std::size_t fileSize = pixelOffset + ImageHeader::CalculatePitch(bitCount, width) * std::abs(height);
@@ -51,7 +51,7 @@ void BitmapFile::WriteHeaders(Stream::BiDirectionalSeekableWriter& seekableWrite
 	seekableWriter.Write(imageHeader);
 }
 
-void BitmapFile::WritePixels(Stream::BiDirectionalSeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
+void BitmapFile::WritePixels(Stream::BidirectionalSeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
 {
 	const auto pitch = ImageHeader::CalculatePitch(bitCount, width);
 	const auto bytesOfPixelsPerRow = ImageHeader::CalcPixelByteWidth(bitCount, width);

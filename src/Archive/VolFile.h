@@ -29,7 +29,7 @@ namespace Archive
 		void ExtractFile(std::size_t index, const std::string& pathOut) override;
 
 		// Opens a stream containing a packed file
-		std::unique_ptr<Stream::BiDirectionalSeekableReader> OpenStream(std::size_t index) override;
+		std::unique_ptr<Stream::BidirectionalSeekableReader> OpenStream(std::size_t index) override;
 
 		// Volume Creation
 		void Repack() override;
@@ -79,7 +79,7 @@ namespace Archive
 		struct CreateVolumeInfo
 		{
 			std::vector<IndexEntry> indexEntries;
-			std::vector<std::unique_ptr<Stream::BiDirectionalSeekableReader>> fileStreamReaders;
+			std::vector<std::unique_ptr<Stream::BidirectionalSeekableReader>> fileStreamReaders;
 			std::vector<std::string> filesToPack;
 			std::vector<std::string> names;
 			uint32_t stringTableLength;

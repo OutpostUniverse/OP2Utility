@@ -5,7 +5,7 @@
 
 namespace Stream
 {
-	class BiDirectionalSeekableReader : public ForwardSeekableReader {
+	class BidirectionalSeekableReader : public ForwardSeekableReader {
 	public:
 		// Seek to absolute position, given as offset from beginning of stream
 		virtual void Seek(uint64_t position) = 0;

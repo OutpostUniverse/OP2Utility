@@ -10,7 +10,7 @@ namespace Stream
 {
 	class FileSliceReader;
 
-	class FileReader : public BiDirectionalSeekableReader {
+	class FileReader : public BidirectionalSeekableReader {
 	public:
 		FileReader(std::string filename);
 		FileReader(const FileReader& fileStreamReader);
@@ -18,7 +18,7 @@ namespace Stream
 
 		std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
 
-		// BiDirectionalSeekableReader methods
+		// BidirectionalSeekableReader methods
 		uint64_t Length() override;
 		uint64_t Position() override;
 

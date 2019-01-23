@@ -6,13 +6,13 @@
 
 namespace Stream
 {
-	class MemoryReader : public BiDirectionalSeekableReader {
+	class MemoryReader : public BidirectionalSeekableReader {
 	public:
 		MemoryReader(const void* const buffer, std::size_t size);
 
 		std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
 
-		// BiDirectionalSeekableReader methods
+		// BidirectionalSeekableReader methods
 		uint64_t Length() override;
 		uint64_t Position() override;
 		

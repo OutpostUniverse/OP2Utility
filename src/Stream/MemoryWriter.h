@@ -6,7 +6,7 @@
 
 namespace Stream
 {
-	class MemoryWriter : public BiDirectionalSeekableWriter
+	class MemoryWriter : public BidirectionalSeekableWriter
 	{
 	public:
 		// buffer: where data will be written to.
