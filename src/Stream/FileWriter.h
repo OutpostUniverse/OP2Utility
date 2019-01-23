@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SeekableWriter.h"
+#include "BiDirectionalSeekableWriter.h"
 #include <string>
 #include <fstream>
 #include <cstddef>
@@ -8,7 +8,7 @@
 
 namespace Stream
 {
-	class FileWriter : public SeekableWriter
+	class FileWriter : public BidirectionalSeekableWriter
 	{
 	public:
 		// Open mode bit flags
@@ -32,8 +32,10 @@ namespace Stream
 		// SeekableWriter methods
 		uint64_t Length() override;
 		uint64_t Position() override;
-		void Seek(uint64_t offset) override;
-		void SeekRelative(int64_t offset) override;
+
+		void Seek(uint64_t position) override;
+		void SeekForward(uint64_t offset) override;
+		void SeekBackward(uint64_t offset) override;
 
 		inline const std::string& GetFilename() const {
 			return filename;

@@ -60,17 +60,24 @@ namespace Stream
 		file.seekg(position);
 	}
 
-	void FileReader::SeekRelative(int64_t offset) 
+	void FileReader::SeekForward(uint64_t offset) 
 	{
-		if (offset < 0) {
-			const uint64_t offsetAbsValue = -offset;
+		uint64_t newPosition = Position() + offset;
 
-			if (offsetAbsValue > Position()) {
-				throw std::runtime_error("Change in offset puts read position before beginning bounds of file.");
-			}
+		if (newPosition < Position()) {
+			throw std::runtime_error("Change in offset puts read position beyond possible bounds of file " + filename);
 		}
 
-		file.seekg(offset, std::ios_base::cur);
+		file.seekg(newPosition);
+	}
+
+	void FileReader::SeekBackward(uint64_t offset)
+	{
+		if (offset > Position()) {
+			throw std::runtime_error("Change in offset puts read position before beginning bounds of file " + filename);
+		}
+		
+		file.seekg(Position() - offset);
 	}
 
 	FileSliceReader FileReader::Slice(uint64_t sliceLength)
@@ -78,7 +85,7 @@ namespace Stream
 		FileSliceReader slice = Slice(Position(), sliceLength);
 
 		// Wait until slice is successfully created before seeking forward.
-		SeekRelative(sliceLength);
+		SeekForward(sliceLength);
 
 		return slice;
 	}

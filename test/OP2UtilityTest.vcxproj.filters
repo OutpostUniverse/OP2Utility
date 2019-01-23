@@ -77,10 +77,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Stream\SeekableReader.test.h">
+    <ClInclude Include="Stream\Reader.test.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="Stream\Reader.test.h">
+    <ClInclude Include="Stream\BidirectionalSeekableReader.test.h">
       <Filter>Stream</Filter>
     </ClInclude>
   </ItemGroup>

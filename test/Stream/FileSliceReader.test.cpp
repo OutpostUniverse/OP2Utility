@@ -1,4 +1,4 @@
-#include "SeekableReader.test.h"
+#include "BiDirectionalSeekableReader.test.h"
 #include "Stream/FileSliceReader.h"
 
 template <>
