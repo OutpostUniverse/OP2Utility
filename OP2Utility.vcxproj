@@ -160,6 +160,7 @@
     <ClCompile Include="src\Map\MapHeader.cpp" />
     <ClCompile Include="src\Map\MapReader.cpp" />
     <ClCompile Include="src\Map\MapWriter.cpp" />
+    <ClCompile Include="src\Map\SavedGameDataSection2.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\Archive\AdaptiveHuffmanTree.cpp" />
     <ClCompile Include="src\Archive\BitStreamReader.cpp" />

@@ -41,7 +41,7 @@ Map Map::ReadSavedGame(Stream::BidirectionalSeekableReader& streamReader)
 	
 	ReadVersionTag(streamReader, map.versionTag);
 
-	ReadSavedGameSection2(streamReader);
+	ReadSavedGameUnits(streamReader);
 	
 	ReadVersionTag(streamReader, map.versionTag);
 
@@ -123,28 +123,34 @@ void Map::ReadVersionTag(Stream::Reader& streamReader, uint32_t lastVersionTag)
 	}
 }
 
-void Map::ReadSavedGameSection2(Stream::BidirectionalSeekableReader& streamReader)
+void Map::ReadSavedGameUnits(Stream::BidirectionalSeekableReader& streamReader)
 {
-	SavedGameDataSection2 savedGameData;
+	SavedGameUnits savedGameUnits;
 
-	streamReader.Read(savedGameData.unitCount);
-	streamReader.Read(savedGameData.unknown1);
-	streamReader.Read(savedGameData.unknown2);
-	streamReader.Read(savedGameData.unknown3);
-	streamReader.Read(savedGameData.sizeOfUnit);
+	streamReader.Read(savedGameUnits.unitCount);
+	streamReader.Read(savedGameUnits.lastUsedUnitIndex);
+	streamReader.Read(savedGameUnits.nextFreeUnitSlotIndex);
+	streamReader.Read(savedGameUnits.firstFreeUnitSlotIndex);
+	streamReader.Read(savedGameUnits.sizeOfUnit);
 
-	streamReader.Read(savedGameData.objectCount1);
-	streamReader.Read(savedGameData.objectCount2);
+	savedGameUnits.CheckSizeOfUnit();
 
-	savedGameData.objects1.resize(savedGameData.objectCount1);
-	streamReader.Read(savedGameData.objects1);
-	savedGameData.objects2.resize(savedGameData.objectCount2);
-	streamReader.Read(savedGameData.objects2);
+	streamReader.Read(savedGameUnits.objectCount1);
+	streamReader.Read(savedGameUnits.objectCount2);
 
-	streamReader.Read(savedGameData.unitID1);
-	streamReader.Read(savedGameData.unitID2);
+	savedGameUnits.objects1.resize(savedGameUnits.objectCount1);
+	streamReader.Read(savedGameUnits.objects1);
+	savedGameUnits.objects2.resize(savedGameUnits.objectCount2);
+	streamReader.Read(savedGameUnits.objects2);
 
-	streamReader.Read(savedGameData.unitRecord);
+	streamReader.Read(savedGameUnits.nextUnitIndex);
+	streamReader.Read(savedGameUnits.prevUnitIndex);
+
+	streamReader.Read(savedGameUnits.units);
+
+	if (savedGameUnits.firstFreeUnitSlotIndex != savedGameUnits.nextFreeUnitSlotIndex) {
+		streamReader.Read(savedGameUnits.freeUnits);
+	}
 }
 
 void Map::ReadTileGroups(Stream::Reader& streamReader, Map& map)

@@ -284,5 +284,8 @@
     <ClCompile Include="src\Map\Map.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="src\Map\SavedGameDataSection2.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
