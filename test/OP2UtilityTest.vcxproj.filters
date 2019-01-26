@@ -55,6 +55,9 @@
     <ClCompile Include="Stream\FileWriter.test.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
+    <ClCompile Include="Map\SavedGameUnits.test.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

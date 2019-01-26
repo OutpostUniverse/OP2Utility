@@ -4,6 +4,8 @@
 #include <vector>
 #include <array>
 
+static const uint32_t DefaultSizeOfUnit = 120;
+
 // Placeholder for unknown object
 struct ObjectType1
 {
@@ -13,7 +15,7 @@ struct ObjectType1
 // Placeholder struct for unit data
 struct UnitRecord
 {
-	std::array<uint8_t, 120> data;
+	std::array<uint8_t, DefaultSizeOfUnit> data;
 };
 
 // Second section of saved game specifc data (not included in .map files)
