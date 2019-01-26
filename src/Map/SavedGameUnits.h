@@ -33,7 +33,7 @@ struct SavedGameUnits
 	uint32_t nextUnitIndex; //Type UnitID
 	uint32_t prevUnitIndex; //Type UnitID
 	std::array<UnitRecord, 2047> units; // Was 1023 before patch
-	std::array<UnitRecord, 2048> freeUnits;
+	std::array<uint32_t, 2048> freeUnits;
 
 	void CheckSizeOfUnit() const;
 };
