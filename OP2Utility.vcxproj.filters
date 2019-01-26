@@ -165,9 +165,6 @@
     <ClInclude Include="src\Map\TileMapping.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="src\Map\SavedGameDataSection2.h">
-      <Filter>Map</Filter>
-    </ClInclude>
     <ClInclude Include="src\Stream\ForwardSeekableReader.h">
       <Filter>Stream</Filter>
     </ClInclude>
@@ -179,6 +176,9 @@
     </ClInclude>
     <ClInclude Include="src\Stream\BidirectionalSeekableWriter.h">
       <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map\SavedGameUnits.h">
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,7 +284,7 @@
     <ClCompile Include="src\Map\Map.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="src\Map\SavedGameDataSection2.cpp">
+    <ClCompile Include="src\Map\SavedGameUnits.cpp">
       <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
