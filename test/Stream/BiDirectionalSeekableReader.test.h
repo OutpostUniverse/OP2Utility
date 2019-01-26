@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stream/SeekableReader.h"
+#include "Stream/BiDirectionalSeekableReader.h"
 #include <gtest/gtest.h>
 
 
@@ -22,7 +22,7 @@ TYPED_TEST_CASE_P(SimpleSeekableReader);
 
 TYPED_TEST_P(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
 	auto position = this->seekableReader.Position();
-	EXPECT_THROW(this->seekableReader.SeekRelative(-1), std::runtime_error);
+	EXPECT_THROW(this->seekableReader.SeekBackward(1), std::runtime_error);
 	EXPECT_EQ(position, this->seekableReader.Position());
 }
 

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "SeekableWriter.h"
+#include "BiDirectionalSeekableWriter.h"
 #include <cstddef>
 #include <cstdint>
 
 namespace Stream
 {
-	class MemoryWriter : public SeekableWriter
+	class MemoryWriter : public BidirectionalSeekableWriter
 	{
 	public:
 		// buffer: where data will be written to.
@@ -16,8 +16,10 @@ namespace Stream
 		// SeekableWriter methods
 		uint64_t Length() override;
 		uint64_t Position() override;
-		void Seek(uint64_t offset) override;
-		void SeekRelative(int64_t offset) override;
+		
+		void Seek(uint64_t position) override;
+		void SeekForward(uint64_t offset) override;
+		void SeekBackward(uint64_t offset) override;
 
 	protected:
 		void WriteImplementation(const void* buffer, std::size_t size) override;

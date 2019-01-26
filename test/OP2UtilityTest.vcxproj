@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stream\Reader.test.h" />
-    <ClInclude Include="Stream\SeekableReader.test.h" />
+    <ClInclude Include="Stream\BidirectionalSeekableReader.test.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -66,13 +66,28 @@ namespace Stream
 		return file.tellp();  // Return the current put pointer
 	}
 
-	void FileWriter::Seek(uint64_t offset)
+	void FileWriter::Seek(uint64_t position)
 	{
-		file.seekp(offset);
+		file.seekp(position);
 	}
 
-	void FileWriter::SeekRelative(int64_t offset)
+	void FileWriter::SeekForward(uint64_t offset)
 	{
-		file.seekp(offset, std::ios_base::cur);
+		uint64_t newPosition = Position() + offset;
+		
+		if (newPosition < Position()) {
+			throw std::runtime_error("Change in offset puts write position beyond possible bounds of file " + filename);
+		}
+
+		file.seekp(newPosition);
+	}
+
+	void FileWriter::SeekBackward(uint64_t offset)
+	{
+		if (offset > Position()) {
+			throw std::runtime_error("Change in offset puts write position before beginning bounds of file.");
+		}
+
+		file.seekp(Position() - offset);
 	}
 }

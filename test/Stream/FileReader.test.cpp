@@ -1,4 +1,4 @@
-#include "SeekableReader.test.h"
+#include "BiDirectionalSeekableReader.test.h"
 #include "Stream/FileReader.h"
 #include <array>
 
@@ -16,12 +16,16 @@ TEST(FileReaderTest, AccessNonexistingFile) {
 
 TEST(FileReaderTest, ZeroSizeStreamHasSafeOperations) {
 	Stream::FileReader stream("Stream/data/EmptyFile.txt");
+
 	// Length and position
 	EXPECT_EQ(0, stream.Length());
 	EXPECT_EQ(0, stream.Position());
+
 	// Seek to current position (should not cause error)
 	ASSERT_NO_THROW(stream.Seek(0));
-	ASSERT_NO_THROW(stream.SeekRelative(0));
+	ASSERT_NO_THROW(stream.SeekForward(0));
+	ASSERT_NO_THROW(stream.SeekBackward(0));
+
 	// Read 0 bytes
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
 	EXPECT_EQ(0, stream.ReadPartial(nullptr, 0));
@@ -37,7 +41,7 @@ protected:
 
 TEST_F(SimpleFileReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
 	auto position = stream.Position();
-	EXPECT_THROW(stream.SeekRelative(-1), std::runtime_error);
+	EXPECT_THROW(stream.SeekBackward(1), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
 }
 
