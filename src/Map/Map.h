@@ -34,9 +34,9 @@ public:
 	Map();
 
 	static Map ReadMap(std::string filename);
-	static Map ReadMap(Stream::Reader& streamReader);
+	static Map ReadMap(Stream::Reader& mapStream);
 	static Map ReadSavedGame(std::string filename);
-	static Map ReadSavedGame(Stream::SeekableReader& seekableReader);
+	static Map ReadSavedGame(Stream::SeekableReader& savedGameStream);
 
 	void Write(const std::string& filename) const;
 	void Write(Stream::Writer& streamWriter) const;
@@ -92,17 +92,17 @@ private:
 	// Write
 	MapHeader CreateHeader() const;
 	uint32_t GetWidthInTilesLog2(uint32_t widthInTiles) const;
-	static void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources);
-	static void WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups);
-	static void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
+	static void WriteTilesetSources(Stream::Writer& stream, const std::vector<TilesetSource>& tilesetSources);
+	static void WriteTileGroups(Stream::Writer& stream, const std::vector<TileGroup>& tileGroups);
+	static void WriteContainerSize(Stream::Writer& stream, std::size_t size);
 
 	// Read
-	static Map ReadMapBeginning(Stream::Reader& streamReader);
-	static void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
-	static void ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t tilesetCount);
-	static void ReadTilesetHeader(Stream::Reader& streamReader);
-	static void ReadVersionTag(Stream::Reader& streamReader, uint32_t lastVersionTag);
-	static void ReadSavedGameSection2(Stream::SeekableReader& streamReader);
-	static void ReadTileGroups(Stream::Reader& streamReader, Map& map);
-	static TileGroup ReadTileGroup(Stream::Reader& streamReader);
+	static Map ReadMapBeginning(Stream::Reader& stream);
+	static void SkipSaveGameHeader(Stream::SeekableReader& stream);
+	static void ReadTilesetSources(Stream::Reader& stream, Map& map, std::size_t tilesetCount);
+	static void ReadTilesetHeader(Stream::Reader& stream);
+	static void ReadVersionTag(Stream::Reader& stream, uint32_t lastVersionTag);
+	static void ReadSavedGameSection2(Stream::SeekableReader& stream);
+	static void ReadTileGroups(Stream::Reader& stream, Map& map);
+	static TileGroup ReadTileGroup(Stream::Reader& stream);
 };

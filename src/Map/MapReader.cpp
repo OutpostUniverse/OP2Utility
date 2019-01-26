@@ -11,39 +11,39 @@ const std::array<char, 10> tilesetHeader{ "TILE SET\x1a" };
 
 Map Map::ReadMap(std::string filename)
 {
-	Stream::FileReader streamReader(filename);
-	return ReadMap(streamReader);
+	Stream::FileReader mapStream(filename);
+	return ReadMap(mapStream);
 }
 
-Map Map::ReadMap(Stream::Reader& streamReader)
+Map Map::ReadMap(Stream::Reader& mapStream)
 {
-	Map map = ReadMapBeginning(streamReader);
+	Map map = ReadMapBeginning(mapStream);
 
-	ReadVersionTag(streamReader, map.versionTag);
-	ReadVersionTag(streamReader, map.versionTag);
+	ReadVersionTag(mapStream, map.versionTag);
+	ReadVersionTag(mapStream, map.versionTag);
 
-	ReadTileGroups(streamReader, map);
+	ReadTileGroups(mapStream, map);
 
 	return map;
 }
 
 Map Map::ReadSavedGame(std::string filename)
 {
-	Stream::FileReader mapReader(filename);
-	return ReadSavedGame(mapReader);
+	Stream::FileReader savedGameStream(filename);
+	return ReadSavedGame(savedGameStream);
 }
 
-Map Map::ReadSavedGame(Stream::SeekableReader& seekableReader)
+Map Map::ReadSavedGame(Stream::SeekableReader& savedGameStream)
 {
-	SkipSaveGameHeader(seekableReader);
+	SkipSaveGameHeader(savedGameStream);
 
-	Map map = ReadMapBeginning(seekableReader);
+	Map map = ReadMapBeginning(savedGameStream);
 	
-	ReadVersionTag(seekableReader, map.versionTag);
+	ReadVersionTag(savedGameStream, map.versionTag);
 
-	ReadSavedGameSection2(seekableReader);
+	ReadSavedGameSection2(savedGameStream);
 	
-	ReadVersionTag(seekableReader, map.versionTag);
+	ReadVersionTag(savedGameStream, map.versionTag);
 
 	// TODO: Read data after final version tag.
 
@@ -53,15 +53,15 @@ Map Map::ReadSavedGame(Stream::SeekableReader& seekableReader)
 
 // == Private methods ==
 
-void Map::SkipSaveGameHeader(Stream::SeekableReader& seekableReader)
+void Map::SkipSaveGameHeader(Stream::SeekableReader& stream)
 {
-	seekableReader.SeekRelative(0x1E025);
+	stream.SeekRelative(0x1E025);
 }
 
-Map Map::ReadMapBeginning(Stream::Reader& streamReader)
+Map Map::ReadMapBeginning(Stream::Reader& stream)
 {
 	MapHeader mapHeader;
-	streamReader.Read(mapHeader);
+	stream.Read(mapHeader);
 	CheckMinVersionTag(mapHeader.versionTag);
 
 	Map map;
@@ -71,49 +71,49 @@ Map Map::ReadMapBeginning(Stream::Reader& streamReader)
 	map.mapTileHeight = mapHeader.mapTileHeight;
 
 	map.tiles.resize(mapHeader.TileCount());
-	streamReader.Read(map.tiles);
+	stream.Read(map.tiles);
 
-	streamReader.Read(map.clipRect);
-	ReadTilesetSources(streamReader, map, static_cast<std::size_t>(mapHeader.tilesetCount));
-	ReadTilesetHeader(streamReader);
-	streamReader.Read<uint32_t>(map.tileMappings);
-	streamReader.Read<uint32_t>(map.terrainTypes);
+	stream.Read(map.clipRect);
+	ReadTilesetSources(stream, map, static_cast<std::size_t>(mapHeader.tilesetCount));
+	ReadTilesetHeader(stream);
+	stream.Read<uint32_t>(map.tileMappings);
+	stream.Read<uint32_t>(map.terrainTypes);
 
 	return map;
 }
 
-void Map::ReadTilesetHeader(Stream::Reader& streamReader)
+void Map::ReadTilesetHeader(Stream::Reader& stream)
 {
 	std::array<char, 10> buffer;
-	streamReader.Read(buffer);
+	stream.Read(buffer);
 
 	if (buffer != tilesetHeader) {
 		throw std::runtime_error("'TILE SET' string not found.");
 	}
 }
 
-void Map::ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t tilesetCount)
+void Map::ReadTilesetSources(Stream::Reader& stream, Map& map, std::size_t tilesetCount)
 {
 	map.tilesetSources.resize(tilesetCount);
 
 	for (auto& tilesetSource : map.tilesetSources)
 	{
-		streamReader.Read<uint32_t>(tilesetSource.tilesetFilename);
+		stream.Read<uint32_t>(tilesetSource.tilesetFilename);
 
 		if (tilesetSource.tilesetFilename.size() > 8) {
 			throw std::runtime_error("Tileset name may not be greater than 8 characters in length.");
 		}
 
 		if (tilesetSource.tilesetFilename.size() > 0) {
-			streamReader.Read(tilesetSource.numTiles);
+			stream.Read(tilesetSource.numTiles);
 		}
 	}
 }
 
-void Map::ReadVersionTag(Stream::Reader& streamReader, uint32_t lastVersionTag)
+void Map::ReadVersionTag(Stream::Reader& stream, uint32_t lastVersionTag)
 {
 	uint32_t nextVersionTag;
-	streamReader.Read(nextVersionTag);
+	stream.Read(nextVersionTag);
 
 	CheckMinVersionTag(nextVersionTag);
 
@@ -123,54 +123,54 @@ void Map::ReadVersionTag(Stream::Reader& streamReader, uint32_t lastVersionTag)
 	}
 }
 
-void Map::ReadSavedGameSection2(Stream::SeekableReader& seekableReader)
+void Map::ReadSavedGameSection2(Stream::SeekableReader& stream)
 {
 	SavedGameDataSection2 savedGameData;
 
-	seekableReader.Read(savedGameData.unitCount);
-	seekableReader.Read(savedGameData.unknown1);
-	seekableReader.Read(savedGameData.unknown2);
-	seekableReader.Read(savedGameData.unknown3);
-	seekableReader.Read(savedGameData.sizeOfUnit);
+	stream.Read(savedGameData.unitCount);
+	stream.Read(savedGameData.unknown1);
+	stream.Read(savedGameData.unknown2);
+	stream.Read(savedGameData.unknown3);
+	stream.Read(savedGameData.sizeOfUnit);
 
-	seekableReader.Read(savedGameData.objectCount1);
-	seekableReader.Read(savedGameData.objectCount2);
+	stream.Read(savedGameData.objectCount1);
+	stream.Read(savedGameData.objectCount2);
 
 	savedGameData.objects1.resize(savedGameData.objectCount1);
-	seekableReader.Read(savedGameData.objects1);
+	stream.Read(savedGameData.objects1);
 	savedGameData.objects2.resize(savedGameData.objectCount2);
-	seekableReader.Read(savedGameData.objects2);
+	stream.Read(savedGameData.objects2);
 
-	seekableReader.Read(savedGameData.unitID1);
-	seekableReader.Read(savedGameData.unitID2);
+	stream.Read(savedGameData.unitID1);
+	stream.Read(savedGameData.unitID2);
 
-	seekableReader.Read(savedGameData.unitRecord);
+	stream.Read(savedGameData.unitRecord);
 }
 
-void Map::ReadTileGroups(Stream::Reader& streamReader, Map& map)
+void Map::ReadTileGroups(Stream::Reader& stream, Map& map)
 {
 	uint32_t numTileGroups;
-	streamReader.Read(numTileGroups);
+	stream.Read(numTileGroups);
 	uint32_t unknown;
-	streamReader.Read(unknown); // Read unknown/unused field (skip past it)
+	stream.Read(unknown); // Read unknown/unused field (skip past it)
 
 	for (uint32_t i = 0; i < numTileGroups; ++i)
 	{
-		map.tileGroups.push_back(ReadTileGroup(streamReader));
+		map.tileGroups.push_back(ReadTileGroup(stream));
 	}
 }
 
-TileGroup Map::ReadTileGroup(Stream::Reader& streamReader)
+TileGroup Map::ReadTileGroup(Stream::Reader& stream)
 {
 	TileGroup tileGroup;
 
-	streamReader.Read(tileGroup.tileWidth);
-	streamReader.Read(tileGroup.tileHeight);
+	stream.Read(tileGroup.tileWidth);
+	stream.Read(tileGroup.tileHeight);
 
 	tileGroup.mappingIndices.resize(tileGroup.tileWidth * tileGroup.tileHeight);
-	streamReader.Read(tileGroup.mappingIndices);
+	stream.Read(tileGroup.mappingIndices);
 
-	streamReader.Read<uint32_t>(tileGroup.name);
+	stream.Read<uint32_t>(tileGroup.name);
 
 	return tileGroup;
 }
