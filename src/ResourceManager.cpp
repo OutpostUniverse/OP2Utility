@@ -27,7 +27,7 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
 std::unique_ptr<Stream::SeekableReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
 {
-	const std::string path = XFile::ReplaceFilename(resourceRootDir, filename);
+	const std::string path = XFile::Append(resourceRootDir, filename);
 	if (XFile::PathExists(path)) {
 		return std::make_unique<Stream::FileReader>(path);
 	}
