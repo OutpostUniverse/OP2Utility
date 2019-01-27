@@ -1,11 +1,7 @@
 #include "../src/XFile.h"
 #include <gtest/gtest.h>
-
-// Disable due to lack of Google Mock in the Windows CI environment
-#ifndef _WIN32
 #include <gmock/gmock.h>
 #include <regex>
-#endif
 
 
 TEST(XFileReplaceFilename, ReplaceFilename) {
@@ -56,8 +52,6 @@ TEST(XFileGetDirectory, WindowsAbsolutePathToDirectory) {
 }
 
 
-// Disable due to lack of Google Mock in the Windows CI environment
-#ifndef _WIN32
 TEST(XFileGetFilesFromDirectory, EmptyPath) {
 	EXPECT_THAT(XFile::GetFilesFromDirectory(""), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 	EXPECT_THAT(XFile::GetFilesFromDirectory("", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
@@ -69,4 +63,3 @@ TEST(XFileGetFilesFromDirectory, ExplicitCurrentDirectory) {
 	EXPECT_THAT(XFile::GetFilesFromDirectory("./", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 	EXPECT_THAT(XFile::GetFilesFromDirectory("./", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 }
-#endif

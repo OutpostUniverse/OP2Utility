@@ -1,13 +1,16 @@
 image: Visual Studio 2017
 configuration:
   - Release
+  - Debug
 platform:
   - x86
   - x64
-cache:
-  # Cache Nuget packages in "packages" folder. Break cache if "packages.config" is updated.
-  - packages -> **\packages.config
-before_build: nuget restore
+install:
+  - cmd: cd C:\Tools\vcpkg
+  - cmd: git pull
+  - cmd: .\bootstrap-vcpkg.bat
+  - cmd: vcpkg install gtest:x86-windows gtest:x64-windows
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%
 build:
   project: OP2Utility.sln
 test_script:
