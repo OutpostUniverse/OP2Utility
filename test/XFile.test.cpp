@@ -21,6 +21,7 @@ TEST(XFile, Append) {
 
 #ifdef _WIN32
 	// Make sure we don't try to append a path with a root component on Windows
+	// Note: The right side paths are valid relative paths on Linux, and so are allowed there
 	EXPECT_THROW(XFile::Append("a/", "C:b/"), std::runtime_error);
 	EXPECT_THROW(XFile::Append("/a/", "C:b/"), std::runtime_error);
 	EXPECT_THROW(XFile::Append("a/", "C:/b/"), std::runtime_error);
