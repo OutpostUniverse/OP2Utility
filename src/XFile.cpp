@@ -56,7 +56,7 @@ bool XFile::PathExists(const std::string& pathStr)
 
 std::string XFile::Append(const std::string& path1, const std::string& relativePath2)
 {
-	return fs::path(path1) / relativePath2;
+	return (fs::path(path1) / relativePath2).generic_string();
 }
 
 std::string XFile::AppendToFilename(const std::string& filename, const std::string& valueToAppend)
