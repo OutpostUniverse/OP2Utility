@@ -8,6 +8,14 @@
 #endif
 
 
+TEST(XFile, Append) {
+	EXPECT_EQ("a/b/", XFile::Append("a/", "b/"));
+	EXPECT_EQ("/a/b/", XFile::Append("/a/", "b/"));
+
+	// EXPECT_THROW(XFile::Append("a/", "/b/"), std::runtime_error);
+	// EXPECT_THROW(XFile::Append("/a/", "/b/"), std::runtime_error);
+}
+
 TEST(XFileReplaceFilename, ReplaceFilename) {
 	EXPECT_EQ(XFile::ReplaceFilename("./Old.map", "New.map"), "./New.map");
 	EXPECT_EQ(XFile::ReplaceFilename("Old.map", "New.map"), "New.map");
