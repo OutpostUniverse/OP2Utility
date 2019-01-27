@@ -131,7 +131,7 @@ std::string ResourceManager::FindContainingArchivePath(const std::string& filena
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 		if (archiveFile->Contains(filename)) {
-			return XFile::ReplaceFilename(resourceRootDir, XFile::GetFilename(archiveFile->GetVolumeFilename()));
+			return archiveFile->GetVolumeFilename();
 		}
 	}
 
