@@ -56,7 +56,11 @@ bool XFile::PathExists(const std::string& pathStr)
 
 std::string XFile::Append(const std::string& path1, const std::string& relativePath2)
 {
-	return (fs::path(path1) / relativePath2).generic_string();
+	fs::path nestedPath(relativePath2);
+	if (nestedPath.is_absolute()) {
+		throw std::runtime_error("Can only append relative paths, not absolute paths: " + relativePath2);
+	}
+	return (fs::path(path1) / nestedPath).generic_string();
 }
 
 std::string XFile::AppendToFilename(const std::string& filename, const std::string& valueToAppend)
