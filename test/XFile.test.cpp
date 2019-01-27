@@ -12,8 +12,20 @@ TEST(XFile, Append) {
 	EXPECT_EQ("a/b/", XFile::Append("a/", "b/"));
 	EXPECT_EQ("/a/b/", XFile::Append("/a/", "b/"));
 
+	EXPECT_EQ("C:a/b/", XFile::Append("C:a/", "b/"));
+	EXPECT_EQ("C:/a/b/", XFile::Append("C:/a/", "b/"));
+
+	// Make sure we don't try to append a path with a root component
 	EXPECT_THROW(XFile::Append("a/", "/b/"), std::runtime_error);
 	EXPECT_THROW(XFile::Append("/a/", "/b/"), std::runtime_error);
+
+#ifdef _WIN32
+	// Make sure we don't try to append a path with a root component on Windows
+	EXPECT_THROW(XFile::Append("a/", "C:b/"), std::runtime_error);
+	EXPECT_THROW(XFile::Append("/a/", "C:b/"), std::runtime_error);
+	EXPECT_THROW(XFile::Append("a/", "C:/b/"), std::runtime_error);
+	EXPECT_THROW(XFile::Append("/a/", "C:/b/"), std::runtime_error);
+#endif
 }
 
 TEST(XFileReplaceFilename, ReplaceFilename) {

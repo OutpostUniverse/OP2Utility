@@ -57,8 +57,8 @@ bool XFile::PathExists(const std::string& pathStr)
 std::string XFile::Append(const std::string& path1, const std::string& relativePath2)
 {
 	fs::path nestedPath(relativePath2);
-	if (nestedPath.is_absolute()) {
-		throw std::runtime_error("Can only append relative paths, not absolute paths: " + relativePath2);
+	if (nestedPath.has_root_name() || nestedPath.has_root_directory()) {
+		throw std::runtime_error("Cannot append paths with root component: " + relativePath2);
 	}
 	return (fs::path(path1) / nestedPath).generic_string();
 }
