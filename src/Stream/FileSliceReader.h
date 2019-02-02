@@ -10,8 +10,10 @@ namespace Stream
 	// Opens a new file stream that is limited to reading from the provided file slice.
 	class FileSliceReader : public BidirectionalSeekableReader
 	{
+		using WrappedStreamType = FileReader;
+
 	public:
-		FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength);
+		FileSliceReader(const WrappedStreamType& wrappedStream, uint64_t startingOffset, uint64_t sliceLength);
 		FileSliceReader(const FileSliceReader& fileSliceReader);
 
 		std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
@@ -37,7 +39,7 @@ namespace Stream
 	private:
 		void Initialize();
 
-		FileReader wrappedStream;
+		WrappedStreamType wrappedStream;
 		const uint64_t startingOffset;
 		const uint64_t sliceLength;
 	};

@@ -4,8 +4,8 @@
 
 namespace Stream
 {
-	FileSliceReader::FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength) :
-		wrappedStream(filename),
+	FileSliceReader::FileSliceReader(const WrappedStreamType& wrappedStream, uint64_t startingOffset, uint64_t sliceLength) :
+		wrappedStream(wrappedStream),
 		startingOffset(startingOffset),
 		sliceLength(sliceLength)
 	{
@@ -13,7 +13,7 @@ namespace Stream
 	}
 
 	FileSliceReader::FileSliceReader(const FileSliceReader& fileSliceReader) :
-		wrappedStream(fileSliceReader.GetFilename()),
+		wrappedStream(fileSliceReader.wrappedStream),
 		startingOffset(fileSliceReader.startingOffset),
 		sliceLength(fileSliceReader.sliceLength)
 	{
