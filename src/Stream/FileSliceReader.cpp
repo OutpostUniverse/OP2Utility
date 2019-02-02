@@ -23,13 +23,17 @@ namespace Stream
 	void FileSliceReader::Initialize()
 	{
 		if (sliceLength > std::numeric_limits<decltype(startingOffset)>::max() - startingOffset) {
-			throw std::runtime_error("The supplied starting offset & length cause the ending offset to wrap past the largest allowed value in the FileSliceReader created on file " +
-				fileStreamReader.GetFilename());
+			throw std::runtime_error(
+				"The stream slice would run past the maximum possible stream length."
+				" Source stream: " + fileStreamReader.GetFilename()
+			);
 		}
 
 		if (startingOffset + sliceLength > fileStreamReader.Length()) {
-			throw std::runtime_error("The ending offset of the FileSliceReader created on " +
-				fileStreamReader.GetFilename() + "is greater than the file's length");
+			throw std::runtime_error(
+				"The stream slice would run past the end of the source stream."
+				" Source stream: " + fileStreamReader.GetFilename()
+			);
 		}
 
 		fileStreamReader.Seek(startingOffset);
