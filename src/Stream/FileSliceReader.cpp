@@ -42,8 +42,10 @@ namespace Stream
 	void FileSliceReader::ReadImplementation(void* buffer, std::size_t size)
 	{
 		if (wrappedStream.Position() + size > startingOffset + sliceLength) {
-			throw std::runtime_error("File Read request would place the position of the FileSliceReader outside the ending offset of file " +
-				wrappedStream.GetFilename());
+			throw std::runtime_error(
+				"Stream Read request extends beyond the bounds of the stream slice."
+				" Source stream: " + wrappedStream.GetFilename()
+			);
 		}
 
 		wrappedStream.Read(buffer, size);
@@ -70,8 +72,10 @@ namespace Stream
 	void FileSliceReader::Seek(uint64_t position)
 	{
 		if (position > sliceLength) {
-			throw std::runtime_error("An absolute offset of " + std::to_string(position) +
-				" would place the position of the FileSliceReader outside the ending offset of file " + wrappedStream.GetFilename());
+			throw std::runtime_error(
+				"Seek to absolute offset of " + std::to_string(position) + " is beyond the bounds of the stream slice."
+				" Source stream: " + wrappedStream.GetFilename()
+			);
 		}
 
 		wrappedStream.Seek(startingOffset + position);
@@ -81,8 +85,10 @@ namespace Stream
 	{
 		if (Position() + offset > startingOffset + sliceLength)
 		{
-			throw std::runtime_error("A forward offset of " + std::to_string(offset) +
-				" would place the position of the FileSliceReader outside the slice bounds of file " + wrappedStream.GetFilename());
+			throw std::runtime_error(
+				"Seek forward by offset of " + std::to_string(offset) + " is beyond the bounds of the stream slice."
+				" Source stream: " + wrappedStream.GetFilename()
+			);
 		}
 
 		wrappedStream.SeekForward(offset);
@@ -91,8 +97,10 @@ namespace Stream
 	void FileSliceReader::SeekBackward(uint64_t offset)
 	{
 		if (Position() - offset < startingOffset) {
-			throw std::runtime_error("A backward offset of " + std::to_string(offset) +
-				" would place the position of the FileSliceReader outside the slice bounds of file " + wrappedStream.GetFilename());
+			throw std::runtime_error(
+				"Seek backward by offset of " + std::to_string(offset) + " is beyond the bounds of the stream slice."
+				" Source stream: " + wrappedStream.GetFilename()
+			);
 		}
 
 		wrappedStream.SeekBackward(offset);
@@ -113,7 +121,10 @@ namespace Stream
 		if (sliceStartPosition + sliceLength > this->sliceLength ||
 			sliceStartPosition + sliceLength < sliceStartPosition) // Check if length wraps past max size of uint64_t
 		{
-			throw std::runtime_error("Unable to create a slice of an existing file stream slice. Requested slice is outside bounds of underlying stream slice.");
+			throw std::runtime_error(
+				"Requested stream slice exceeds the bounds of current stream slice."
+				" Source stream: " + wrappedStream.GetFilename()
+			);
 		}
 
 		return FileSliceReader(GetFilename(), sliceStartPosition, sliceLength);
