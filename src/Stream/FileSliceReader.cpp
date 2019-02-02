@@ -128,6 +128,6 @@ namespace Stream
 			);
 		}
 
-		return FileSliceReader(GetFilename(), sliceStartPosition, sliceLength);
+		return FileSliceReader(wrappedStream, sliceStartPosition, sliceLength);
 	}
 }
