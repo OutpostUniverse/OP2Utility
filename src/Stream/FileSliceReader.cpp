@@ -118,9 +118,10 @@ namespace Stream
 
 	FileSliceReader FileSliceReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const
 	{
-		if (sliceStartPosition + sliceLength > this->sliceLength ||
-			sliceStartPosition + sliceLength < sliceStartPosition) // Check if length wraps past max size of uint64_t
-		{
+		if (
+			sliceStartPosition + sliceLength > this->sliceLength ||
+			sliceLength > std::numeric_limits<decltype(sliceStartPosition)>::max() - sliceStartPosition
+		) {
 			throw std::runtime_error(
 				"Requested stream slice exceeds the bounds of current stream slice."
 				" Source stream: " + wrappedStream.GetFilename()
