@@ -5,7 +5,7 @@
 namespace Stream
 {
 	FileSliceReader::FileSliceReader(std::string filename, uint64_t startingOffset, uint64_t sliceLength) :
-		fileStreamReader(filename),
+		wrappedStream(filename),
 		startingOffset(startingOffset),
 		sliceLength(sliceLength)
 	{
@@ -13,7 +13,7 @@ namespace Stream
 	}
 
 	FileSliceReader::FileSliceReader(const FileSliceReader& fileSliceReader) :
-		fileStreamReader(fileSliceReader.GetFilename()),
+		wrappedStream(fileSliceReader.GetFilename()),
 		startingOffset(fileSliceReader.startingOffset),
 		sliceLength(fileSliceReader.sliceLength)
 	{
@@ -25,28 +25,28 @@ namespace Stream
 		if (sliceLength > std::numeric_limits<decltype(startingOffset)>::max() - startingOffset) {
 			throw std::runtime_error(
 				"The stream slice would run past the maximum possible stream length."
-				" Source stream: " + fileStreamReader.GetFilename()
+				" Source stream: " + wrappedStream.GetFilename()
 			);
 		}
 
-		if (startingOffset + sliceLength > fileStreamReader.Length()) {
+		if (startingOffset + sliceLength > wrappedStream.Length()) {
 			throw std::runtime_error(
 				"The stream slice would run past the end of the source stream."
-				" Source stream: " + fileStreamReader.GetFilename()
+				" Source stream: " + wrappedStream.GetFilename()
 			);
 		}
 
-		fileStreamReader.Seek(startingOffset);
+		wrappedStream.Seek(startingOffset);
 	}
 
 	void FileSliceReader::ReadImplementation(void* buffer, std::size_t size)
 	{
-		if (fileStreamReader.Position() + size > startingOffset + sliceLength) {
+		if (wrappedStream.Position() + size > startingOffset + sliceLength) {
 			throw std::runtime_error("File Read request would place the position of the FileSliceReader outside the ending offset of file " +
-				fileStreamReader.GetFilename());
+				wrappedStream.GetFilename());
 		}
 
-		fileStreamReader.Read(buffer, size);
+		wrappedStream.Read(buffer, size);
 	}
 
 	std::size_t FileSliceReader::ReadPartial(void* buffer, std::size_t size) noexcept {
@@ -54,7 +54,7 @@ namespace Stream
 		// Note: if !(size < bytesLeft) then bytesLeft fits within a size_t
 		std::size_t readSize = (size < bytesLeft) ? size : static_cast<std::size_t>(bytesLeft);
 
-		return fileStreamReader.ReadPartial(buffer, readSize);
+		return wrappedStream.ReadPartial(buffer, readSize);
 	}
 
 	uint64_t FileSliceReader::Length()
@@ -64,17 +64,17 @@ namespace Stream
 
 	uint64_t FileSliceReader::Position()
 	{
-		return fileStreamReader.Position() - startingOffset;
+		return wrappedStream.Position() - startingOffset;
 	}
 
 	void FileSliceReader::Seek(uint64_t position)
 	{
 		if (position > sliceLength) {
 			throw std::runtime_error("An absolute offset of " + std::to_string(position) +
-				" would place the position of the FileSliceReader outside the ending offset of file " + fileStreamReader.GetFilename());
+				" would place the position of the FileSliceReader outside the ending offset of file " + wrappedStream.GetFilename());
 		}
 
-		fileStreamReader.Seek(startingOffset + position);
+		wrappedStream.Seek(startingOffset + position);
 	}
 
 	void FileSliceReader::SeekForward(uint64_t offset)
@@ -82,20 +82,20 @@ namespace Stream
 		if (Position() + offset > startingOffset + sliceLength)
 		{
 			throw std::runtime_error("A forward offset of " + std::to_string(offset) +
-				" would place the position of the FileSliceReader outside the slice bounds of file " + fileStreamReader.GetFilename());
+				" would place the position of the FileSliceReader outside the slice bounds of file " + wrappedStream.GetFilename());
 		}
 
-		fileStreamReader.SeekForward(offset);
+		wrappedStream.SeekForward(offset);
 	}
 
 	void FileSliceReader::SeekBackward(uint64_t offset)
 	{
 		if (Position() - offset < startingOffset) {
 			throw std::runtime_error("A backward offset of " + std::to_string(offset) +
-				" would place the position of the FileSliceReader outside the slice bounds of file " + fileStreamReader.GetFilename());
+				" would place the position of the FileSliceReader outside the slice bounds of file " + wrappedStream.GetFilename());
 		}
 
-		fileStreamReader.SeekBackward(offset);
+		wrappedStream.SeekBackward(offset);
 	}
 
 	FileSliceReader FileSliceReader::Slice(uint64_t sliceLength)

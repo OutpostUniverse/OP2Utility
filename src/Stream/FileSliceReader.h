@@ -28,7 +28,7 @@ namespace Stream
 		FileSliceReader Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const;
 
 		inline const std::string& GetFilename() const {
-			return fileStreamReader.GetFilename();
+			return wrappedStream.GetFilename();
 		}
 
 	protected:
@@ -37,7 +37,7 @@ namespace Stream
 	private:
 		void Initialize();
 
-		FileReader fileStreamReader;
+		FileReader wrappedStream;
 		const uint64_t startingOffset;
 		const uint64_t sliceLength;
 	};
