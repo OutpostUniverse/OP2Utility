@@ -1,5 +1,6 @@
 #include "FileSliceReader.h"
 #include <stdexcept>
+#include <limits>
 
 namespace Stream
 {
@@ -21,7 +22,7 @@ namespace Stream
 
 	void FileSliceReader::Initialize()
 	{
-		if (startingOffset + sliceLength < startingOffset) {
+		if (sliceLength > std::numeric_limits<decltype(startingOffset)>::max() - startingOffset) {
 			throw std::runtime_error("The supplied starting offset & length cause the ending offset to wrap past the largest allowed value in the FileSliceReader created on file " +
 				fileStreamReader.GetFilename());
 		}
