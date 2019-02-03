@@ -173,7 +173,6 @@
     <ClCompile Include="src\Sprite\OP2BmpLoader.cpp" />
     <ClCompile Include="src\Sprite\PaletteHeader.cpp" />
     <ClCompile Include="src\Sprite\SectionHeader.cpp" />
-    <ClCompile Include="src\Stream\FileSliceReader.cpp" />
     <ClCompile Include="src\Stream\FileReader.cpp" />
     <ClCompile Include="src\Stream\FileWriter.cpp" />
     <ClCompile Include="src\Stream\MemoryWriter.cpp" />
