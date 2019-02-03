@@ -25,14 +25,14 @@ namespace Stream
 		if (sliceLength > std::numeric_limits<decltype(startingOffset)>::max() - startingOffset) {
 			throw std::runtime_error(
 				"The stream slice would run past the maximum possible stream length."
-				" Source stream: " + wrappedStream.GetFilename()
+				+ IdentifySource()
 			);
 		}
 
 		if (startingOffset + sliceLength > wrappedStream.Length()) {
 			throw std::runtime_error(
 				"The stream slice would run past the end of the source stream."
-				" Source stream: " + wrappedStream.GetFilename()
+				+ IdentifySource()
 			);
 		}
 
@@ -44,7 +44,7 @@ namespace Stream
 		if (wrappedStream.Position() + size > startingOffset + sliceLength) {
 			throw std::runtime_error(
 				"Stream Read request extends beyond the bounds of the stream slice."
-				" Source stream: " + wrappedStream.GetFilename()
+				+ IdentifySource()
 			);
 		}
 
@@ -74,7 +74,7 @@ namespace Stream
 		if (position > sliceLength) {
 			throw std::runtime_error(
 				"Seek to absolute offset of " + std::to_string(position) + " is beyond the bounds of the stream slice."
-				" Source stream: " + wrappedStream.GetFilename()
+				+ IdentifySource()
 			);
 		}
 
@@ -87,7 +87,7 @@ namespace Stream
 		{
 			throw std::runtime_error(
 				"Seek forward by offset of " + std::to_string(offset) + " is beyond the bounds of the stream slice."
-				" Source stream: " + wrappedStream.GetFilename()
+				+ IdentifySource()
 			);
 		}
 
@@ -99,7 +99,7 @@ namespace Stream
 		if (Position() - offset < startingOffset) {
 			throw std::runtime_error(
 				"Seek backward by offset of " + std::to_string(offset) + " is beyond the bounds of the stream slice."
-				" Source stream: " + wrappedStream.GetFilename()
+				+ IdentifySource()
 			);
 		}
 
@@ -124,7 +124,7 @@ namespace Stream
 		) {
 			throw std::runtime_error(
 				"Requested stream slice exceeds the bounds of current stream slice."
-				" Source stream: " + wrappedStream.GetFilename()
+				+ IdentifySource()
 			);
 		}
 

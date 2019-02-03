@@ -36,6 +36,10 @@ namespace Stream
 	protected:
 		void ReadImplementation(void* buffer, std::size_t size) override;
 
+		std::string IdentifySource() const {
+			return " Source stream: " + wrappedStream.GetFilename();
+		}
+
 	private:
 		void Initialize();
 
