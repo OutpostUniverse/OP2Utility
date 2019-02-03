@@ -9,6 +9,13 @@ namespace Stream
 		startingOffset(startingOffset),
 		sliceLength(sliceLength)
 	{
+		if (sliceLength > std::numeric_limits<decltype(startingOffset)>::max() - startingOffset) {
+			throw std::runtime_error(
+				"The stream slice would run past the maximum possible stream length."
+				+ IdentifySource()
+			);
+		}
+
 		Initialize();
 	}
 
@@ -22,13 +29,6 @@ namespace Stream
 
 	void FileSliceReader::Initialize()
 	{
-		if (sliceLength > std::numeric_limits<decltype(startingOffset)>::max() - startingOffset) {
-			throw std::runtime_error(
-				"The stream slice would run past the maximum possible stream length."
-				+ IdentifySource()
-			);
-		}
-
 		if (startingOffset + sliceLength > wrappedStream.Length()) {
 			throw std::runtime_error(
 				"The stream slice would run past the end of the source stream."
