@@ -108,7 +108,7 @@ namespace Stream
 
 	FileSliceReader FileSliceReader::Slice(uint64_t sliceLength)
 	{
-		FileSliceReader slice = Slice(startingOffset + Position(), sliceLength);
+		FileSliceReader slice = Slice(wrappedStream.Position(), sliceLength);
 
 		// Wait until slice is successfully created before seeking forward.
 		SeekForward(sliceLength);
