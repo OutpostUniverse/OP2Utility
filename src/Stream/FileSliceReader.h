@@ -9,14 +9,16 @@
 
 namespace Stream
 {
-	// Opens a new file stream that is limited to reading from the provided file slice.
-	class FileSliceReader : public BidirectionalSeekableReader
+	// Creates a stream which is a slice of an existing stream.
+	// Access is bounds checked according to the slice parameters.
+	// The underlying stream must be copy constructible, so that an independent stream can be created.
+	template<class WrappedStreamType>
+	class StreamSlice : public BidirectionalSeekableReader
 	{
-		using WrappedStreamType = FileReader;
-
 	public:
 
-		FileSliceReader(const WrappedStreamType& wrappedStream, uint64_t startingOffset, uint64_t sliceLength) :
+		// Creates a new independent stream which is a slice of an existing stream.
+		StreamSlice(const WrappedStreamType& wrappedStream, uint64_t startingOffset, uint64_t sliceLength) :
 			wrappedStream(wrappedStream),
 			startingOffset(startingOffset),
 			sliceLength(sliceLength)
@@ -31,7 +33,9 @@ namespace Stream
 			Initialize();
 		}
 
-		FileSliceReader(const FileSliceReader& fileSliceReader) :
+		// Copy constructor taking an existing stream slice
+		// Generates a new identical slice with its own independent stream position
+		StreamSlice(const StreamSlice& fileSliceReader) :
 			wrappedStream(fileSliceReader.wrappedStream),
 			startingOffset(fileSliceReader.startingOffset),
 			sliceLength(fileSliceReader.sliceLength)
@@ -93,8 +97,8 @@ namespace Stream
 		}
 
 
-		FileSliceReader Slice(uint64_t sliceLength) {
-			FileSliceReader slice = Slice(Position(), sliceLength);
+		StreamSlice<WrappedStreamType> Slice(uint64_t sliceLength) {
+			auto slice = Slice(Position(), sliceLength);
 
 			// Wait until slice is successfully created before seeking forward.
 			SeekForward(sliceLength);
@@ -102,7 +106,7 @@ namespace Stream
 			return slice;
 		}
 
-		FileSliceReader Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const {
+		StreamSlice<WrappedStreamType> Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const {
 			if (
 				sliceStartPosition + sliceLength > this->sliceLength ||
 				sliceLength > std::numeric_limits<decltype(sliceStartPosition)>::max() - sliceStartPosition
@@ -113,7 +117,7 @@ namespace Stream
 				);
 			}
 
-			return FileSliceReader(wrappedStream, this->startingOffset + sliceStartPosition, sliceLength);
+			return StreamSlice(wrappedStream, this->startingOffset + sliceStartPosition, sliceLength);
 		}
 
 		inline const std::string& GetFilename() const {
@@ -157,4 +161,8 @@ namespace Stream
 		const uint64_t startingOffset;
 		const uint64_t sliceLength;
 	};
+
+
+	// Create alias for old name
+	using FileSliceReader = StreamSlice<FileReader>;
 }
