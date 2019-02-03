@@ -50,7 +50,27 @@ TEST(FileSliceReader, SliceOfSliceIsBoundsChecked) {
 	EXPECT_THROW(slice.Slice(slice.Length(), 1), std::runtime_error);
 }
 
-TEST(FileSliceReader, SliceOfSliceMatchesCorrectOffset) {
+TEST(FileSliceReader, SliceOfSliceMatchesCorrectOffset1) {
+	Stream::FileReader stream("Stream/data/SimpleStream.txt");
+	stream.Seek(1);
+	auto slice1 = stream.Slice(stream.Length() - 2);
+	slice1.Seek(1);
+	auto slice2 = slice1.Slice(slice1.Length() - 2);
+
+	stream.Seek(2);
+	slice1.Seek(1);
+
+	char data, data1, data2;
+	stream.Read(data);
+	slice1.Read(data1);
+	slice2.Read(data2);
+
+	// Reads through different slices at corresponding offsets should match up
+	EXPECT_EQ(data, data1);
+	EXPECT_EQ(data, data2);
+}
+
+TEST(FileSliceReader, SliceOfSliceMatchesCorrectOffset2) {
 	Stream::FileReader stream("Stream/data/SimpleStream.txt");
 	auto slice1 = stream.Slice(1, stream.Length() - 2);
 	auto slice2 = slice1.Slice(1, slice1.Length() - 2);
@@ -63,6 +83,7 @@ TEST(FileSliceReader, SliceOfSliceMatchesCorrectOffset) {
 	slice1.Read(data1);
 	slice2.Read(data2);
 
+	// Reads through different slices at corresponding offsets should match up
 	EXPECT_EQ(data, data1);
 	EXPECT_EQ(data, data2);
 }
