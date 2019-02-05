@@ -90,7 +90,7 @@ namespace Archive
 			indexEntry.dataOffset,
 			indexEntry.dataLength);
 
-		return std::make_unique<Stream::FileSliceReader>(slice);
+		return std::make_unique<Stream::ReaderSlice>(slice);
 	}
 
 	// Repacks the volume using the same files as are specified by the internal file names

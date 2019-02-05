@@ -80,9 +80,9 @@ namespace Stream
 		file.seekg(Position() - offset);
 	}
 
-	FileSliceReader FileReader::Slice(uint64_t sliceLength)
+	ReaderSlice FileReader::Slice(uint64_t sliceLength)
 	{
-		FileSliceReader slice = Slice(Position(), sliceLength);
+		ReaderSlice slice = Slice(Position(), sliceLength);
 
 		// Wait until slice is successfully created before seeking forward.
 		SeekForward(sliceLength);
@@ -90,7 +90,7 @@ namespace Stream
 		return slice;
 	}
 
-	FileSliceReader FileReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const {
-		return FileSliceReader(filename, sliceStartPosition, sliceLength);
+	ReaderSlice FileReader::Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const {
+		return ReaderSlice(filename, sliceStartPosition, sliceLength);
 	}
 }

@@ -32,7 +32,7 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 	BitmapFile::WriteIndexed(filenameOut, imageMeta.GetBitCount(), imageMeta.width, -static_cast<int32_t>(imageMeta.height), palette, pixelContainer);
 }
 
-std::unique_ptr<Stream::FileSliceReader> OP2BmpLoader::GetPixels(std::size_t startingIndex, std::size_t length)
+std::unique_ptr<Stream::ReaderSlice> OP2BmpLoader::GetPixels(std::size_t startingIndex, std::size_t length)
 {
-	return std::make_unique<Stream::FileSliceReader>(bmpReader.Slice(startingIndex, length));
+	return std::make_unique<Stream::ReaderSlice>(bmpReader.Slice(startingIndex, length));
 }

@@ -10,7 +10,7 @@ namespace Stream
 {
 	class FileReader;
 	template <class WrappedStreamType> class StreamSlice;
-	using FileSliceReader = StreamSlice<FileReader>;
+	using ReaderSlice = StreamSlice<FileReader>;
 
 	class FileReader : public BidirectionalSeekableReader {
 	public:
@@ -30,10 +30,10 @@ namespace Stream
 
 		// Create a slice of the stream for independent processing. Starts at current position of stream.
 		// Seeks parent stream forward the slice's length if creation is successful.
-		FileSliceReader Slice(uint64_t sliceLength);
+		ReaderSlice Slice(uint64_t sliceLength);
 
 		// Create a slice of the stream for independent processing.
-		FileSliceReader Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const;
+		ReaderSlice Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const;
 
 		inline const std::string& GetFilename() const {
 			return filename;

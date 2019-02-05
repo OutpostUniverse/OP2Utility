@@ -164,5 +164,5 @@ namespace Stream
 
 
 	// Create alias for old name
-	using FileSliceReader = StreamSlice<FileReader>;
+	using ReaderSlice = StreamSlice<FileReader>;
 }

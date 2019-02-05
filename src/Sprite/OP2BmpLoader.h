@@ -20,5 +20,5 @@ private:
 	Stream::FileReader bmpReader;
 	ArtFile artFile;
 
-	std::unique_ptr<Stream::FileSliceReader> GetPixels(std::size_t startingIndex, std::size_t length);
+	std::unique_ptr<Stream::ReaderSlice> GetPixels(std::size_t startingIndex, std::size_t length);
 };
