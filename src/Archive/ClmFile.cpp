@@ -1,5 +1,5 @@
 #include "ClmFile.h"
-#include "../Stream/FileSliceReader.h"
+#include "../Stream/ReaderSlice.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>

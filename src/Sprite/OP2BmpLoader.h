@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ArtFile.h"
-#include "../Stream/FileSliceReader.h"
+#include "../Stream/ReaderSlice.h"
 #include <memory>
 #include <string>
 #include <cstddef>
