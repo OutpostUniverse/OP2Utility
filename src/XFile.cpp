@@ -178,7 +178,11 @@ std::string XFile::GetDirectory(const std::string& pathStr)
 	}
 
 	fs::path p(pathStr);
-	return p.parent_path().generic_string() + "/";
+	auto returnPathStr = p.parent_path().generic_string();
+	if (returnPathStr.size() > 0) {
+		returnPathStr += "/";
+	}
+	return returnPathStr;
 }
 
 void XFile::DeletePath(const std::string& pathStr)
