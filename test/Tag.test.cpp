@@ -1,5 +1,6 @@
 #include "../src/Tag.h"
 #include <gtest/gtest.h>
+#include <sstream>
 
 
 TEST(Tag, RemoveLastElement) {
