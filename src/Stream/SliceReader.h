@@ -161,8 +161,4 @@ namespace Stream
 		const uint64_t startingOffset;
 		const uint64_t sliceLength;
 	};
-
-
-	// Create alias for old name
-	using FileSliceReader = SliceReader<FileReader>;
 }
