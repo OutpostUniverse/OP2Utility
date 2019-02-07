@@ -1,8 +1,10 @@
 #include "PaletteHeader.h"
 
-constexpr auto PaletteHeader::TagSection = MakeTag("PPAL");
-constexpr auto PaletteHeader::TagHeader = MakeTag("head");
-constexpr auto PaletteHeader::TagData = MakeTag("data");
+
+constexpr auto TagSection = MakeTag("PPAL");
+constexpr auto TagHeader = MakeTag("head");
+constexpr auto TagData = MakeTag("data");
+
 
 PaletteHeader::PaletteHeader() : remainingTagCount(0) {}
 

@@ -21,11 +21,6 @@ struct PaletteHeader {
 	SectionHeader dataHeader;
 
 	void Validate();
-
-private:
-	static const Tag TagSection;
-	static const Tag TagHeader;
-	static const Tag TagData;
 };
 
 static_assert(4 + 3 * sizeof(SectionHeader) == sizeof(PaletteHeader), "PaletteHeader is an unexpected size");
