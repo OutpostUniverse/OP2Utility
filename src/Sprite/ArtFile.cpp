@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 
-const Tag ArtFile::TagPalette;
+constexpr Tag ArtFile::TagPalette;
 
 
 void ArtFile::VerifyImageIndexInBounds(std::size_t index)
