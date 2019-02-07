@@ -49,5 +49,5 @@ private:
 	void ValidateImageMetadata() const;
 	void CountFrames(std::size_t& frameCount, std::size_t& layerCount, std::size_t& unknownCount) const;
 
-	static const Tag TagPalette;
+	static constexpr auto TagPalette = MakeTag("CPAL");
 };

@@ -1,7 +1,9 @@
 #include "ArtFile.h"
 #include <stdexcept>
 
-constexpr auto ArtFile::TagPalette = MakeTag("CPAL");
+
+const Tag ArtFile::TagPalette;
+
 
 void ArtFile::VerifyImageIndexInBounds(std::size_t index)
 {
