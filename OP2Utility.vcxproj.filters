@@ -177,7 +177,7 @@
     <ClInclude Include="src\Map\SavedGameUnits.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\ReaderSlice.h">
+    <ClInclude Include="src\Stream\SliceReader.h">
       <Filter>Stream</Filter>
     </ClInclude>
   </ItemGroup>

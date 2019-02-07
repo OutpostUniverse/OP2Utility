@@ -1,5 +1,5 @@
 #include "FileReader.h"
-#include "ReaderSlice.h"
+#include "SliceReader.h"
 #include <stdexcept>
 
 namespace Stream

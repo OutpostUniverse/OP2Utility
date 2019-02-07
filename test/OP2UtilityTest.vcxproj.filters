@@ -55,7 +55,7 @@
     <ClCompile Include="Map\SavedGameUnits.test.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Stream\ReaderSlice.test.cpp">
+    <ClCompile Include="Stream\SliceReader.test.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include "BiDirectionalSeekableReader.test.h"
-#include "Stream/ReaderSlice.h"
+#include "Stream/SliceReader.h"
 
 template <>
 Stream::FileSliceReader CreateSeekableReader<Stream::FileSliceReader>() {
