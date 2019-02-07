@@ -64,7 +64,7 @@ namespace Archive
 	{
 		SectionHeader sectionHeader = GetSectionHeader(index);
 
-		return std::make_unique<Stream::ReaderSlice>(archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length)));
+		return std::make_unique<Stream::FileSliceReader>(archiveFileReader.Slice(archiveFileReader.Position(), static_cast<uint64_t>(sectionHeader.length)));
 	}
 
 	VolFile::SectionHeader VolFile::GetSectionHeader(std::size_t index)

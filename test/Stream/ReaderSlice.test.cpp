@@ -2,15 +2,15 @@
 #include "Stream/ReaderSlice.h"
 
 template <>
-Stream::ReaderSlice CreateSeekableReader<Stream::ReaderSlice>() {
+Stream::FileSliceReader CreateSeekableReader<Stream::FileSliceReader>() {
 	Stream::FileReader fileReader("Stream/data/SimpleStream.txt");
 	return fileReader.Slice(5);
 }
 
-INSTANTIATE_TYPED_TEST_CASE_P(ReaderSlice, SimpleSeekableReader, Stream::ReaderSlice);
+INSTANTIATE_TYPED_TEST_CASE_P(FileSliceReader, SimpleSeekableReader, Stream::FileSliceReader);
 
 
-TEST(ReaderSlice, SliceIsBoundsChecked) {
+TEST(FileSliceReader, SliceIsBoundsChecked) {
 	Stream::FileReader stream("Stream/data/SimpleStream.txt");
 
 	// Proects against overflow of the stream position
@@ -23,7 +23,7 @@ TEST(ReaderSlice, SliceIsBoundsChecked) {
 	EXPECT_THROW(stream.Slice(stream.Length(), 1), std::runtime_error);
 }
 
-TEST(ReaderSlice, SliceCanBeSliced) {
+TEST(FileSliceReader, SliceCanBeSliced) {
 	Stream::FileReader stream("Stream/data/SimpleStream.txt");
 	auto slice = stream.Slice(1, stream.Length() - 2);
 
@@ -40,7 +40,7 @@ TEST(ReaderSlice, SliceCanBeSliced) {
 	EXPECT_NO_THROW(slice.Slice(1, slice.Length() - 2));  // Chop both sides
 }
 
-TEST(ReaderSlice, SliceOfSliceIsBoundsChecked) {
+TEST(FileSliceReader, SliceOfSliceIsBoundsChecked) {
 	Stream::FileReader stream("Stream/data/SimpleStream.txt");
 	auto slice = stream.Slice(1, stream.Length() - 2);
 
@@ -50,7 +50,7 @@ TEST(ReaderSlice, SliceOfSliceIsBoundsChecked) {
 	EXPECT_THROW(slice.Slice(slice.Length(), 1), std::runtime_error);
 }
 
-TEST(ReaderSlice, SliceOfSliceMatchesCorrectOffset1Param) {
+TEST(FileSliceReader, SliceOfSliceMatchesCorrectOffset1Param) {
 	Stream::FileReader stream("Stream/data/SimpleStream.txt");
 	stream.Seek(1);
 	auto slice1 = stream.Slice(stream.Length() - 2);
@@ -70,7 +70,7 @@ TEST(ReaderSlice, SliceOfSliceMatchesCorrectOffset1Param) {
 	EXPECT_EQ(data, data2);
 }
 
-TEST(ReaderSlice, SliceOfSliceMatchesCorrectOffset2Param) {
+TEST(FileSliceReader, SliceOfSliceMatchesCorrectOffset2Param) {
 	Stream::FileReader stream("Stream/data/SimpleStream.txt");
 	auto slice1 = stream.Slice(1, stream.Length() - 2);
 	auto slice2 = slice1.Slice(1, slice1.Length() - 2);
