@@ -23,6 +23,11 @@ TEST(XFileGetDirectory, EmptyPath) {
 	EXPECT_EQ("", XFile::GetDirectory(""));
 }
 
+TEST(XFileGetDirectory, OnlyFile) {
+	EXPECT_EQ("", XFile::GetDirectory("file.ext"));
+	EXPECT_EQ("", XFile::GetDirectory(".ext"));
+}
+
 TEST(XFileGetDirectory, RelativePathToFile) {
 	EXPECT_EQ("a/", XFile::GetDirectory("a/file.ext"));
 	EXPECT_EQ("a/b/", XFile::GetDirectory("a/b/file.ext"));
