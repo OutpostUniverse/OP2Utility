@@ -1,14 +1,15 @@
 #pragma once
 
+#include "../Tag.h"
 #include <array>
 #include <cstdint>
 
 namespace Archive
 {
-	const std::array<char, 4> tagRIFF{ 'R', 'I', 'F', 'F' };
-	const std::array<char, 4> tagWAVE{ 'W', 'A', 'V', 'E' };
-	const std::array<char, 4> tagFMT_{ 'f', 'm', 't', ' ' };
-	const std::array<char, 4> tagDATA{ 'd', 'a', 't', 'a' };
+	constexpr auto tagRIFF = MakeTag("RIFF");
+	constexpr auto tagWAVE = MakeTag("WAVE");
+	constexpr auto tagFMT_ = MakeTag("fmt ");
+	constexpr auto tagDATA = MakeTag("data");
 
 #pragma pack(push, 1)
 
@@ -32,16 +33,16 @@ namespace Archive
 
 	struct RiffHeader
 	{
-		std::array<char, 4> riffTag;
+		Tag riffTag;
 		uint32_t chunkSize;
-		std::array<char, 4> waveTag;
+		Tag waveTag;
 	};
 
 	static_assert(12 == sizeof(RiffHeader), "RiffHeader is an unexpected size");
 
 	struct FormatChunk
 	{
-		std::array<char, 4> fmtTag;
+		Tag fmtTag;
 		uint32_t formatSize;
 		WaveFormatEx waveFormat;
 	};
@@ -50,7 +51,7 @@ namespace Archive
 
 	struct ChunkHeader
 	{
-		std::array<char, 4> formatTag;
+		Tag formatTag;
 		uint32_t length;
 	};
 

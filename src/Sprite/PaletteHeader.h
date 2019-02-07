@@ -23,9 +23,9 @@ struct PaletteHeader {
 	void Validate();
 
 private:
-	static const std::array<char, 4> TagSection;
-	static const std::array<char, 4> TagHeader;
-	static const std::array<char, 4> TagData;
+	static const Tag TagSection;
+	static const Tag TagHeader;
+	static const Tag TagData;
 };
 
 static_assert(4 + 3 * sizeof(SectionHeader) == sizeof(PaletteHeader), "PaletteHeader is an unexpected size");

@@ -3,6 +3,7 @@
 #include "ImageMeta.h"
 #include "Animation.h"
 #include "../Bitmap/Color.h"
+#include "../Tag.h"
 #include <vector>
 #include <array>
 #include <string>
@@ -48,5 +49,5 @@ private:
 	void ValidateImageMetadata() const;
 	void CountFrames(std::size_t& frameCount, std::size_t& layerCount, std::size_t& unknownCount) const;
 
-	static const std::array<char, 4> TagPalette;
+	static const Tag TagPalette;
 };

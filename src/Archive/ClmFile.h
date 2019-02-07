@@ -2,6 +2,7 @@
 
 #include "WaveFile.h"
 #include "ArchiveFile.h"
+#include "../Tag.h"
 #include "../Stream/FileReader.h"
 #include "../Stream/FileWriter.h"
 #include <cstdint>
@@ -67,7 +68,7 @@ namespace Archive
 
 		// Private functions for packing files
 		static void ReadAllWaveHeaders(std::vector<std::unique_ptr<Stream::FileReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
-		static uint32_t FindChunk(std::array<char, 4> chunkTag, Stream::BidirectionalSeekableReader& seekableStreamReader);
+		static uint32_t FindChunk(Tag chunkTag, Stream::BidirectionalSeekableReader& seekableStreamReader);
 		static void CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormatsconst, const std::vector<std::string>& filesToPack);
 		static void WriteArchive(const std::string& archiveFilename, const std::vector<std::unique_ptr<Stream::FileReader>>& filesToPackReaders,
 			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& names, const WaveFormatEx& waveFormat);

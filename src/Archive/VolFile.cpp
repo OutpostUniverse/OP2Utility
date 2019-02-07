@@ -9,11 +9,11 @@
 namespace Archive
 {
 	// Volume section header tags
-	const std::array<char, 4> TagVOL_{ 'V', 'O', 'L', ' ' }; // Volume file tag
-	const std::array<char, 4> TagVOLH{ 'v', 'o', 'l', 'h' }; // Header tag
-	const std::array<char, 4> TagVOLS{ 'v', 'o', 'l', 's' }; // Filename table tag
-	const std::array<char, 4> TagVOLI{ 'v', 'o', 'l', 'i' }; // Index table tag
-	const std::array<char, 4> TagVBLK{ 'V', 'B', 'L', 'K' }; // Packed file tag
+	constexpr auto TagVOL_ = MakeTag("VOL "); // Volume file tag
+	constexpr auto TagVOLH = MakeTag("volh"); // Header tag
+	constexpr auto TagVOLS = MakeTag("vols"); // Filename table tag
+	constexpr auto TagVOLI = MakeTag("voli"); // Index table tag
+	constexpr auto TagVBLK = MakeTag("VBLK"); // Packed file tag
 
 
 	VolFile::VolFile(const std::string& filename) : ArchiveFile(filename), archiveFileReader(filename)
@@ -312,7 +312,7 @@ namespace Archive
 
 	// Reads a tag in the .vol file and returns the length of that section.
 	// If tag does not match what is in the file or if the length is invalid then an error is thrown.
-	uint32_t VolFile::ReadTag(std::array<char, 4> tagName)
+	uint32_t VolFile::ReadTag(Tag tagName)
 	{
 		SectionHeader tag;
 		archiveFileReader.Read(tag);
@@ -416,6 +416,6 @@ namespace Archive
 	}
 
 	VolFile::SectionHeader::SectionHeader() {}
-	VolFile::SectionHeader::SectionHeader(std::array<char, 4> tag, uint32_t length, VolPadding padding)
+	VolFile::SectionHeader::SectionHeader(Tag tag, uint32_t length, VolPadding padding)
 		: tag(tag), length(length), padding(padding) {}
 }
