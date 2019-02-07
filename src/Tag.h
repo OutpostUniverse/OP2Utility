@@ -24,11 +24,11 @@ constexpr std::array<Type, N - 1> RemoveLastElement(const Type (&staticArray)[N]
 using Tag = std::array<char, 4>;
 
 // Factory method to construct a Tag from a string literal
-constexpr Tag MakeTag(const char (&tagText)[5]) {
+inline constexpr Tag MakeTag(const char (&tagText)[5]) {
 	return RemoveLastElement(tagText);
 }
 
 // Helper method to allow easily printing a Tag's text
-std::ostream& operator << (std::ostream& out, const Tag tag) {
+inline std::ostream& operator << (std::ostream& out, const Tag tag) {
 	return out.write(tag.data(), tag.size());
 }
