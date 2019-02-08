@@ -22,7 +22,7 @@
 #include "../src/Bitmap/BitmapFile.h"
 
 #include "../src/Stream/FileReader.h"
-#include "../src/Stream/FileSliceReader.h"
+#include "../src/Stream/SliceReader.h"
 #include "../src/Stream/FileWriter.h"
 #include "../src/Stream/MemoryReader.h"
 #include "../src/Stream/MemoryWriter.h"

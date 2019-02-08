@@ -8,7 +8,9 @@
 
 namespace Stream
 {
-	class FileSliceReader;
+	class FileReader;
+	template <class WrappedStreamType> class SliceReader;
+	using FileSliceReader = SliceReader<FileReader>;
 
 	class FileReader : public BidirectionalSeekableReader {
 	public:

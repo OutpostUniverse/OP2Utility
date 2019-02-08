@@ -1,5 +1,5 @@
 #include "VolFile.h"
-#include "../Stream/FileSliceReader.h"
+#include "../Stream/SliceReader.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>

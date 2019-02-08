@@ -173,7 +173,6 @@
     <ClCompile Include="src\Sprite\OP2BmpLoader.cpp" />
     <ClCompile Include="src\Sprite\PaletteHeader.cpp" />
     <ClCompile Include="src\Sprite\SectionHeader.cpp" />
-    <ClCompile Include="src\Stream\FileSliceReader.cpp" />
     <ClCompile Include="src\Stream\FileReader.cpp" />
     <ClCompile Include="src\Stream\FileWriter.cpp" />
     <ClCompile Include="src\Stream\MemoryWriter.cpp" />
@@ -184,7 +183,7 @@
     <ClInclude Include="src\Sprite\OP2BmpLoader.h" />
     <ClInclude Include="src\Sprite\PaletteHeader.h" />
     <ClInclude Include="src\Sprite\SectionHeader.h" />
-    <ClInclude Include="src\Stream\FileSliceReader.h" />
+    <ClInclude Include="src\Stream\SliceReader.h" />
     <ClInclude Include="src\Stream\FileReader.h" />
     <ClInclude Include="src\Stream\FileWriter.h" />
     <ClInclude Include="src\Stream\ForwardSeekableReader.h" />

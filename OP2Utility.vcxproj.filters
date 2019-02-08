@@ -81,9 +81,6 @@
     <ClInclude Include="src\Archive\WaveFile.h">
       <Filter>Archive</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\FileSliceReader.h">
-      <Filter>Stream</Filter>
-    </ClInclude>
     <ClInclude Include="include\OP2Utility.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -180,6 +177,9 @@
     <ClInclude Include="src\Map\SavedGameUnits.h">
       <Filter>Map</Filter>
     </ClInclude>
+    <ClInclude Include="src\Stream\SliceReader.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
@@ -214,9 +214,6 @@
     </ClCompile>
     <ClCompile Include="src\Map\MapReader.cpp">
       <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Stream\FileSliceReader.cpp">
-      <Filter>Stream</Filter>
     </ClCompile>
     <ClCompile Include="src\Stream\FileReader.cpp">
       <Filter>Stream</Filter>
