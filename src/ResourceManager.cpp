@@ -10,13 +10,13 @@ using namespace Archive;
 ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 	resourceRootDir(archiveDirectory)
 {
-	auto volFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".vol");
+	auto volFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".vol");
 
 	for (const auto& volFilename : volFilenames) {
 		ArchiveFiles.push_back(std::make_unique<VolFile>(volFilename));
 	}
 
-	auto clmFilenames = XFile::GetFilesFromDirectory(archiveDirectory, ".clm");
+	auto clmFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".clm");
 
 	for (const auto& clmFilename : clmFilenames) {
 		ArchiveFiles.push_back(std::make_unique<ClmFile>(clmFilename));
@@ -53,7 +53,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& fil
 {
 	std::regex filenameRegex(filenameRegexStr, std::regex_constants::icase);
 
-	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(resourceRootDir, filenameRegex);
+	std::vector<std::string> filenames = XFile::GetFilenamesFromDirectory(resourceRootDir, filenameRegex);
 
 	if (!accessArchives) {
 		return filenames;
@@ -74,7 +74,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& fil
 
 std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::string& extension, bool accessArchives)
 {
-	std::vector<std::string> filenames = XFile::GetFilesFromDirectory(resourceRootDir, extension);
+	std::vector<std::string> filenames = XFile::GetFilenamesFromDirectory(resourceRootDir, extension);
 
 	if (!accessArchives) {
 		return filenames;

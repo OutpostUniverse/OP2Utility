@@ -75,22 +75,22 @@ std::string XFile::AppendToFilename(const std::string& filename, const std::stri
 	return newPath.string();
 }
 
-std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directory)
+std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory)
 {
 	// Brett208 6Aug17: Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
 	auto pathStr = directory.length() > 0 ? directory : "./";
 
 	std::vector<std::string> filenames;
 	for (const auto& entry : fs::directory_iterator(pathStr)) {
-		filenames.push_back(entry.path().string());
+		filenames.push_back(GetFilename(entry.path().generic_string()));
 	}
 
 	return filenames;
 }
 
-std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
+std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
 {
-	std::vector<std::string> filenames = GetFilesFromDirectory(directory);
+	std::vector<std::string> filenames = GetFilenamesFromDirectory(directory);
 
 	// Loop starts at index size - 1 and ends after index 0 executes
 	for (std::size_t i = filenames.size(); i-- > 0; )
@@ -103,9 +103,9 @@ std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directo
 	return filenames;
 }
 
-std::vector<std::string> XFile::GetFilesFromDirectory(const std::string& directory, const std::string& fileType)
+std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::string& fileType)
 {
-	std::vector<std::string> filenames = GetFilesFromDirectory(directory);
+	std::vector<std::string> filenames = GetFilenamesFromDirectory(directory);
 
 	// Loop starts at index size - 1 and ends after index 0 executes
 	for (std::size_t i = filenames.size(); i-- > 0; )
