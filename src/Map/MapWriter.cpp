@@ -8,27 +8,27 @@
 
 void Map::Write(const std::string& filename) const
 {
-	Stream::FileWriter mapWriter(filename);
-	this->Write(mapWriter);
+	Stream::FileWriter mapStream(filename);
+	this->Write(mapStream);
 }
 
-void Map::Write(Stream::Writer& streamWriter) const
+void Map::Write(Stream::Writer& mapStream) const
 {
 	const Map& map = *this;
 	MapHeader mapHeader = map.CreateHeader();
 
-	streamWriter.Write(mapHeader);
-	streamWriter.Write(map.tiles);
-	streamWriter.Write(map.clipRect);
-	WriteTilesetSources(streamWriter, map.tilesetSources);
-	streamWriter.Write("TILE SET\x1a", 10);
-	streamWriter.Write<uint32_t>(map.tileInfos);
-	streamWriter.Write<uint32_t>(map.terrainTypes);
+	mapStream.Write(mapHeader);
+	mapStream.Write(map.tiles);
+	mapStream.Write(map.clipRect);
+	WriteTilesetSources(mapStream, map.tilesetSources);
+	mapStream.Write("TILE SET\x1a", 10);
+	mapStream.Write<uint32_t>(map.tileMappings);
+	mapStream.Write<uint32_t>(map.terrainTypes);
 
-	streamWriter.Write(mapHeader.versionTag);
-	streamWriter.Write(mapHeader.versionTag);
+	mapStream.Write(mapHeader.versionTag);
+	mapStream.Write(mapHeader.versionTag);
 
-	WriteTileGroups(streamWriter, map.tileGroups);
+	WriteTileGroups(mapStream, map.tileGroups);
 }
 
 
@@ -61,46 +61,46 @@ uint32_t Map::GetWidthInTilesLog2(uint32_t widthInTiles) const
 	return Log2OfPowerOf2(widthInTiles);
 }
 
-void Map::WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources)
+void Map::WriteTilesetSources(Stream::Writer& stream, const std::vector<TilesetSource>& tilesetSources)
 {
 	for (const auto& tilesetSource : tilesetSources)
 	{
-		streamWriter.Write<uint32_t>(tilesetSource.tilesetFilename);
+		stream.Write<uint32_t>(tilesetSource.tilesetFilename);
 
 		// Only include the number of tiles if the tileset contains a filename.
 		if (tilesetSource.tilesetFilename.size() > 0)
 		{
-			streamWriter.Write(tilesetSource.numTiles);
+			stream.Write(tilesetSource.numTiles);
 		}
 	}
 }
 
-void Map::WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups)
+void Map::WriteTileGroups(Stream::Writer& stream, const std::vector<TileGroup>& tileGroups)
 {
-	WriteContainerSize(streamWriter, tileGroups.size());
+	WriteContainerSize(stream, tileGroups.size());
 	// tileGroups.size is checked to ensure it is below UINT32_MAX by previous call to WriteContainerSize.
 	// Write unknown field with best guess as to what value it should hold
 	uint32_t unknown = !tileGroups.empty() ? static_cast<uint32_t>(tileGroups.size()) - 1 : 0;
-	streamWriter.Write(unknown);
+	stream.Write(unknown);
 
 	for (const auto& tileGroup : tileGroups)
 	{
-		streamWriter.Write(tileGroup.tileWidth);
-		streamWriter.Write(tileGroup.tileHeight);
+		stream.Write(tileGroup.tileWidth);
+		stream.Write(tileGroup.tileHeight);
 
-		streamWriter.Write(tileGroup.mappingIndices);
+		stream.Write(tileGroup.mappingIndices);
 
-		streamWriter.Write<uint32_t>(tileGroup.name);
+		stream.Write<uint32_t>(tileGroup.name);
 	}
 }
 
 // Outpost 2 map files represent container sizes as 4 byte values
-void Map::WriteContainerSize(Stream::Writer& streamWriter, std::size_t size)
+void Map::WriteContainerSize(Stream::Writer& stream, std::size_t size)
 {
 	if (size > UINT32_MAX) {
 		throw std::runtime_error("Container size is too large for writing into an Outpost 2 map");
 	}
 
-	streamWriter.Write(static_cast<uint32_t>(size));
+	stream.Write(static_cast<uint32_t>(size));
 }
 	

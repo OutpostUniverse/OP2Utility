@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SeekableReader.h"
+#include "BiDirectionalSeekableReader.h"
 #include <string>
 #include <fstream>
 #include <cstddef>
@@ -8,9 +8,11 @@
 
 namespace Stream
 {
-	class FileSliceReader;
+	class FileReader;
+	template <class WrappedStreamType> class SliceReader;
+	using FileSliceReader = SliceReader<FileReader>;
 
-	class FileReader : public SeekableReader {
+	class FileReader : public BidirectionalSeekableReader {
 	public:
 		FileReader(std::string filename);
 		FileReader(const FileReader& fileStreamReader);
@@ -18,11 +20,13 @@ namespace Stream
 
 		std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
 
-		// SeekableReader methods
+		// BidirectionalSeekableReader methods
 		uint64_t Length() override;
 		uint64_t Position() override;
+
 		void Seek(uint64_t position) override;
-		void SeekRelative(int64_t offset) override;
+		void SeekForward(uint64_t offset) override;
+		void SeekBackward(uint64_t offset) override;
 
 		// Create a slice of the stream for independent processing. Starts at current position of stream.
 		// Seeks parent stream forward the slice's length if creation is successful.

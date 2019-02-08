@@ -1,5 +1,5 @@
 #include "ClmFile.h"
-#include "../Stream/FileSliceReader.h"
+#include "../Stream/SliceReader.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
@@ -81,7 +81,7 @@ namespace Archive
 		}
 	}
 
-	std::unique_ptr<Stream::SeekableReader> ClmFile::OpenStream(std::size_t index)
+	std::unique_ptr<Stream::BidirectionalSeekableReader> ClmFile::OpenStream(std::size_t index)
 	{
 		VerifyIndexInBounds(index);
 		const auto& indexEntry = indexEntries[index];
@@ -194,7 +194,7 @@ namespace Archive
 	// Searches through the wave file to find the given chunk length
 	// The current stream position is set the the first byte after the chunk header
 	// Returns the chunk length if found or -1 otherwise
-	uint32_t ClmFile::FindChunk(std::array<char, 4> chunkTag, Stream::SeekableReader& seekableStreamReader)
+	uint32_t ClmFile::FindChunk(std::array<char, 4> chunkTag, Stream::BidirectionalSeekableReader& seekableStreamReader)
 	{
 		uint64_t fileSize = seekableStreamReader.Length();
 

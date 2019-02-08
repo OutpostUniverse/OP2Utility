@@ -1,5 +1,5 @@
 #include "VolFile.h"
-#include "../Stream/FileSliceReader.h"
+#include "../Stream/SliceReader.h"
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
@@ -60,7 +60,7 @@ namespace Archive
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<Stream::SeekableReader> VolFile::OpenStream(std::size_t index)
+	std::unique_ptr<Stream::BidirectionalSeekableReader> VolFile::OpenStream(std::size_t index)
 	{
 		SectionHeader sectionHeader = GetSectionHeader(index);
 
@@ -398,7 +398,7 @@ namespace Archive
 		m_StringTable.erase(m_StringTable.begin() + m_StringTable.size() - 1);
 
 		// Seek to the end of padding at end of StringTable
-		archiveFileReader.SeekRelative(m_StringTableLength - actualStringTableLength - 4);
+		archiveFileReader.SeekForward(m_StringTableLength - actualStringTableLength - 4);
 	}
 
 	void VolFile::CountValidEntries()

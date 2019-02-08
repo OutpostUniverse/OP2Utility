@@ -6,7 +6,7 @@
 #include <cstdint>
 
 namespace Stream {
-	class SeekableReader;
+	class BidirectionalSeekableReader;
 }
 
 #pragma pack(push, 1) // Make sure structures are byte aligned

@@ -5,14 +5,13 @@
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 // Outpost 2 Tile metadata. Implemented as a Bitfield structure (32 bits total)
-struct TileData
+struct Tile
 {
 	// Determines movement speed of tile, or if tile is bulldozed, walled, tubed, or has rubble.
 	CellType cellType : 5;
 
-	// The tile's associated index in the TileInfo array.
-	// TileInfo lists general properties associated with a tile.
-	unsigned int tileIndex : 11;
+	// TileMapping lists graphics and animation properties associated with a tile.
+	unsigned int tileMappingIndex : 11;
 
 	// Index of the unit that occupies the tile.
 	int unitIndex : 11;
@@ -33,6 +32,6 @@ struct TileData
 	int bWallOrBuilding : 1;
 };
 
-static_assert(4 == sizeof(TileData), "TileData is an unexpected size");
+static_assert(4 == sizeof(Tile), "Tile is an unexpected size");
 
 #pragma pack(pop)

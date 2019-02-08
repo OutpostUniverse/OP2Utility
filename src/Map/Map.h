@@ -1,8 +1,8 @@
 #pragma once
 
-#include "TileData.h"
+#include "Tile.h"
 #include "TilesetSource.h"
-#include "TileInfo.h"
+#include "TileMapping.h"
 #include "TerrainType.h"
 #include "../Rect.h"
 #include "TileGroup.h"
@@ -18,7 +18,7 @@ struct MapHeader;
 namespace Stream {
 	class Writer;
 	class Reader;
-	class SeekableReader;
+	class BidirectionalSeekableReader;
 }
 
 // FILE FORMAT DOCUMENTATION:
@@ -34,12 +34,12 @@ public:
 	Map();
 
 	static Map ReadMap(std::string filename);
-	static Map ReadMap(Stream::Reader& seekableReader);
+	static Map ReadMap(Stream::Reader& mapStream);
 	static Map ReadSavedGame(std::string filename);
-	static Map ReadSavedGame(Stream::SeekableReader& seekableReader);
+	static Map ReadSavedGame(Stream::BidirectionalSeekableReader& savedGameStream);
 
 	void Write(const std::string& filename) const;
-	void Write(Stream::Writer& mapStream) const;
+	void Write(Stream::Writer& streamWriter) const;
 
 	inline void SetVersionTag(int32_t versionTag) { this->versionTag = versionTag; };
 	inline int32_t GetVersionTag() const { return versionTag; };
@@ -54,7 +54,7 @@ public:
 	};
 
 	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
-	std::vector<TileData> tiles;
+	std::vector<Tile> tiles;
 
 	// Represents playable area of the map.
 	Rect clipRect;
@@ -63,7 +63,7 @@ public:
 	std::vector<TilesetSource> tilesetSources;
 
 	// Metadata about each available tile from the tile set sources.
-	std::vector<TileInfo> tileInfos;
+	std::vector<TileMapping> tileMappings;
 
 	// Listing of properties grouped by terrain type. Properties apply to a given range of tiles.
 	std::vector<TerrainType> terrainTypes;
@@ -71,11 +71,13 @@ public:
 	std::vector<TileGroup> tileGroups;
 
 public:
-	std::size_t GetTileInfoIndex(std::size_t x, std::size_t y) const;
+	std::size_t GetTileMappingIndex(std::size_t x, std::size_t y) const;
 	CellType GetCellType(std::size_t x, std::size_t y) const;
 	bool GetLavaPossible(std::size_t x, std::size_t y) const;
 	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
 	std::size_t GetImageIndex(std::size_t x, std::size_t y) const;
+
+	static void CheckMinVersionTag(uint32_t versionTag);
 
 	void TrimTilesetSources();
 
@@ -90,15 +92,17 @@ private:
 	// Write
 	MapHeader CreateHeader() const;
 	uint32_t GetWidthInTilesLog2(uint32_t widthInTiles) const;
-	static void WriteTilesetSources(Stream::Writer& streamWriter, const std::vector<TilesetSource>& tilesetSources);
-	static void WriteTileGroups(Stream::Writer& streamWriter, const std::vector<TileGroup>& tileGroups);
-	static void WriteContainerSize(Stream::Writer& streamWriter, std::size_t size);
+	static void WriteTilesetSources(Stream::Writer& stream, const std::vector<TilesetSource>& tilesetSources);
+	static void WriteTileGroups(Stream::Writer& stream, const std::vector<TileGroup>& tileGroups);
+	static void WriteContainerSize(Stream::Writer& stream, std::size_t size);
 
 	// Read
-	static void SkipSaveGameHeader(Stream::SeekableReader& streamReader);
-	static void ReadTilesetSources(Stream::Reader& streamReader, Map& map, std::size_t tilesetCount);
-	static void ReadTilesetHeader(Stream::Reader& streamReader);
-	static void ReadVersionTag(Stream::Reader& streamReader);
-	static void ReadTileGroups(Stream::Reader& streamReader, Map& map);
-	static TileGroup ReadTileGroup(Stream::Reader& streamReader);
+	static Map ReadMapBeginning(Stream::Reader& stream);
+	static void SkipSaveGameHeader(Stream::BidirectionalSeekableReader& stream);
+	static void ReadTilesetSources(Stream::Reader& stream, Map& map, std::size_t tilesetCount);
+	static void ReadTilesetHeader(Stream::Reader& stream);
+	static void ReadVersionTag(Stream::Reader& stream, uint32_t lastVersionTag);
+	static void ReadSavedGameUnits(Stream::BidirectionalSeekableReader& stream);
+	static void ReadTileGroups(Stream::Reader& stream, Map& map);
+	static TileGroup ReadTileGroup(Stream::Reader& stream);
 };
