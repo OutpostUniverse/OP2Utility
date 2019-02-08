@@ -32,6 +32,8 @@ namespace XFile
 
 	bool PathExists(const std::string& pathStr);
 
+	std::string Append(const std::string& path1, const std::string& relativePath2);
+
 	// Adds a string to the end of the filenameStr, but before the file's extension.
 	std::string AppendToFilename(const std::string& filename, const std::string& valueToAppend);
 
