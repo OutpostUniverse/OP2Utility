@@ -33,6 +33,7 @@ TEST(Tag, Properties) {
 
 	// Assignable
 	EXPECT_TRUE((std::is_assignable<Tag, Tag>::value));
+	EXPECT_TRUE((std::is_assignable<Tag, const char[5]>::value));
 }
 
 TEST(Tag, MakeTag) {
@@ -43,6 +44,10 @@ TEST(Tag, MakeTag) {
 	// Equality and inequality comparable
 	EXPECT_EQ(tag1, tag2);
 	EXPECT_NE(tag1, tag3);
+
+	// Convertible to std::string
+	std::string string = tag1;
+	EXPECT_EQ("VOL ", string);
 
 	// Concatenation with string literals
 	std::string appendString1 = "String literal: " + tag1;
