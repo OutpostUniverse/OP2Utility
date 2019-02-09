@@ -58,6 +58,7 @@
     <ClCompile Include="Map\SavedGameUnits.test.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="Tag.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

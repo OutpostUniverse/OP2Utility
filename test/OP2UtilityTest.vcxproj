@@ -61,6 +61,7 @@
     <ClCompile Include="Stream\FileSliceReader.test.cpp" />
     <ClCompile Include="Stream\FileWriter.test.cpp" />
     <ClCompile Include="Stream\MemoryStreamReader.test.cpp" />
+    <ClCompile Include="Tag.test.cpp" />
     <ClCompile Include="XFile.test.cpp" />
   </ItemGroup>
   <ItemGroup>
