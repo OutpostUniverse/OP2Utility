@@ -1,6 +1,7 @@
 #include "../src/Tag.h"
 #include <gtest/gtest.h>
 #include <sstream>
+#include <type_traits>
 
 
 TEST(Tag, RemoveLastElement) {
@@ -16,13 +17,25 @@ TEST(Tag, RemoveLastElement) {
 	EXPECT_EQ(6, RemoveLastElement(U"UTF-32").size());
 }
 
+TEST(Tag, Properties) {
+	// Proper size
+	EXPECT_EQ(4, sizeof(Tag));
+
+	// Tags can be memcopied
+	EXPECT_TRUE(std::is_trivially_copyable<Tag>::value);
+
+	// Default constructible (can be declared or embedded in a struct without initialization)
+	// Example:  Tag defaultTag;
+	EXPECT_TRUE(std::is_default_constructible<Tag>::value);
+
+	// Copy constructible (copy one tag to another)
+	EXPECT_TRUE(std::is_copy_constructible<Tag>::value);
+}
+
 TEST(Tag, MakeTag) {
 	auto tag1 = MakeTag("VOL ");
 	auto tag2 = MakeTag("VOL ");
 	auto tag3 = MakeTag("volh");
-
-	// Proper size
-	EXPECT_EQ(4, sizeof(tag1));
 
 	// Equality and inequality comparable
 	EXPECT_EQ(tag1, tag2);
