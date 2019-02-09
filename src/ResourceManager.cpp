@@ -10,7 +10,9 @@ using namespace Archive;
 ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 	resourceRootDir(archiveDirectory)
 {
-	auto volFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".vol");
+	if (!XFile::IsDirectory(archiveDirectory)) {
+		throw std::runtime_error("Resource manager must be passed an archive directory.");
+	}
 
 	const auto volFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".vol");
 
