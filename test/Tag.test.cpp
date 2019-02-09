@@ -30,6 +30,9 @@ TEST(Tag, Properties) {
 
 	// Copy constructible (copy one tag to another)
 	EXPECT_TRUE(std::is_copy_constructible<Tag>::value);
+
+	// Assignable
+	EXPECT_TRUE((std::is_assignable<Tag, Tag>::value));
 }
 
 TEST(Tag, MakeTag) {
