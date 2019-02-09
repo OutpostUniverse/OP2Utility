@@ -12,6 +12,7 @@ file(GLOB SOURCE_CODE
 	"src/ResourceManager.h"
 	"src/StringHelper.cpp"
 	"src/StringHelper.h"
+	"src/Tag.h"
 	"src/XFile.cpp"
 	"src/XFile.h"
 
