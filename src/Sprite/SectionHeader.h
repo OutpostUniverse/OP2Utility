@@ -19,7 +19,7 @@ struct SectionHeader
 	void Validate(Tag tagName) const;
 
 	// Includes sectionHeader
-	inline std::size_t TotalLength() const { return length + tag.size() * sizeof(decltype(tag)::value_type); };
+	inline std::size_t TotalLength() const { return length + sizeof(tag); };
 };
 
 static_assert(8 == sizeof(SectionHeader), "SectionHeader is an unexpected size");
