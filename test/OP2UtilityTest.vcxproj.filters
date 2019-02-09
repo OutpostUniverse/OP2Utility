@@ -7,9 +7,6 @@
     <ClCompile Include="Stream\FileReader.test.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
-    <ClCompile Include="Stream\FileSliceReader.test.cpp">
-      <Filter>Stream</Filter>
-    </ClCompile>
     <ClCompile Include="Map\MapReader.test.cpp">
       <Filter>Map</Filter>
     </ClCompile>
@@ -58,7 +55,10 @@
     <ClCompile Include="Map\SavedGameUnits.test.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Tag.test.cpp" />
+    <ClCompile Include="Stream\SliceReader.test.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
+	<ClCompile Include="Tag.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

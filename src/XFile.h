@@ -20,17 +20,18 @@ namespace XFile
 
 	bool IsFile(const std::string& path);
 
-	std::vector<std::string> GetFilesFromDirectory(const std::string& directory);
-
-	std::vector<std::string> GetFilesFromDirectory(const std::string& directory, const std::string& fileType);
-
-	std::vector<std::string> GetFilesFromDirectory(const std::string& directory, const std::regex& filenameRegex);
+	// Non-recursive search of directory that returns filename only (no directory)
+	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory);
+	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::string& fileType);
+	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex);
 
 	std::string ChangeFileExtension(const std::string& filename, const std::string& newExtension);
 
 	void NewDirectory(const std::string& newPath);
 
 	bool PathExists(const std::string& pathStr);
+
+	std::string Append(const std::string& path1, const std::string& relativePath2);
 
 	// Adds a string to the end of the filenameStr, but before the file's extension.
 	std::string AppendToFilename(const std::string& filename, const std::string& valueToAppend);

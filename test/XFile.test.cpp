@@ -8,6 +8,27 @@
 #endif
 
 
+TEST(XFile, Append) {
+	EXPECT_EQ("a/b/", XFile::Append("a/", "b/"));
+	EXPECT_EQ("/a/b/", XFile::Append("/a/", "b/"));
+
+	EXPECT_EQ("C:a/b/", XFile::Append("C:a/", "b/"));
+	EXPECT_EQ("C:/a/b/", XFile::Append("C:/a/", "b/"));
+
+	// Make sure we don't try to append a path with a root component
+	EXPECT_THROW(XFile::Append("a/", "/b/"), std::runtime_error);
+	EXPECT_THROW(XFile::Append("/a/", "/b/"), std::runtime_error);
+
+#ifdef _WIN32
+	// Make sure we don't try to append a path with a root component on Windows
+	// Note: The right side paths are valid relative paths on Linux, and so are allowed there
+	EXPECT_THROW(XFile::Append("a/", "C:b/"), std::runtime_error);
+	EXPECT_THROW(XFile::Append("/a/", "C:b/"), std::runtime_error);
+	EXPECT_THROW(XFile::Append("a/", "C:/b/"), std::runtime_error);
+	EXPECT_THROW(XFile::Append("/a/", "C:/b/"), std::runtime_error);
+#endif
+}
+
 TEST(XFileReplaceFilename, ReplaceFilename) {
 	EXPECT_EQ(XFile::ReplaceFilename("./Old.map", "New.map"), "./New.map");
 	EXPECT_EQ(XFile::ReplaceFilename("Old.map", "New.map"), "New.map");
@@ -21,6 +42,11 @@ TEST(XFileReplaceFilename, ReplaceFilename) {
 
 TEST(XFileGetDirectory, EmptyPath) {
 	EXPECT_EQ("", XFile::GetDirectory(""));
+}
+
+TEST(XFileGetDirectory, OnlyFile) {
+	EXPECT_EQ("", XFile::GetDirectory("file.ext"));
+	EXPECT_EQ("", XFile::GetDirectory(".ext"));
 }
 
 TEST(XFileGetDirectory, RelativePathToFile) {
@@ -58,15 +84,15 @@ TEST(XFileGetDirectory, WindowsAbsolutePathToDirectory) {
 
 // Disable due to lack of Google Mock in the Windows CI environment
 #ifndef _WIN32
-TEST(XFileGetFilesFromDirectory, EmptyPath) {
-	EXPECT_THAT(XFile::GetFilesFromDirectory(""), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilesFromDirectory("", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilesFromDirectory("", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+TEST(XFileGetFilenamesFromDirectory, EmptyPath) {
+	EXPECT_THAT(XFile::GetFilenamesFromDirectory(""), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilenamesFromDirectory("", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilenamesFromDirectory("", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 }
 
-TEST(XFileGetFilesFromDirectory, ExplicitCurrentDirectory) {
-	EXPECT_THAT(XFile::GetFilesFromDirectory("./"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilesFromDirectory("./", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilesFromDirectory("./", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+TEST(XFileGetFilenamesFromDirectory, ExplicitCurrentDirectory) {
+	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 }
 #endif
