@@ -81,7 +81,12 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 	auto pathStr = directory.length() > 0 ? directory : "./";
 
 	std::vector<std::string> filenames;
-	for (const auto& entry : fs::directory_iterator(pathStr)) {
+	for (const auto& entry : fs::directory_iterator(pathStr)) 
+	{
+		if (!is_regular_file(entry.path())) {
+			continue;
+		}
+
 		filenames.push_back(GetFilename(entry.path().generic_string()));
 	}
 
