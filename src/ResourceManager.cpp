@@ -12,11 +12,13 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 {
 	auto volFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".vol");
 
+	const auto volFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".vol");
+
 	for (const auto& volFilename : volFilenames) {
 		ArchiveFiles.push_back(std::make_unique<VolFile>(volFilename));
 	}
 
-	auto clmFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".clm");
+	const auto clmFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".clm");
 
 	for (const auto& clmFilename : clmFilenames) {
 		ArchiveFiles.push_back(std::make_unique<ClmFile>(clmFilename));
