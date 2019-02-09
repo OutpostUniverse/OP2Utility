@@ -28,6 +28,14 @@ TEST(Tag, MakeTag) {
 	EXPECT_EQ(tag1, tag2);
 	EXPECT_NE(tag1, tag3);
 
+	// Concatenation with string literals
+	std::string appendString1 = "String literal: " + tag1;
+	EXPECT_EQ("String literal: VOL ", appendString1);
+
+	// Concatenation with std::string
+	std::string appendString2 = std::string("std::string: ") + tag1;
+	EXPECT_EQ("std::string: VOL ", appendString2);
+
 	// Printable with standard serialization
 	std::ostringstream stream;
 	stream << tag1;

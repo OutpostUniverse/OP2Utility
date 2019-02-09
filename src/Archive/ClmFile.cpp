@@ -222,7 +222,7 @@ namespace Archive
 			seekableStreamReader.Seek(currentPosition);
 		} while (currentPosition < fileSize);
 
-		throw std::runtime_error("Unable to find the tag " + std::string(chunkTag.data(), chunkTag.size()));
+		throw std::runtime_error("Unable to find the tag " + chunkTag);
 	}
 
 	// Compares wave format structures in the waveFormats container

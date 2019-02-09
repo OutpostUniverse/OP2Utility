@@ -318,12 +318,12 @@ namespace Archive
 		archiveFileReader.Read(tag);
 
 		if (tag.tag != tagName) {
-			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) +
+			throw std::runtime_error("The tag " + tagName +
 				" was not found in the proper position in volume " + m_ArchiveFilename);
 		}
 
 		if (tag.padding == VolPadding::TwoByte) {
-			throw std::runtime_error("The tag " + std::string(tagName.data(), tagName.size()) +
+			throw std::runtime_error("The tag " + tagName +
 				" from volume " + m_ArchiveFilename +
 				" uses 2 byte padding, which is not supported. Only 4 byte padding is supported.");
 		}

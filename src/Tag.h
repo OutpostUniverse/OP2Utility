@@ -32,3 +32,11 @@ inline constexpr Tag MakeTag(const char (&tagText)[5]) {
 inline std::ostream& operator << (std::ostream& out, const Tag tag) {
 	return out.write(tag.data(), tag.size());
 }
+
+// Helper method to allow easily concatenating a Tag's text to strings
+inline std::string operator +(const char* string, Tag tag) {
+	return string + std::string(tag.data(), tag.size());
+}
+inline std::string operator +(const std::string& string, Tag tag) {
+	return string + std::string(tag.data(), tag.size());
+}
