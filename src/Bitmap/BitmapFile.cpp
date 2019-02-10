@@ -35,7 +35,7 @@ void BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount(uint16_t bitCount
 
 void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch() const
 {
-	BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(imageHeader.bitCount, imageHeader.width, imageHeader.height, pixels.size());
+	VerifyPixelSizeMatchesImageDimensionsWithPitch(imageHeader.bitCount, FindPitch(), imageHeader.height, pixels.size());
 }
 
 void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, std::size_t pitch, int32_t height, std::size_t pixelsWithPitchSize)
