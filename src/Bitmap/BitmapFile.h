@@ -20,7 +20,7 @@ public:
 	BmpHeader bmpHeader;
 	ImageHeader imageHeader;
 	std::vector<Color> palette;
-	std::vector<uint8_t> pixels;
+	std::vector<uint8_t> pixels; // Includes pitch
 
 	// Uses a default 4 byte pitch
 	static BitmapFile CreateDefaultIndexed(uint16_t bitCount, uint32_t width, uint32_t height);
@@ -43,6 +43,9 @@ public:
 	// @pixelsWithPitchSize: Number of pixels including padding pixels to next 4 byte boundary.
 	void VerifyPixelSizeMatchesImageDimensionsWithPitch() const;
 	static void VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, std::size_t pitch, int32_t height, std::size_t pixelsWithPitchSize);
+	
+	std::size_t FindPitch() const;
+	static std::size_t FindPitch(std::size_t width, std::size_t height, std::size_t pixelCount);
 
 	void Validate() const;
 
@@ -56,7 +59,6 @@ private:
 	static void ReadPixels(Stream::BidirectionalSeekableReader& seekableReader, BitmapFile& bitmapFile);
 
 	// Write
-	static std::size_t FindPitch(std::size_t width, std::size_t height, std::size_t pixelCount);
 	static void WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, std::size_t pitch, const std::vector<Color>& palette);
 	static void WritePixels(Stream::BidirectionalSeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount, std::size_t pitch);
 };

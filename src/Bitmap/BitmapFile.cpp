@@ -45,6 +45,26 @@ void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCoun
 	}
 }
 
+std::size_t BitmapFile::FindPitch() const
+{
+	return FindPitch(imageHeader.width, imageHeader.height, pixels.size());
+}
+
+std::size_t BitmapFile::FindPitch(std::size_t width, std::size_t height, std::size_t pixelCount)
+{
+	if (pixelCount % height != 0) {
+		throw std::runtime_error("Unable to calculate a valid pitch based on height and pixel count");
+	}
+
+	const std::size_t pitch = pixelCount / height;
+
+	if (pitch < width) {
+		throw std::runtime_error("Calculated pitch would be smaller than image pixel width");
+	}
+
+	return pitch;
+}
+
 void BitmapFile::VerifyIndexedImageForSerialization(uint16_t bitCount)
 {
 	if (!ImageHeader::IsIndexedImage(bitCount)) {

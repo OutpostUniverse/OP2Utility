@@ -36,21 +36,6 @@ void BitmapFile::WriteIndexed(Stream::BidirectionalSeekableWriter& seekableWrite
 	WritePixels(seekableWriter, indexedPixels, width, bitCount, pitch);
 }
 
-std::size_t BitmapFile::FindPitch(std::size_t width, std::size_t height, std::size_t pixelCount)
-{
-	if (pixelCount % height != 0) {
-		throw std::runtime_error("Unable to calculate a valid pitch based on height and pixel count");
-	}
-
-	const std::size_t pitch = pixelCount / height;
-
-	if (pitch < width) {
-		throw std::runtime_error("Calculated pitch would be smaller than image pixel width");
-	}
-
-	return pitch;
-}
-
 void BitmapFile::WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, std::size_t pitch, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
