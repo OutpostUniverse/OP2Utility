@@ -1,7 +1,9 @@
 #include "ArtFile.h"
 #include <stdexcept>
 
-const std::array<char, 4> ArtFile::TagPalette{ 'C', 'P', 'A', 'L' };
+
+constexpr Tag ArtFile::TagPalette;
+
 
 void ArtFile::VerifyImageIndexInBounds(std::size_t index)
 {
