@@ -15,13 +15,13 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 {
 	artFile.VerifyImageIndexInBounds(index);
 
-	ImageMeta& imageMeta = artFile.imageMetas[index];
+	const ImageMeta& imageMeta = artFile.imageMetas[index];
 
 	const auto palette = CreatePalette(imageMeta);
 
-	std::size_t pixelOffset = imageMeta.pixelDataOffset + 14 + sizeof(ImageHeader) + palette.size() * sizeof(Color);
+	const std::size_t pixelOffset = imageMeta.pixelDataOffset + 14 + sizeof(ImageHeader) + palette.size() * sizeof(Color);
 
-	auto pixels = GetPixels(pixelOffset, imageMeta.scanLineByteWidth * imageMeta.height);
+	const auto pixels = GetPixels(pixelOffset, imageMeta.scanLineByteWidth * imageMeta.height);
 
 	std::vector<uint8_t> pixelContainer(imageMeta.scanLineByteWidth * imageMeta.height);
 	(*pixels).Read(pixelContainer);
