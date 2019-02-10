@@ -18,8 +18,9 @@
 
 #include "../src/Map/Map.h"
 
-#include "../src/Sprite/ArtFile.h"
 #include "../src/Bitmap/BitmapFile.h"
+#include "../src/Sprite/ArtFile.h"
+#include "../src/Sprite/OP2BmpLoader.h"
 
 #include "../src/Stream/FileReader.h"
 #include "../src/Stream/SliceReader.h"
