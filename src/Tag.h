@@ -34,9 +34,6 @@ public:
 	// Allow construction from other Tag objects
 	constexpr Tag(const Tag& other) = default;
 
-	// Assignable
-	// Tag& operator =(const Tag& rhs) = default;
-
 	// Equality and inequality comparable
 	bool operator ==(const Tag rhs) const {
 		return text == rhs.text;
