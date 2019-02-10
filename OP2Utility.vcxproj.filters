@@ -182,7 +182,7 @@
     </ClInclude>
     <ClInclude Include="src\Tag.h">
       <Filter>Header Files</Filter>
-	</ClInclude>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">

@@ -58,7 +58,7 @@
     <ClCompile Include="Stream\SliceReader.test.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
-	<ClCompile Include="Tag.test.cpp" />
+    <ClCompile Include="Tag.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
