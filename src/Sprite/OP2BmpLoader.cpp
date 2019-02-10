@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <limits>
 
+const std::vector<Color> DefaultMonochromePalette{ Color{0, 0, 0}, Color{255, 255, 255} };
+
 OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::string artFilename) :
 	bmpReader(bmpFilename), artFile(ArtFile::Read(artFilename)) { }
 
@@ -47,8 +49,7 @@ std::vector<Color> OP2BmpLoader::CreatePalette(const ImageMeta& imageMeta) const
 	std::vector<Color> palette;
 
 	if (imageMeta.GetBitCount() == 1) {
-		palette.push_back(Color{ 0, 0, 0 });
-		palette.push_back(Color{ 255, 255, 255 });
+		return DefaultMonochromePalette;
 	}
 	else {
 		palette.resize(artFile.palettes[imageMeta.paletteIndex].size());

@@ -25,6 +25,7 @@ private:
 	// Actual palette data and range of pixels to form each image is contained in the .prt file.
 	Stream::FileReader bmpReader;
 	ArtFile artFile;
+	static const std::vector<Color> DefaultMonochromePalette;
 
 	std::vector<Color> CreatePalette(const ImageMeta& imageMeta) const;
 	std::unique_ptr<Stream::FileSliceReader> GetPixels(std::size_t startingIndex, std::size_t length);
