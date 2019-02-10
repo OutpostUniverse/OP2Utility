@@ -22,14 +22,15 @@ public:
 	std::vector<Color> palette;
 	std::vector<uint8_t> pixels;
 
+	// Uses a default 4 byte pitch
 	static BitmapFile CreateDefaultIndexed(uint16_t bitCount, uint32_t width, uint32_t height);
 
-	// BMP Reader only supports Indexed Color palettes (1, 2, and 8 bit BMPs).
+	// BMP Reader only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	static BitmapFile ReadIndexed(const std::string& filename);
 	static BitmapFile ReadIndexed(Stream::BidirectionalSeekableReader& seekableReader);
 
-	// BMP Writer only supporting Indexed Color palettes (1, 2, and 8 bit BMPs).
-	// @indexedPixels: Must include padding to fill each image row out to the next 4 byte memory border (pitch).
+	// BMP Writer only supports indexed color palettes (1, 2, and 8 bit BMPs).
+	// @indexedPixels: Must include padding to fill each image row out to the next byte memory border (pitch). 4 byte pitch is typical.
 	static void WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
 	static void WriteIndexed(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
 	static void WriteIndexed(std::string filename, const BitmapFile& bitmapFile);
