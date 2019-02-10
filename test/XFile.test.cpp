@@ -81,6 +81,13 @@ TEST(XFileGetDirectory, WindowsAbsolutePathToDirectory) {
 	EXPECT_EQ("C:/a/b/", XFile::GetDirectory("C:/a/b/"));
 }
 
+TEST(XFileGetFilenamesFromDirectory, DoesNotReturnDirectories) {
+	const auto filenames = XFile::GetFilenamesFromDirectory("");
+
+	for (const auto& filename : filenames) {
+		ASSERT_FALSE(XFile::IsDirectory(filename));
+	}
+}
 
 // Disable due to lack of Google Mock in the Windows CI environment
 #ifndef _WIN32
