@@ -11,34 +11,50 @@ void BitmapFile::WriteIndexed(std::string filename, const BitmapFile& bitmapFile
 	}
 
 	bitmapFile.Validate();
+	const auto pitch = FindPitch(bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, bitmapFile.pixels.size());
 
-	WriteIndexed(filename, bitmapFile.imageHeader.bitCount, bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, bitmapFile.palette, bitmapFile.pixels);
+	WriteIndexed(filename, bitmapFile.imageHeader.bitCount, bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, pitch, bitmapFile.palette, bitmapFile.pixels);
 }
 
-void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
+void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::size_t pitch, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
 	Stream::FileWriter fileWriter(filename);
-	WriteIndexed(fileWriter, bitCount, width, height, palette, indexedPixels);
+	WriteIndexed(fileWriter, bitCount, width, height, pitch, palette, indexedPixels);
 }
 
-void BitmapFile::WriteIndexed(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
+void BitmapFile::WriteIndexed(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::size_t pitch, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
 	VerifyIndexedImageForSerialization(bitCount);
 	VerifyIndexedPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
-	VerifyPixelSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
+	VerifyPixelSizeMatchesImageDimensionsWithPitch(bitCount, pitch, height, indexedPixels.size());
 
 	palette.resize(ImageHeader::CalcMaxIndexedPaletteSize(bitCount), DiscreteColor::Black);
 
-	WriteHeaders(seekableWriter, bitCount, width, height, palette);
+	WriteHeaders(seekableWriter, bitCount, width, height, pitch, palette);
 	seekableWriter.Write(palette);
 
-	WritePixels(seekableWriter, indexedPixels, width, bitCount);
+	WritePixels(seekableWriter, indexedPixels, width, bitCount, pitch);
 }
 
-void BitmapFile::WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
+std::size_t BitmapFile::FindPitch(std::size_t width, std::size_t height, std::size_t pixelCount)
+{
+	if (pixelCount % height != 0) {
+		throw std::runtime_error("Unable to calculate a valid pitch based on height and pixel count");
+	}
+
+	const std::size_t pitch = pixelCount / height;
+
+	if (pitch < width) {
+		throw std::runtime_error("Calculated pitch would be smaller than image pixel width");
+	}
+
+	return pitch;
+}
+
+void BitmapFile::WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, std::size_t pitch, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
-	std::size_t fileSize = pixelOffset + ImageHeader::CalculateDefaultPitch(bitCount, width) * std::abs(height);
+	std::size_t fileSize = pixelOffset + pitch * std::abs(height);
 
 	if (fileSize > UINT32_MAX) {
 		throw std::runtime_error("Bitmap size is too large to save to disk.");
@@ -51,9 +67,8 @@ void BitmapFile::WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWrite
 	seekableWriter.Write(imageHeader);
 }
 
-void BitmapFile::WritePixels(Stream::BidirectionalSeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
+void BitmapFile::WritePixels(Stream::BidirectionalSeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount, std::size_t pitch)
 {
-	const auto pitch = ImageHeader::CalculateDefaultPitch(bitCount, width);
 	const auto bytesOfPixelsPerRow = ImageHeader::CalcPixelByteWidth(bitCount, width);
 	const std::vector<uint8_t> padding(pitch - bytesOfPixelsPerRow, 0);
 

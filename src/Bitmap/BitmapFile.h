@@ -31,8 +31,8 @@ public:
 
 	// BMP Writer only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	// @indexedPixels: Must include padding to fill each image row out to the next byte memory border (pitch). 4 byte pitch is typical.
-	static void WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
-	static void WriteIndexed(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
+	static void WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::size_t pitch, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
+	static void WriteIndexed(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::size_t pitch, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
 	static void WriteIndexed(std::string filename, const BitmapFile& bitmapFile);
 
 	void VerifyIndexedPaletteSizeDoesNotExceedBitCount() const;
@@ -42,7 +42,7 @@ public:
 	// @width: Width in pixels. Do not include the pitch in width.
 	// @pixelsWithPitchSize: Number of pixels including padding pixels to next 4 byte boundary.
 	void VerifyPixelSizeMatchesImageDimensionsWithPitch() const;
-	static void VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize);
+	static void VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, std::size_t pitch, int32_t height, std::size_t pixelsWithPitchSize);
 
 	void Validate() const;
 
@@ -56,8 +56,9 @@ private:
 	static void ReadPixels(Stream::BidirectionalSeekableReader& seekableReader, BitmapFile& bitmapFile);
 
 	// Write
-	static void WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette);
-	static void WritePixels(Stream::BidirectionalSeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount);
+	static std::size_t FindPitch(std::size_t width, std::size_t height, std::size_t pixelCount);
+	static void WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, std::size_t pitch, const std::vector<Color>& palette);
+	static void WritePixels(Stream::BidirectionalSeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount, std::size_t pitch);
 };
 
 bool operator==(const BitmapFile& lhs, const BitmapFile& rhs);

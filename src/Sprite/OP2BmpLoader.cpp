@@ -31,7 +31,7 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 		throw std::runtime_error("Image height is too large to fit in standard bitmap file format.");
 	}
 
-	BitmapFile::WriteIndexed(filenameOut, imageMeta.GetBitCount(), imageMeta.width, -static_cast<int32_t>(imageMeta.height), palette, pixelContainer);
+	BitmapFile::WriteIndexed(filenameOut, imageMeta.GetBitCount(), imageMeta.width, -static_cast<int32_t>(imageMeta.height), imageMeta.scanLineByteWidth, palette, pixelContainer);
 }
 
 std::size_t OP2BmpLoader::FrameCount(std::size_t animationIndex) const {

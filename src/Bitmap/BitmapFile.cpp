@@ -38,9 +38,9 @@ void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch() const
 	BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(imageHeader.bitCount, imageHeader.width, imageHeader.height, pixels.size());
 }
 
-void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
+void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, std::size_t pitch, int32_t height, std::size_t pixelsWithPitchSize)
 {
-	if (pixelsWithPitchSize != ImageHeader::CalculateDefaultPitch(bitCount, width) * std::abs(height)) {
+	if (pixelsWithPitchSize != pitch * std::abs(height)) {
 		throw std::runtime_error("The size of pixels does not match the image's height time pitch");
 	}
 }
