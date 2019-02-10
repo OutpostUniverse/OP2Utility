@@ -10,6 +10,7 @@ class OP2BmpLoader
 {
 public:
 	OP2BmpLoader(std::string bmpFilename, std::string artFilename);
+	OP2BmpLoader(std::string bmpFilename, Stream::BidirectionalSeekableReader& artFileStream);
 
 	void ExtractImage(std::size_t index, const std::string& filenameOut);
 	
