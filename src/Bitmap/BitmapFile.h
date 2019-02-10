@@ -30,7 +30,7 @@ public:
 	static BitmapFile ReadIndexed(Stream::BidirectionalSeekableReader& seekableReader);
 
 	// BMP Writer only supports indexed color palettes (1, 2, and 8 bit BMPs).
-	// @indexedPixels: Must include padding to fill each image row out to the next byte memory border (pitch). 4 byte pitch is typical.
+	// @indexedPixels: Size must be padded to a multiple of pitch. (4 byte pitch is typical)
 	static void WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::size_t pitch, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
 	static void WriteIndexed(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::size_t pitch, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
 	static void WriteIndexed(std::string filename, const BitmapFile& bitmapFile);

@@ -42,7 +42,7 @@ struct ImageHeader
 	void VerifyValidBitCount() const;
 	static void VerifyValidBitCount(uint16_t bitCount);
 
-	// Default pitch interval is 32
+	// Default pitch interval is 4 bytes
 	std::size_t CalculateDefaultPitch() const;
 	static std::size_t CalculateDefaultPitch(uint16_t bitCount, int32_t width);
 
