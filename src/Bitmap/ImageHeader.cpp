@@ -63,12 +63,12 @@ void ImageHeader::VerifyValidBitCount(uint16_t bitCount)
 	}
 }
 
-std::size_t ImageHeader::CalculatePitch() const
+std::size_t ImageHeader::CalculateDefaultPitch() const
 {
-	return ImageHeader::CalculatePitch(bitCount, width);
+	return ImageHeader::CalculateDefaultPitch(bitCount, width);
 }
 
-std::size_t ImageHeader::CalculatePitch(uint16_t bitCount, int32_t width)
+std::size_t ImageHeader::CalculateDefaultPitch(uint16_t bitCount, int32_t width)
 {
 	const auto bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
 	return (bytesOfPixelsPerRow + 3) & ~3;

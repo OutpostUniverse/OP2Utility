@@ -38,7 +38,7 @@ void BitmapFile::WriteIndexed(Stream::BidirectionalSeekableWriter& seekableWrite
 void BitmapFile::WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
-	std::size_t fileSize = pixelOffset + ImageHeader::CalculatePitch(bitCount, width) * std::abs(height);
+	std::size_t fileSize = pixelOffset + ImageHeader::CalculateDefaultPitch(bitCount, width) * std::abs(height);
 
 	if (fileSize > UINT32_MAX) {
 		throw std::runtime_error("Bitmap size is too large to save to disk.");
@@ -53,7 +53,7 @@ void BitmapFile::WriteHeaders(Stream::BidirectionalSeekableWriter& seekableWrite
 
 void BitmapFile::WritePixels(Stream::BidirectionalSeekableWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
 {
-	const auto pitch = ImageHeader::CalculatePitch(bitCount, width);
+	const auto pitch = ImageHeader::CalculateDefaultPitch(bitCount, width);
 	const auto bytesOfPixelsPerRow = ImageHeader::CalcPixelByteWidth(bitCount, width);
 	const std::vector<uint8_t> padding(pitch - bytesOfPixelsPerRow, 0);
 
