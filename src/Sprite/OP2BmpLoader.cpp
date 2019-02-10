@@ -17,8 +17,7 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 
 	ImageMeta& imageMeta = artFile.imageMetas[index];
 
-	std::vector<Color> palette(artFile.palettes[imageMeta.paletteIndex].size());
-	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].end(), palette.begin());
+	const auto palette = CreatePalette(imageMeta);
 
 	std::size_t pixelOffset = imageMeta.pixelDataOffset + 14 + sizeof(ImageHeader) + palette.size() * sizeof(Color);
 
@@ -42,6 +41,23 @@ std::size_t OP2BmpLoader::FrameCount(std::size_t animationIndex) const {
 std::size_t OP2BmpLoader::LayerCount(std::size_t animationIndex, std::size_t frameIndex) const {
 	return artFile.animations[animationIndex].frames[frameIndex].layers.size();
 }
+
+std::vector<Color> OP2BmpLoader::CreatePalette(const ImageMeta& imageMeta) const
+{
+	std::vector<Color> palette;
+
+	if (imageMeta.GetBitCount() == 1) {
+		palette.push_back(Color{ 0, 0, 0 });
+		palette.push_back(Color{ 255, 255, 255 });
+	}
+	else {
+		palette.resize(artFile.palettes[imageMeta.paletteIndex].size());
+		std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].end(), palette.begin());
+	}
+
+	return palette;
+}
+
 std::unique_ptr<Stream::FileSliceReader> OP2BmpLoader::GetPixels(std::size_t startingIndex, std::size_t length)
 {
 	return std::make_unique<Stream::FileSliceReader>(bmpReader.Slice(startingIndex, length));
