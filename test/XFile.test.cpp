@@ -30,6 +30,13 @@ TEST(XFile, MakeAbsolute) {
 #endif
 	EXPECT_EQ("C:/A/file.ext", XFile::MakeAbsolute("A/file.ext", "C:/"));
 	EXPECT_EQ("C:/A/file.ext", XFile::MakeAbsolute("file.ext", "C:/A/"));
+
+	#ifdef _WIN32
+		// For possible future extension on Windows
+		// Note: Behavior is currently unimplemented
+		// EXPECT_EQ("C:/file.ext", XFile::MakeAbsolute("/file.ext", "C:"));
+		// EXPECT_EQ("C:/file.ext", XFile::MakeAbsolute("C:file.ext", "/"));
+	#endif
 }
 
 TEST(XFile, Append) {
