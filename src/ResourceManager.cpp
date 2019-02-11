@@ -10,16 +10,20 @@ using namespace Archive;
 ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 	resourceRootDir(archiveDirectory)
 {
-	auto volFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".vol");
-
-	for (const auto& volFilename : volFilenames) {
-		ArchiveFiles.push_back(std::make_unique<VolFile>(volFilename));
+	if (!XFile::IsDirectory(archiveDirectory)) {
+		throw std::runtime_error("Resource manager must be passed an archive directory.");
 	}
 
-	auto clmFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".clm");
+	const auto volFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".vol");
+
+	for (const auto& volFilename : volFilenames) {
+		ArchiveFiles.push_back(std::make_unique<VolFile>(XFile::Append(archiveDirectory, volFilename)));
+	}
+
+	const auto clmFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".clm");
 
 	for (const auto& clmFilename : clmFilenames) {
-		ArchiveFiles.push_back(std::make_unique<ClmFile>(clmFilename));
+		ArchiveFiles.push_back(std::make_unique<ClmFile>(XFile::Append(archiveDirectory, clmFilename)));
 	}
 }
 
