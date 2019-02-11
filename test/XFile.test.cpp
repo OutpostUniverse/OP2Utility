@@ -8,6 +8,30 @@
 #endif
 
 
+TEST(XFile, HasRootComponent) {
+	EXPECT_TRUE(XFile::HasRootComponent("/Path/File.ext"));
+#ifdef _WIN32
+		// Note: The "C:/" prefix is only considered absolute on Windows
+	EXPECT_TRUE(XFile::HasRootComponent("C:/Path/File.ext"));
+#endif
+
+	EXPECT_FALSE(XFile::HasRootComponent("Path/File.ext"));
+	EXPECT_FALSE(XFile::HasRootComponent("File.ext"));
+}
+
+TEST(XFile, MakeAbsolute) {
+	EXPECT_EQ("/A/file.ext", XFile::MakeAbsolute("/A/file.ext", "Anything"));
+	EXPECT_EQ("/A/file.ext", XFile::MakeAbsolute("A/file.ext", "/"));
+	EXPECT_EQ("/A/file.ext", XFile::MakeAbsolute("file.ext", "/A/"));
+
+#ifdef _WIN32
+	// Note: The "C:/" prefix is only considered absolute on Windows
+	EXPECT_EQ("C:/A/file.ext", XFile::MakeAbsolute("C:/A/file.ext", "Anything"));
+#endif
+	EXPECT_EQ("C:/A/file.ext", XFile::MakeAbsolute("A/file.ext", "C:/"));
+	EXPECT_EQ("C:/A/file.ext", XFile::MakeAbsolute("file.ext", "C:/A/"));
+}
+
 TEST(XFile, Append) {
 	EXPECT_EQ("a/b/", XFile::Append("a/", "b/"));
 	EXPECT_EQ("/a/b/", XFile::Append("/a/", "b/"));

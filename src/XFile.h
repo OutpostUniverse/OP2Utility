@@ -31,6 +31,14 @@ namespace XFile
 
 	bool PathExists(const std::string& pathStr);
 
+	// True if the path has a drive specifier (on Windows, "C:") or root folder specifier (leading "/")
+	// Note: This basically tests if the path is not fully relative
+	bool HasRootComponent(const std::string& pathStr);
+
+	// Returns absolute paths as is. Returns relative paths with relativePathRoot prepended
+	// Note: This allows easy construction of absolute paths, using an arbitrary base for relative paths
+	std::string MakeAbsolute(const std::string& path, const std::string& relativeRootPath);
+
 	std::string Append(const std::string& path1, const std::string& relativePath2);
 
 	// Adds a string to the end of the filenameStr, but before the file's extension.
