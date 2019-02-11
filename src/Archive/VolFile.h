@@ -3,6 +3,7 @@
 #include "HuffLZ.h"
 #include "ArchiveFile.h"
 #include "CompressionType.h"
+#include "../Tag.h"
 #include "../Stream/FileWriter.h"
 #include "../Stream/FileReader.h"
 #include <cstddef>
@@ -65,9 +66,9 @@ namespace Archive
 		struct SectionHeader
 		{
 			SectionHeader();
-			SectionHeader(std::array<char, 4> tag, uint32_t length, VolPadding padding = VolPadding::FourByte);
+			SectionHeader(Tag tag, uint32_t length, VolPadding padding = VolPadding::FourByte);
 
-			std::array<char, 4> tag;
+			Tag tag;
 			uint32_t length : 31;
 			VolPadding padding : 1;
 		};
@@ -93,7 +94,7 @@ namespace Archive
 			}
 		};
 
-		uint32_t ReadTag(std::array<char, 4> tagName);
+		uint32_t ReadTag(Tag tagName);
 		void ReadVolHeader();
 		void ReadStringTable();
 		void CountValidEntries();

@@ -1,8 +1,10 @@
 #include "PaletteHeader.h"
 
-const std::array<char, 4> PaletteHeader::TagSection{ 'P', 'P', 'A', 'L' };
-const std::array<char, 4> PaletteHeader::TagHeader{ 'h', 'e', 'a', 'd' };
-const std::array<char, 4> PaletteHeader::TagData{ 'd', 'a', 't', 'a' };
+
+constexpr auto TagSection = MakeTag("PPAL");
+constexpr auto TagHeader = MakeTag("head");
+constexpr auto TagData = MakeTag("data");
+
 
 PaletteHeader::PaletteHeader() : remainingTagCount(0) {}
 

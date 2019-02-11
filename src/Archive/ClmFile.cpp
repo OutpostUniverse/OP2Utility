@@ -194,7 +194,7 @@ namespace Archive
 	// Searches through the wave file to find the given chunk length
 	// The current stream position is set the the first byte after the chunk header
 	// Returns the chunk length if found or -1 otherwise
-	uint32_t ClmFile::FindChunk(std::array<char, 4> chunkTag, Stream::BidirectionalSeekableReader& seekableStreamReader)
+	uint32_t ClmFile::FindChunk(Tag chunkTag, Stream::BidirectionalSeekableReader& seekableStreamReader)
 	{
 		uint64_t fileSize = seekableStreamReader.Length();
 
@@ -222,7 +222,7 @@ namespace Archive
 			seekableStreamReader.Seek(currentPosition);
 		} while (currentPosition < fileSize);
 
-		throw std::runtime_error("Unable to find the tag " + std::string(chunkTag.data(), chunkTag.size()));
+		throw std::runtime_error("Unable to find the tag " + chunkTag);
 	}
 
 	// Compares wave format structures in the waveFormats container
