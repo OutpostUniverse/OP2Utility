@@ -40,13 +40,11 @@ std::unique_ptr<Stream::BidirectionalSeekableReader> ResourceManager::GetResourc
 		return nullptr;
 	}
 
-	std::string internalArchiveFilename = XFile::GetFilename(filename);
-
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 
-		if (archiveFile->Contains(internalArchiveFilename)) {
-			auto index = archiveFile->GetIndex(internalArchiveFilename);
+		if (archiveFile->Contains(filename)) {
+			auto index = archiveFile->GetIndex(filename);
 			return archiveFile->OpenStream(index);
 		}
 	}
