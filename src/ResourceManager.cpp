@@ -36,8 +36,8 @@ std::unique_ptr<Stream::BidirectionalSeekableReader> ResourceManager::GetResourc
 		throw std::runtime_error("ResourceManager only accepts fully relative paths. Refusing: " + filename);
 	}
 
-	// Absolute paths are used as is, fully relative paths are relative to resourceRootDir
-	const std::string path = XFile::MakeAbsolute(filename, resourceRootDir);
+	// Relative paths are relative to resourceRootDir
+	const std::string path = XFile::Append(resourceRootDir, filename);
 	if (XFile::PathExists(path)) {
 		return std::make_unique<Stream::FileReader>(path);
 	}
