@@ -5,7 +5,7 @@
 
 namespace Stream
 {
-	class ForwardSeekableWriter : public Writer
+	class ForwardWriter : public Writer
 	{
 	public:
 		// Get the size of the stream

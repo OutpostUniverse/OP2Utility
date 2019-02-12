@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ForwardSeekableReader.h"
+#include "ForwardReader.h"
 #include <cstdint>
 
 namespace Stream
 {
-	class BidirectionalReader : public ForwardSeekableReader {
+	class BidirectionalReader : public ForwardReader {
 	public:
 		// Seek backward by a relative amount, given as offset from current position
 		virtual void SeekBackward(uint64_t offset) = 0;

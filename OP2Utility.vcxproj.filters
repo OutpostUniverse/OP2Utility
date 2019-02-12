@@ -162,10 +162,10 @@
     <ClInclude Include="src\Map\TileMapping.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\ForwardSeekableReader.h">
+    <ClInclude Include="src\Stream\ForwardReader.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\ForwardSeekableWriter.h">
+    <ClInclude Include="src\Stream\ForwardWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
     <ClInclude Include="src\Stream\BidirectionalReader.h">

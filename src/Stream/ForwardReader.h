@@ -5,7 +5,7 @@
 
 namespace Stream
 {
-	class ForwardSeekableReader : public Reader {
+	class ForwardReader : public Reader {
 	public:
 		// Get the size of the stream
 		virtual uint64_t Length() = 0;

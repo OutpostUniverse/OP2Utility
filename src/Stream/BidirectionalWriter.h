@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ForwardSeekableWriter.h"
+#include "ForwardWriter.h"
 #include <cstdint>
 
 namespace Stream
 {
-	class BidirectionalWriter : public ForwardSeekableWriter
+	class BidirectionalWriter : public ForwardWriter
 	{
 	public:
 		// Seek backward by a relative amount, given as offset from current position
