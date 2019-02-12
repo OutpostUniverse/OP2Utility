@@ -19,7 +19,7 @@ static_assert(4 == sizeof(Color), "Color is an unexpected size");
 bool operator==(const Color& lhs, const Color& rhs);
 bool operator!=(const Color& lhs, const Color& rhs);
 
-using Palette = std::array<Color, 256>;
+using Palette8Bit = std::array<Color, 256>;
 
 namespace DiscreteColor
 {

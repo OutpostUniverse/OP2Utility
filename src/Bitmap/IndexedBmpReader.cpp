@@ -62,8 +62,9 @@ void BitmapFile::ReadPalette(Stream::BidirectionalSeekableReader& seekableReader
 
 void BitmapFile::ReadPixels(Stream::BidirectionalSeekableReader& seekableReader, BitmapFile& bitmapFile)
 {
-	std::size_t pixelContainerSize = bitmapFile.bmpHeader.size - bitmapFile.bmpHeader.pixelOffset;
-	BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(bitmapFile.imageHeader.bitCount, bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, pixelContainerSize);
+	const std::size_t pixelContainerSize = bitmapFile.bmpHeader.size - bitmapFile.bmpHeader.pixelOffset;
+	const std::size_t pitch = FindPitch(bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, pixelContainerSize);
+	BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(bitmapFile.imageHeader.bitCount, pitch, bitmapFile.imageHeader.height, pixelContainerSize);
 
 	bitmapFile.pixels.clear();
 	bitmapFile.pixels.resize(pixelContainerSize);

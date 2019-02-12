@@ -42,8 +42,9 @@ struct ImageHeader
 	void VerifyValidBitCount() const;
 	static void VerifyValidBitCount(uint16_t bitCount);
 
-	std::size_t CalculatePitch() const;
-	static std::size_t CalculatePitch(uint16_t bitCount, int32_t width);
+	// Default pitch granularity is 4 bytes
+	std::size_t CalculateDefaultPitch() const;
+	static std::size_t CalculateDefaultPitch(uint16_t bitCount, int32_t width);
 
 	// Does not include padding
 	std::size_t CalcPixelByteWidth() const;

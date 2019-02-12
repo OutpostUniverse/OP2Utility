@@ -10,7 +10,7 @@ PaletteHeader::PaletteHeader() : remainingTagCount(0) {}
 
 PaletteHeader::PaletteHeader(const ArtFile& artFile)  : remainingTagCount(1)
 {
-	uint64_t dataSize = sizeof(Palette);
+	uint64_t dataSize = sizeof(Palette8Bit);
 
 	uint64_t overallSize = 4 + sizeof(overallHeader) + sizeof(sectionHeader) + sizeof(remainingTagCount) + dataSize;
 

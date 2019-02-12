@@ -27,7 +27,7 @@ TEST(ArtWriter, BlankFilename)
 class SimpleArtFile : public ::testing::Test {
 public:
 	inline SimpleArtFile() { 
-		artFile.palettes.push_back(Palette());
+		artFile.palettes.push_back(Palette8Bit());
 
 		ImageMeta imageMeta;
 		imageMeta.width = 10;

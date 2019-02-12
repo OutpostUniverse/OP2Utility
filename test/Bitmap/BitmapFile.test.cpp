@@ -62,13 +62,13 @@ TEST(BitmapFile, VerifyIndexedPaletteSizeDoesNotExceedBitCount)
 
 TEST(BitmapFile, VerifyPixelSizeMatchesImageDimensionsWithPitch)
 {
-	EXPECT_NO_THROW(BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(1, 1, 1, 4));
-	EXPECT_THROW(BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(1, 1, 1, 1), std::runtime_error);
+	EXPECT_NO_THROW(BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(1, 4, 1, 4));
+	EXPECT_THROW(BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(1, 4, 1, 1), std::runtime_error);
 
 	// Test non-static version of function
-	BitmapFile bitmapFile = BitmapFile::CreateDefaultIndexed(1, 1, 1);;
+	BitmapFile bitmapFile = BitmapFile::CreateDefaultIndexed(1, 1, 2);;
 	EXPECT_NO_THROW(bitmapFile.VerifyPixelSizeMatchesImageDimensionsWithPitch());
-	bitmapFile.pixels.resize(1, 0);
+	bitmapFile.pixels.resize(3, 0); // Cannot calculate a valid pitch
 	EXPECT_THROW(bitmapFile.VerifyPixelSizeMatchesImageDimensionsWithPitch(), std::runtime_error);
 }
 

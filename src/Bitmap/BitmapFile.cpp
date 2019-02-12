@@ -7,7 +7,7 @@ BitmapFile BitmapFile::CreateDefaultIndexed(uint16_t bitCount, uint32_t width, u
 	BitmapFile bitmapFile;
 	bitmapFile.imageHeader = ImageHeader::Create(width, height, bitCount);
 	bitmapFile.palette.resize(bitmapFile.imageHeader.CalcMaxIndexedPaletteSize());
-	bitmapFile.pixels.resize(bitmapFile.imageHeader.CalculatePitch() * height);
+	bitmapFile.pixels.resize(bitmapFile.imageHeader.CalculateDefaultPitch() * height);
 
 	const std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + bitmapFile.palette.size() * sizeof(Color);
 	const std::size_t bitmapFileSize = pixelOffset + bitmapFile.pixels.size() * sizeof(uint8_t);
@@ -35,14 +35,34 @@ void BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount(uint16_t bitCount
 
 void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch() const
 {
-	BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(imageHeader.bitCount, imageHeader.width, imageHeader.height, pixels.size());
+	VerifyPixelSizeMatchesImageDimensionsWithPitch(imageHeader.bitCount, FindPitch(), imageHeader.height, pixels.size());
 }
 
-void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
+void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, std::size_t pitch, int32_t height, std::size_t pixelsWithPitchSize)
 {
-	if (pixelsWithPitchSize != ImageHeader::CalculatePitch(bitCount, width) * std::abs(height)) {
+	if (pixelsWithPitchSize != pitch * std::abs(height)) {
 		throw std::runtime_error("The size of pixels does not match the image's height time pitch");
 	}
+}
+
+std::size_t BitmapFile::FindPitch() const
+{
+	return FindPitch(imageHeader.width, imageHeader.height, pixels.size());
+}
+
+std::size_t BitmapFile::FindPitch(std::size_t width, std::size_t height, std::size_t pixelCount)
+{
+	if (pixelCount % height != 0) {
+		throw std::runtime_error("Unable to calculate a valid pitch based on height and pixel count");
+	}
+
+	const std::size_t pitch = pixelCount / height;
+
+	if (pitch < width) {
+		throw std::runtime_error("Calculated pitch would be smaller than image pixel width");
+	}
+
+	return pitch;
 }
 
 void BitmapFile::VerifyIndexedImageForSerialization(uint16_t bitCount)
