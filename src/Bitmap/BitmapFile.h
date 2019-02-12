@@ -39,7 +39,7 @@ public:
 	static void VerifyIndexedPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize);
 
 	// Check the pixel count is correct and already includes dummy pixels out to pitch boundary.
-	void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch() const;
+	void VerifyPixelSizeMatchesImageDimensionsWithPitch() const;
 	// @pixelsWithPitchSize: Number of pixels including padding pixels to next pitch boundary.
 	static void VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, std::size_t pitch, int32_t height, std::size_t pixelsWithPitchSize);
 	
