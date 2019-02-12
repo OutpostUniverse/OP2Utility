@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <limits>
 
-const std::vector<Color> DefaultMonochromePalette{ Color{0, 0, 0}, Color{255, 255, 255} };
+const std::vector<Color> OP2BmpLoader::DefaultMonochromePalette{ Color{0, 0, 0}, Color{255, 255, 255} };
 
 OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::string artFilename) :
 	bmpReader(bmpFilename), artFile(ArtFile::Read(artFilename)) { }
