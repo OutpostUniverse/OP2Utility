@@ -5,7 +5,7 @@
 
 namespace Stream
 {
-	class BidirectionalSeekableReader : public ForwardSeekableReader {
+	class BidirectionalReader : public ForwardSeekableReader {
 	public:
 		// Seek backward by a relative amount, given as offset from current position
 		virtual void SeekBackward(uint64_t offset) = 0;

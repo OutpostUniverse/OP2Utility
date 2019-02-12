@@ -81,7 +81,7 @@ namespace Archive
 		}
 	}
 
-	std::unique_ptr<Stream::BidirectionalSeekableReader> ClmFile::OpenStream(std::size_t index)
+	std::unique_ptr<Stream::BidirectionalReader> ClmFile::OpenStream(std::size_t index)
 	{
 		VerifyIndexInBounds(index);
 		const auto& indexEntry = indexEntries[index];
@@ -194,7 +194,7 @@ namespace Archive
 	// Searches through the wave file to find the given chunk length
 	// The current stream position is set the the first byte after the chunk header
 	// Returns the chunk length if found or -1 otherwise
-	uint32_t ClmFile::FindChunk(Tag chunkTag, Stream::BidirectionalSeekableReader& seekableStreamReader)
+	uint32_t ClmFile::FindChunk(Tag chunkTag, Stream::BidirectionalReader& seekableStreamReader)
 	{
 		uint64_t fileSize = seekableStreamReader.Length();
 

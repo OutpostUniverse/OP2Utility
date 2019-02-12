@@ -11,7 +11,7 @@ ArtFile ArtFile::Read(std::string filename) {
 	return Read(mapReader);
 }
 
-ArtFile ArtFile::Read(Stream::BidirectionalSeekableReader& seekableReader) {
+ArtFile ArtFile::Read(Stream::BidirectionalReader& seekableReader) {
 	ArtFile artFile;
 
 	ReadPalette(seekableReader, artFile);
@@ -21,7 +21,7 @@ ArtFile ArtFile::Read(Stream::BidirectionalSeekableReader& seekableReader) {
 	return artFile;
 }
 
-void ArtFile::ReadPalette(Stream::BidirectionalSeekableReader& seekableReader, ArtFile& artFile)
+void ArtFile::ReadPalette(Stream::BidirectionalReader& seekableReader, ArtFile& artFile)
 {
 	SectionHeader paletteSectionHeader;
 	seekableReader.Read(paletteSectionHeader);
@@ -45,14 +45,14 @@ void ArtFile::ReadPalette(Stream::BidirectionalSeekableReader& seekableReader, A
 	}
 }
 
-void ArtFile::ReadImageMetadata(Stream::BidirectionalSeekableReader& seekableReader, ArtFile& artFile)
+void ArtFile::ReadImageMetadata(Stream::BidirectionalReader& seekableReader, ArtFile& artFile)
 {
 	seekableReader.Read<uint32_t>(artFile.imageMetas);
 
 	artFile.ValidateImageMetadata();
 }
 
-void ArtFile::ReadAnimations(Stream::BidirectionalSeekableReader& seekableReader, ArtFile& artFile)
+void ArtFile::ReadAnimations(Stream::BidirectionalReader& seekableReader, ArtFile& artFile)
 {
 	uint32_t animationCount;
 	seekableReader.Read(animationCount);
@@ -74,7 +74,7 @@ void ArtFile::ReadAnimations(Stream::BidirectionalSeekableReader& seekableReader
 	VerifyCountsMatchHeader(artFile, frameCount, layerCount, artFile.unknownAnimationCount);
 }
 
-Animation ArtFile::ReadAnimation(Stream::BidirectionalSeekableReader& seekableReader)
+Animation ArtFile::ReadAnimation(Stream::BidirectionalReader& seekableReader)
 {
 	Animation animation;
 
@@ -96,7 +96,7 @@ Animation ArtFile::ReadAnimation(Stream::BidirectionalSeekableReader& seekableRe
 	return animation;
 }
 
-Animation::Frame ArtFile::ReadFrame(Stream::BidirectionalSeekableReader& seekableReader) {
+Animation::Frame ArtFile::ReadFrame(Stream::BidirectionalReader& seekableReader) {
 	Animation::Frame frame;
 	frame.optional1 = 0;
 	frame.optional2 = 0;

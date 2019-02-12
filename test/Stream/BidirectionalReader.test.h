@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stream/BiDirectionalSeekableReader.h"
+#include "Stream/BidirectionalReader.h"
 #include <gtest/gtest.h>
 
 

@@ -5,7 +5,7 @@
 
 namespace Stream
 {
-	class BidirectionalSeekableWriter : public ForwardSeekableWriter
+	class BidirectionalWriter : public ForwardSeekableWriter
 	{
 	public:
 		// Seek backward by a relative amount, given as offset from current position

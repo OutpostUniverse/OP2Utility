@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BiDirectionalSeekableWriter.h"
+#include "BidirectionalWriter.h"
 #include <string>
 #include <fstream>
 #include <cstddef>
@@ -8,7 +8,7 @@
 
 namespace Stream
 {
-	class FileWriter : public BidirectionalSeekableWriter
+	class FileWriter : public BidirectionalWriter
 	{
 	public:
 		// Open mode bit flags

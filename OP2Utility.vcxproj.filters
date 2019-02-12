@@ -168,10 +168,10 @@
     <ClInclude Include="src\Stream\ForwardSeekableWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\BidirectionalSeekableReader.h">
+    <ClInclude Include="src\Stream\BidirectionalReader.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\BidirectionalSeekableWriter.h">
+    <ClInclude Include="src\Stream\BidirectionalWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
     <ClInclude Include="src\Map\SavedGameUnits.h">
