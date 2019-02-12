@@ -31,6 +31,11 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
 std::unique_ptr<Stream::BidirectionalSeekableReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
 {
+	// Only fully relative paths are supported
+	if (XFile::HasRootComponent(filename)) {
+		throw std::runtime_error("ResourceManager only accepts fully relative paths. Refusing: " + filename);
+	}
+
 	// Absolute paths are used as is, fully relative paths are relative to resourceRootDir
 	const std::string path = XFile::MakeAbsolute(filename, resourceRootDir);
 	if (XFile::PathExists(path)) {
