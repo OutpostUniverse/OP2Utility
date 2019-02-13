@@ -8,7 +8,7 @@ BitmapFile BitmapFile::ReadIndexed(const std::string& filename)
 	return ReadIndexed(fileReader);
 }
 
-BitmapFile BitmapFile::ReadIndexed(Stream::BidirectionalSeekableReader& seekableReader)
+BitmapFile BitmapFile::ReadIndexed(Stream::BidirectionalReader& seekableReader)
 {
 	BitmapFile bitmapFile;
 	bitmapFile.bmpHeader = ReadBmpHeader(seekableReader);
@@ -20,7 +20,7 @@ BitmapFile BitmapFile::ReadIndexed(Stream::BidirectionalSeekableReader& seekable
 	return bitmapFile;
 }
 
-BmpHeader BitmapFile::ReadBmpHeader(Stream::BidirectionalSeekableReader& seekableReader)
+BmpHeader BitmapFile::ReadBmpHeader(Stream::BidirectionalReader& seekableReader)
 {
 	BmpHeader bmpHeader;
 	seekableReader.Read(bmpHeader);
@@ -34,7 +34,7 @@ BmpHeader BitmapFile::ReadBmpHeader(Stream::BidirectionalSeekableReader& seekabl
 	return bmpHeader;
 }
 
-ImageHeader BitmapFile::ReadImageHeader(Stream::BidirectionalSeekableReader& seekableReader)
+ImageHeader BitmapFile::ReadImageHeader(Stream::BidirectionalReader& seekableReader)
 {
 	ImageHeader imageHeader;
 	seekableReader.Read(imageHeader);
@@ -46,7 +46,7 @@ ImageHeader BitmapFile::ReadImageHeader(Stream::BidirectionalSeekableReader& see
 	return imageHeader;
 }
 
-void BitmapFile::ReadPalette(Stream::BidirectionalSeekableReader& seekableReader, BitmapFile& bitmapFile)
+void BitmapFile::ReadPalette(Stream::BidirectionalReader& seekableReader, BitmapFile& bitmapFile)
 {
 	bitmapFile.palette.clear();
 
@@ -60,7 +60,7 @@ void BitmapFile::ReadPalette(Stream::BidirectionalSeekableReader& seekableReader
 	seekableReader.Read(bitmapFile.palette);
 }
 
-void BitmapFile::ReadPixels(Stream::BidirectionalSeekableReader& seekableReader, BitmapFile& bitmapFile)
+void BitmapFile::ReadPixels(Stream::BidirectionalReader& seekableReader, BitmapFile& bitmapFile)
 {
 	std::size_t pixelContainerSize = bitmapFile.bmpHeader.size - bitmapFile.bmpHeader.pixelOffset;
 	BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(bitmapFile.imageHeader.bitCount, bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, pixelContainerSize);

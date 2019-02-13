@@ -60,7 +60,7 @@ namespace Archive
 		return m_IndexEntries[index].filenameOffset;
 	}
 
-	std::unique_ptr<Stream::BidirectionalSeekableReader> VolFile::OpenStream(std::size_t index)
+	std::unique_ptr<Stream::BidirectionalReader> VolFile::OpenStream(std::size_t index)
 	{
 		SectionHeader sectionHeader = GetSectionHeader(index);
 

@@ -10,8 +10,8 @@
 #include <cstddef>
 
 namespace Stream {
-	class BidirectionalSeekableReader;
-	class BidirectionalSeekableWriter;
+	class BidirectionalReader;
+	class BidirectionalWriter;
 }
 
 struct ArtFile
@@ -23,27 +23,27 @@ public:
 	uint32_t unknownAnimationCount;
 
 	static ArtFile Read(std::string filename);
-	static ArtFile Read(Stream::BidirectionalSeekableReader& seekableReader);
+	static ArtFile Read(Stream::BidirectionalReader& seekableReader);
 	static void Write(std::string filename, const ArtFile& artFile);
-	static void Write(Stream::BidirectionalSeekableWriter&, const ArtFile& artFile);
+	static void Write(Stream::BidirectionalWriter&, const ArtFile& artFile);
 
 	void VerifyImageIndexInBounds(std::size_t index);
 
 private:
 	// Read Functions
-	static void ReadPalette(Stream::BidirectionalSeekableReader& seekableReader, ArtFile& artFile);
-	static void ReadImageMetadata(Stream::BidirectionalSeekableReader& seekableReader, ArtFile& artFile);
-	static void ReadAnimations(Stream::BidirectionalSeekableReader& seekableReader, ArtFile& artFile);
-	static Animation ReadAnimation(Stream::BidirectionalSeekableReader& seekableReader);
-	static Animation::Frame ReadFrame(Stream::BidirectionalSeekableReader& seekableReader);
+	static void ReadPalette(Stream::BidirectionalReader& seekableReader, ArtFile& artFile);
+	static void ReadImageMetadata(Stream::BidirectionalReader& seekableReader, ArtFile& artFile);
+	static void ReadAnimations(Stream::BidirectionalReader& seekableReader, ArtFile& artFile);
+	static Animation ReadAnimation(Stream::BidirectionalReader& seekableReader);
+	static Animation::Frame ReadFrame(Stream::BidirectionalReader& seekableReader);
 	static void VerifyCountsMatchHeader(const ArtFile& artFile, std::size_t frameCount, std::size_t layerCount, std::size_t unknownCount);
 
 
 	// Write Functions
-	static void WritePalettes(Stream::BidirectionalSeekableWriter& seekableWriter, const ArtFile& artFile);
-	static void WriteAnimations(Stream::BidirectionalSeekableWriter& seekableWriter, const ArtFile& artFile);
-	static void WriteAnimation(Stream::BidirectionalSeekableWriter& seekableWriter, const Animation& animation);
-	static void WriteFrame(Stream::BidirectionalSeekableWriter& seekableWriter, const Animation::Frame& frame);
+	static void WritePalettes(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile);
+	static void WriteAnimations(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile);
+	static void WriteAnimation(Stream::BidirectionalWriter& seekableWriter, const Animation& animation);
+	static void WriteFrame(Stream::BidirectionalWriter& seekableWriter, const Animation::Frame& frame);
 
 
 	void ValidateImageMetadata() const;

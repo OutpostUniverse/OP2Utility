@@ -162,16 +162,16 @@
     <ClInclude Include="src\Map\TileMapping.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\ForwardSeekableReader.h">
+    <ClInclude Include="src\Stream\ForwardReader.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\ForwardSeekableWriter.h">
+    <ClInclude Include="src\Stream\ForwardWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\BidirectionalSeekableReader.h">
+    <ClInclude Include="src\Stream\BidirectionalReader.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\BidirectionalSeekableWriter.h">
+    <ClInclude Include="src\Stream\BidirectionalWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
     <ClInclude Include="src\Map\SavedGameUnits.h">

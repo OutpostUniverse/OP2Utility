@@ -33,7 +33,7 @@ Map Map::ReadSavedGame(std::string filename)
 	return ReadSavedGame(savedGameStream);
 }
 
-Map Map::ReadSavedGame(Stream::BidirectionalSeekableReader& savedGameStream)
+Map Map::ReadSavedGame(Stream::BidirectionalReader& savedGameStream)
 {
 	SkipSaveGameHeader(savedGameStream);
 
@@ -54,7 +54,7 @@ Map Map::ReadSavedGame(Stream::BidirectionalSeekableReader& savedGameStream)
 // == Private methods ==
 
 
-void Map::SkipSaveGameHeader(Stream::BidirectionalSeekableReader& stream)
+void Map::SkipSaveGameHeader(Stream::BidirectionalReader& stream)
 {
 	stream.SeekForward(0x1E025);
 }
@@ -124,7 +124,7 @@ void Map::ReadVersionTag(Stream::Reader& stream, uint32_t lastVersionTag)
 	}
 }
 
-void Map::ReadSavedGameUnits(Stream::BidirectionalSeekableReader& stream)
+void Map::ReadSavedGameUnits(Stream::BidirectionalReader& stream)
 {
 	SavedGameUnits savedGameUnits;
 
