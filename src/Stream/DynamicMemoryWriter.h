@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BiDirectionalSeekableWriter.h"
+#include "BidirectionalWriter.h"
 #include "MemoryReader.h"
 #include <cstddef>
 #include <cstdint>
@@ -8,7 +8,7 @@
 
 namespace Stream
 {
-	class DynamicMemoryWriter : public BidirectionalSeekableWriter
+	class DynamicMemoryWriter : public BidirectionalWriter
 	{
 	public:
 		DynamicMemoryWriter();
