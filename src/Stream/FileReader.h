@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BiDirectionalSeekableReader.h"
+#include "BidirectionalReader.h"
 #include <string>
 #include <fstream>
 #include <cstddef>
@@ -12,7 +12,7 @@ namespace Stream
 	template <class WrappedStreamType> class SliceReader;
 	using FileSliceReader = SliceReader<FileReader>;
 
-	class FileReader : public BidirectionalSeekableReader {
+	class FileReader : public BidirectionalReader {
 	public:
 		FileReader(std::string filename);
 		FileReader(const FileReader& fileStreamReader);
@@ -20,7 +20,7 @@ namespace Stream
 
 		std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
 
-		// BidirectionalSeekableReader methods
+		// BidirectionalReader methods
 		uint64_t Length() override;
 		uint64_t Position() override;
 

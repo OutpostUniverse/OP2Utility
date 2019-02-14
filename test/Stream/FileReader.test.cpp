@@ -1,4 +1,4 @@
-#include "BiDirectionalSeekableReader.test.h"
+#include "BidirectionalReader.test.h"
 #include "Stream/FileReader.h"
 #include <array>
 

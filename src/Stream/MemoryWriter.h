@@ -1,12 +1,12 @@
 #pragma once
 
-#include "BiDirectionalSeekableWriter.h"
+#include "BidirectionalWriter.h"
 #include <cstddef>
 #include <cstdint>
 
 namespace Stream
 {
-	class MemoryWriter : public BidirectionalSeekableWriter
+	class MemoryWriter : public BidirectionalWriter
 	{
 	public:
 		// buffer: where data will be written to.

@@ -11,7 +11,7 @@ void ArtFile::Write(std::string filename, const ArtFile& artFile)
 	Write(artWriter, artFile);
 }
 
-void ArtFile::Write(Stream::BidirectionalSeekableWriter& seekableWriter, const ArtFile& artFile)
+void ArtFile::Write(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile)
 {
 	artFile.ValidateImageMetadata();
 
@@ -22,7 +22,7 @@ void ArtFile::Write(Stream::BidirectionalSeekableWriter& seekableWriter, const A
 	WriteAnimations(seekableWriter, artFile);
 }
 
-void ArtFile::WritePalettes(Stream::BidirectionalSeekableWriter& seekableWriter, const ArtFile& artFile)
+void ArtFile::WritePalettes(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile)
 {
 	if (artFile.palettes.size() > UINT32_MAX) {
 		throw std::runtime_error("Art file contains too many palettes.");
@@ -43,7 +43,7 @@ void ArtFile::WritePalettes(Stream::BidirectionalSeekableWriter& seekableWriter,
 	}
 }
 
-void ArtFile::WriteAnimations(Stream::BidirectionalSeekableWriter& seekableWriter, const ArtFile& artFile)
+void ArtFile::WriteAnimations(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile)
 {
 	if (artFile.animations.size() > UINT32_MAX) {
 		throw std::runtime_error("There are too many animations contained in the ArtFile.");
@@ -78,7 +78,7 @@ void ArtFile::WriteAnimations(Stream::BidirectionalSeekableWriter& seekableWrite
 	}
 }
 
-void ArtFile::WriteAnimation(Stream::BidirectionalSeekableWriter& seekableWriter, const Animation& animation)
+void ArtFile::WriteAnimation(Stream::BidirectionalWriter& seekableWriter, const Animation& animation)
 {
 	seekableWriter.Write(animation.unknown);
 	seekableWriter.Write(animation.selectionRect);
@@ -98,7 +98,7 @@ void ArtFile::WriteAnimation(Stream::BidirectionalSeekableWriter& seekableWriter
 	seekableWriter.Write<uint32_t>(animation.unknownContainer);
 }
 
-void ArtFile::WriteFrame(Stream::BidirectionalSeekableWriter& seekableWriter, const Animation::Frame& frame)
+void ArtFile::WriteFrame(Stream::BidirectionalWriter& seekableWriter, const Animation::Frame& frame)
 {
 	if (frame.layerMetadata.count != frame.layers.size()) {
 		throw std::runtime_error("Recorded layer count must match number of written layers.");

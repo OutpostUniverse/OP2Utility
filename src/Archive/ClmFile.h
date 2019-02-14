@@ -24,7 +24,7 @@ namespace Archive
 		void ExtractFile(std::size_t index, const std::string& pathOut) override;
 
 		// Opens a stream containing packed audio PCM data
-		std::unique_ptr<Stream::BidirectionalSeekableReader> OpenStream(std::size_t index) override;
+		std::unique_ptr<Stream::BidirectionalReader> OpenStream(std::size_t index) override;
 
 		void Repack() override;
 
@@ -68,7 +68,7 @@ namespace Archive
 
 		// Private functions for packing files
 		static void ReadAllWaveHeaders(std::vector<std::unique_ptr<Stream::FileReader>>& filesToPackReaders, std::vector<WaveFormatEx>& waveFormats, std::vector<IndexEntry>& indexEntries);
-		static uint32_t FindChunk(Tag chunkTag, Stream::BidirectionalSeekableReader& seekableStreamReader);
+		static uint32_t FindChunk(Tag chunkTag, Stream::BidirectionalReader& seekableStreamReader);
 		static void CompareWaveFormats(const std::vector<WaveFormatEx>& waveFormatsconst, const std::vector<std::string>& filesToPack);
 		static void WriteArchive(const std::string& archiveFilename, const std::vector<std::unique_ptr<Stream::FileReader>>& filesToPackReaders,
 			std::vector<IndexEntry>& indexEntries, const std::vector<std::string>& names, const WaveFormatEx& waveFormat);
