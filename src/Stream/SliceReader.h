@@ -13,7 +13,7 @@ namespace Stream
 	// Access is bounds checked according to the slice parameters.
 	// The underlying stream must be copy constructible, so that an independent stream can be created.
 	template<class WrappedStreamType>
-	class SliceReader : public BidirectionalSeekableReader
+	class SliceReader : public BidirectionalReader
 	{
 	public:
 

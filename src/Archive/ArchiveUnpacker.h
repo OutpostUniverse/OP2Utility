@@ -4,7 +4,7 @@
 #include <memory>
 #include <cstdint>
 #include <cstddef>
-#include "../Stream/BiDirectionalSeekableReader.h"
+#include "../Stream/BidirectionalReader.h"
 
 namespace Archive
 {
@@ -25,8 +25,8 @@ namespace Archive
 		virtual uint32_t GetSize(std::size_t index) = 0;
 		virtual void ExtractFile(std::size_t index, const std::string& pathOut) = 0;
 		virtual void ExtractAllFiles(const std::string& destDirectory);
-		virtual std::unique_ptr<Stream::BidirectionalSeekableReader> OpenStream(std::size_t index) = 0;
-		virtual std::unique_ptr<Stream::BidirectionalSeekableReader> OpenStream(const std::string& name);
+		virtual std::unique_ptr<Stream::BidirectionalReader> OpenStream(std::size_t index) = 0;
+		virtual std::unique_ptr<Stream::BidirectionalReader> OpenStream(const std::string& name);
 
 	protected:
 		void VerifyIndexInBounds(std::size_t index);

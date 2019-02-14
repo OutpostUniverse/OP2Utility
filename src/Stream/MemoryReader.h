@@ -1,18 +1,18 @@
 #pragma once
 
-#include "BiDirectionalSeekableReader.h"
+#include "BidirectionalReader.h"
 #include <cstddef>
 #include <cstdint>
 
 namespace Stream
 {
-	class MemoryReader : public BidirectionalSeekableReader {
+	class MemoryReader : public BidirectionalReader {
 	public:
 		MemoryReader(const void* const buffer, std::size_t size);
 
 		std::size_t ReadPartial(void* buffer, std::size_t size) noexcept override;
 
-		// BidirectionalSeekableReader methods
+		// BidirectionalReader methods
 		uint64_t Length() override;
 		uint64_t Position() override;
 		

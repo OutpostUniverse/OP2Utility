@@ -5,10 +5,6 @@
 #include <array>
 #include <cstdint>
 
-namespace Stream {
-	class BidirectionalSeekableReader;
-}
-
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct PaletteHeader {

@@ -18,7 +18,7 @@ struct MapHeader;
 namespace Stream {
 	class Writer;
 	class Reader;
-	class BidirectionalSeekableReader;
+	class BidirectionalReader;
 }
 
 // FILE FORMAT DOCUMENTATION:
@@ -36,7 +36,7 @@ public:
 	static Map ReadMap(std::string filename);
 	static Map ReadMap(Stream::Reader& mapStream);
 	static Map ReadSavedGame(std::string filename);
-	static Map ReadSavedGame(Stream::BidirectionalSeekableReader& savedGameStream);
+	static Map ReadSavedGame(Stream::BidirectionalReader& savedGameStream);
 
 	void Write(const std::string& filename) const;
 	void Write(Stream::Writer& streamWriter) const;
@@ -98,11 +98,11 @@ private:
 
 	// Read
 	static Map ReadMapBeginning(Stream::Reader& stream);
-	static void SkipSaveGameHeader(Stream::BidirectionalSeekableReader& stream);
+	static void SkipSaveGameHeader(Stream::BidirectionalReader& stream);
 	static void ReadTilesetSources(Stream::Reader& stream, Map& map, std::size_t tilesetCount);
 	static void ReadTilesetHeader(Stream::Reader& stream);
 	static void ReadVersionTag(Stream::Reader& stream, uint32_t lastVersionTag);
-	static void ReadSavedGameUnits(Stream::BidirectionalSeekableReader& stream);
+	static void ReadSavedGameUnits(Stream::BidirectionalReader& stream);
 	static void ReadTileGroups(Stream::Reader& stream, Map& map);
 	static TileGroup ReadTileGroup(Stream::Reader& stream);
 };

@@ -1,7 +1,7 @@
 #include "ResourceManager.h"
 #include "Archive/VolFile.h"
 #include "Archive/ClmFile.h"
-#include "Stream/BiDirectionalSeekableReader.h"
+#include "Stream/BidirectionalReader.h"
 #include "XFile.h"
 #include <regex>
 
@@ -29,7 +29,7 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 
 // First searches for resources loosely in provided directory.
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
-std::unique_ptr<Stream::BidirectionalSeekableReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
+std::unique_ptr<Stream::BidirectionalReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
 {
 	// Only fully relative paths are supported
 	if (XFile::HasRootComponent(filename)) {
