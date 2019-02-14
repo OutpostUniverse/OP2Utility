@@ -17,11 +17,11 @@ namespace Stream
 		uint64_t Length() override;
 		uint64_t Position() override;
 
-		// Note: SeekForward will set a new stream size and 0 fill the buffer gap
+		// SeekForward will set a new stream size and 0 fill the buffer gap
 		void SeekForward(uint64_t offset) override;
-		// Note: SeekBackward will set a new stream size and truncate the stream
+		// SeekBackward will set a new stream size and truncate the stream
 		void SeekBackward(uint64_t offset) override;
-		// Note: Seek will set a new stream size (either by 0 filling or by truncating)
+		// Seek will set a new stream size (either by 0 filling or by truncating)
 		void Seek(uint64_t position) override;
 
 		// Get read access to the written data
