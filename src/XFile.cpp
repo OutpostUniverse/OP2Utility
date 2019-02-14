@@ -54,6 +54,17 @@ bool XFile::PathExists(const std::string& pathStr)
 	return fs::exists(fs::path(pathStr));
 }
 
+bool XFile::HasRootComponent(const std::string& pathStr)
+{
+	fs::path path(pathStr);
+	return path.has_root_name() || path.has_root_directory();
+}
+
+std::string XFile::MakeAbsolute(const std::string& pathStr, const std::string& relativeRootDirStr)
+{
+	return XFile::HasRootComponent(pathStr) ? pathStr : XFile::Append(relativeRootDirStr, pathStr);
+}
+
 std::string XFile::Append(const std::string& path1, const std::string& relativePath2)
 {
 	fs::path nestedPath(relativePath2);

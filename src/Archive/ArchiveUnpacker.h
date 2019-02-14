@@ -4,12 +4,7 @@
 #include <memory>
 #include <cstdint>
 #include <cstddef>
-
-namespace Stream {
-	class BidirectionalReader;
-	class Reader;
-	class Writer;
-}
+#include "../Stream/BidirectionalReader.h"
 
 namespace Archive
 {

@@ -31,6 +31,12 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 // Then, if accessArhives = true, searches the preloaded archives for the resource.
 std::unique_ptr<Stream::BidirectionalReader> ResourceManager::GetResourceStream(const std::string& filename, bool accessArchives)
 {
+	// Only fully relative paths are supported
+	if (XFile::HasRootComponent(filename)) {
+		throw std::runtime_error("ResourceManager only accepts fully relative paths. Refusing: " + filename);
+	}
+
+	// Relative paths are relative to resourceRootDir
 	const std::string path = XFile::Append(resourceRootDir, filename);
 	if (XFile::PathExists(path)) {
 		return std::make_unique<Stream::FileReader>(path);
@@ -42,10 +48,9 @@ std::unique_ptr<Stream::BidirectionalReader> ResourceManager::GetResourceStream(
 
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		std::string internalArchiveFilename = XFile::GetFilename(filename);
 
-		if (archiveFile->Contains(internalArchiveFilename)) {
-			auto index = archiveFile->GetIndex(internalArchiveFilename);
+		if (archiveFile->Contains(filename)) {
+			auto index = archiveFile->GetIndex(filename);
 			return archiveFile->OpenStream(index);
 		}
 	}
