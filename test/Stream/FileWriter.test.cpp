@@ -53,3 +53,15 @@ TEST(FileWriterOpenMode, PermissionChecks) {
 	// Cleanup temporary file
 	XFile::DeletePath(filename);
 }
+
+
+TEST(FileWriter, MoveConstructible) {
+	std::string filename("TestFile.temp");
+
+	// Move object to new variable
+	Stream::FileWriter writer1("TestFile.temp");
+	EXPECT_NO_THROW(Stream::FileWriter writer2(std::move(writer1)));
+
+	// Cleanup temporary file
+	XFile::DeletePath(filename);
+}

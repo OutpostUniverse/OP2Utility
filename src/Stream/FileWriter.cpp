@@ -43,6 +43,12 @@ namespace Stream
 		}
 	}
 
+	FileWriter::FileWriter(FileWriter&& fileWriter) :
+		filename(std::move(fileWriter.filename)),
+		file(std::move(fileWriter.file))
+	{
+	}
+
 	FileWriter::~FileWriter() {
 		file.close();
 	}
