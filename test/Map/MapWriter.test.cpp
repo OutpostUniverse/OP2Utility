@@ -24,11 +24,9 @@ TEST(MapWriter, BlankFilename)
 }
 
 TEST(MapWriter, AllowInvalidVersionTag) {
-	const std::string testFilename("Map/data/test.map");
+	Stream::DynamicMemoryWriter writer;
 	Map map;
 
 	map.SetVersionTag(MapHeader::MinMapVersion - 1);
-	EXPECT_NO_THROW(Map().Write(testFilename));
-
-	XFile::DeletePath(testFilename);
+	EXPECT_NO_THROW(Map().Write(writer));
 }
