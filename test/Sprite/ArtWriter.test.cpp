@@ -40,24 +40,22 @@ protected:
 
 TEST_F(SimpleArtFile, Write_ScanLineByteWidth)
 {
-	std::string filename = "Sprite/data/test.prt";
+	Stream::DynamicMemoryWriter writer;
 
 	// Check no throw if scanLine next 4 byte aligned
-	EXPECT_NO_THROW(ArtFile::Write(filename, artFile));
+	EXPECT_NO_THROW(ArtFile::Write(writer, artFile));
 
 	// Check throw if scanLine > width && < 4 byte aligned
 	artFile.imageMetas[0].scanLineByteWidth = 11;
-	EXPECT_THROW(ArtFile::Write(filename, artFile), std::runtime_error);
+	EXPECT_THROW(ArtFile::Write(writer, artFile), std::runtime_error);
 
 	// Check throw if scanLine > first 4 byte align
 	artFile.imageMetas[0].scanLineByteWidth = 16;
-	EXPECT_THROW(ArtFile::Write(filename, artFile), std::runtime_error);
+	EXPECT_THROW(ArtFile::Write(writer, artFile), std::runtime_error);
 
 	// Check throw if scanLine < width but still 4 byte aligned
 	artFile.imageMetas[0].scanLineByteWidth = 8;
-	EXPECT_THROW(ArtFile::Write(filename, artFile), std::runtime_error);
-
-	XFile::DeletePath(filename);
+	EXPECT_THROW(ArtFile::Write(writer, artFile), std::runtime_error);
 }
 
 TEST_F(SimpleArtFile, Write_PaletteIndexRange) 
