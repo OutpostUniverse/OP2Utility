@@ -77,18 +77,17 @@ TEST_F(SimpleArtFile, Write_PaletteColors)
 	const uint8_t blue = 0;
 	artFile.palettes[0][0] = Color{ red, 0, blue, 0 };
 
-	std::string filename = "Sprite/data/test.prt";
+	Stream::DynamicMemoryWriter writer;
 
-	EXPECT_NO_THROW(ArtFile::Write(filename, artFile));
+	EXPECT_NO_THROW(ArtFile::Write(writer, artFile));
 
 	// Check ArtFile palette remains unchanged after write
 	EXPECT_EQ(red, artFile.palettes[0][0].red);
 	EXPECT_EQ(blue, artFile.palettes[0][0].blue);
 
 	// Check ArtFile palette written to disk properly
-	artFile = ArtFile::Read(filename);
+	auto reader = writer.GetReader();
+	artFile = ArtFile::Read(reader);
 	EXPECT_EQ(red, artFile.palettes[0][0].red);
 	EXPECT_EQ(blue, artFile.palettes[0][0].blue);
-
-	XFile::DeletePath(filename);
 }
