@@ -11,7 +11,7 @@
 
 namespace Stream {
 	class Reader;
-	class BidirectionalWriter;
+	class Writer;
 }
 
 struct ArtFile
@@ -25,7 +25,7 @@ public:
 	static ArtFile Read(std::string filename);
 	static ArtFile Read(Stream::Reader& reader);
 	static void Write(std::string filename, const ArtFile& artFile);
-	static void Write(Stream::BidirectionalWriter&, const ArtFile& artFile);
+	static void Write(Stream::Writer&, const ArtFile& artFile);
 
 	void VerifyImageIndexInBounds(std::size_t index);
 
@@ -40,10 +40,10 @@ private:
 
 
 	// Write Functions
-	static void WritePalettes(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile);
-	static void WriteAnimations(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile);
-	static void WriteAnimation(Stream::BidirectionalWriter& seekableWriter, const Animation& animation);
-	static void WriteFrame(Stream::BidirectionalWriter& seekableWriter, const Animation::Frame& frame);
+	static void WritePalettes(Stream::Writer& writer, const ArtFile& artFile);
+	static void WriteAnimations(Stream::Writer& writer, const ArtFile& artFile);
+	static void WriteAnimation(Stream::Writer& writer, const Animation& animation);
+	static void WriteFrame(Stream::Writer& writer, const Animation::Frame& frame);
 
 
 	void ValidateImageMetadata() const;

@@ -11,45 +11,45 @@ void ArtFile::Write(std::string filename, const ArtFile& artFile)
 	Write(artWriter, artFile);
 }
 
-void ArtFile::Write(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile)
+void ArtFile::Write(Stream::Writer& writer, const ArtFile& artFile)
 {
 	artFile.ValidateImageMetadata();
 
-	WritePalettes(seekableWriter, artFile);
+	WritePalettes(writer, artFile);
 
-	seekableWriter.Write<uint32_t>(artFile.imageMetas);
+	writer.Write<uint32_t>(artFile.imageMetas);
 
-	WriteAnimations(seekableWriter, artFile);
+	WriteAnimations(writer, artFile);
 }
 
-void ArtFile::WritePalettes(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile)
+void ArtFile::WritePalettes(Stream::Writer& writer, const ArtFile& artFile)
 {
 	if (artFile.palettes.size() > UINT32_MAX) {
 		throw std::runtime_error("Art file contains too many palettes.");
 	}
 
-	seekableWriter.Write(SectionHeader(TagPalette, static_cast<uint32_t>(artFile.palettes.size())));
+	writer.Write(SectionHeader(TagPalette, static_cast<uint32_t>(artFile.palettes.size())));
 
 	// Intentially do not pass palette as reference to allow local modification
 	// Switch red and blue color to match Outpost 2 custom format.
 	for (auto pallete : artFile.palettes) {
-		seekableWriter.Write(PaletteHeader(artFile));
+		writer.Write(PaletteHeader(artFile));
 
 		for (auto& color : pallete) {
 			std::swap(color.red, color.blue);
 		}
 
-		seekableWriter.Write(pallete);
+		writer.Write(pallete);
 	}
 }
 
-void ArtFile::WriteAnimations(Stream::BidirectionalWriter& seekableWriter, const ArtFile& artFile)
+void ArtFile::WriteAnimations(Stream::Writer& writer, const ArtFile& artFile)
 {
 	if (artFile.animations.size() > UINT32_MAX) {
 		throw std::runtime_error("There are too many animations contained in the ArtFile.");
 	}
 
-	seekableWriter.Write(static_cast<uint32_t>(artFile.animations.size()));
+	writer.Write(static_cast<uint32_t>(artFile.animations.size()));
 
 	std::size_t frameCount;
 	std::size_t layerCount;
@@ -68,54 +68,54 @@ void ArtFile::WriteAnimations(Stream::BidirectionalWriter& seekableWriter, const
 		throw std::runtime_error("There are too many unknown container items to write to file.");
 	}
 
-	seekableWriter.Write(static_cast<uint32_t>(frameCount));
-	seekableWriter.Write(static_cast<uint32_t>(layerCount));
-	seekableWriter.Write(static_cast<uint32_t>(unknownCount));
+	writer.Write(static_cast<uint32_t>(frameCount));
+	writer.Write(static_cast<uint32_t>(layerCount));
+	writer.Write(static_cast<uint32_t>(unknownCount));
 
 	for (const auto& animation : artFile.animations)
 	{
-		WriteAnimation(seekableWriter, animation);
+		WriteAnimation(writer, animation);
 	}
 }
 
-void ArtFile::WriteAnimation(Stream::BidirectionalWriter& seekableWriter, const Animation& animation)
+void ArtFile::WriteAnimation(Stream::Writer& writer, const Animation& animation)
 {
-	seekableWriter.Write(animation.unknown);
-	seekableWriter.Write(animation.selectionRect);
-	seekableWriter.Write(animation.pixelDisplacement);
-	seekableWriter.Write(animation.unknown2);
+	writer.Write(animation.unknown);
+	writer.Write(animation.selectionRect);
+	writer.Write(animation.pixelDisplacement);
+	writer.Write(animation.unknown2);
 
 	std::size_t frameCount = animation.frames.size();
 	if (frameCount > UINT32_MAX) {
 		throw std::runtime_error("There are too many frames in animation to write");
 	}
-	seekableWriter.Write(static_cast<uint32_t>(frameCount));
+	writer.Write(static_cast<uint32_t>(frameCount));
 
 	for (const auto& frame : animation.frames) {
-		WriteFrame(seekableWriter, frame);
+		WriteFrame(writer, frame);
 	}
 
-	seekableWriter.Write<uint32_t>(animation.unknownContainer);
+	writer.Write<uint32_t>(animation.unknownContainer);
 }
 
-void ArtFile::WriteFrame(Stream::BidirectionalWriter& seekableWriter, const Animation::Frame& frame)
+void ArtFile::WriteFrame(Stream::Writer& writer, const Animation::Frame& frame)
 {
 	if (frame.layerMetadata.count != frame.layers.size()) {
 		throw std::runtime_error("Recorded layer count must match number of written layers.");
 	}
 
-	seekableWriter.Write(frame.layerMetadata);
-	seekableWriter.Write(frame.unknownBitfield);
+	writer.Write(frame.layerMetadata);
+	writer.Write(frame.unknownBitfield);
 
 	if (frame.layerMetadata.bReadOptionalData) {
-		seekableWriter.Write(frame.optional1);
-		seekableWriter.Write(frame.optional2);
+		writer.Write(frame.optional1);
+		writer.Write(frame.optional2);
 	}
 
 	if (frame.unknownBitfield.bReadOptionalData) {
-		seekableWriter.Write(frame.optional3);
-		seekableWriter.Write(frame.optional4);
+		writer.Write(frame.optional3);
+		writer.Write(frame.optional4);
 	}
 
-	seekableWriter.Write(frame.layers);
+	writer.Write(frame.layers);
 }
