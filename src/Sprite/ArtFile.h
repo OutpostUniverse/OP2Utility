@@ -10,7 +10,7 @@
 #include <cstddef>
 
 namespace Stream {
-	class BidirectionalReader;
+	class Reader;
 	class BidirectionalWriter;
 }
 
@@ -23,7 +23,7 @@ public:
 	uint32_t unknownAnimationCount;
 
 	static ArtFile Read(std::string filename);
-	static ArtFile Read(Stream::BidirectionalReader& seekableReader);
+	static ArtFile Read(Stream::Reader& reader);
 	static void Write(std::string filename, const ArtFile& artFile);
 	static void Write(Stream::BidirectionalWriter&, const ArtFile& artFile);
 
@@ -31,11 +31,11 @@ public:
 
 private:
 	// Read Functions
-	static void ReadPalette(Stream::BidirectionalReader& seekableReader, ArtFile& artFile);
-	static void ReadImageMetadata(Stream::BidirectionalReader& seekableReader, ArtFile& artFile);
-	static void ReadAnimations(Stream::BidirectionalReader& seekableReader, ArtFile& artFile);
-	static Animation ReadAnimation(Stream::BidirectionalReader& seekableReader);
-	static Animation::Frame ReadFrame(Stream::BidirectionalReader& seekableReader);
+	static void ReadPalette(Stream::Reader& reader, ArtFile& artFile);
+	static void ReadImageMetadata(Stream::Reader& reader, ArtFile& artFile);
+	static void ReadAnimations(Stream::Reader& reader, ArtFile& artFile);
+	static Animation ReadAnimation(Stream::Reader& reader);
+	static Animation::Frame ReadFrame(Stream::Reader& reader);
 	static void VerifyCountsMatchHeader(const ArtFile& artFile, std::size_t frameCount, std::size_t layerCount, std::size_t unknownCount);
 
 
