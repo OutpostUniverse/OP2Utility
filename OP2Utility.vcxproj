@@ -117,8 +117,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Archive\ArchivePacker.h" />
-    <ClInclude Include="src\Archive\ArchiveUnpacker.h" />
     <ClInclude Include="src\Archive\CompressionType.h" />
     <ClInclude Include="src\Archive\WaveFile.h" />
     <ClInclude Include="include\OP2Utility.h" />
@@ -146,8 +144,7 @@
     <ClInclude Include="src\Archive\ClmFile.h" />
     <ClInclude Include="src\Archive\HuffLZ.h" />
     <ClInclude Include="src\Archive\VolFile.h" />
-    <ClCompile Include="src\Archive\ArchivePacker.cpp" />
-    <ClCompile Include="src\Archive\ArchiveUnpacker.cpp" />
+    <ClCompile Include="src\Archive\ArchiveFile.cpp" />
     <ClCompile Include="src\Archive\WaveFile.cpp" />
     <ClCompile Include="src\Bitmap\BitmapFile.cpp" />
     <ClCompile Include="src\Bitmap\BmpHeader.cpp" />
