@@ -60,17 +60,15 @@ TEST_F(SimpleArtFile, Write_ScanLineByteWidth)
 
 TEST_F(SimpleArtFile, Write_PaletteIndexRange) 
 {
-	std::string filename = "Sprite/data/test.prt";
+	Stream::DynamicMemoryWriter writer;
 
 	// Check for no throw when ImageMeta.paletteIndex is within palette container's range
-	EXPECT_NO_THROW(ArtFile::Write(filename, artFile));
+	EXPECT_NO_THROW(ArtFile::Write(writer, artFile));
 
 	artFile.palettes.clear();
 
 	// Check for throw due to ImageMeta.paletteIndex outside of palette container's range
-	EXPECT_THROW(ArtFile::Write(filename, artFile), std::runtime_error);
-
-	XFile::DeletePath(filename);
+	EXPECT_THROW(ArtFile::Write(writer, artFile), std::runtime_error);
 }
 
 TEST_F(SimpleArtFile, Write_PaletteColors)
