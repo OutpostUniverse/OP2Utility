@@ -1,6 +1,6 @@
 #include "../src/Sprite/ArtFile.h"
 #include "../src/XFile.h"
-#include "Stream/MemoryWriter.h"
+#include "Stream/DynamicMemoryWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
 #include <string>
@@ -14,9 +14,8 @@ TEST(ArtWriter, Empty)
 	XFile::DeletePath(testFilename);
 
 	// Write to Memory
-	std::vector<char> buffer(1024);
-	Stream::MemoryWriter memoryWriter(buffer.data(), buffer.size() * sizeof(decltype(buffer)::value_type));
-	EXPECT_NO_THROW(ArtFile::Write(memoryWriter, ArtFile()));
+	Stream::DynamicMemoryWriter writer;
+	EXPECT_NO_THROW(ArtFile::Write(writer, ArtFile()));
 }
 
 TEST(ArtWriter, BlankFilename)
