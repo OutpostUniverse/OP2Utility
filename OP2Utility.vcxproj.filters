@@ -99,6 +99,9 @@
     <ClInclude Include="src\Stream\MemoryWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
+    <ClInclude Include="src\Stream\DynamicMemoryWriter.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
     <ClInclude Include="src\Stream\Reader.h">
       <Filter>Stream</Filter>
     </ClInclude>
@@ -228,6 +231,9 @@
       <Filter>Stream</Filter>
     </ClCompile>
     <ClCompile Include="src\Stream\MemoryWriter.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stream\DynamicMemoryWriter.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
     <ClCompile Include="src\Archive\BitStreamReader.cpp">
