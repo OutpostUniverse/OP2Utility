@@ -23,7 +23,7 @@ struct Animation {
 			Point16 pixelOffset;
 		};
 
-		static_assert(4 + sizeof(Point16), "Animation::Frame::Layer is an unexpected size");
+		static_assert(8 == sizeof(Layer), "Animation::Frame::Layer is an unexpected size");
 
 		LayerMetadata layerMetadata;
 		LayerMetadata unknownBitfield;
