@@ -11,31 +11,31 @@ ArtFile ArtFile::Read(std::string filename) {
 	return Read(mapReader);
 }
 
-ArtFile ArtFile::Read(Stream::BidirectionalReader& seekableReader) {
+ArtFile ArtFile::Read(Stream::Reader& reader) {
 	ArtFile artFile;
 
-	ReadPalette(seekableReader, artFile);
-	ReadImageMetadata(seekableReader, artFile);
-	ReadAnimations(seekableReader, artFile);
+	ReadPalette(reader, artFile);
+	ReadImageMetadata(reader, artFile);
+	ReadAnimations(reader, artFile);
 
 	return artFile;
 }
 
-void ArtFile::ReadPalette(Stream::BidirectionalReader& seekableReader, ArtFile& artFile)
+void ArtFile::ReadPalette(Stream::Reader& reader, ArtFile& artFile)
 {
 	SectionHeader paletteSectionHeader;
-	seekableReader.Read(paletteSectionHeader);
+	reader.Read(paletteSectionHeader);
 	paletteSectionHeader.Validate(TagPalette);
 
 	artFile.palettes.resize(paletteSectionHeader.length);
 
 	for (uint32_t i = 0; i < paletteSectionHeader.length; ++i) {
 		PaletteHeader paletteHeader;
-		seekableReader.Read(paletteHeader);
+		reader.Read(paletteHeader);
 
 		paletteHeader.Validate();
 
-		seekableReader.Read(artFile.palettes[i]);
+		reader.Read(artFile.palettes[i]);
 
 		// Rearrange color into standard format. Outpost 2 uses custom color order.
 		for (auto& color : artFile.palettes[i])
@@ -45,78 +45,78 @@ void ArtFile::ReadPalette(Stream::BidirectionalReader& seekableReader, ArtFile& 
 	}
 }
 
-void ArtFile::ReadImageMetadata(Stream::BidirectionalReader& seekableReader, ArtFile& artFile)
+void ArtFile::ReadImageMetadata(Stream::Reader& reader, ArtFile& artFile)
 {
-	seekableReader.Read<uint32_t>(artFile.imageMetas);
+	reader.Read<uint32_t>(artFile.imageMetas);
 
 	artFile.ValidateImageMetadata();
 }
 
-void ArtFile::ReadAnimations(Stream::BidirectionalReader& seekableReader, ArtFile& artFile)
+void ArtFile::ReadAnimations(Stream::Reader& reader, ArtFile& artFile)
 {
 	uint32_t animationCount;
-	seekableReader.Read(animationCount);
+	reader.Read(animationCount);
 	artFile.animations.resize(animationCount);
 
 	uint32_t frameCount;
-	seekableReader.Read(frameCount);
+	reader.Read(frameCount);
 
 	uint32_t layerCount;
-	seekableReader.Read(layerCount);
+	reader.Read(layerCount);
 
-	seekableReader.Read(artFile.unknownAnimationCount);
+	reader.Read(artFile.unknownAnimationCount);
 
 	for (uint32_t i = 0; i < animationCount; ++i)
 	{
-		artFile.animations[i] = ReadAnimation(seekableReader);
+		artFile.animations[i] = ReadAnimation(reader);
 	}
 
 	VerifyCountsMatchHeader(artFile, frameCount, layerCount, artFile.unknownAnimationCount);
 }
 
-Animation ArtFile::ReadAnimation(Stream::BidirectionalReader& seekableReader)
+Animation ArtFile::ReadAnimation(Stream::Reader& reader)
 {
 	Animation animation;
 
-	seekableReader.Read(animation.unknown);
-	seekableReader.Read(animation.selectionRect);
-	seekableReader.Read(animation.pixelDisplacement);
-	seekableReader.Read(animation.unknown2);
+	reader.Read(animation.unknown);
+	reader.Read(animation.selectionRect);
+	reader.Read(animation.pixelDisplacement);
+	reader.Read(animation.unknown2);
 
 	uint32_t frameCount;
-	seekableReader.Read(frameCount);
+	reader.Read(frameCount);
 	animation.frames.resize(frameCount);
 
 	for (uint32_t i = 0; i < frameCount; ++i) {
-		animation.frames[i] = ReadFrame(seekableReader);
+		animation.frames[i] = ReadFrame(reader);
 	}
 
-	seekableReader.Read<uint32_t>(animation.unknownContainer);
+	reader.Read<uint32_t>(animation.unknownContainer);
 
 	return animation;
 }
 
-Animation::Frame ArtFile::ReadFrame(Stream::BidirectionalReader& seekableReader) {
+Animation::Frame ArtFile::ReadFrame(Stream::Reader& reader) {
 	Animation::Frame frame;
 	frame.optional1 = 0;
 	frame.optional2 = 0;
 	frame.optional3 = 0;
 	frame.optional4 = 0;
 
-	seekableReader.Read(frame.layerMetadata);
-	seekableReader.Read(frame.unknownBitfield);
+	reader.Read(frame.layerMetadata);
+	reader.Read(frame.unknownBitfield);
 
 	if (frame.layerMetadata.bReadOptionalData) {
-		seekableReader.Read(frame.optional1);
-		seekableReader.Read(frame.optional2);
+		reader.Read(frame.optional1);
+		reader.Read(frame.optional2);
 	}
 	if (frame.unknownBitfield.bReadOptionalData) {
-		seekableReader.Read(frame.optional3);
-		seekableReader.Read(frame.optional4);
+		reader.Read(frame.optional3);
+		reader.Read(frame.optional4);
 	}
 
 	frame.layers.resize(frame.layerMetadata.count);
-	seekableReader.Read(frame.layers);
+	reader.Read(frame.layers);
 
 	return frame;
 }
