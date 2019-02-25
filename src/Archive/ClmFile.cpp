@@ -93,26 +93,6 @@ namespace Archive
 		return std::make_unique<Stream::FileSliceReader>(slice);
 	}
 
-	// Repacks the volume using the same files as are specified by the internal file names
-	// Returns nonzero if successful and zero otherwise
-	void ClmFile::Repack()
-	{
-		std::vector<std::string> filesToPack(m_Count);
-		std::vector<std::string> names(m_Count);
-
-		for (std::size_t i = 0; i < m_Count; ++i)
-		{
-			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			filesToPack[i] = GetName(i) + ".wav";
-		}
-
-		const std::string tempFilename = "temp.clm";
-		CreateArchive(tempFilename, filesToPack);
-
-		// Rename the output file to the desired file
-		XFile::RenameFile(tempFilename, m_ArchiveFilename);
-	}
-
 	// Creates a new Archive file with the file name archiveFilename. The
 	// files listed in the container filesToPack are packed into the archive.
 	// Automatically strips file name extensions from filesToPack.

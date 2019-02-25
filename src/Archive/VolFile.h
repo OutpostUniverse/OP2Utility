@@ -32,9 +32,6 @@ namespace Archive
 		// Opens a stream containing a packed file
 		std::unique_ptr<Stream::BidirectionalReader> OpenStream(std::size_t index) override;
 
-		// Volume Creation
-		void Repack() override;
-
 		// Create a new archive with the files specified in filesToPack
 		static void CreateArchive(const std::string& volumeFilename, std::vector<std::string> filesToPack);
 

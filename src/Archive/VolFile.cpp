@@ -150,23 +150,6 @@ namespace Archive
 
 
 
-	void VolFile::Repack()
-	{
-		std::vector<std::string> filesToPack(m_Count);
-
-		for (std::size_t i = 0; i < m_Count; ++i)
-		{
-			//Filename is equivalent to internalName since filename is a relative path from current directory.
-			filesToPack.push_back(GetName(i));
-		}
-
-		const std::string tempFilename("temp.vol");
-		CreateArchive(tempFilename, filesToPack);
-
-		// Rename the output file to the desired file
-		XFile::RenameFile(tempFilename, m_ArchiveFilename);
-	}
-
 	void VolFile::CreateArchive(const std::string& volumeFilename, std::vector<std::string> filesToPack)
 	{
 		// Sort files alphabetically based on the filename only (not including the full path).
