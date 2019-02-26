@@ -38,6 +38,7 @@ namespace Stream
 		// Vector data types
 		template<typename T, typename A>
 		inline void Write(const std::vector<T, A>& vector) {
+			// Size calculation can't possibly overflow since the vector size necessarily fits in memory
 			WriteImplementation(vector.data(), vector.size() * sizeof(T));
 		}
 
@@ -46,9 +47,11 @@ namespace Stream
 		template<typename SizeType, typename T, typename A>
 		void Write(const std::vector<T, A>& vector) {
 			auto vectorSize = vector.size();
+			// This check is trivially false if SizeType is larger than max vector size
 			if (vectorSize > std::numeric_limits<SizeType>::max()) {
 				throw std::runtime_error("Vector too large to save size field");
 			}
+			// This can't overflow due to check above
 			auto typedSize = static_cast<SizeType>(vectorSize);
 			Write(typedSize);
 			Write(vector);
@@ -58,6 +61,7 @@ namespace Stream
 		// Does not write null terminator unless specifically included in string
 		template<typename CharT, typename Traits, typename Allocator>
 		void Write(const std::basic_string<CharT, Traits, Allocator>& string) {
+			// Size calculation can't possibly overflow since the string size necessarily fits in memory
 			Write(&string[0], string.size() * sizeof(CharT));
 		}
 
@@ -67,9 +71,11 @@ namespace Stream
 		template<typename SizeType, typename CharT, typename Traits, typename Allocator>
 		void Write(const std::basic_string<CharT, Traits, Allocator>& string) {
 			auto stringSize = string.size();
+			// This check is trivially false if SizeType is larger than max string size
 			if (stringSize > std::numeric_limits<SizeType>::max()) {
 				throw std::runtime_error("String's size is too large to write in provided size field");
 			}
+			// This can't overflow due to check above
 			Write(static_cast<SizeType>(stringSize));
 			Write(string);
 		}
