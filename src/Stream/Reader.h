@@ -43,6 +43,7 @@ namespace Stream
 		// passing vector into this function to ensure proper vector size is read
 		template<typename T, typename A>
 		inline void Read(std::vector<T, A>& vector) {
+			// Size calculation can't possibly overflow since the vector size necessarily fits in memory
 			ReadImplementation(vector.data(), vector.size() * sizeof(T));
 		}
 
@@ -52,8 +53,13 @@ namespace Stream
 		void Read(std::vector<T, A>& vector) {
 			SizeType vectorSize;
 			Read(vectorSize);
+			// This check is trivially false for unsigned SizeType
 			if (vectorSize < 0) {
 				throw std::runtime_error("Vector's size may not be a negative number");
+			}
+			// This check may be trivially false when SizeType is much smaller than max vector size
+			if (vectorSize > vector.max_size()) {
+				throw std::runtime_error("Vector's size is too big to fit in memory");
 			}
 			vector.clear();
 			vector.resize(vectorSize);
@@ -65,6 +71,7 @@ namespace Stream
 		// passing string into this function to ensure proper string size is read
 		template<typename CharT, typename Traits, typename Allocator>
 		void Read(std::basic_string<CharT, Traits, Allocator>& string) {
+			// Size calculation can't possibly overflow since the string size necessarily fits in memory
 			Read(&string[0], string.size() * sizeof(CharT));
 		}
 
@@ -74,8 +81,13 @@ namespace Stream
 		void Read(std::basic_string<CharT, Traits, Allocator>& string) {
 			SizeType stringSize;
 			Read(stringSize);
+			// This check is trivially false for unsigned SizeType
 			if (stringSize < 0) {
 				throw std::runtime_error("String's size may not be a negative number");
+			}
+			// This check may be trivially false when SizeType is too small to overflow string size for CharT types
+			if (stringSize > string.max_size()) {
+				throw std::runtime_error("String's size is too big to fit in memory");
 			}
 
 			string.clear();
