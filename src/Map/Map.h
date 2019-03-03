@@ -56,7 +56,13 @@ public:
 	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
 	std::vector<Tile> tiles;
 
-	// Represents playable area of the map.
+	/**
+	 * \brief	Represents the visible areas of the map.
+	 *
+	 * \note	Maps designated 'around the world' allow for continuous
+	 *			scrolling on the X axis and so will populate X1 with -1
+	 *			and X2 with \c INT_MAX.
+	 */
 	Rect clipRect;
 
 	// Listing of all tile set sources associated with the map.
