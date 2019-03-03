@@ -68,8 +68,8 @@ Map Map::ReadMapBeginning(Stream::Reader& stream)
 	Map map;
 	map.versionTag = mapHeader.versionTag;
 	map.isSavedGame = mapHeader.bSavedGame;
-	map.mapTileWidth = mapHeader.MapTileWidth();
-	map.mapTileHeight = mapHeader.mapTileHeight;
+	map.widthInTiles = mapHeader.WidthInTiles();
+	map.heightInTiles = mapHeader.heightInTiles;
 
 	map.tiles.resize(mapHeader.TileCount());
 	stream.Read(map.tiles);

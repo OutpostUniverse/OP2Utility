@@ -44,8 +44,8 @@ public:
 	inline void SetVersionTag(int32_t versionTag) { this->versionTag = versionTag; };
 	inline int32_t GetVersionTag() const { return versionTag; };
 	inline bool IsSavedGame() const { return isSavedGame; };
-	inline uint32_t MapTileWidth() const { return mapTileWidth; };
-	inline uint32_t MapTileHeight() const { return mapTileHeight; };
+	inline uint32_t WidthInTiles() const { return widthInTiles; };
+	inline uint32_t HeightInTiles() const { return heightInTiles; };
 
 	// Total number of tiles on map.
 	inline std::size_t TileCount() const
@@ -90,8 +90,8 @@ public:
 private:
 	int32_t versionTag;
 	bool isSavedGame;
-	uint32_t mapTileWidth;
-	uint32_t mapTileHeight;
+	uint32_t widthInTiles;
+	uint32_t heightInTiles;
 
 	std::size_t GetTileIndex(std::size_t x, std::size_t y) const;
 
