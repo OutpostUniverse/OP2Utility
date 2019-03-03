@@ -36,7 +36,7 @@ namespace Stream
 			throw std::runtime_error("Seek forward beyond stream size limit");
 		}
 		// Zero fill to new size
-		streamBuffer.resize(streamSize + offset, 0);
+		streamBuffer.resize(static_cast<std::size_t>(streamSize + offset), 0);
 	}
 
 	void DynamicMemoryWriter::SeekBackward(uint64_t offset)
@@ -45,12 +45,12 @@ namespace Stream
 		if (offset > streamSize) {
 			throw std::runtime_error("Seek backward before beginning of stream");
 		}
-		streamBuffer.resize(streamSize - offset, 0);
+		streamBuffer.resize(static_cast<std::size_t>(streamSize - offset), 0);
 	}
 
 	void DynamicMemoryWriter::Seek(uint64_t offset)
 	{
-		streamBuffer.resize(offset, 0);
+		streamBuffer.resize(static_cast<std::size_t>(offset), 0);
 	}
 
 	MemoryReader DynamicMemoryWriter::GetReader() {
