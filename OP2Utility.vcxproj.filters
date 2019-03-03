@@ -99,9 +99,6 @@
     <ClInclude Include="src\Stream\MemoryWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="src\Stream\DynamicMemoryWriter.h">
-      <Filter>Stream</Filter>
-    </ClInclude>
     <ClInclude Include="src\Stream\Reader.h">
       <Filter>Stream</Filter>
     </ClInclude>
@@ -185,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="src\Tag.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Stream\DynamicMemoryWriter.h">
+      <Filter>Stream</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

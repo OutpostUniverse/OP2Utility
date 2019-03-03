@@ -184,6 +184,7 @@
     <ClInclude Include="src\Sprite\OP2BmpLoader.h" />
     <ClInclude Include="src\Sprite\PaletteHeader.h" />
     <ClInclude Include="src\Sprite\SectionHeader.h" />
+    <ClInclude Include="src\Stream\DynamicMemoryWriter.h" />
     <ClInclude Include="src\Stream\SliceReader.h" />
     <ClInclude Include="src\Stream\FileReader.h" />
     <ClInclude Include="src\Stream\FileWriter.h" />
