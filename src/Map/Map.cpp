@@ -7,8 +7,8 @@
 Map::Map() :
 	versionTag(MapHeader::MinMapVersion),
 	isSavedGame(false),
-	mapTileWidth(0),
-	mapTileHeight(0) { }
+	widthInTiles(0),
+	heightInTiles(0) { }
 
 std::size_t Map::GetTileMappingIndex(std::size_t x, std::size_t y) const
 {
@@ -54,7 +54,7 @@ std::size_t Map::GetTileIndex(std::size_t x, std::size_t y) const
 {
 	auto lowerX = x & 0x1F; // ... 0001 1111
 	auto upperX = x >> 5;   // ... 1110 0000
-	return (upperX * mapTileHeight + y) * 32 + lowerX;
+	return (upperX * heightInTiles + y) * 32 + lowerX;
 }
 
 void Map::CheckMinVersionTag(uint32_t versionTag)
