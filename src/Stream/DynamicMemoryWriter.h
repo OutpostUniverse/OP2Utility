@@ -40,5 +40,7 @@ namespace Stream
 
 	private:
 		std::vector<uint8_t> streamBuffer;
+
+		using SizeType = decltype(streamBuffer)::size_type;
 	};
 }
