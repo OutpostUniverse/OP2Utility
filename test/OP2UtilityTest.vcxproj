@@ -57,6 +57,7 @@
     <ClCompile Include="Rect.test.cpp" />
     <ClCompile Include="Sprite\ArtReader.test.cpp" />
     <ClCompile Include="Sprite\ArtWriter.test.cpp" />
+    <ClCompile Include="Stream\DynamicMemoryWriter.test.cpp" />
     <ClCompile Include="Stream\FileReader.test.cpp" />
     <ClCompile Include="Stream\SliceReader.test.cpp" />
     <ClCompile Include="Stream\FileWriter.test.cpp" />

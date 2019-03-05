@@ -1,6 +1,6 @@
 #include "Map/Map.h"
 #include "Map/MapHeader.h"
-#include "Stream/MemoryWriter.h"
+#include "Stream/DynamicMemoryWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
 #include <vector>
@@ -14,9 +14,8 @@ TEST(MapWriter, EmptyMap)
 	XFile::DeletePath(testFilename);
 
 	// Write to Memory
-	std::vector<char> buffer(1024);
-	Stream::MemoryWriter memoryWriter(buffer.data(), buffer.size() * sizeof(decltype(buffer)::value_type));
-	EXPECT_NO_THROW(Map().Write(memoryWriter));
+	Stream::DynamicMemoryWriter writer;
+	EXPECT_NO_THROW(Map().Write(writer));
 }
 
 TEST(MapWriter, BlankFilename)
@@ -25,11 +24,9 @@ TEST(MapWriter, BlankFilename)
 }
 
 TEST(MapWriter, AllowInvalidVersionTag) {
-	const std::string testFilename("Map/data/test.map");
+	Stream::DynamicMemoryWriter writer;
 	Map map;
 
 	map.SetVersionTag(MapHeader::MinMapVersion - 1);
-	EXPECT_NO_THROW(Map().Write(testFilename));
-
-	XFile::DeletePath(testFilename);
+	EXPECT_NO_THROW(Map().Write(writer));
 }

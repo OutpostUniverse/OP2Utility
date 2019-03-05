@@ -59,6 +59,9 @@
       <Filter>Stream</Filter>
     </ClCompile>
     <ClCompile Include="Tag.test.cpp" />
+    <ClCompile Include="Stream\DynamicMemoryWriter.test.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
