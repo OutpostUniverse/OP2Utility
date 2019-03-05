@@ -8,6 +8,14 @@
 
 namespace Stream
 {
+	/**
+	 * \brief Memory backed stream, which grows dynamically in size as data is added
+	 *
+	 * An internal memory buffer is managed by DynamicMemoryWriter, which grows as needed to accommodate new data.
+	 * This is in contrast to MemoryWriter, which is a view to a non-owned pre-set sized buffer, which can not grow.
+	 *
+	 * \note Adding additional data to the stream after calling GetReader may invalidate existing readers.
+	 */
 	class DynamicMemoryWriter : public BidirectionalWriter
 	{
 	public:
