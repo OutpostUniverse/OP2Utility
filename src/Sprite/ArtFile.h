@@ -24,8 +24,8 @@ public:
 
 	static ArtFile Read(std::string filename);
 	static ArtFile Read(Stream::Reader& reader);
-	static void Write(std::string filename, const ArtFile& artFile);
-	static void Write(Stream::Writer&, const ArtFile& artFile);
+	void Write(std::string filename) const;
+	void Write(Stream::Writer& writer) const;
 
 	void VerifyImageIndexInBounds(std::size_t index);
 

@@ -5,21 +5,21 @@
 #include <stdexcept>
 #include <algorithm>
 
-void ArtFile::Write(std::string filename, const ArtFile& artFile)
+void ArtFile::Write(std::string filename) const
 {
 	Stream::FileWriter artWriter(filename);
-	Write(artWriter, artFile);
+	Write(artWriter);
 }
 
-void ArtFile::Write(Stream::Writer& writer, const ArtFile& artFile)
+void ArtFile::Write(Stream::Writer& writer) const
 {
-	artFile.ValidateImageMetadata();
+	ValidateImageMetadata();
 
-	WritePalettes(writer, artFile);
+	WritePalettes(writer, *this);
 
-	writer.Write<uint32_t>(artFile.imageMetas);
+	writer.Write<uint32_t>(imageMetas);
 
-	WriteAnimations(writer, artFile);
+	WriteAnimations(writer, *this);
 }
 
 void ArtFile::WritePalettes(Stream::Writer& writer, const ArtFile& artFile)
