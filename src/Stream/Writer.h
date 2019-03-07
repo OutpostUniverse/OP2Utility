@@ -35,9 +35,9 @@ namespace Stream
 			WriteImplementation(&object, sizeof(object));
 		}
 
-		// Vector data types
+		// Vector of trvially copyable data types
 		template<typename T, typename A>
-		inline void Write(const std::vector<T, A>& vector) {
+		inline std::enable_if_t<std::is_trivially_copyable<T>::value> Write(const std::vector<T, A>& vector) {
 			// Size calculation can't possibly overflow since the vector size necessarily fits in memory
 			WriteImplementation(vector.data(), vector.size() * sizeof(T));
 		}
