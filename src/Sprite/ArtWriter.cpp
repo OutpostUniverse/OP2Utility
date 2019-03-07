@@ -15,25 +15,25 @@ void ArtFile::Write(Stream::Writer& writer) const
 {
 	ValidateImageMetadata();
 
-	WritePalettes(writer, *this);
+	WritePalettes(writer);
 
 	writer.Write<uint32_t>(imageMetas);
 
-	WriteAnimations(writer, *this);
+	WriteAnimations(writer);
 }
 
-void ArtFile::WritePalettes(Stream::Writer& writer, const ArtFile& artFile)
+void ArtFile::WritePalettes(Stream::Writer& writer) const
 {
-	if (artFile.palettes.size() > UINT32_MAX) {
+	if (palettes.size() > UINT32_MAX) {
 		throw std::runtime_error("Art file contains too many palettes.");
 	}
 
-	writer.Write(SectionHeader(TagPalette, static_cast<uint32_t>(artFile.palettes.size())));
+	writer.Write(SectionHeader(TagPalette, static_cast<uint32_t>(palettes.size())));
 
 	// Intentially do not pass palette as reference to allow local modification
 	// Switch red and blue color to match Outpost 2 custom format.
-	for (auto pallete : artFile.palettes) {
-		writer.Write(PaletteHeader(artFile));
+	for (auto pallete : palettes) {
+		writer.Write(PaletteHeader(*this));
 
 		for (auto& color : pallete) {
 			std::swap(color.red, color.blue);
@@ -43,18 +43,18 @@ void ArtFile::WritePalettes(Stream::Writer& writer, const ArtFile& artFile)
 	}
 }
 
-void ArtFile::WriteAnimations(Stream::Writer& writer, const ArtFile& artFile)
+void ArtFile::WriteAnimations(Stream::Writer& writer) const
 {
-	if (artFile.animations.size() > UINT32_MAX) {
+	if (animations.size() > UINT32_MAX) {
 		throw std::runtime_error("There are too many animations contained in the ArtFile.");
 	}
 
-	writer.Write(static_cast<uint32_t>(artFile.animations.size()));
+	writer.Write(static_cast<uint32_t>(animations.size()));
 
 	std::size_t frameCount;
 	std::size_t layerCount;
 	std::size_t unknownCount;
-	artFile.CountFrames(frameCount, layerCount, unknownCount);
+	CountFrames(frameCount, layerCount, unknownCount);
 
 	if (frameCount > UINT32_MAX) {
 		throw std::runtime_error("There are too many frames to write to file.");
@@ -72,7 +72,7 @@ void ArtFile::WriteAnimations(Stream::Writer& writer, const ArtFile& artFile)
 	writer.Write(static_cast<uint32_t>(layerCount));
 	writer.Write(static_cast<uint32_t>(unknownCount));
 
-	for (const auto& animation : artFile.animations)
+	for (const auto& animation : animations)
 	{
 		WriteAnimation(writer, animation);
 	}

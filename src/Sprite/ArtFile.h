@@ -40,8 +40,8 @@ private:
 
 
 	// Write Functions
-	static void WritePalettes(Stream::Writer& writer, const ArtFile& artFile);
-	static void WriteAnimations(Stream::Writer& writer, const ArtFile& artFile);
+	void WritePalettes(Stream::Writer& writer) const;
+	void WriteAnimations(Stream::Writer& writer) const;
 	static void WriteAnimation(Stream::Writer& writer, const Animation& animation);
 	static void WriteFrame(Stream::Writer& writer, const Animation::Frame& frame);
 
