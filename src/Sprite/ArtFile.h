@@ -24,6 +24,7 @@ public:
 
 	static ArtFile Read(std::string filename);
 	static ArtFile Read(Stream::Reader& reader);
+	static ArtFile Read(Stream::Reader&& reader);
 	void Write(std::string filename) const;
 	void Write(Stream::Writer& writer) const;
 
