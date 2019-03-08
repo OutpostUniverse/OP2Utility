@@ -10,17 +10,17 @@ TEST(ArtWriter, Empty)
 {
 	// Write to File
 	const std::string testFilename("Sprite/data/test.prt");
-	EXPECT_NO_THROW(ArtFile::Write(testFilename, ArtFile()));
+	EXPECT_NO_THROW(ArtFile().Write(testFilename));
 	XFile::DeletePath(testFilename);
 
 	// Write to Memory
 	Stream::DynamicMemoryWriter writer;
-	EXPECT_NO_THROW(ArtFile::Write(writer, ArtFile()));
+	EXPECT_NO_THROW(ArtFile().Write(writer));
 }
 
 TEST(ArtWriter, BlankFilename)
 {
-	EXPECT_THROW(ArtFile::Write("", ArtFile()), std::runtime_error);
+	EXPECT_THROW(ArtFile().Write(""), std::runtime_error);
 }
 
 class SimpleArtFile : public ::testing::Test {
@@ -43,19 +43,19 @@ TEST_F(SimpleArtFile, Write_ScanLineByteWidth)
 	Stream::DynamicMemoryWriter writer;
 
 	// Check no throw if scanLine next 4 byte aligned
-	EXPECT_NO_THROW(ArtFile::Write(writer, artFile));
+	EXPECT_NO_THROW(artFile.Write(writer));
 
 	// Check throw if scanLine > width && < 4 byte aligned
 	artFile.imageMetas[0].scanLineByteWidth = 11;
-	EXPECT_THROW(ArtFile::Write(writer, artFile), std::runtime_error);
+	EXPECT_THROW(artFile.Write(writer), std::runtime_error);
 
 	// Check throw if scanLine > first 4 byte align
 	artFile.imageMetas[0].scanLineByteWidth = 16;
-	EXPECT_THROW(ArtFile::Write(writer, artFile), std::runtime_error);
+	EXPECT_THROW(artFile.Write(writer), std::runtime_error);
 
 	// Check throw if scanLine < width but still 4 byte aligned
 	artFile.imageMetas[0].scanLineByteWidth = 8;
-	EXPECT_THROW(ArtFile::Write(writer, artFile), std::runtime_error);
+	EXPECT_THROW(artFile.Write(writer), std::runtime_error);
 }
 
 TEST_F(SimpleArtFile, Write_PaletteIndexRange) 
@@ -63,12 +63,12 @@ TEST_F(SimpleArtFile, Write_PaletteIndexRange)
 	Stream::DynamicMemoryWriter writer;
 
 	// Check for no throw when ImageMeta.paletteIndex is within palette container's range
-	EXPECT_NO_THROW(ArtFile::Write(writer, artFile));
+	EXPECT_NO_THROW(artFile.Write(writer));
 
 	artFile.palettes.clear();
 
 	// Check for throw due to ImageMeta.paletteIndex outside of palette container's range
-	EXPECT_THROW(ArtFile::Write(writer, artFile), std::runtime_error);
+	EXPECT_THROW(artFile.Write(writer), std::runtime_error);
 }
 
 TEST_F(SimpleArtFile, Write_PaletteColors)
@@ -79,7 +79,7 @@ TEST_F(SimpleArtFile, Write_PaletteColors)
 
 	Stream::DynamicMemoryWriter writer;
 
-	EXPECT_NO_THROW(ArtFile::Write(writer, artFile));
+	EXPECT_NO_THROW(artFile.Write(writer));
 
 	// Check ArtFile palette remains unchanged after write
 	EXPECT_EQ(red, artFile.palettes[0][0].red);
