@@ -20,8 +20,7 @@ TEST(MapReader, EmptyFile) {
 TEST(MapReader, ReadMap) {
 	// Simple valid source to load from
 	Stream::DynamicMemoryWriter writer;
-	Map map;
-	map.Write(writer);
+	Map().Write(writer);
 
 	// Read from stream as lvalue
 	auto reader = writer.GetReader();
