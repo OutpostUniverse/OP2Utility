@@ -29,4 +29,7 @@ TEST(MapReader, ReadMap) {
 
 	// Read from stream as rvalue (unnamed temporary object)
 	EXPECT_NO_THROW(auto mapFile = Map::ReadMap(writer.GetReader()));
+	
+	// Throw error if attempting to read a saved game from a map
+	EXPECT_THROW(auto savedGame = Map::ReadSavedGame(writer.GetReader()), std::runtime_error);
 }

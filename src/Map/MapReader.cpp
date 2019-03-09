@@ -56,6 +56,12 @@ Map Map::ReadSavedGame(Stream::BidirectionalReader& savedGameStream)
 	return map;
 }
 
+// Read saved game from an rvalue stream (unnamed temporary)
+Map Map::ReadSavedGame(Stream::BidirectionalReader&& savedGameStream) {
+	// Delegate to lvalue overload
+	return ReadSavedGame(savedGameStream);
+}
+
 
 // == Private methods ==
 
