@@ -27,6 +27,12 @@ Map Map::ReadMap(Stream::Reader& mapStream)
 	return map;
 }
 
+// Read map from an rvalue stream (unnamed temporary)
+Map Map::ReadMap(Stream::Reader&& mapStream) {
+	// Delegate to lvalue overload
+	return ReadMap(mapStream);
+}
+
 Map Map::ReadSavedGame(std::string filename)
 {
 	Stream::FileReader savedGameStream(filename);

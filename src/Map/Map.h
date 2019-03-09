@@ -35,6 +35,8 @@ public:
 
 	static Map ReadMap(std::string filename);
 	static Map ReadMap(Stream::Reader& mapStream);
+	static Map ReadMap(Stream::Reader&& mapStream);
+
 	static Map ReadSavedGame(std::string filename);
 	static Map ReadSavedGame(Stream::BidirectionalReader& savedGameStream);
 

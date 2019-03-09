@@ -1,4 +1,5 @@
 #include "Map/Map.h"
+#include "Stream/DynamicMemoryWriter.h"
 #include <gtest/gtest.h>
 #include <string>
 
@@ -14,4 +15,18 @@ TEST(MapReader, MissingFile) {
 TEST(MapReader, EmptyFile) {
 	EXPECT_THROW(Map::ReadMap("Map/data/EmptyMap.map"), std::runtime_error);
 	EXPECT_THROW(Map::ReadSavedGame("Map/data/EmptySave.OP2"), std::runtime_error);
+}
+
+TEST(MapReader, ReadMap) {
+	// Simple valid source to load from
+	Stream::DynamicMemoryWriter writer;
+	Map map;
+	map.Write(writer);
+
+	// Read from stream as lvalue
+	auto reader = writer.GetReader();
+	EXPECT_NO_THROW(auto mapFile = Map::ReadMap(reader));
+
+	// Read from stream as rvalue (unnamed temporary object)
+	EXPECT_NO_THROW(auto mapFile = Map::ReadMap(writer.GetReader()));
 }
