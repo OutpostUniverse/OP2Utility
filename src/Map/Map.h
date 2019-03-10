@@ -35,8 +35,11 @@ public:
 
 	static Map ReadMap(std::string filename);
 	static Map ReadMap(Stream::Reader& mapStream);
+	static Map ReadMap(Stream::Reader&& mapStream);
+
 	static Map ReadSavedGame(std::string filename);
 	static Map ReadSavedGame(Stream::BidirectionalReader& savedGameStream);
+	static Map ReadSavedGame(Stream::BidirectionalReader&& savedGameStream);
 
 	void Write(const std::string& filename) const;
 	void Write(Stream::Writer& streamWriter) const;
