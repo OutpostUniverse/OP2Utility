@@ -10,7 +10,8 @@
 
 namespace Stream {
 	class BidirectionalWriter;
-	class BidirectionalReader;
+	class ForwardReader;
+	class Reader;
 }
 
 // BMP Writer only supporting Indexed Color palettes (1, 2, and 8 bit BMPs). 
@@ -26,7 +27,7 @@ public:
 
 	// BMP Reader only supports Indexed Color palettes (1, 2, and 8 bit BMPs).
 	static BitmapFile ReadIndexed(const std::string& filename);
-	static BitmapFile ReadIndexed(Stream::BidirectionalReader& seekableReader);
+	static BitmapFile ReadIndexed(Stream::ForwardReader& reader);
 
 	// BMP Writer only supporting Indexed Color palettes (1, 2, and 8 bit BMPs).
 	// @indexedPixels: Must include padding to fill each image row out to the next 4 byte memory border (pitch).
@@ -49,10 +50,10 @@ private:
 	static void VerifyIndexedImageForSerialization(uint16_t bitCount);
 
 	// Read
-	static BmpHeader ReadBmpHeader(Stream::BidirectionalReader& seekableReader);
-	static ImageHeader ReadImageHeader(Stream::BidirectionalReader& seekableReader);
-	static void ReadPalette(Stream::BidirectionalReader& seekableReader, BitmapFile& bitmapFile);
-	static void ReadPixels(Stream::BidirectionalReader& seekableReader, BitmapFile& bitmapFile);
+	static BmpHeader ReadBmpHeader(Stream::ForwardReader& reader);
+	static ImageHeader ReadImageHeader(Stream::Reader& reader);
+	static void ReadPalette(Stream::Reader& reader, BitmapFile& bitmapFile);
+	static void ReadPixels(Stream::Reader& reader, BitmapFile& bitmapFile);
 
 	// Write
 	static void WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette);

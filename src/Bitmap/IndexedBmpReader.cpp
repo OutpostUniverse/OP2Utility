@@ -8,36 +8,36 @@ BitmapFile BitmapFile::ReadIndexed(const std::string& filename)
 	return ReadIndexed(fileReader);
 }
 
-BitmapFile BitmapFile::ReadIndexed(Stream::BidirectionalReader& seekableReader)
+BitmapFile BitmapFile::ReadIndexed(Stream::ForwardReader& reader)
 {
 	BitmapFile bitmapFile;
-	bitmapFile.bmpHeader = ReadBmpHeader(seekableReader);
-	bitmapFile.imageHeader = ReadImageHeader(seekableReader);
+	bitmapFile.bmpHeader = ReadBmpHeader(reader);
+	bitmapFile.imageHeader = ReadImageHeader(reader);
 
-	ReadPalette(seekableReader, bitmapFile);
-	ReadPixels(seekableReader, bitmapFile);
+	ReadPalette(reader, bitmapFile);
+	ReadPixels(reader, bitmapFile);
 
 	return bitmapFile;
 }
 
-BmpHeader BitmapFile::ReadBmpHeader(Stream::BidirectionalReader& seekableReader)
+BmpHeader BitmapFile::ReadBmpHeader(Stream::ForwardReader& reader)
 {
 	BmpHeader bmpHeader;
-	seekableReader.Read(bmpHeader);
+	reader.Read(bmpHeader);
 
 	bmpHeader.VerifyFileSignature();
 
-	if (bmpHeader.size < seekableReader.Length()) {
+	if (bmpHeader.size < reader.Length()) {
 		throw std::runtime_error("Bitmap file size exceed length of stream.");
 	}
 
 	return bmpHeader;
 }
 
-ImageHeader BitmapFile::ReadImageHeader(Stream::BidirectionalReader& seekableReader)
+ImageHeader BitmapFile::ReadImageHeader(Stream::Reader& reader)
 {
 	ImageHeader imageHeader;
-	seekableReader.Read(imageHeader);
+	reader.Read(imageHeader);
 
 	imageHeader.Validate();
 
@@ -46,7 +46,7 @@ ImageHeader BitmapFile::ReadImageHeader(Stream::BidirectionalReader& seekableRea
 	return imageHeader;
 }
 
-void BitmapFile::ReadPalette(Stream::BidirectionalReader& seekableReader, BitmapFile& bitmapFile)
+void BitmapFile::ReadPalette(Stream::Reader& reader, BitmapFile& bitmapFile)
 {
 	bitmapFile.palette.clear();
 
@@ -57,15 +57,15 @@ void BitmapFile::ReadPalette(Stream::BidirectionalReader& seekableReader, Bitmap
 		bitmapFile.palette.resize(bitmapFile.imageHeader.CalcMaxIndexedPaletteSize());
 	}
 
-	seekableReader.Read(bitmapFile.palette);
+	reader.Read(bitmapFile.palette);
 }
 
-void BitmapFile::ReadPixels(Stream::BidirectionalReader& seekableReader, BitmapFile& bitmapFile)
+void BitmapFile::ReadPixels(Stream::Reader& reader, BitmapFile& bitmapFile)
 {
 	std::size_t pixelContainerSize = bitmapFile.bmpHeader.size - bitmapFile.bmpHeader.pixelOffset;
 	BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(bitmapFile.imageHeader.bitCount, bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, pixelContainerSize);
 
 	bitmapFile.pixels.clear();
 	bitmapFile.pixels.resize(pixelContainerSize);
-	seekableReader.Read(bitmapFile.pixels);
+	reader.Read(bitmapFile.pixels);
 }
