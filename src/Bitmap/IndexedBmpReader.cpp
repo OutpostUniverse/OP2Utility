@@ -20,6 +20,13 @@ BitmapFile BitmapFile::ReadIndexed(Stream::ForwardReader& reader)
 	return bitmapFile;
 }
 
+// Read indexed bitmap from an rvalue stream (unnamed temporary)
+BitmapFile BitmapFile::ReadIndexed(Stream::ForwardReader&& reader)
+{
+	// Delegate to lvalue overload
+	return ReadIndexed(reader);
+}
+
 BmpHeader BitmapFile::ReadBmpHeader(Stream::ForwardReader& reader)
 {
 	BmpHeader bmpHeader;
