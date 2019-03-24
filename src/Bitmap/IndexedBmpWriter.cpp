@@ -21,7 +21,7 @@ void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t w
 	WriteIndexed(fileWriter, bitCount, width, height, palette, indexedPixels);
 }
 
-void BitmapFile::WriteIndexed(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
+void BitmapFile::WriteIndexed(Stream::BidirectionalWriter& writer, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
 {
 	VerifyIndexedImageForSerialization(bitCount);
 	VerifyIndexedPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
@@ -29,13 +29,13 @@ void BitmapFile::WriteIndexed(Stream::BidirectionalWriter& seekableWriter, uint1
 
 	palette.resize(ImageHeader::CalcMaxIndexedPaletteSize(bitCount), DiscreteColor::Black);
 
-	WriteHeaders(seekableWriter, bitCount, width, height, palette);
-	seekableWriter.Write(palette);
+	WriteHeaders(writer, bitCount, width, height, palette);
+	writer.Write(palette);
 
-	WritePixels(seekableWriter, indexedPixels, width, bitCount);
+	WritePixels(writer, indexedPixels, width, bitCount);
 }
 
-void BitmapFile::WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
+void BitmapFile::WriteHeaders(Stream::BidirectionalWriter& writer, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
 	std::size_t fileSize = pixelOffset + ImageHeader::CalculatePitch(bitCount, width) * std::abs(height);
@@ -47,19 +47,19 @@ void BitmapFile::WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint1
 	auto bmpHeader = BmpHeader::Create(static_cast<uint32_t>(fileSize), static_cast<uint32_t>(pixelOffset));
 	auto imageHeader = ImageHeader::Create(width, height, bitCount);
 
-	seekableWriter.Write(bmpHeader);
-	seekableWriter.Write(imageHeader);
+	writer.Write(bmpHeader);
+	writer.Write(imageHeader);
 }
 
-void BitmapFile::WritePixels(Stream::BidirectionalWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
+void BitmapFile::WritePixels(Stream::BidirectionalWriter& writer, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
 {
 	const auto pitch = ImageHeader::CalculatePitch(bitCount, width);
 	const auto bytesOfPixelsPerRow = ImageHeader::CalcPixelByteWidth(bitCount, width);
 	const std::vector<uint8_t> padding(pitch - bytesOfPixelsPerRow, 0);
 
 	for (std::size_t i = 0; i < pixels.size();) {
-		seekableWriter.Write(&pixels[i], bytesOfPixelsPerRow);
-		seekableWriter.Write(padding);
+		writer.Write(&pixels[i], bytesOfPixelsPerRow);
+		writer.Write(padding);
 		i += pitch;
 	}
 }
