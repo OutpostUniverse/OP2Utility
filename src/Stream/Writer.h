@@ -64,14 +64,6 @@ namespace Stream
 			Write(vector);
 		}
 
-		// String data types
-		// Does not write null terminator unless specifically included in string
-		template<typename CharT, typename Traits, typename Allocator>
-		void Write(const std::basic_string<CharT, Traits, Allocator>& string) {
-			// Size calculation can't possibly overflow since the string size necessarily fits in memory
-			Write(&string[0], string.size() * sizeof(CharT));
-		}
-
 		// Size prefixed string data types
 		// Ex: Write<uint32_t>(string); // Write 32-bit string length followed by string data
 		// Does not write null terminator unless specifically included in string
