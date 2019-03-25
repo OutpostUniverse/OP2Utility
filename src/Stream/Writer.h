@@ -51,8 +51,11 @@ namespace Stream
 
 		// Size prefixed vector data types
 		// Ex: Write<uint32_t>(vector); // Write 32-bit vector size followed by vector data
-		template<typename SizeType, typename T, typename A>
-		void Write(const std::vector<T, A>& vector) {
+		template<typename SizeType, typename T>
+		std::enable_if_t<
+			std::is_same<T, std::vector<typename T::value_type, typename T::allocator_type>>::value
+		>
+		Write(const T& vector) {
 			auto vectorSize = vector.size();
 			// This check is trivially false if SizeType is larger than max vector size
 			if (vectorSize > std::numeric_limits<SizeType>::max()) {
