@@ -49,21 +49,21 @@ namespace Stream
 			WriteImplementation(container.data(), container.size() * sizeof(typename T::value_type));
 		}
 
-		// Size prefixed vector data types
+		// Size prefixed container data types
 		// Ex: Write<uint32_t>(vector); // Write 32-bit vector size followed by vector data
 		template<typename SizeType, typename T>
 		std::enable_if_t<
-			std::is_same<T, std::vector<typename T::value_type, typename T::allocator_type>>::value
+			true
 		>
-		Write(const T& vector) {
-			auto vectorSize = vector.size();
-			// This check is trivially false if SizeType is larger than max vector size
-			if (vectorSize > std::numeric_limits<SizeType>::max()) {
-				throw std::runtime_error("Vector too large to save size field");
+		Write(const T& container) {
+			auto containerSize = container.size();
+			// This check is trivially false if SizeType is larger than max container size
+			if (containerSize > std::numeric_limits<SizeType>::max()) {
+				throw std::runtime_error("Container too large to save size field");
 			}
 			// Cast can't overflow due to check above
-			Write(static_cast<SizeType>(vectorSize));
-			Write(vector);
+			Write(static_cast<SizeType>(containerSize));
+			Write(container);
 		}
 
 		// Size prefixed string data types
