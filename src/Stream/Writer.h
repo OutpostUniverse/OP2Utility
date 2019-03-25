@@ -61,9 +61,8 @@ namespace Stream
 			if (vectorSize > std::numeric_limits<SizeType>::max()) {
 				throw std::runtime_error("Vector too large to save size field");
 			}
-			// This can't overflow due to check above
-			auto typedSize = static_cast<SizeType>(vectorSize);
-			Write(typedSize);
+			// Cast can't overflow due to check above
+			Write(static_cast<SizeType>(vectorSize));
 			Write(vector);
 		}
 
