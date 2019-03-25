@@ -34,7 +34,9 @@ namespace Stream
 
 		// Trivially copyable data types
 		template<typename T>
-		inline std::enable_if_t<std::is_trivially_copyable<T>::value> Read(T& object) {
+		inline
+		std::enable_if_t<std::is_trivially_copyable<T>::value>
+		Read(T& object) {
 			ReadImplementation(&object, sizeof(object));
 		}
 
@@ -42,7 +44,8 @@ namespace Stream
 		// Reads into entire length of passed vector. Call vector.resize(vectorSize) before
 		// passing vector into this function to ensure proper vector size is read
 		template<typename T, typename A>
-		inline void Read(std::vector<T, A>& vector) {
+		inline
+		void Read(std::vector<T, A>& vector) {
 			// Size calculation can't possibly overflow since the vector size necessarily fits in memory
 			ReadImplementation(vector.data(), vector.size() * sizeof(T));
 		}
