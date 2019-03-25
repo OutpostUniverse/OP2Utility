@@ -57,6 +57,7 @@ namespace Stream
 		// String data types
 		// Reads into entire length of passed string. Call string.resize(stringSize) before
 		// passing string into this function to ensure proper string size is read
+		// Note: C++17 added a non-const overload of `string.data()`, needed to collapse this with the above
 		template<typename CharT, typename Traits, typename Allocator>
 		void Read(std::basic_string<CharT, Traits, Allocator>& string) {
 			// Size calculation can't possibly overflow since the string size necessarily fits in memory
