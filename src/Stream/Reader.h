@@ -40,14 +40,18 @@ namespace Stream
 			ReadImplementation(&object, sizeof(object));
 		}
 
-		// Vector data types
-		// Reads into entire length of passed vector. Call vector.resize(vectorSize) before
-		// passing vector into this function to ensure proper vector size is read
-		template<typename T, typename A>
+		// Non-trivial contiguous container of trivially copyable data types
+		// Reads into entire length of passed container. Call container.resize(size) before
+		// passing container into this function to ensure proper container size is read
+		template<typename T>
 		inline
-		void Read(std::vector<T, A>& vector) {
-			// Size calculation can't possibly overflow since the vector size necessarily fits in memory
-			ReadImplementation(vector.data(), vector.size() * sizeof(T));
+		std::enable_if_t<
+			!std::is_trivially_copyable<T>::value &&
+			std::is_trivially_copyable<typename T::value_type>::value
+		>
+		Read(T& container) {
+			// Size calculation can't possibly overflow since the container size necessarily fits in memory
+			ReadImplementation(container.data(), container.size() * sizeof(typename T::value_type));
 		}
 
 		// Size prefixed vector data types
