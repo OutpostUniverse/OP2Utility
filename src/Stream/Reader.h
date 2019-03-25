@@ -64,23 +64,23 @@ namespace Stream
 			Read(&string[0], string.size() * sizeof(CharT));
 		}
 
-		// Size prefixed vector data types
+		// Size prefixed container data types
 		// Ex: Read<uint32_t>(vector); // Read 32-bit vector size, allocate space, then read vector data
-		template<typename SizeType, typename T, typename A>
-		void Read(std::vector<T, A>& vector) {
-			SizeType vectorSize;
-			Read(vectorSize);
+		template<typename SizeType, typename T>
+		void Read(T& container) {
+			SizeType containerSize;
+			Read(containerSize);
 			// This check is trivially false for unsigned SizeType
-			if (vectorSize < 0) {
-				throw std::runtime_error("Vector's size may not be a negative number");
+			if (containerSize < 0) {
+				throw std::runtime_error("Container's size may not be a negative number");
 			}
-			// This check may be trivially false when SizeType is much smaller than max vector size
-			if (vectorSize > vector.max_size()) {
-				throw std::runtime_error("Vector's size is too big to fit in memory");
+			// This check may be trivially false when SizeType is much smaller than max container size
+			if (containerSize > container.max_size()) {
+				throw std::runtime_error("Container's size is too big to fit in memory");
 			}
-			vector.clear();
-			vector.resize(vectorSize);
-			Read(vector);
+			container.clear();
+			container.resize(containerSize);
+			Read(container);
 		}
 
 		// Size prefixed string data types
