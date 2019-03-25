@@ -54,6 +54,15 @@ namespace Stream
 			ReadImplementation(container.data(), container.size() * sizeof(typename T::value_type));
 		}
 
+		// String data types
+		// Reads into entire length of passed string. Call string.resize(stringSize) before
+		// passing string into this function to ensure proper string size is read
+		template<typename CharT, typename Traits, typename Allocator>
+		void Read(std::basic_string<CharT, Traits, Allocator>& string) {
+			// Size calculation can't possibly overflow since the string size necessarily fits in memory
+			Read(&string[0], string.size() * sizeof(CharT));
+		}
+
 		// Size prefixed vector data types
 		// Ex: Read<uint32_t>(vector); // Read 32-bit vector size, allocate space, then read vector data
 		template<typename SizeType, typename T, typename A>
@@ -71,15 +80,6 @@ namespace Stream
 			vector.clear();
 			vector.resize(vectorSize);
 			Read(vector);
-		}
-
-		// String data types
-		// Reads into entire length of passed string. Call string.resize(stringSize) before
-		// passing string into this function to ensure proper string size is read
-		template<typename CharT, typename Traits, typename Allocator>
-		void Read(std::basic_string<CharT, Traits, Allocator>& string) {
-			// Size calculation can't possibly overflow since the string size necessarily fits in memory
-			Read(&string[0], string.size() * sizeof(CharT));
 		}
 
 		// Size prefixed string data types
