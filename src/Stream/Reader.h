@@ -82,25 +82,5 @@ namespace Stream
 			container.resize(containerSize);
 			Read(container);
 		}
-
-		// Size prefixed string data types
-		// Ex: Read<uint32_t>(string); // Read 32-bit string length, allocate space, then read string data
-		template<typename SizeType, typename CharT, typename Traits, typename Allocator>
-		void Read(std::basic_string<CharT, Traits, Allocator>& string) {
-			SizeType stringSize;
-			Read(stringSize);
-			// This check is trivially false for unsigned SizeType
-			if (stringSize < 0) {
-				throw std::runtime_error("String's size may not be a negative number");
-			}
-			// This check may be trivially false when SizeType is too small to overflow string size for CharT types
-			if (stringSize > string.max_size()) {
-				throw std::runtime_error("String's size is too big to fit in memory");
-			}
-
-			string.clear();
-			string.resize(stringSize);
-			Read(string);
-		}
 	};
 }
