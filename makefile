@@ -33,7 +33,7 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d | build-folder
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
 
-.PHONY:build-folder
+.PHONY: build-folder
 build-folder:
 	@mkdir -p $(patsubst $(SRCDIR)/%,$(OBJDIR)/%, $(FOLDERS))
 	@mkdir -p $(patsubst $(SRCDIR)/%,$(DEPDIR)/%, $(FOLDERS))
@@ -43,7 +43,7 @@ $(DEPDIR)/%.d: ;
 
 include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
 
-.PHONY:clean, clean-deps, clean-all
+.PHONY: clean clean-deps clean-all
 clean:
 	-rm -fr $(OBJDIR)
 	-rm -fr $(DEPDIR)
@@ -57,7 +57,7 @@ clean-all:
 
 GTESTDIR := $(BUILDDIR)/gtest
 
-.PHONY:gtest
+.PHONY: gtest
 gtest:
 	mkdir -p $(GTESTDIR)
 	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++14" /usr/src/gtest/
@@ -77,7 +77,7 @@ TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
 TESTCOMPILE.cpp = $(CXX) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 
-.PHONY:check
+.PHONY: check
 check: $(TESTOUTPUT)
 	cd test && ../$(TESTOUTPUT)
 
@@ -89,7 +89,7 @@ $(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build
 	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) -I$(SRCDIR) $<
 	$(TESTPOSTCOMPILE)
 
-.PHONY:test-build-folder
+.PHONY: test-build-folder
 test-build-folder:
 	@mkdir -p $(patsubst $(TESTDIR)/%,$(TESTOBJDIR)/%, $(TESTFOLDERS))
 
