@@ -1,4 +1,5 @@
 #include "../src/Bitmap/BitmapFile.h"
+#include "Stream/DynamicMemoryWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
@@ -45,6 +46,13 @@ TEST(BitmapFile, RoundTripWriteAndRead)
 		RoundTripSub(8, 1, 2);
 		RoundTripSub(8, 2, 1);
 	}
+}
+
+TEST(BitmapFile, ReadFromMemory)
+{
+	Stream::DynamicMemoryWriter writer;
+	auto bitmapFile = BitmapFile::CreateDefaultIndexed(1, 1, 1);
+	//BitmapFile::WriteIndexed(writer);
 }
 
 TEST(BitmapFile, VerifyIndexedPaletteSizeDoesNotExceedBitCount)
