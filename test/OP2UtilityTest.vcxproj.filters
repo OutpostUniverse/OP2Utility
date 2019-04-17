@@ -67,9 +67,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Stream">
       <UniqueIdentifier>{f07f4252-ca5e-4f5b-94cb-8df3794157fe}</UniqueIdentifier>
     </Filter>
@@ -93,5 +90,8 @@
     <ClInclude Include="Stream\BidirectionalReader.test.h">
       <Filter>Stream</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
