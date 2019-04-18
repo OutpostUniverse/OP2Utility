@@ -16,7 +16,7 @@ TEST(ResourceManager, RefusesAbsolutePaths) {
 
 TEST(ResourceManager, IgnoreNonFilenamesOnConstruction) {
 	// Attempt to load Resource Manager where directories exist with .vol and .clm 'extensions'
-	EXPECT_NO_THROW(ResourceManager resourceManager("./data"));
+	EXPECT_NO_THROW(ResourceManager("./data"));
 }
 
 TEST(ResourceManager, AbortsWithCreationOnFilename) {
