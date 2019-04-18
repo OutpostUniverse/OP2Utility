@@ -21,3 +21,16 @@ TEST(ResourceManager, GetResourceStream_RefuseAbsolutePath) {
 	EXPECT_THROW(resourceManager.GetResourceStream("/Archive.vol"), std::runtime_error);
 	EXPECT_THROW(resourceManager.GetResourceStream("/PathTo/Archive.vol"), std::runtime_error);
 }
+
+TEST(ResourceManager, GetFilenames)
+{
+	// Ensure Directory.vol is not returned
+	ResourceManager resourceManager("./data");
+	auto filenames = resourceManager.GetAllFilenamesOfType(".vol");
+
+	EXPECT_EQ(0, filenames.size());
+
+	filenames = resourceManager.GetAllFilenames("Directory.vol");
+
+	EXPECT_EQ(0, filenames.size());
+}
