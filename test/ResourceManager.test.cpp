@@ -1,5 +1,6 @@
 #include "../src/ResourceManager.h"
 #include <gtest/gtest.h>
+#include <stdexcept>
 
 
 TEST(ResourceManager, RefusesAbsolutePaths) {
@@ -16,4 +17,8 @@ TEST(ResourceManager, RefusesAbsolutePaths) {
 TEST(ResourceManager, IgnoreNonFilenamesOnConstruction) {
 	// Attempt to load Resource Manager where directories exist with .vol and .clm 'extensions'
 	EXPECT_NO_THROW(ResourceManager resourceManager("./data"));
+}
+
+TEST(ResourceManager, AbortsWithCreationOnFilename) {
+	EXPECT_THROW(ResourceManager("./data/Directory.clm/.keep"), std::runtime_error);
 }
