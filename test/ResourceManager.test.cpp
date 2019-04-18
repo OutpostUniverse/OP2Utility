@@ -2,10 +2,9 @@
 #include <gtest/gtest.h>
 
 
-TEST(ResourceManager, GetResourceStream) {
+TEST(ResourceManager, RefusesAbsolutePaths) {
 	ResourceManager resourceManager("");
 
-	// Refuses absolute paths
 #ifdef _WIN32
 	EXPECT_THROW(resourceManager.GetResourceStream("C:/Archive.vol"), std::runtime_error);
 	EXPECT_THROW(resourceManager.GetResourceStream("C:/PathTo/Archive.vol"), std::runtime_error);
