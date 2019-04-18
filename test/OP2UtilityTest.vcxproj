@@ -55,6 +55,7 @@
     <ClCompile Include="Map\MapWriter.test.cpp" />
     <ClCompile Include="Map\SavedGameUnits.test.cpp" />
     <ClCompile Include="Rect.test.cpp" />
+    <ClCompile Include="ResourceManager.test.cpp" />
     <ClCompile Include="Sprite\ArtReader.test.cpp" />
     <ClCompile Include="Sprite\ArtWriter.test.cpp" />
     <ClCompile Include="Stream\DynamicMemoryWriter.test.cpp" />
