@@ -34,5 +34,5 @@ private:
 	bool ExistsInArchives(const std::string& filename, std::size_t& archiveIndexOut, std::size_t& internalIndexOut);
 	bool IsDuplicateFilename(std::vector<std::string>& currentFilenames, std::string filenameToCheck);
 	// Returns only files from the directory
-	std::vector<std::string> GetFilesFromDirectory(const std::string& directory, const std::string& fileExtension);
+	std::vector<std::string> GetFilesFromDirectory(const std::string& fileExtension);
 };

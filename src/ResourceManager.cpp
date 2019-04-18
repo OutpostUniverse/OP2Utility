@@ -15,13 +15,13 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 		throw std::runtime_error("Resource manager must be passed an archive directory.");
 	}
 
-	const auto volFilenames = GetFilesFromDirectory(archiveDirectory, ".vol");
+	const auto volFilenames = GetFilesFromDirectory(".vol");
 
 	for (const auto& volFilename : volFilenames) {
 		ArchiveFiles.push_back(std::make_unique<VolFile>(XFile::Append(archiveDirectory, volFilename)));
 	}
 
-	const auto clmFilenames = GetFilesFromDirectory(archiveDirectory, ".clm");
+	const auto clmFilenames = GetFilesFromDirectory(".clm");
 
 	for (const auto& clmFilename : clmFilenames) {
 		ArchiveFiles.push_back(std::make_unique<ClmFile>(XFile::Append(archiveDirectory, clmFilename)));
@@ -84,7 +84,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& fil
 
 std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::string& extension, bool accessArchives)
 {
-	std::vector<std::string> filenames = XFile::GetFilenamesFromDirectory(resourceRootDir, extension);
+	auto filenames = GetFilesFromDirectory(extension);
 
 	if (!accessArchives) {
 		return filenames;
@@ -160,9 +160,9 @@ std::vector<std::string> ResourceManager::GetArchiveFilenames()
 	return archiveFilenames;
 }
 
-std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::string& directory, const std::string& fileExtension)
+std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::string& fileExtension)
 {
-	auto directoryContents = XFile::GetFilenamesFromDirectory(directory, fileExtension);
+	auto directoryContents = XFile::GetFilenamesFromDirectory(resourceRootDir, fileExtension);
 
 	// Reject non-filenames
 	directoryContents.erase(
