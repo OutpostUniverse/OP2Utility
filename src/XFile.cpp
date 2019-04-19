@@ -2,9 +2,14 @@
 #include "StringHelper.h"
 #include <cstddef>
 
+#ifdef _WIN32
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
 #include <experimental/filesystem>
-
 namespace fs = std::experimental::filesystem;
+#endif
+
 
 std::string XFile::GetFileExtension(const std::string& pathStr)
 {
