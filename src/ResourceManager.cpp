@@ -3,7 +3,6 @@
 #include "Archive/ClmFile.h"
 #include "Stream/BidirectionalReader.h"
 #include "XFile.h"
-#include <algorithm>
 
 using namespace Archive;
 
@@ -162,7 +161,7 @@ std::vector<std::string> ResourceManager::GetArchiveFilenames()
 std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::string& fileExtension)
 {
 	auto directoryContents = XFile::GetFilenamesFromDirectory(resourceRootDir, fileExtension);
-	EraseNonFilenames(directoryContents);
+	XFile::EraseNonFilenames(directoryContents);
 
 	return directoryContents;
 }
@@ -170,19 +169,7 @@ std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::strin
 std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::regex& filenameRegex)
 {
 	auto directoryContents = XFile::GetFilenamesFromDirectory(resourceRootDir, filenameRegex);
-	EraseNonFilenames(directoryContents);
+	XFile::EraseNonFilenames(directoryContents);
 
 	return directoryContents;
-}
-
-void ResourceManager::EraseNonFilenames(std::vector<std::string>& directoryContents)
-{
-	directoryContents.erase(
-		std::remove_if(
-			directoryContents.begin(),
-			directoryContents.end(),
-			[](std::string path) { return !XFile::IsFile(path); }
-		),
-		directoryContents.end()
-	);
 }

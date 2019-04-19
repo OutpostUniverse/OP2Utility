@@ -37,5 +37,4 @@ private:
 	// Returns only files from the directory
 	std::vector<std::string> GetFilesFromDirectory(const std::string& fileExtension);
 	std::vector<std::string> GetFilesFromDirectory(const std::regex& filenameRegex);
-	void EraseNonFilenames(std::vector<std::string>& directoryContents);
 };
