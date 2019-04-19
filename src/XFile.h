@@ -24,7 +24,8 @@ namespace XFile
 	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory);
 	
 	// Non-recursive search that returns entire directory contents (not just filenames)
-	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::string& fileType);
+	// Extension includes the dot (.) prefix
+	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::string& extension);
 	
 	// Non-recursive search that returns entire directory contents (not just filenames)
 	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex);
