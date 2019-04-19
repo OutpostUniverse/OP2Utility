@@ -8,7 +8,7 @@ TEST(ResourceManager, ConstructResourceManager)
 	EXPECT_NO_THROW(ResourceManager("./data"));
 
 	// Refuse to load when passed a filename
-	EXPECT_THROW(ResourceManager("./data/Directory.clm/.keep"), std::runtime_error);
+	EXPECT_THROW(ResourceManager("./data/Empty.txt"), std::runtime_error);
 }
 
 TEST(ResourceManager, GetResourceStream_RefuseAbsolutePath) {
