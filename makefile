@@ -12,7 +12,7 @@ OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/deps
 OUTPUT := libOP2Utility.a
 
-CXXFLAGS := -std=c++14 -g -Wall -Wno-unknown-pragmas
+CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
