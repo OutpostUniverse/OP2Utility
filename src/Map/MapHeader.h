@@ -16,7 +16,7 @@ struct MapHeader
 	static const uint32_t CurrentMapVersion = 0x1011;
 
 	// The map's version tag must be >= MinMapVersion or Outpost 2 will abort loading the map.
-	int32_t versionTag;
+	uint32_t versionTag;
 
 	// True if file represents a saved game instead of a map file.
 	int32_t bSavedGame;
