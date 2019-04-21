@@ -2,7 +2,7 @@
 #include "StringHelper.h"
 #include <cstddef>
 
-#ifdef _WIN32
+#ifdef __cpp_lib_filesystem
 #include <filesystem>
 namespace fs = std::filesystem;
 #else
