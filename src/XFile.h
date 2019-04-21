@@ -20,9 +20,14 @@ namespace XFile
 
 	bool IsFile(const std::string& path);
 
-	// Non-recursive search of directory that returns filename only (no directory)
+	// Non-recursive search that returns entire directory contents (not just filenames)
 	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory);
-	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::string& fileType);
+	
+	// Non-recursive search that returns entire directory contents (not just filenames)
+	// Extension includes the dot (.) prefix
+	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::string& extension);
+	
+	// Non-recursive search that returns entire directory contents (not just filenames)
 	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex);
 
 	std::string ChangeFileExtension(const std::string& filename, const std::string& newExtension);

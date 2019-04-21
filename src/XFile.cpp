@@ -119,7 +119,7 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 	return filenames;
 }
 
-std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::string& fileType)
+std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::string& extension)
 {
 	std::vector<std::string> filenames = GetFilenamesFromDirectory(directory);
 
@@ -130,8 +130,7 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 			return filenames;
 		}
 
-		std::string extension = fs::path(filenames[i]).extension().string();
-		if (extension != fileType) {
+		if (fs::path(filenames[i]).extension().string() != extension) {
 			filenames.erase(filenames.begin() + i);
 		}
 	}
