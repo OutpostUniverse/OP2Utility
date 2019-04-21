@@ -34,65 +34,53 @@ namespace Stream
 
 		// Trivially copyable data types
 		template<typename T>
-		inline std::enable_if_t<std::is_trivially_copyable<T>::value> Read(T& object) {
+		inline
+		std::enable_if_t<std::is_trivially_copyable<T>::value>
+		Read(T& object) {
 			ReadImplementation(&object, sizeof(object));
 		}
 
-		// Vector data types
-		// Reads into entire length of passed vector. Call vector.resize(vectorSize) before
-		// passing vector into this function to ensure proper vector size is read
-		template<typename T, typename A>
-		inline void Read(std::vector<T, A>& vector) {
-			// Size calculation can't possibly overflow since the vector size necessarily fits in memory
-			ReadImplementation(vector.data(), vector.size() * sizeof(T));
-		}
-
-		// Size prefixed vector data types
-		// Ex: Read<uint32_t>(vector); // Read 32-bit vector size, allocate space, then read vector data
-		template<typename SizeType, typename T, typename A>
-		void Read(std::vector<T, A>& vector) {
-			SizeType vectorSize;
-			Read(vectorSize);
-			// This check is trivially false for unsigned SizeType
-			if (vectorSize < 0) {
-				throw std::runtime_error("Vector's size may not be a negative number");
-			}
-			// This check may be trivially false when SizeType is much smaller than max vector size
-			if (vectorSize > vector.max_size()) {
-				throw std::runtime_error("Vector's size is too big to fit in memory");
-			}
-			vector.clear();
-			vector.resize(vectorSize);
-			Read(vector);
+		// Non-trivial contiguous container of trivially copyable data types
+		// Reads into entire length of passed container. Call container.resize(size) before
+		// passing container into this function to ensure proper container size is read
+		template<typename T>
+		inline
+		std::enable_if_t<
+			!std::is_trivially_copyable<T>::value &&
+			std::is_trivially_copyable<typename T::value_type>::value
+		>
+		Read(T& container) {
+			// Size calculation can't possibly overflow since the container size necessarily fits in memory
+			ReadImplementation(container.data(), container.size() * sizeof(typename T::value_type));
 		}
 
 		// String data types
 		// Reads into entire length of passed string. Call string.resize(stringSize) before
 		// passing string into this function to ensure proper string size is read
+		// Note: C++17 added a non-const overload of `string.data()`, needed to collapse this with the above
 		template<typename CharT, typename Traits, typename Allocator>
 		void Read(std::basic_string<CharT, Traits, Allocator>& string) {
 			// Size calculation can't possibly overflow since the string size necessarily fits in memory
 			Read(&string[0], string.size() * sizeof(CharT));
 		}
 
-		// Size prefixed string data types
-		// Ex: Read<uint32_t>(string); // Read 32-bit string length, allocate space, then read string data
-		template<typename SizeType, typename CharT, typename Traits, typename Allocator>
-		void Read(std::basic_string<CharT, Traits, Allocator>& string) {
-			SizeType stringSize;
-			Read(stringSize);
+		// Size prefixed container data types
+		// Ex: Read<uint32_t>(vector); // Read 32-bit vector size, allocate space, then read vector data
+		template<typename SizeType, typename T>
+		void Read(T& container) {
+			SizeType containerSize;
+			Read(containerSize);
 			// This check is trivially false for unsigned SizeType
-			if (stringSize < 0) {
-				throw std::runtime_error("String's size may not be a negative number");
+			if (containerSize < 0) {
+				throw std::runtime_error("Container's size may not be a negative number");
 			}
-			// This check may be trivially false when SizeType is too small to overflow string size for CharT types
-			if (stringSize > string.max_size()) {
-				throw std::runtime_error("String's size is too big to fit in memory");
+			// This check may be trivially false when SizeType is much smaller than max container size
+			if (containerSize > container.max_size()) {
+				throw std::runtime_error("Container's size is too big to fit in memory");
 			}
-
-			string.clear();
-			string.resize(stringSize);
-			Read(string);
+			container.clear();
+			container.resize(containerSize);
+			Read(container);
 		}
 	};
 }
