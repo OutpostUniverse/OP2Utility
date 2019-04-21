@@ -1,11 +1,19 @@
 #include "../src/ResourceManager.h"
 #include <gtest/gtest.h>
+#include <stdexcept>
 
+TEST(ResourceManager, ConstructResourceManager)
+{
+	// Load Resource Manager where directories exist with .vol and .clm 'extensions'
+	EXPECT_NO_THROW(ResourceManager("./data"));
 
-TEST(ResourceManager, GetResourceStream) {
+	// Refuse to load when passed a filename
+	EXPECT_THROW(ResourceManager("./data/Empty.txt"), std::runtime_error);
+}
+
+TEST(ResourceManager, GetResourceStream_RefuseAbsolutePath) {
 	ResourceManager resourceManager("");
 
-	// Refuses absolute paths
 #ifdef _WIN32
 	EXPECT_THROW(resourceManager.GetResourceStream("C:/Archive.vol"), std::runtime_error);
 	EXPECT_THROW(resourceManager.GetResourceStream("C:/PathTo/Archive.vol"), std::runtime_error);
