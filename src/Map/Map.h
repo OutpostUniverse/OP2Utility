@@ -44,8 +44,8 @@ public:
 	void Write(const std::string& filename) const;
 	void Write(Stream::Writer& streamWriter) const;
 
-	inline void SetVersionTag(int32_t versionTag) { this->versionTag = versionTag; };
-	inline int32_t GetVersionTag() const { return versionTag; };
+	inline void SetVersionTag(uint32_t versionTag) { this->versionTag = versionTag; };
+	inline uint32_t GetVersionTag() const { return versionTag; };
 	inline bool IsSavedGame() const { return isSavedGame; };
 	inline uint32_t WidthInTiles() const { return widthInTiles; };
 	inline uint32_t HeightInTiles() const { return heightInTiles; };
