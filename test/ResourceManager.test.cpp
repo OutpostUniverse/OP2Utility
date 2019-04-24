@@ -30,7 +30,5 @@ TEST(ResourceManager, GetFilenames)
 
 	EXPECT_EQ(0, filenames.size());
 
-	filenames = resourceManager.GetAllFilenames("Directory.vol");
-
-	EXPECT_EQ(0, filenames.size());
+	EXPECT_EQ(0, resourceManager.GetAllFilenames("Directory.vol").size());
 }
