@@ -1,6 +1,7 @@
 #include "XFile.h"
 #include "StringHelper.h"
 #include <cstddef>
+#include <algorithm>
 
 #ifdef __cpp_lib_filesystem
 #include <filesystem>
@@ -136,6 +137,18 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 	}
 
 	return filenames;
+}
+
+void XFile::EraseNonFilenames(std::vector<std::string>& directoryContents)
+{
+	directoryContents.erase(
+		std::remove_if(
+			directoryContents.begin(),
+			directoryContents.end(),
+			[](std::string path) { return !XFile::IsFile(path); }
+		),
+		directoryContents.end()
+	);
 }
 
 bool XFile::IsRootPath(const std::string& pathStr)

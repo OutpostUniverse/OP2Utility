@@ -30,6 +30,9 @@ namespace XFile
 	// Non-recursive search that returns entire directory contents (not just filenames)
 	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex);
 
+	// Erase all paths that are not represent filenames (such as subdirectories)
+	void EraseNonFilenames(std::vector<std::string>& directoryContents);
+
 	std::string ChangeFileExtension(const std::string& filename, const std::string& newExtension);
 
 	void NewDirectory(const std::string& newPath);

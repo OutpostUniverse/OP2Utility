@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <regex>
 #include <cstddef>
 
 namespace Stream {
@@ -35,4 +36,5 @@ private:
 	bool IsDuplicateFilename(std::vector<std::string>& currentFilenames, std::string filenameToCheck);
 	// Returns only files from the directory
 	std::vector<std::string> GetFilesFromDirectory(const std::string& fileExtension);
+	std::vector<std::string> GetFilesFromDirectory(const std::regex& filenameRegex);
 };

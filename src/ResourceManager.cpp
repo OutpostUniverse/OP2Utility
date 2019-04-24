@@ -3,8 +3,6 @@
 #include "Archive/ClmFile.h"
 #include "Stream/BidirectionalReader.h"
 #include "XFile.h"
-#include <algorithm>
-#include <regex>
 
 using namespace Archive;
 
@@ -63,7 +61,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& fil
 {
 	std::regex filenameRegex(filenameRegexStr, std::regex_constants::icase);
 
-	std::vector<std::string> filenames = XFile::GetFilenamesFromDirectory(resourceRootDir, filenameRegex);
+	auto filenames = GetFilesFromDirectory(filenameRegex);
 
 	if (!accessArchives) {
 		return filenames;
@@ -163,16 +161,15 @@ std::vector<std::string> ResourceManager::GetArchiveFilenames()
 std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::string& fileExtension)
 {
 	auto directoryContents = XFile::GetFilenamesFromDirectory(resourceRootDir, fileExtension);
+	XFile::EraseNonFilenames(directoryContents);
 
-	// Reject non-filenames
-	directoryContents.erase(
-		std::remove_if(
-			directoryContents.begin(),
-			directoryContents.end(),
-			[](std::string path) { return !XFile::IsFile(path); }
-		),
-		directoryContents.end()
-	);
+	return directoryContents;
+}
+
+std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::regex& filenameRegex)
+{
+	auto directoryContents = XFile::GetFilenamesFromDirectory(resourceRootDir, filenameRegex);
+	XFile::EraseNonFilenames(directoryContents);
 
 	return directoryContents;
 }
