@@ -65,3 +65,13 @@ TEST(FileWriter, MoveConstructible) {
 	// Cleanup temporary file
 	XFile::DeletePath(filename);
 }
+
+TEST(FileWriter, DirectoryDoesNotExist) {
+	EXPECT_NO_THROW(Stream::FileWriter writer("../NewDirectory/TestFile.temp"));
+	EXPECT_NO_THROW(Stream::FileWriter writer("./NewDirectory/TestFile.temp"));
+	EXPECT_NO_THROW(Stream::FileWriter writer("NewDirectory/TestFile.temp"));
+
+	EXPECT_NO_THROW(Stream::FileWriter writer("..\\NewDirectory\\TestFile.temp"));
+	EXPECT_NO_THROW(Stream::FileWriter writer(".\\NewDirectory\\TestFile.temp"));
+	EXPECT_NO_THROW(Stream::FileWriter writer("NewDirectory\\TestFile.temp"));
+}
