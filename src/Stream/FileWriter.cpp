@@ -1,4 +1,5 @@
 #include "FileWriter.h"
+#include "../XFile.h"
 #include <stdexcept>
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
@@ -35,9 +36,16 @@ namespace Stream
 
 
 	FileWriter::FileWriter(const std::string& filename, OpenMode openMode) :
-		filename(filename),
-		file(filename, TranslateFlags(filename, openMode))
+		filename(filename)
 	{
+		// Create directory if it does not exist. ofstream will fail if directory does not exist.
+		auto directory = XFile::GetDirectory(filename);
+		if (!XFile::PathExists(directory)) {
+			XFile::NewDirectory(directory);
+		}
+
+		file = std::ofstream(filename, TranslateFlags(filename, openMode));
+
 		if (!file.is_open()) {
 			throw std::runtime_error("File could not be opened. Filename: " + filename);
 		}
