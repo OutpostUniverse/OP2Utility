@@ -40,7 +40,7 @@ namespace Stream
 	{
 		// Create directory if it does not exist. ofstream will fail if directory does not exist.
 		auto directory = XFile::GetDirectory(filename);
-		if (directory != "" && !XFile::PathExists(directory)) {
+		if (!directory.empty() && !XFile::PathExists(directory)) {
 			XFile::NewDirectory(directory);
 		}
 
