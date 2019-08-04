@@ -1,6 +1,7 @@
 #include "Stream/FileWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
+#include <string>
 
 void WriteToNewDirectory(const std::string& path);
 
@@ -76,6 +77,11 @@ TEST(FileWriter, DirectoryDoesNotExist) {
 // Will delete the path after testing creation
 void WriteToNewDirectory(const std::string& path)
 {
+	// New directory should not be created when writer cannot create new files
+	EXPECT_THROW(Stream::FileWriter writer(path, Stream::FileWriter::OpenMode::CanOpenExisting), std::runtime_error);
+	EXPECT_FALSE(XFile::PathExists(path));
+
 	EXPECT_NO_THROW(Stream::FileWriter writer(path));
+
 	XFile::DeletePath(path);
 }
