@@ -2,6 +2,7 @@
 #include "XFile.h"
 #include <gtest/gtest.h>
 
+void WriteToNewDirectory(const std::string& path);
 
 TEST(FileWriterOpenMode, BadFlagCombinations) {
 	using OpenMode = Stream::FileWriter::OpenMode;
@@ -67,11 +68,14 @@ TEST(FileWriter, MoveConstructible) {
 }
 
 TEST(FileWriter, DirectoryDoesNotExist) {
-	EXPECT_NO_THROW(Stream::FileWriter writer("../NewDirectory/TestFile.temp"));
-	EXPECT_NO_THROW(Stream::FileWriter writer("./NewDirectory/TestFile.temp"));
-	EXPECT_NO_THROW(Stream::FileWriter writer("NewDirectory/TestFile.temp"));
+	WriteToNewDirectory("../NewDirectory/TestFile.temp");
+	WriteToNewDirectory("./NewDirectory/TestFile.temp");
+	WriteToNewDirectory("NewDirectory/TestFile.temp");
+}
 
-	EXPECT_NO_THROW(Stream::FileWriter writer("..\\NewDirectory\\TestFile.temp"));
-	EXPECT_NO_THROW(Stream::FileWriter writer(".\\NewDirectory\\TestFile.temp"));
-	EXPECT_NO_THROW(Stream::FileWriter writer("NewDirectory\\TestFile.temp"));
+// Will delete the path after testing creation
+void WriteToNewDirectory(const std::string& path)
+{
+	EXPECT_NO_THROW(Stream::FileWriter writer(path));
+	XFile::DeletePath(path);
 }
