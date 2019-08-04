@@ -1,10 +1,10 @@
 #pragma once
 
+#include "../Stream/BidirectionalReader.h"
 #include <string>
 #include <memory>
 #include <cstdint>
 #include <cstddef>
-#include "../Stream/BidirectionalReader.h"
 
 namespace Archive
 {
