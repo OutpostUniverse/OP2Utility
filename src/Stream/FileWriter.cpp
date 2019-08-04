@@ -40,7 +40,12 @@ namespace Stream
 	{
 		// Create directory if it does not exist. ofstream will fail if directory does not exist.
 		auto directory = XFile::GetDirectory(filename);
-		if (!directory.empty() && !XFile::PathExists(directory)) {
+		if (!directory.empty() && !XFile::PathExists(directory)) 
+		{
+			if (openMode != OpenMode::CanOpenNew) {
+				throw std::runtime_error("The directory does not exist. The write command was restricted from creating new files or directories.");
+			}
+
 			XFile::NewDirectory(directory);
 		}
 
