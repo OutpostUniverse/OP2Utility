@@ -4,25 +4,21 @@ matrix:
   include:
     - os: linux
       dist: bionic
-      env: CXX=g++-7 CC=gcc-7
+      env: CXX=g++ CC=gcc
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-7
             - googletest
     - os: linux
       dist: bionic
-      env: CXX=clang++-6.0 CC=clang-6.0
+      env: CXX=clang++ CC=clang
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-6.0
           packages:
-            - clang-6.0
-            - libstdc++-6-dev
             - googletest
 
 script:
