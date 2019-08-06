@@ -4,14 +4,14 @@ matrix:
   include:
     - os: linux
       dist: bionic
-      env: CXX=g++-6 CC=gcc-6
+      env: CXX=g++-7 CC=gcc-7
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-6
-            - google-mock
+            - g++-7
+            - googletest
     - os: linux
       dist: bionic
       env: CXX=clang++-6.0 CC=clang-6.0
@@ -23,7 +23,7 @@ matrix:
           packages:
             - clang-6.0
             - libstdc++-6-dev
-            - google-mock
+            - googletest
 
 script:
   # Use -k to continue after errors, ensuring full build log with all errors
