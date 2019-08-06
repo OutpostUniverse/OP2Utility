@@ -1,9 +1,9 @@
 
 language: generic
-sudo: false
 matrix:
   include:
     - os: linux
+      dist: bionic
       env: CXX=g++-6 CC=gcc-6
       addons:
         apt:
@@ -13,6 +13,7 @@ matrix:
             - g++-6
             - google-mock
     - os: linux
+      dist: bionic
       env: CXX=clang++-6.0 CC=clang-6.0
       addons:
         apt:
