@@ -58,6 +58,7 @@ clean-all:
 GTESTSRCDIR := /usr/src/googletest/
 GTESTINCDIR := /usr/src/googletest/googletest/include/
 GTESTBUILDDIR := $(BUILDDIR)/gtest/
+GTESTLOCALLIBDIR := $(GTESTBUILDDIR)googlemock/
 GTESTLIBDIR := /usr/lib/
 
 .PHONY: gtest gtest-install gtest-clean
@@ -78,7 +79,7 @@ TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
 TESTCPPFLAGS := -I$(SRCDIR) -I$(GTESTINCDIR)
-TESTLDFLAGS := -L./ -L$(GTESTBUILDDIR) -L$(GTESTBUILDDIR)/gtest/
+TESTLDFLAGS := -L./ -L$(GTESTLOCALLIBDIR) -L$(GTESTLOCALLIBDIR)/gtest/
 TESTLIBS := -lOP2Utility -lgtest -lgtest_main -lpthread -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
