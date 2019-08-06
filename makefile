@@ -55,41 +55,32 @@ clean-all:
 	-rm -rf $(BUILDDIR)
 
 
-# Either of these should be a complete combined package. Only build one.
-GTESTSRCDIR := /usr/src/gtest/
-GMOCKSRCDIR := /usr/src/gmock/
-GTESTDIR := $(BUILDDIR)/gtest
-GMOCKDIR := $(BUILDDIR)/gmock
+GTESTSRCDIR := /usr/src/googletest/
+GTESTINCDIR := /usr/src/googletest/googletest/include/
+GTESTBUILDDIR := $(BUILDDIR)/gtest/
+GTESTLIBDIR := /usr/lib/
 
-.PHONY: gtest
+.PHONY: gtest gtest-install gtest-clean
 gtest:
-	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake -DCMAKE_CXX="$(CXX)" -DCMAKE_CXX_FLAGS="-std=c++17" $(GTESTSRCDIR)
-	make -C $(GTESTDIR)
+	mkdir -p "$(GTESTBUILDDIR)"
+	cd "$(GTESTBUILDDIR)" && cmake -DCMAKE_CXX_COMPILER="$(CXX)" -DCMAKE_C_COMPILER="$(CC)" -DCMAKE_CXX_FLAGS="-std=c++17" "$(GTESTSRCDIR)"
+	make -C "$(GTESTBUILDDIR)"
+gtest-install:
+	cp $(GTESTBUILDDIR)googlemock/gtest/lib*.a "$(GTESTLIBDIR)"
+	cp $(GTESTBUILDDIR)googlemock/lib*.a "$(GTESTLIBDIR)"
+gtest-clean:
+	rm -rf "$(GTESTBUILDDIR)"
 
-.PHONY:gmock
-gmock:
-	mkdir -p $(GMOCKDIR)
-	cd $(GMOCKDIR) && cmake -DCMAKE_CXX="$(CXX)" -DCMAKE_CXX_FLAGS="-std=c++17" $(GMOCKSRCDIR)
-	make -C $(GMOCKDIR)
-
-# This is used to detect if a separate GMock library was built, in which case, use it
-GMOCKLIB := $(wildcard $(GMOCKDIR)/libgmock.a)
 
 TESTDIR := test
 TESTOBJDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
-TESTCPPFLAGS := -I$(SRCDIR) -I$(GMOCKSRCDIR)/gtest/include
-TESTLDFLAGS := -L./ -L$(GMOCKDIR) -L$(GMOCKDIR)/gtest/ -L$(GTESTDIR)
+TESTCPPFLAGS := -I$(SRCDIR) -I$(GTESTINCDIR)
+TESTLDFLAGS := -L./ -L$(GTESTBUILDDIR) -L$(GTESTBUILDDIR)/gtest/
 TESTLIBS := -lOP2Utility -lgtest -lgtest_main -lpthread -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
-# Conditionally add GMock if we built it separately
-# This is conditional to avoid errors in case the library is not found
-ifneq ($(strip $(GMOCKLIB)),)
-	TESTLIBS := -lgmock $(TESTLIBS)
-endif
 
 TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
 TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
