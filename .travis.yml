@@ -1,5 +1,5 @@
 
-language: generic
+language: cpp
 matrix:
   include:
     - os: linux
