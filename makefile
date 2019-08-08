@@ -21,13 +21,10 @@ $(OUTPUT): $(OBJS)
 	@mkdir -p ${@D}
 	ar rcs $@ $^
 
-$(OBJS): $(INTDIR)/%.o : $(SRCDIR)/%.cpp $(INTDIR)/%.d | build-folder
+$(OBJS): $(INTDIR)/%.o : $(SRCDIR)/%.cpp $(INTDIR)/%.d
+	@mkdir -p ${@D}
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
-
-.PHONY: build-folder
-build-folder:
-	@mkdir -p $(patsubst $(SRCDIR)/%,$(INTDIR)/%, $(FOLDERS))
 
 $(INTDIR)/%.d: ;
 .PRECIOUS: $(INTDIR)/%.d
