@@ -1,7 +1,6 @@
 
 SRCDIR := src
 BUILDDIR := .build
-BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/deps
 OUTPUT := libOP2Utility.a
@@ -41,7 +40,6 @@ include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
 clean:
 	-rm -fr $(OBJDIR)
 	-rm -fr $(DEPDIR)
-	-rm -fr $(BINDIR)
 	-rm -f $(OUTPUT)
 clean-deps:
 	-rm -fr $(DEPDIR)
