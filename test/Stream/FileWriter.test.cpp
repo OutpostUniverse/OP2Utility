@@ -1,7 +1,9 @@
 #include "Stream/FileWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
+#include <string>
 
+void WriteToNewDirectory(const std::string& path);
 
 TEST(FileWriterOpenMode, BadFlagCombinations) {
 	using OpenMode = Stream::FileWriter::OpenMode;
@@ -64,4 +66,22 @@ TEST(FileWriter, MoveConstructible) {
 
 	// Cleanup temporary file
 	XFile::DeletePath(filename);
+}
+
+TEST(FileWriter, DirectoryDoesNotExist) {
+	WriteToNewDirectory("../NewDirectory/TestFile.temp");
+	WriteToNewDirectory("./NewDirectory/TestFile.temp");
+	WriteToNewDirectory("NewDirectory/TestFile.temp");
+}
+
+// Will delete the path after testing creation
+void WriteToNewDirectory(const std::string& path)
+{
+	// New directory should not be created when writer cannot create new files
+	EXPECT_THROW(Stream::FileWriter writer(path, Stream::FileWriter::OpenMode::CanOpenExisting), std::runtime_error);
+	EXPECT_FALSE(XFile::PathExists(path));
+
+	EXPECT_NO_THROW(Stream::FileWriter writer(path));
+
+	XFile::DeletePath(path);
 }
