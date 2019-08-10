@@ -283,6 +283,11 @@ namespace Archive
 		// Calculate the zero padded length of the string table and index table
 		volInfo.paddedStringTableLength = (volInfo.stringTableLength + 7) & ~3;
 		volInfo.paddedIndexTableLength = (volInfo.indexTableLength + 3) & ~3;
+
+		if (volInfo.indexEntries.size() == 0) {
+			return;
+		}
+
 		volInfo.indexEntries[0].dataBlockOffset = volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 32;
 
 		// Calculate offsets to the files
