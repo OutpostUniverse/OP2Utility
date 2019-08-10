@@ -66,6 +66,9 @@
       <Filter>Stream</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.test.cpp" />
+    <ClCompile Include="Archive\ArchiveFile.test.cpp">
+      <Filter>Archive</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Stream">
