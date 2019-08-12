@@ -52,8 +52,13 @@ TEST(FileWriterOpenMode, PermissionChecks) {
 	// Try to open existing file without permission for existing files
 	ASSERT_THROW(Stream::FileWriter writer(filename, OpenMode::CanOpenNew), std::runtime_error);
 
+	// Try to open new file in new directory with permission
+	const std::string directoryAndFilename("NewDirectory/OpenModePermissionChecks.temp");
+	ASSERT_NO_THROW(Stream::FileWriter writer(directoryAndFilename, OpenMode::CanOpenNew));
+
 	// Cleanup temporary file
 	XFile::DeletePath(filename);
+	XFile::DeletePath(directoryAndFilename);
 }
 
 
