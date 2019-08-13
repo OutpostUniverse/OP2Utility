@@ -42,7 +42,7 @@ namespace Stream
 		auto directory = XFile::GetDirectory(filename);
 		if (!directory.empty() && !XFile::PathExists(directory)) 
 		{
-			if (openMode & OpenMode::CanOpenNew) {
+			if (!(openMode & OpenMode::CanOpenNew)) {
 				throw std::runtime_error("The directory does not exist. The write command was restricted from creating new files or directories.");
 			}
 
