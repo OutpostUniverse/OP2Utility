@@ -139,7 +139,7 @@ std::string ResourceManager::FindContainingArchivePath(const std::string& filena
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 		if (archiveFile->Contains(filename)) {
-			return archiveFile->GetVolumeFilename();
+			return archiveFile->GetArchiveFilename();
 		}
 	}
 
@@ -153,7 +153,7 @@ std::vector<std::string> ResourceManager::GetArchiveFilenames()
 
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		archiveFilenames.push_back(archiveFile->GetVolumeFilename());
+		archiveFilenames.push_back(archiveFile->GetArchiveFilename());
 	}
 	return archiveFilenames;
 }

@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="Archive\AdaptiveHuffmanTree.test.cpp" />
+    <ClCompile Include="Archive\ArchiveFile.test.cpp" />
     <ClCompile Include="Bitmap\BitmapFile.test.cpp" />
     <ClCompile Include="Bitmap\BmpHeader.test.cpp" />
     <ClCompile Include="Bitmap\Color.test.cpp" />

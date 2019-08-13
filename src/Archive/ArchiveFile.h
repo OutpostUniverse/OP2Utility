@@ -14,8 +14,8 @@ namespace Archive
 		ArchiveFile(const std::string& filename);
 		virtual ~ArchiveFile();
 
-		std::string GetVolumeFilename() const { return m_ArchiveFilename; };
-		uint64_t GetVolumeFileSize() const { return m_ArchiveFileSize; };
+		std::string GetArchiveFilename() const { return m_ArchiveFilename; };
+		uint64_t GetArchiveFileSize() const { return m_ArchiveFileSize; };
 		std::size_t GetCount() const { return m_Count; };
 		bool Contains(const std::string& name);
 		void ExtractFile(const std::string& name, const std::string& pathOut);
