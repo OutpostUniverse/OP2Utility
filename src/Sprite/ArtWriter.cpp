@@ -33,7 +33,7 @@ void ArtFile::WritePalettes(Stream::Writer& writer) const
 	// Intentially do not pass palette as reference to allow local modification
 	// Switch red and blue color to match Outpost 2 custom format.
 	for (auto pallete : palettes) {
-		writer.Write(PaletteHeader(*this));
+		writer.Write(PaletteHeader::CreatePaletteHeader());
 
 		for (auto& color : pallete) {
 			std::swap(color.red, color.blue);

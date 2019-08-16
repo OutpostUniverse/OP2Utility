@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ArtFile.h"
 #include "SectionHeader.h"
 #include <array>
 #include <cstdint>
@@ -8,8 +7,8 @@
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct PaletteHeader {
-	PaletteHeader(const ArtFile& artFile);
 	PaletteHeader();
+	static PaletteHeader CreatePaletteHeader();
 
 	SectionHeader overallHeader;
 	SectionHeader sectionHeader;
