@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <limits>
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -71,8 +72,10 @@ namespace Stream
 			SizeType containerSize;
 			Read(containerSize);
 			// This check is trivially false for unsigned SizeType
-			if (containerSize < 0) {
-				throw std::runtime_error("Container's size may not be a negative number");
+			if constexpr(std::is_signed<SizeType>::value) {
+				if (containerSize < 0) {
+					throw std::runtime_error("Container's size may not be a negative number");
+				}
 			}
 			// This check may be trivially false when SizeType is much smaller than max container size
 			if (containerSize > container.max_size()) {
