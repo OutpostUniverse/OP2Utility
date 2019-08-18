@@ -79,7 +79,6 @@ public:
 
 	std::vector<TileGroup> tileGroups;
 
-public:
 	std::size_t GetTileMappingIndex(std::size_t x, std::size_t y) const;
 	CellType GetCellType(std::size_t x, std::size_t y) const;
 	bool GetLavaPossible(std::size_t x, std::size_t y) const;
