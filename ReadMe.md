@@ -12,7 +12,7 @@ Main features:
  - Load of spite graphics (partial experimental support)
  - General file stream reading/writing
 
-The library can be compiled and used on both Windows and Linux. x86 and x64 architectures are fully supported. Partial unit test coverage is made using gtest. Supported compilers:
+The library can be compiled and used on both Windows and Linux. Both x86 (32-bit) and x64 architectures are fully supported. Partial unit test coverage is made using [Google Test](https://github.com/google/googletest). Supported compilers:
  - Visual Studio 2017
  - GCC
  - Clang
