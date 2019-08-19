@@ -58,8 +58,10 @@ namespace Stream
 		Write(const T& container) {
 			auto containerSize = container.size();
 			// This check is trivially false if SizeType is larger than max container size
-			if (containerSize > std::numeric_limits<SizeType>::max()) {
-				throw std::runtime_error("Container too large to save size field");
+			if constexpr(std::numeric_limits<decltype(containerSize)>::max() > std::numeric_limits<SizeType>::max()) {
+				if (containerSize > std::numeric_limits<SizeType>::max()) {
+					throw std::runtime_error("Container too large to save size field");
+				}
 			}
 			// Cast can't overflow due to check above
 			Write(static_cast<SizeType>(containerSize));
