@@ -24,13 +24,3 @@ The library can be compiled and used on both Windows and Linux. Both x86 (32-bit
 All headers meant for consumption outside of OP2Utility are contained in **include/OP2Utility.h**. No other library headers should be needed by 3rd party applications for normal use.
 
 This library is released under a MIT license. See License.txt for details.
-
-## Change Log
-
-Version 1.0.1
-
-* Added MIT License to project. See License.txt for details.
-
-Version 1.0.0
-
-* Initial Release
