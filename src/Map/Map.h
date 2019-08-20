@@ -31,6 +31,31 @@ namespace Stream {
 class Map
 {
 public:
+
+	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
+	std::vector<Tile> tiles;
+
+	/**
+	 * \brief	Represents the visible areas of the map.
+	 *
+	 * \note	Maps designated 'around the world' allow for continuous
+	 *			scrolling on the X axis and so will populate X1 with -1
+	 *			and X2 with \c INT_MAX.
+	 */
+	Rect clipRect;
+
+	// Listing of all tile set sources associated with the map.
+	std::vector<TilesetSource> tilesetSources;
+
+	// Metadata about each available tile from the tile set sources.
+	std::vector<TileMapping> tileMappings;
+
+	// Listing of properties grouped by terrain type. Properties apply to a given range of tiles.
+	std::vector<TerrainType> terrainTypes;
+
+	std::vector<TileGroup> tileGroups;
+
+
 	Map();
 
 	static Map ReadMap(std::string filename);
@@ -55,29 +80,6 @@ public:
 	{
 		return tiles.size();
 	};
-
-	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
-	std::vector<Tile> tiles;
-
-	/**
-	 * \brief	Represents the visible areas of the map.
-	 *
-	 * \note	Maps designated 'around the world' allow for continuous
-	 *			scrolling on the X axis and so will populate X1 with -1
-	 *			and X2 with \c INT_MAX.
-	 */
-	Rect clipRect;
-
-	// Listing of all tile set sources associated with the map.
-	std::vector<TilesetSource> tilesetSources;
-
-	// Metadata about each available tile from the tile set sources.
-	std::vector<TileMapping> tileMappings;
-
-	// Listing of properties grouped by terrain type. Properties apply to a given range of tiles.
-	std::vector<TerrainType> terrainTypes;
-
-	std::vector<TileGroup> tileGroups;
 
 	std::size_t GetTileMappingIndex(std::size_t x, std::size_t y) const;
 	CellType GetCellType(std::size_t x, std::size_t y) const;
