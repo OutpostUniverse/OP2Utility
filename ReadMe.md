@@ -1,10 +1,10 @@
 # OP2Utility
 
-A C++17 utility library for working with Outpost 2 game resources (maps, graphics, sounds). This is a static library to be used by other code projects.
+A cross platform C++17 utility library that simplifies Outpost 2 game resource manipulation, including archives (vol and clm), maps, graphics, sounds, and music. This is a static library designed for use by other code projects.
 
-See [OP2Archive](https://github.com/OutpostUniverse/OP2Archive) and [OP2MapImager](https://github.com/OutpostUniverse/OP2MapImager) for examples of standalone utilities that make use of this library.
+See [OP2Archive](https://github.com/OutpostUniverse/OP2Archive) and [OP2MapImager](https://github.com/OutpostUniverse/OP2MapImager) for examples of standalone utilities using OP2Utility.
 
-This does not relate to mission building or extension modules for Outpost 2. For that see the [OP2 Mission SDK](https://github.com/OutpostUniverse/OP2MissionSDK) and [op2ext](https://github.com/OutpostUniverse/op2ext) respectively. Though with that said, if you wanted to be creative with game resources, you could potentially use this library from a mission or an extension module.
+OP2Utility does not relate to mission building or extension modules for Outpost 2. For these applications see the [OP2 Mission SDK](https://github.com/OutpostUniverse/OP2MissionSDK) and [op2ext](https://github.com/OutpostUniverse/op2ext) repositories respectively. However, this library could be used in conjunction to aid resource management of custom missions or game extension modules.
 
 Main features:
  - Extract and repack files in .VOL archives
