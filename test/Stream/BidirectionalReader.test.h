@@ -31,10 +31,10 @@ TYPED_TEST_P(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPosi
 TYPED_TEST_P(SimpleSeekableReader, StreamPositionUpdatesOnRead) {
 	char destinationBuffer;
 
-	EXPECT_EQ(0, this->seekableReader.Position());
+	EXPECT_EQ(0u, this->seekableReader.Position());
 
 	this->seekableReader.Read(destinationBuffer);
-	EXPECT_EQ(1, this->seekableReader.Position());
+	EXPECT_EQ(1u, this->seekableReader.Position());
 }
 
 TYPED_TEST_P(SimpleSeekableReader, StreamSizeMatchesInitialization) {
