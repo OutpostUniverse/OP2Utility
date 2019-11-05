@@ -23,7 +23,7 @@ TYPED_TEST_P(BasicReaderTests, CanReadZeroBytesToNull) {
 }
 
 TYPED_TEST_P(BasicReaderTests, CanReadPartialZeroBytesToNull) {
-	EXPECT_EQ(0, this->stream.ReadPartial(nullptr, 0));
+	EXPECT_EQ(0u, this->stream.ReadPartial(nullptr, 0));
 }
 
 REGISTER_TYPED_TEST_CASE_P(BasicReaderTests,

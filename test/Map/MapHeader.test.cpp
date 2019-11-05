@@ -24,9 +24,9 @@ protected:
 };
 
 TEST_F(MapHeader32TileSquare, WidthInTiles) {
-	EXPECT_EQ(32, mapHeader.WidthInTiles());
+	EXPECT_EQ(32u, mapHeader.WidthInTiles());
 }
 
 TEST_F(MapHeader32TileSquare, TileCount) {
-	EXPECT_EQ(32 * 32, mapHeader.TileCount());
+	EXPECT_EQ(32u * 32u, mapHeader.TileCount());
 }

@@ -28,8 +28,8 @@ TEST(MemoryStreamReaderTest, ZeroSizeStreamHasSafeOperations) {
 	Stream::MemoryReader stream(nullptr, 0);
 	
 	// Length and position
-	EXPECT_EQ(0, stream.Length());
-	EXPECT_EQ(0, stream.Position());
+	EXPECT_EQ(0u, stream.Length());
+	EXPECT_EQ(0u, stream.Position());
 	
 	// Seek to current position (should not cause error)
 	ASSERT_NO_THROW(stream.Seek(0));
@@ -38,7 +38,7 @@ TEST(MemoryStreamReaderTest, ZeroSizeStreamHasSafeOperations) {
 	
 	// Read 0 bytes
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
-	EXPECT_EQ(0, stream.ReadPartial(nullptr, 0));
+	EXPECT_EQ(0u, stream.ReadPartial(nullptr, 0));
 }
 
 
@@ -54,8 +54,8 @@ protected:
 
 TEST_F(EmptyMemoryStreamReader, ZeroSizeStreamHasSafeOperations) {
 	// Length and position
-	EXPECT_EQ(0, stream.Length());
-	EXPECT_EQ(0, stream.Position());
+	EXPECT_EQ(0u, stream.Length());
+	EXPECT_EQ(0u, stream.Position());
 
 	// Seek to current position (should not cause error)
 	ASSERT_NO_THROW(stream.Seek(0));
@@ -64,7 +64,7 @@ TEST_F(EmptyMemoryStreamReader, ZeroSizeStreamHasSafeOperations) {
 
 	// Read 0 bytes
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
-	EXPECT_EQ(0, stream.ReadPartial(nullptr, 0));
+	EXPECT_EQ(0u, stream.ReadPartial(nullptr, 0));
 }
 
 

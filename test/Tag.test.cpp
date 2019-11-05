@@ -6,20 +6,20 @@
 
 TEST(Tag, RemoveLastElement) {
 	// Note: Empty string (size 0) omitted, since variables may always take at least 1 byte
-	EXPECT_EQ(1, sizeof(RemoveLastElement("A")));
-	EXPECT_EQ(4, sizeof(RemoveLastElement("volh")));
-	EXPECT_EQ(11, sizeof(RemoveLastElement("some string")));
+	EXPECT_EQ(1u, sizeof(RemoveLastElement("A")));
+	EXPECT_EQ(4u, sizeof(RemoveLastElement("volh")));
+	EXPECT_EQ(11u, sizeof(RemoveLastElement("some string")));
 
 	// Wide string literals and unicode string literals
-	EXPECT_EQ(4, RemoveLastElement(L"wide").size());
-	EXPECT_EQ(5, RemoveLastElement(u8"UTF-8").size());
-	EXPECT_EQ(6, RemoveLastElement(u"UTF-16").size());
-	EXPECT_EQ(6, RemoveLastElement(U"UTF-32").size());
+	EXPECT_EQ(4u, RemoveLastElement(L"wide").size());
+	EXPECT_EQ(5u, RemoveLastElement(u8"UTF-8").size());
+	EXPECT_EQ(6u, RemoveLastElement(u"UTF-16").size());
+	EXPECT_EQ(6u, RemoveLastElement(U"UTF-32").size());
 }
 
 TEST(Tag, Properties) {
 	// Proper size
-	EXPECT_EQ(4, sizeof(Tag));
+	EXPECT_EQ(4u, sizeof(Tag));
 
 	// Tags can be memcopied
 	EXPECT_TRUE(std::is_trivially_copyable<Tag>::value);

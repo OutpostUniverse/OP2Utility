@@ -18,8 +18,8 @@ TEST(FileReaderTest, ZeroSizeStreamHasSafeOperations) {
 	Stream::FileReader stream("Stream/data/EmptyFile.txt");
 
 	// Length and position
-	EXPECT_EQ(0, stream.Length());
-	EXPECT_EQ(0, stream.Position());
+	EXPECT_EQ(0u, stream.Length());
+	EXPECT_EQ(0u, stream.Position());
 
 	// Seek to current position (should not cause error)
 	ASSERT_NO_THROW(stream.Seek(0));
@@ -28,7 +28,7 @@ TEST(FileReaderTest, ZeroSizeStreamHasSafeOperations) {
 
 	// Read 0 bytes
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
-	EXPECT_EQ(0, stream.ReadPartial(nullptr, 0));
+	EXPECT_EQ(0u, stream.ReadPartial(nullptr, 0));
 }
 
 
@@ -46,5 +46,5 @@ TEST_F(SimpleFileReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
 }
 
 TEST_F(SimpleFileReader, StreamSizeMatchesInitialization) {
-	EXPECT_EQ(stream.Length(), 5);
+	EXPECT_EQ(5u, stream.Length());
 }
