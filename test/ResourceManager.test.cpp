@@ -28,7 +28,7 @@ TEST(ResourceManager, GetFilenames)
 	ResourceManager resourceManager("./data");
 	auto filenames = resourceManager.GetAllFilenamesOfType(".vol");
 
-	EXPECT_EQ(0, filenames.size());
+	EXPECT_EQ(0u, filenames.size());
 
-	EXPECT_EQ(0, resourceManager.GetAllFilenames("Directory.vol").size());
+	EXPECT_EQ(0u, resourceManager.GetAllFilenames("Directory.vol").size());
 }
