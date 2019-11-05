@@ -46,5 +46,5 @@ TEST_F(SimpleFileReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
 }
 
 TEST_F(SimpleFileReader, StreamSizeMatchesInitialization) {
-	EXPECT_EQ(stream.Length(), 5u);
+	EXPECT_EQ(5u, stream.Length());
 }
