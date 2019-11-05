@@ -2,6 +2,8 @@
 #include "BidirectionalReader.test.h"
 #include "Stream/MemoryReader.h"
 #include <array>
+#include <string>
+#include <stdexcept>
 
 
 template <>
@@ -94,4 +96,37 @@ TEST_F(SimpleMemoryReader, SeekRelativeOutOfBoundsEndPreservesPosition) {
 	auto position = stream.Position();
 	EXPECT_THROW(stream.SeekForward(6), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
+}
+
+TEST(MemoryReader, ReadNullTerminatedString)
+{
+	std::array<char, 5> buffer{ 'n', 'u', 'l', 'l', '\0' };
+	std::array<char, 5> result;
+
+	// Check null-terminated
+	Stream::MemoryReader reader(&buffer[0], 5);
+	std::string str;
+	
+	EXPECT_NO_THROW(str = reader.ReadNullTerminatedString());
+
+	// Copy to array
+	std::copy(str.begin(), str.end(), result.data());
+	
+	// Ensure null-terminator was not copied
+	EXPECT_NE(buffer, result);
+
+	// Add null-terminator to check for equality
+	result[4] = '\0';
+	EXPECT_EQ(buffer, result);
+
+	// Check string without null-termination eventually throws
+	buffer[4] = '0';
+	reader.Seek(0);
+	EXPECT_THROW(str = reader.ReadNullTerminatedString(), std::runtime_error);
+	EXPECT_NE(buffer, result);
+
+	// Check maxCount stops reading string
+	reader.Seek(0);
+	EXPECT_NO_THROW(str = reader.ReadNullTerminatedString(4));
+	EXPECT_EQ(4, str.size());
 }
