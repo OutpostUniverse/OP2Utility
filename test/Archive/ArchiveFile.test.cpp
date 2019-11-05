@@ -63,7 +63,7 @@ void TestEmptyArchive(Archive::ArchiveFile& archiveFile, const std::string& arch
 	EXPECT_EQ(archiveFilename, archiveFile.GetArchiveFilename());
 
 	EXPECT_EQ(0u, archiveFile.GetCount());
-	EXPECT_GT(archiveFile.GetArchiveFileSize(), 0u);
+	EXPECT_LE(0u, archiveFile.GetArchiveFileSize());
 
 	XFile::DeletePath(extractDirectory);
 }
