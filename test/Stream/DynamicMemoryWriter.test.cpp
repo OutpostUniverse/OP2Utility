@@ -9,19 +9,19 @@ TEST(DynamicMemoryWriter, LengthAutoExpands) {
 	Stream::DynamicMemoryWriter writer;
 
 	// Initially stream has 0 length
-	EXPECT_EQ(0, writer.Length());
+	EXPECT_EQ(0u, writer.Length());
 
 	// Length grows as data is added
 	EXPECT_NO_THROW(writer.Write(data));
-	EXPECT_EQ(4, writer.Length());
+	EXPECT_EQ(4u, writer.Length());
 
 	// Seeking forward past the end expands the stream
 	EXPECT_NO_THROW(writer.SeekForward(1));
-	EXPECT_EQ(5, writer.Length());
+	EXPECT_EQ(5u, writer.Length());
 
 	// Additional data is added after the expansion gap
 	EXPECT_NO_THROW(writer.Write(data));
-	EXPECT_EQ(9, writer.Length());
+	EXPECT_EQ(9u, writer.Length());
 }
 
 TEST(DynamicMemoryWriter, ReadsBackStoredData) {
