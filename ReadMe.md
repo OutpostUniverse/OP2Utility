@@ -100,7 +100,7 @@ std::vector<std::string> filenames = GetAllFilenames("Eden");
 std::vector<std::string> filenames GetAllFilenamesOfType(".map");
 
 // Return the filename of the archive containing the passed filename. Returns an empty string if file is not located in an archive file in the ResourceManager's working directory.
-auto archiveFilename = FindContainingArchivePath(const std::string& filename);
+auto archiveFilename = FindContainingArchivePath(filename);
 if (!archiveFilename.empty()) {
     // TODO
 }
@@ -124,7 +124,7 @@ Map op2Map = Map::ReadMap("MesaMissions.map");
 op2Map.Write("MesaMissionsRevB.map);
 
 // Load parts of saved game that are equivalent to the map format into memory.
-Map savedGame = Map::ReadSavedGame(std::string filename);
+Map savedGame = Map::ReadSavedGame(filename);
 
 // Change the map version tag.
 op2Map.SetVersionTag(100);
