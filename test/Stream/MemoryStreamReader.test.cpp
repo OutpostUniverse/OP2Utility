@@ -98,7 +98,7 @@ TEST_F(SimpleMemoryReader, SeekRelativeOutOfBoundsEndPreservesPosition) {
 	EXPECT_EQ(position, stream.Position());
 }
 
-TEST(MemoryReader, ReadNullTerminatedString)
+TEST(MemoryReader, ReadNullTerminatedStringUnbounded)
 {
 	constexpr std::array<char, 5> terminatedBuffer{ 'n', 'u', 'l', 'l', '\0' };
 	Stream::MemoryReader reader(&terminatedBuffer[0], terminatedBuffer.size());
@@ -107,9 +107,13 @@ TEST(MemoryReader, ReadNullTerminatedString)
 	EXPECT_EQ("null", reader.ReadNullTerminatedString());
 	// Stream is adanced by string length + null terminator
 	EXPECT_EQ(5u, reader.Position());
+}
 
-	// Check maxCount stops reading string at proper location
-	reader.Seek(0);
+TEST(MemoryReader, ReadNullTerminatedStringBounded)
+{
+	constexpr std::array<char, 5> terminatedBuffer{ 'n', 'u', 'l', 'l', '\0' };
+	Stream::MemoryReader reader(&terminatedBuffer[0], terminatedBuffer.size());
+
 	// Test bounded read with maxCount characters
 	EXPECT_EQ("nu", reader.ReadNullTerminatedString(2));
 	// Stream is adanced by read length (no null terminator was seen)
