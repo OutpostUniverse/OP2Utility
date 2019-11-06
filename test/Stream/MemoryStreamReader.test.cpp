@@ -107,6 +107,8 @@ TEST(MemoryReader, ReadNullTerminatedString)
 
 	// Test unbounded read
 	EXPECT_EQ("null", reader.ReadNullTerminatedString());
+	// Stream is adanced by string length + null terminator
+	EXPECT_EQ(5u, reader.Position());
 
 	// Check maxCount stops reading string at proper location
 	reader.Seek(0);
