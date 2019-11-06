@@ -100,33 +100,36 @@ TEST_F(SimpleMemoryReader, SeekRelativeOutOfBoundsEndPreservesPosition) {
 
 TEST(MemoryReader, ReadNullTerminatedString)
 {
-	std::array<char, 5> buffer{ 'n', 'u', 'l', 'l', '\0' };
-	std::array<char, 5> result;
+	constexpr std::array<char, 5> terminatedBuffer{ 'n', 'u', 'l', 'l', '\0' };
 
-	// Check null-terminated
-	Stream::MemoryReader reader(&buffer[0], 5);
+	Stream::MemoryReader reader(&terminatedBuffer[0], terminatedBuffer.size());
 	std::string str;
 	
 	EXPECT_NO_THROW(str = reader.ReadNullTerminatedString());
-
-	// Copy to array
-	std::copy(str.begin(), str.end(), result.data());
 	
 	// Ensure null-terminator was not copied
-	EXPECT_NE(buffer, result);
+	EXPECT_EQ(terminatedBuffer.size() - 1, str.size());
 
-	// Add null-terminator to check for equality
-	result[4] = '\0';
-	EXPECT_EQ(buffer, result);
+	for (std::size_t i = 0; i < str.size(); ++i) {
+		EXPECT_EQ(terminatedBuffer[i], str[i]);
+	}
 
-	// Check string without null-termination eventually throws
-	buffer[4] = '0';
+	// Check maxCount stops reading string at proper location
 	reader.Seek(0);
+	EXPECT_NO_THROW(str = reader.ReadNullTerminatedString(2u));
+	EXPECT_EQ(2u, str.size());
+}
+
+TEST(MemoryReader, ReadNonNullTerminatedString)
+{
+	constexpr std::array<char, 5> nonTerminatedBuffer{ 'n', 'o', 'p', 'e', '!' };
+	Stream::MemoryReader reader(&nonTerminatedBuffer[0], nonTerminatedBuffer.size());
+	std::string str;
+
+	// Check string without null-termination will throw. 
+	// Throw caused by underlying stream when exceeding buffer size.
 	EXPECT_THROW(str = reader.ReadNullTerminatedString(), std::runtime_error);
-	EXPECT_NE(buffer, result);
 
-	// Check maxCount stops reading string
-	reader.Seek(0);
-	EXPECT_NO_THROW(str = reader.ReadNullTerminatedString(4));
-	EXPECT_EQ(4, str.size());
+	// No string is returned due to exception before read function returns a value
+	EXPECT_EQ(0u, str.size());
 }
