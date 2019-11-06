@@ -60,11 +60,11 @@ Map::ReadMap(volFile.OpenStream(0));
 
 #### CLM File Manipulation
 
-Outpost 2 stores all music tracks except for the main menu track in the archive file op2.clm. As a starting point for manipulating audio tracks for Outpost 2, consider the free program Audacity (http://www.audacityteam.org/). 
+Outpost 2 stores all music tracks except for the main menu track in the archive file op2.clm. As a starting point for manipulating audio tracks for Outpost 2, consider the free program Audacity (http://www.audacityteam.org/).
 
 When naming audio files for storage in a CLM archive, the filename (excluding extension) must be 8 characters or less. The names of the audio tracks provided with the stock download of the game must be used. The game will then select the music tracks as it sees appropriate based on name.
 
-Outpost 2 audio tracks must be formatted as WAV files with the following settings: 
+Outpost 2 audio tracks must be formatted as WAV files with the following settings:
  * Frequency = 22050 Hz
  * Channels = 1 (Mono)
  * BitsPerSample = 16
@@ -76,7 +76,7 @@ The file size of each WAV audio track (the actual wav data) must be zero padded 
 Exact same as Volume File manipulation
 
 ### Resource Manager
-The Resource Manager eases retrieving Outpost 2 files when the consumer does not know if the file is stored loosely on disk or in an archive. 
+The Resource Manager eases retrieving Outpost 2 files when the consumer does not know if the file is stored loosely on disk or in an archive.
 
 Each `ResourceManager` is passed a base directory where searches are made from. After construction, relative directories passed into `ResourceManager` will search relative to the established base directory, *not* the program's overall environmentally set directory.
 
@@ -110,9 +110,9 @@ std::vector<std::string> archiveFilenames = GetArchiveFilenames();
 ```
 
 ### Map and Saved Game File Manipulation
-OP2Utility allows loading Outpost 2 map (.map) files into memory. After loaded into memory, different map properties such as width, tilesets, and cell indexed can be read or manipulated. 
+OP2Utility allows loading Outpost 2 map (.map) files into memory. After loaded into memory, different map properties such as width, tilesets, and cell indexed can be read or manipulated.
 
-Outpost 2 saved games (.op2) have a similar format to map files. OP2Utility supports partial reading and manipulation of saved game files, mostly where the map and saved game format overlap. 
+Outpost 2 saved games (.op2) have a similar format to map files. OP2Utility supports partial reading and manipulation of saved game files, mostly where the map and saved game format overlap.
 
 ```C++
 #include "OP2Utility.h"
@@ -129,11 +129,11 @@ Map savedGame = Map::ReadSavedGame(std::string filename);
 // Change the map version tag.
 op2Map.SetVersionTag(100);
 
-// Retrieve the version tag 
+// Retrieve the version tag
 uint32_t versionTag = op2Map.GetVersionTag();
 
 // Check if loaded file is a saved game or map
-if (op2Map.IsSavedGame()) { 
+if (op2Map.IsSavedGame()) {
     // TODO
 };
 
