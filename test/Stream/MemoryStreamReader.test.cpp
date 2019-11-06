@@ -125,7 +125,6 @@ TEST(MemoryReader, ReadNonNullTerminatedString)
 	constexpr std::array<char, 5> nonTerminatedBuffer{ 'n', 'o', 'p', 'e', '!' };
 	Stream::MemoryReader reader(&nonTerminatedBuffer[0], nonTerminatedBuffer.size());
 
-	// Check string without null-termination will throw. 
-	// Throw caused by underlying stream when exceeding buffer size.
+	// Unbounded read of non-terminated string will throw when end of stream is reached
 	EXPECT_THROW(reader.ReadNullTerminatedString(), std::runtime_error);
 }
