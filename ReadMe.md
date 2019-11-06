@@ -13,7 +13,7 @@ Main features:
  - Load and parse map files to in-memory format, and save back to disk
  - Load and parse the map portion of saved game files to in-memory format
  - Load of tileset graphics (both standard Windows bitmaps and custom OP2 format)
- - Load of OP2 specific spite formats (.prt/.bmp) (partial experimental support)
+ - Load of OP2 specific sprite formats (.prt/.bmp) (partial experimental support)
  - General file stream reading/writing
  - Indexed Bitmap manipulation (experimental)
 
