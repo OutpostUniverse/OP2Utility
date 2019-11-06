@@ -104,15 +104,9 @@ TEST(MemoryReader, ReadNullTerminatedString)
 
 	Stream::MemoryReader reader(&terminatedBuffer[0], terminatedBuffer.size());
 	std::string str;
-	
-	EXPECT_NO_THROW(str = reader.ReadNullTerminatedString());
-	
-	// Ensure null-terminator was not copied
-	EXPECT_EQ(terminatedBuffer.size() - 1, str.size());
 
-	for (std::size_t i = 0; i < str.size(); ++i) {
-		EXPECT_EQ(terminatedBuffer[i], str[i]);
-	}
+	// Test unbounded read
+	EXPECT_EQ("null", reader.ReadNullTerminatedString());
 
 	// Check maxCount stops reading string at proper location
 	reader.Seek(0);
