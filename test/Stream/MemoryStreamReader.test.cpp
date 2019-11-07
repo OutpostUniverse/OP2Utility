@@ -105,7 +105,7 @@ TEST(MemoryReader, ReadNullTerminatedStringUnbounded)
 
 	// Test unbounded read
 	EXPECT_EQ("null", reader.ReadNullTerminatedString());
-	// Stream is adanced by string length + null terminator
+	// Stream is advanced by string length + null terminator
 	EXPECT_EQ(5u, reader.Position());
 }
 
@@ -116,7 +116,7 @@ TEST(MemoryReader, ReadNullTerminatedStringBounded)
 
 	// Test bounded read with maxCount characters
 	EXPECT_EQ("nu", reader.ReadNullTerminatedString(2));
-	// Stream is adanced by read length (no null terminator was seen)
+	// Stream is advanced by read length (no null terminator was seen)
 	EXPECT_EQ(2u, reader.Position());
 }
 
