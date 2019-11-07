@@ -2,6 +2,8 @@
 #include "BidirectionalReader.test.h"
 #include "Stream/MemoryReader.h"
 #include <array>
+#include <string>
+#include <stdexcept>
 
 
 template <>
@@ -94,4 +96,35 @@ TEST_F(SimpleMemoryReader, SeekRelativeOutOfBoundsEndPreservesPosition) {
 	auto position = stream.Position();
 	EXPECT_THROW(stream.SeekForward(6), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
+}
+
+TEST(MemoryReader, ReadNullTerminatedStringUnbounded)
+{
+	constexpr std::array<char, 5> terminatedBuffer{ 'n', 'u', 'l', 'l', '\0' };
+	Stream::MemoryReader reader(&terminatedBuffer[0], terminatedBuffer.size());
+
+	// Test unbounded read
+	EXPECT_EQ("null", reader.ReadNullTerminatedString());
+	// Stream is advanced by string length + null terminator
+	EXPECT_EQ(5u, reader.Position());
+}
+
+TEST(MemoryReader, ReadNullTerminatedStringBounded)
+{
+	constexpr std::array<char, 5> terminatedBuffer{ 'n', 'u', 'l', 'l', '\0' };
+	Stream::MemoryReader reader(&terminatedBuffer[0], terminatedBuffer.size());
+
+	// Test bounded read with maxCount characters
+	EXPECT_EQ("nu", reader.ReadNullTerminatedString(2));
+	// Stream is advanced by read length (no null terminator was seen)
+	EXPECT_EQ(2u, reader.Position());
+}
+
+TEST(MemoryReader, ReadNonNullTerminatedString)
+{
+	constexpr std::array<char, 5> nonTerminatedBuffer{ 'n', 'o', 'p', 'e', '!' };
+	Stream::MemoryReader reader(&nonTerminatedBuffer[0], nonTerminatedBuffer.size());
+
+	// Unbounded read of non-terminated string will throw when end of stream is reached
+	EXPECT_THROW(reader.ReadNullTerminatedString(), std::runtime_error);
 }
