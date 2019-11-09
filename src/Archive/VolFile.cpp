@@ -172,6 +172,12 @@ namespace Archive
 
 	void VolFile::WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo)
 	{
+		for (const auto& path : volInfo.filesToPack) {
+			if (XFile::PathsAreEqual(filename, path)) {
+				throw std::runtime_error("Cannot include a volume being overwritten in new volume " + filename);
+			}
+		}
+
 		Stream::FileWriter volWriter(filename);
 
 		WriteHeader(volWriter, volInfo);
