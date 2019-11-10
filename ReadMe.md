@@ -49,13 +49,13 @@ OP2Utility cannot create compressed archives.
 #include "OP2Utility.h"
 
 // Open a Volume file into memory
-VolFile volFile("maps.vol");
+Archive::VolFile volFile("maps.vol");
 
 // Extract the file contained at index 0 of the volume
-volFile.ExtractFile(0, "/Test/);
+volFile.ExtractFile(0, "/Test/");
 
 // Read a map into memory without extracting the archived file to disk
-Map::ReadMap(volFile.OpenStream(0));
+Map op2Map = Map::ReadMap(*volFile.OpenStream(0));
 ```
 
 #### CLM File Manipulation
@@ -83,54 +83,60 @@ Each `ResourceManager` is passed a base directory where searches are made from. 
 #### Resource Manager Example Code
 ```C++
 #include "OP2Utility.h"
+#include <memory>
+#include <string>
+#include <vector>
 
 // Creates a ResourceManager whose base directory is EnvironmentDirectory/TestDirectory
 ResourceManager resourceManager("TestDirectory");
 
 // Load a map into memory without extracting the file to disk if it is contained in an archive.
-Map map(resourceManager.GetResourceStream("MesaMissions.map"));
+std::unique_ptr<Stream::BidirectionalReader> mapStream = resourceManager.GetResourceStream("MesaMissions.map");
+Map op2Map = Map::ReadMap(*mapStream);
 
-// Same as above, but only look for an already extracted file
-map(resourceManager.GetResourceStream("MesaMissions.map", false));
+// Same as above, but prevent searching archives for given file
+op2Map = Map::ReadMap(*resourceManager.GetResourceStream("MesaMissions.map", false));
 
 // Retrieve all filenames (loose or in an archive) that contain the word Eden via C++ std library Regex search.
-std::vector<std::string> filenames = GetAllFilenames("Eden");
+std::vector<std::string> filenames = resourceManager.GetAllFilenames("Eden");
 
 // Retrieve all files containing a .map extension
-std::vector<std::string> filenames GetAllFilenamesOfType(".map");
+std::vector<std::string> mapFilenames = resourceManager.GetAllFilenamesOfType(".map");
 
 // Return the filename of the archive containing the passed filename. Returns an empty string if file is not located in an archive file in the ResourceManager's working directory.
-auto archiveFilename = FindContainingArchivePath(filename);
+std::string archiveFilename = resourceManager.FindContainingArchivePath("filename");
 if (!archiveFilename.empty()) {
-    // TODO
+	// TODO
 }
 
 // Return a list of the filenames of all archives loaded by the ResourceManager
-std::vector<std::string> archiveFilenames = GetArchiveFilenames();
+std::vector<std::string> archiveFilenames = resourceManager.GetArchiveFilenames();
 ```
 
 ### Map and Saved Game File Manipulation
+
 OP2Utility allows loading Outpost 2 map (.map) files into memory. After loaded into memory, different map properties such as width, tilesets, and cell indexed can be read or manipulated.
 
 Outpost 2 saved games (.op2) have a similar format to map files. OP2Utility supports partial reading and manipulation of saved game files, mostly where the map and saved game format overlap.
 
 ```C++
 #include "OP2Utility.h"
+#include <cstdint>
 
 // Load a map into memory
 Map op2Map = Map::ReadMap("MesaMissions.map");
 
 // Write modified map to file
-op2Map.Write("MesaMissionsRevB.map);
+op2Map.Write("MesaMissions_RevB.map");
 
-// Load parts of saved game that are equivalent to the map format into memory.
+// Load portions of saved game equivalent to the map format into memory.
 Map savedGame = Map::ReadSavedGame(filename);
 
 // Change the map version tag.
 op2Map.SetVersionTag(100);
 
 // Retrieve the version tag
-uint32_t versionTag = op2Map.GetVersionTag();
+std::uint32_t versionTag = op2Map.GetVersionTag();
 
 // Check if loaded file is a saved game or map
 if (op2Map.IsSavedGame()) {
@@ -138,18 +144,48 @@ if (op2Map.IsSavedGame()) {
 };
 
 // Retrieve map width and height in tiles
-uint32_t widthInTiles = op2Map.WidthInTiles();
-uint32_t heightInTiles = op2Map.HeightInTiles();
+std::uint32_t widthInTiles = op2Map.WidthInTiles();
+std::uint32_t heightInTiles = op2Map.HeightInTiles();
 std::size_t tileCount = op2Map.TileCount();
 
-std::size_t GetTileMappingIndex(std::size_t x, std::size_t y) const;
-CellType GetCellType(std::size_t x, std::size_t y) const;
-bool GetLavaPossible(std::size_t x, std::size_t y) const;
-std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
-std::size_t GetImageIndex(std::size_t x, std::size_t y) const;
+// Trim unused tileset sources from map
+op2Map.TrimTilesetSources();
+```
+
+#### Manipulating individual map cells and tilesets
+
+After loading a map into memory, fine-grained manipulation or checks of map cell information is possible. When manipulating, a thorough knowledge of Outpost 2 map format is necessary to keep map data well formed.
+
+```C++
+// Check if lava can flow onto given map cell
+if (op2Map.GetLavaPossible(15, 15)) {
+    // TODO
+}
+
+// CellType represents if cell is impassable, movement speed if passable, etc
+CellType cellType = op2Map.GetCellType(15, 15);
+
+// A TileMapping represents common metadata for all tiles on the map with the corresponding tileset and tileIndex.
+// The mapping index is the array index into the TileMapping array that applies to the tile
+std::size_t mappingIndex = op2Map.GetTileMappingIndex(15, 15);
+
+// Tileset is the index of the tileset (well) that contains the tile
+std::size_t tilesetIndex = op2Map.GetTilesetIndex(15, 15);
+
+// ImageIndex is the index of the image within the tileset used by the tile
+std::size_t imageIndex = op2Map.GetImageIndex(15, 15);
 ```
 
 ### Outpost 2 specific Art/Bitmap File Manipulation
+Outpost 2 sprites are stored in two files with tightly coupled dependencies on each other. OP2_ART.bmp contains pixel data and is typically stored loosley within Outpost 2's directory. op2_art.prt contains the required metadata to form the pixels into frames and animations. op2_art.prt is typically stored within art.vol (See the archives section for extraction instructions).
 
+OP2Archive contains a basic bitmap library for manipulating indexed bitmaps. The bitmap library is tailored for use with Outpost 2's sprites. If bitmap work beyond extracting the sprites is needed, a third party library should be used.
 
-### Stream Read/Write Operations
+Bitmap file manipulation is only partially supported.
+
+```C++
+#include "OP2Utility.h"
+
+OP2BmpLoader bmpLoader(bmpFilename, artFilename);
+bmpLoader.ExtractImage(0, "extractedFilename.bmp");
+```
