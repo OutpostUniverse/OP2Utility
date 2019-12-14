@@ -107,34 +107,24 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 
 std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
 {
-	std::vector<std::string> filenames = GetFilenamesFromDirectory(directory);
+	auto filenames = GetFilenamesFromDirectory(directory);
 
-	// Loop starts at index size - 1 and ends after index 0 executes
-	for (std::size_t i = filenames.size(); i-- > 0; )
-	{
-		if (!std::regex_search(filenames[i], filenameRegex)) {
-			filenames.erase(filenames.begin() + i);
-		}
-	}
+	filenames.erase(std::remove_if(filenames.begin(), filenames.end(), 
+		[&filenameRegex](const std::string& filename) {
+			return !std::regex_search(filename, filenameRegex);
+		}), filenames.end());
 
 	return filenames;
 }
 
 std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::string& extension)
 {
-	std::vector<std::string> filenames = GetFilenamesFromDirectory(directory);
+	auto filenames = GetFilenamesFromDirectory(directory);
 
-	// Loop starts at index size - 1 and ends after index 0 executes
-	for (std::size_t i = filenames.size(); i-- > 0; )
-	{
-		if (filenames.size() == 0) {
-			return filenames;
-		}
-
-		if (fs::path(filenames[i]).extension().string() != extension) {
-			filenames.erase(filenames.begin() + i);
-		}
-	}
+	filenames.erase(std::remove_if(filenames.begin(), filenames.end(),
+		[&extension](const std::string& filename) {
+			return fs::path(filename).extension().string() != extension;
+		}), filenames.end());
 
 	return filenames;
 }
