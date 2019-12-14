@@ -108,12 +108,16 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 template <typename FilterFunction>
 std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, FilterFunction filterFunction)
 {
-	auto filenames = XFile::GetFilenamesFromDirectory(directory);
+	// Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
+	auto pathStr = directory.length() > 0 ? directory : "./";
 
-	filenames.erase(
-		std::remove_if(filenames.begin(), filenames.end(), filterFunction),
-		filenames.end()
-	);
+	std::vector<std::string> filenames;
+	for (const auto& entry : fs::directory_iterator(pathStr)) {
+		auto pathString = entry.path().generic_string();
+		if (!filterFunction(pathString)) {
+			filenames.push_back(XFile::GetFilename(pathString));
+		}
+	}
 
 	return filenames;
 }
