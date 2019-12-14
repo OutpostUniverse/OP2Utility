@@ -118,22 +118,22 @@ std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory,
 	return filenames;
 }
 
-std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
-{
-	return ::GetFilenamesFromDirectory(
-		directory,
-		[&filenameRegex](const std::string& filename) {
-			return !std::regex_search(filename, filenameRegex);
-		}
-	);
-}
-
 std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::string& extension)
 {
 	return ::GetFilenamesFromDirectory(
 		directory,
 		[&extension](const std::string& filename) {
 			return fs::path(filename).extension().string() != extension;
+		}
+	);
+}
+
+std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
+{
+	return ::GetFilenamesFromDirectory(
+		directory,
+		[&filenameRegex](const std::string& filename) {
+			return !std::regex_search(filename, filenameRegex);
 		}
 	);
 }
