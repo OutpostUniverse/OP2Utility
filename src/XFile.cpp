@@ -120,26 +120,22 @@ std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory,
 
 std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
 {
-	auto filenames = GetFilenamesFromDirectory(directory);
-
-	filenames.erase(std::remove_if(filenames.begin(), filenames.end(), 
+	return ::GetFilenamesFromDirectory(
+		directory,
 		[&filenameRegex](const std::string& filename) {
 			return !std::regex_search(filename, filenameRegex);
-		}), filenames.end());
-
-	return filenames;
+		}
+	);
 }
 
 std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::string& extension)
 {
-	auto filenames = GetFilenamesFromDirectory(directory);
-
-	filenames.erase(std::remove_if(filenames.begin(), filenames.end(),
+	return ::GetFilenamesFromDirectory(
+		directory,
 		[&extension](const std::string& filename) {
 			return fs::path(filename).extension().string() != extension;
-		}), filenames.end());
-
-	return filenames;
+		}
+	);
 }
 
 void XFile::EraseNonFilenames(std::vector<std::string>& directoryContents)
