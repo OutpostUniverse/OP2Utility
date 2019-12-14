@@ -105,6 +105,19 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 	return filenames;
 }
 
+template <typename FilterFunction>
+std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, FilterFunction filterFunction)
+{
+	auto filenames = XFile::GetFilenamesFromDirectory(directory);
+
+	filenames.erase(
+		std::remove_if(filenames.begin(), filenames.end(), filterFunction),
+		filenames.end()
+	);
+
+	return filenames;
+}
+
 std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
 {
 	auto filenames = GetFilenamesFromDirectory(directory);
