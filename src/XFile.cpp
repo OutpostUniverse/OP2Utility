@@ -152,6 +152,16 @@ std::vector<std::string> XFile::DirFilesWithExtension(const std::string& directo
 	);
 }
 
+std::vector<std::string> XFile::DirFiles(const std::string& directory, const std::regex& filenameRegex)
+{
+	return ::GetFilenamesFromDirectory(
+		directory,
+		[&filenameRegex](const std::string& filename) {
+			return std::regex_search(filename, filenameRegex) && IsFile(filename);
+		}
+	);
+}
+
 void XFile::EraseNonFilenames(std::vector<std::string>& directoryContents)
 {
 	directoryContents.erase(
