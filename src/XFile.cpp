@@ -122,16 +122,6 @@ std::vector<std::string> Dir(const std::string& directory, SelectFunction select
 	return filenames;
 }
 
-std::vector<std::string> XFile::DirWithExtension(const std::string& directory, const std::string& extension)
-{
-	return ::Dir(
-		directory,
-		[&extension](const std::string& filename) {
-			return fs::path(filename).extension().string() == extension;
-		}
-	);
-}
-
 std::vector<std::string> XFile::Dir(const std::string& directory, const std::regex& filenameRegex)
 {
 	return ::Dir(
@@ -142,12 +132,12 @@ std::vector<std::string> XFile::Dir(const std::string& directory, const std::reg
 	);
 }
 
-std::vector<std::string> XFile::DirFilesWithExtension(const std::string& directory, const std::string& extension)
+std::vector<std::string> XFile::DirWithExtension(const std::string& directory, const std::string& extension)
 {
 	return ::Dir(
 		directory,
 		[&extension](const std::string& filename) {
-			return (fs::path(filename).extension().string() == extension) && IsFile(filename);
+			return fs::path(filename).extension().string() == extension;
 		}
 	);
 }
@@ -158,6 +148,16 @@ std::vector<std::string> XFile::DirFiles(const std::string& directory, const std
 		directory,
 		[&filenameRegex](const std::string& filename) {
 			return std::regex_search(filename, filenameRegex) && IsFile(filename);
+		}
+	);
+}
+
+std::vector<std::string> XFile::DirFilesWithExtension(const std::string& directory, const std::string& extension)
+{
+	return ::Dir(
+		directory,
+		[&extension](const std::string& filename) {
+			return (fs::path(filename).extension().string() == extension) && IsFile(filename);
 		}
 	);
 }
