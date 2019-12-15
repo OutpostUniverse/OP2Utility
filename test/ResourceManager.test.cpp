@@ -47,8 +47,13 @@ TEST(ResourceManager, GetArchiveFilenames)
 	const std::string archiveName("./data/Test.vol");
 	Archive::VolFile::CreateArchive(archiveName, {});
 
-	ResourceManager resourceManager("./data");
-	EXPECT_EQ(std::vector<std::string>{archiveName}, resourceManager.GetArchiveFilenames());
+	// Scope block to ensures ResourceManager is destructed after use
+	// This ensures the VOL file is closed before attempting to delete it
+	// This is needed for Windows filesystem semantics
+	{
+		ResourceManager resourceManager("./data");
+		EXPECT_EQ(std::vector<std::string>{archiveName}, resourceManager.GetArchiveFilenames());
+	}
 
 	XFile::DeletePath(archiveName);
 }
