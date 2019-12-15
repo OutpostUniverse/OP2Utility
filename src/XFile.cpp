@@ -92,7 +92,7 @@ std::string XFile::AppendToFilename(const std::string& filename, const std::stri
 	return newPath.string();
 }
 
-std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory)
+std::vector<std::string> XFile::Dir(const std::string& directory)
 {
 	// Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
 	auto pathStr = directory.length() > 0 ? directory : "./";
@@ -106,7 +106,7 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 }
 
 template <typename SelectFunction>
-std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, SelectFunction selectFunction)
+std::vector<std::string> Dir(const std::string& directory, SelectFunction selectFunction)
 {
 	// Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
 	auto pathStr = directory.length() > 0 ? directory : "./";
@@ -122,9 +122,9 @@ std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory,
 	return filenames;
 }
 
-std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::string& extension)
+std::vector<std::string> XFile::DirWithExtension(const std::string& directory, const std::string& extension)
 {
-	return ::GetFilenamesFromDirectory(
+	return ::Dir(
 		directory,
 		[&extension](const std::string& filename) {
 			return fs::path(filename).extension().string() == extension;
@@ -132,9 +132,9 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 	);
 }
 
-std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
+std::vector<std::string> XFile::Dir(const std::string& directory, const std::regex& filenameRegex)
 {
-	return ::GetFilenamesFromDirectory(
+	return ::Dir(
 		directory,
 		[&filenameRegex](const std::string& filename) {
 			return std::regex_search(filename, filenameRegex);
@@ -144,7 +144,7 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 
 std::vector<std::string> XFile::DirFilesWithExtension(const std::string& directory, const std::string& extension)
 {
-	return ::GetFilenamesFromDirectory(
+	return ::Dir(
 		directory,
 		[&extension](const std::string& filename) {
 			return (fs::path(filename).extension().string() == extension) && IsFile(filename);
@@ -154,7 +154,7 @@ std::vector<std::string> XFile::DirFilesWithExtension(const std::string& directo
 
 std::vector<std::string> XFile::DirFiles(const std::string& directory, const std::regex& filenameRegex)
 {
-	return ::GetFilenamesFromDirectory(
+	return ::Dir(
 		directory,
 		[&filenameRegex](const std::string& filename) {
 			return std::regex_search(filename, filenameRegex) && IsFile(filename);
