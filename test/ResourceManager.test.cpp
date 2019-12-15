@@ -1,4 +1,6 @@
 #include "../src/ResourceManager.h"
+#include "../src/Archive/VolFile.h"
+#include "../src/XFile.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
 
@@ -20,6 +22,13 @@ TEST(ResourceManager, GetResourceStream_RefuseAbsolutePath) {
 #endif
 	EXPECT_THROW(resourceManager.GetResourceStream("/Archive.vol"), std::runtime_error);
 	EXPECT_THROW(resourceManager.GetResourceStream("/PathTo/Archive.vol"), std::runtime_error);
+}
+
+TEST(ResourceManager, GetResourceStreamExistingFileUnpacked)
+{
+	ResourceManager resourceManager("./data");
+	// Opening an existing file should result in a valid stream
+	EXPECT_NE(nullptr, resourceManager.GetResourceStream("Empty.txt"));
 }
 
 TEST(ResourceManager, GetFilenames)
