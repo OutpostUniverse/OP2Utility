@@ -41,3 +41,14 @@ TEST(ResourceManager, GetFilenames)
 
 	EXPECT_EQ(0u, resourceManager.GetAllFilenames("Directory.vol").size());
 }
+
+TEST(ResourceManager, GetArchiveFilenames)
+{
+	const std::string archiveName("./data/Test.vol");
+	Archive::VolFile::CreateArchive(archiveName, {});
+
+	ResourceManager resourceManager("./data");
+	EXPECT_EQ(std::vector<std::string>{archiveName}, resourceManager.GetArchiveFilenames());
+
+	XFile::DeletePath(archiveName);
+}
