@@ -127,3 +127,10 @@ TEST(XFileDirFilesWithExtension, DataPath) {
 	// Directories are skipped
 	EXPECT_THAT(XFile::DirFilesWithExtension("data/", ".vol"), Not(testing::Contains(testing::EndsWith("Directory.vol"))));
 }
+
+TEST(XFileDirFiles, DataPath) {
+	// Files are found
+	EXPECT_THAT(XFile::DirFiles("data/", std::regex(".txt")), testing::Contains(testing::EndsWith("Empty.txt")));
+	// Directories are skipped
+	EXPECT_THAT(XFile::DirFiles("data/", std::regex(".vol")), Not(testing::Contains(testing::EndsWith("Directory.vol"))));
+}
