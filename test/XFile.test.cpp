@@ -120,3 +120,10 @@ TEST(XFileGetFilenamesFromDirectory, ExplicitCurrentDirectory) {
 	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 }
+
+TEST(XFileDirFilesWithExtension, DataPath) {
+	// Files are found
+	EXPECT_THAT(XFile::DirFilesWithExtension("data/", ".txt"), testing::Contains(testing::EndsWith("Empty.txt")));
+	// Directories are skipped
+	EXPECT_THAT(XFile::DirFilesWithExtension("data/", ".vol"), Not(testing::Contains(testing::EndsWith("Directory.vol"))));
+}
