@@ -142,6 +142,16 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 	);
 }
 
+std::vector<std::string> XFile::DirFilesWithExtension(const std::string& directory, const std::string& extension)
+{
+	return ::GetFilenamesFromDirectory(
+		directory,
+		[&extension](const std::string& filename) {
+			return (fs::path(filename).extension().string() == extension) && IsFile(filename);
+		}
+	);
+}
+
 void XFile::EraseNonFilenames(std::vector<std::string>& directoryContents)
 {
 	directoryContents.erase(
