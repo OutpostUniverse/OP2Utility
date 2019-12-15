@@ -109,15 +109,18 @@ TEST(XFileGetDirectory, WindowsAbsolutePathToDirectory) {
 }
 
 
-TEST(XFileGetFilenamesFromDirectory, EmptyPath) {
+TEST(XFileGetFilenamesFromDirectory, NoFilter) {
 	EXPECT_THAT(XFile::GetFilenamesFromDirectory(""), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilenamesFromDirectory("", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilenamesFromDirectory("", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 }
 
-TEST(XFileGetFilenamesFromDirectory, ExplicitCurrentDirectory) {
-	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+TEST(XFileGetFilenamesFromDirectory, ExtensionFilter) {
+	EXPECT_THAT(XFile::GetFilenamesFromDirectory("", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+}
+
+TEST(XFileGetFilenamesFromDirectory, RegexFilter) {
+	EXPECT_THAT(XFile::GetFilenamesFromDirectory("", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 }
 
