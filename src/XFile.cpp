@@ -142,6 +142,16 @@ std::vector<std::string> XFile::DirWithExtension(const std::string& directory, c
 	);
 }
 
+std::vector<std::string> XFile::DirFiles(const std::string& directory)
+{
+	return ::Dir(
+		directory,
+		[](const std::string& filename) {
+			return IsFile(filename);
+		}
+	);
+}
+
 std::vector<std::string> XFile::DirFiles(const std::string& directory, const std::regex& filenameRegex)
 {
 	return ::Dir(

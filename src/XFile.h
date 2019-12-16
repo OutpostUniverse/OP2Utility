@@ -31,6 +31,9 @@ namespace XFile
 	std::vector<std::string> DirWithExtension(const std::string& directory, const std::string& extension);
 
 	// Non-recursive search that returns files from a directory (but not subfolders)
+	std::vector<std::string> DirFiles(const std::string& directory);
+
+	// Non-recursive search that returns files from a directory (but not subfolders)
 	std::vector<std::string> DirFiles(const std::string& directory, const std::regex& filenameRegex);
 
 	// Non-recursive search that returns files from a directory (but not subfolders)
