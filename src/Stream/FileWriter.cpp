@@ -38,6 +38,10 @@ namespace Stream
 	FileWriter::FileWriter(const std::string& filename, OpenMode openMode) :
 		filename(filename)
 	{
+		if (XFile::IsDirectory(filename) && XFile::PathExists(filename)) {
+			throw std::runtime_error("Requested filename already exists as a directory.");
+		}
+
 		// Create directory if it does not exist. ofstream will fail if directory does not exist.
 		auto directory = XFile::GetDirectory(filename);
 		if (!directory.empty() && !XFile::PathExists(directory)) 
