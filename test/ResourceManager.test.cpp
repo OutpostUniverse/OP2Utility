@@ -1,4 +1,6 @@
 #include "../src/ResourceManager.h"
+#include "../src/Archive/VolFile.h"
+#include "../src/XFile.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
 
@@ -22,6 +24,13 @@ TEST(ResourceManager, GetResourceStream_RefuseAbsolutePath) {
 	EXPECT_THROW(resourceManager.GetResourceStream("/PathTo/Archive.vol"), std::runtime_error);
 }
 
+TEST(ResourceManager, GetResourceStreamExistingFileUnpacked)
+{
+	ResourceManager resourceManager("./data");
+	// Opening an existing file should result in a valid stream
+	EXPECT_NE(nullptr, resourceManager.GetResourceStream("Empty.txt"));
+}
+
 TEST(ResourceManager, GetFilenames)
 {
 	// Ensure Directory.vol is not returned
@@ -31,4 +40,20 @@ TEST(ResourceManager, GetFilenames)
 	EXPECT_EQ(0u, filenames.size());
 
 	EXPECT_EQ(0u, resourceManager.GetAllFilenames("Directory.vol").size());
+}
+
+TEST(ResourceManager, GetArchiveFilenames)
+{
+	const std::string archiveName("./data/Test.vol");
+	Archive::VolFile::CreateArchive(archiveName, {});
+
+	// Scope block to ensures ResourceManager is destructed after use
+	// This ensures the VOL file is closed before attempting to delete it
+	// This is needed for Windows filesystem semantics
+	{
+		ResourceManager resourceManager("./data");
+		EXPECT_EQ(std::vector<std::string>{archiveName}, resourceManager.GetArchiveFilenames());
+	}
+
+	XFile::DeletePath(archiveName);
 }

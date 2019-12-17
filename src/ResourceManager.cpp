@@ -160,16 +160,10 @@ std::vector<std::string> ResourceManager::GetArchiveFilenames()
 
 std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::string& fileExtension)
 {
-	auto directoryContents = XFile::GetFilenamesFromDirectory(resourceRootDir, fileExtension);
-	XFile::EraseNonFilenames(directoryContents);
-
-	return directoryContents;
+	return XFile::DirFilesWithExtension(resourceRootDir, fileExtension);
 }
 
 std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::regex& filenameRegex)
 {
-	auto directoryContents = XFile::GetFilenamesFromDirectory(resourceRootDir, filenameRegex);
-	XFile::EraseNonFilenames(directoryContents);
-
-	return directoryContents;
+	return XFile::DirFiles(resourceRootDir, filenameRegex);
 }

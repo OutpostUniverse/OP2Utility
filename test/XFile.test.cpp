@@ -109,14 +109,38 @@ TEST(XFileGetDirectory, WindowsAbsolutePathToDirectory) {
 }
 
 
-TEST(XFileGetFilenamesFromDirectory, EmptyPath) {
-	EXPECT_THAT(XFile::GetFilenamesFromDirectory(""), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilenamesFromDirectory("", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilenamesFromDirectory("", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+TEST(XFileDir, NoFilter) {
+	EXPECT_THAT(XFile::Dir(""), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::Dir("./"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
 }
 
-TEST(XFileGetFilenamesFromDirectory, ExplicitCurrentDirectory) {
-	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
-	EXPECT_THAT(XFile::GetFilenamesFromDirectory("./", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+TEST(XFileDirWithExtension, ExtensionFilter) {
+	EXPECT_THAT(XFile::DirWithExtension("", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::DirWithExtension("./", ".vcxproj"), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+}
+
+TEST(XFileDir, RegexFilter) {
+	EXPECT_THAT(XFile::Dir("", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+	EXPECT_THAT(XFile::Dir("./", std::regex(".*[.]vcxproj")), testing::Contains(testing::EndsWith("OP2UtilityTest.vcxproj")));
+}
+
+TEST(XFileDirFilesWithExtension, DataPath) {
+	// Files are found
+	EXPECT_THAT(XFile::DirFilesWithExtension("data/", ".txt"), testing::Contains(testing::EndsWith("Empty.txt")));
+	// Directories are skipped
+	EXPECT_THAT(XFile::DirFilesWithExtension("data/", ".vol"), Not(testing::Contains(testing::EndsWith("Directory.vol"))));
+}
+
+TEST(XFileDirFiles, NoFilter) {
+	// Files are found
+	EXPECT_THAT(XFile::DirFiles("data/"), testing::Contains(testing::EndsWith("Empty.txt")));
+	// Directories are skipped
+	EXPECT_THAT(XFile::DirFiles("data/"), Not(testing::Contains(testing::EndsWith("Directory.vol"))));
+}
+
+TEST(XFileDirFiles, DataPath) {
+	// Files are found
+	EXPECT_THAT(XFile::DirFiles("data/", std::regex(".txt")), testing::Contains(testing::EndsWith("Empty.txt")));
+	// Directories are skipped
+	EXPECT_THAT(XFile::DirFiles("data/", std::regex(".vol")), Not(testing::Contains(testing::EndsWith("Directory.vol"))));
 }
