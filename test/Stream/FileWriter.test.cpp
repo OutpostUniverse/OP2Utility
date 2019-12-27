@@ -73,6 +73,10 @@ TEST(FileWriter, MoveConstructible) {
 	XFile::DeletePath(filename);
 }
 
+TEST(FileWriter, EmptyFilename) {
+	EXPECT_THROW(Stream::FileWriter fileWriter(""), std::runtime_error);
+}
+
 TEST(FileWriter, DirectoryDoesNotExist) {
 	WriteToNewDirectory("../NewDirectory/TestFile.temp");
 	WriteToNewDirectory("./NewDirectory/TestFile.temp");

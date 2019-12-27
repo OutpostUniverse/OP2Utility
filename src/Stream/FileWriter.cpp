@@ -38,6 +38,10 @@ namespace Stream
 	FileWriter::FileWriter(const std::string& filename, OpenMode openMode) :
 		filename(filename)
 	{
+		if (filename.empty()) {
+			throw std::runtime_error("Empty filename provided.");
+		}
+
 		if (XFile::IsDirectory(filename) && XFile::PathExists(filename)) {
 			throw std::runtime_error("Requested filename already exists as a directory.");
 		}
