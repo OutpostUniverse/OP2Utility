@@ -84,6 +84,7 @@ public:
 	std::size_t GetTileMappingIndex(std::size_t x, std::size_t y) const;
 	CellType GetCellType(std::size_t x, std::size_t y) const;
 	bool GetLavaPossible(std::size_t x, std::size_t y) const;
+	void SetLavaPossible(bool lavaPossible, std::size_t x, std::size_t y);
 	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
 	std::size_t GetImageIndex(std::size_t x, std::size_t y) const;
 

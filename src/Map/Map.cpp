@@ -25,6 +25,10 @@ bool Map::GetLavaPossible(std::size_t x, std::size_t y) const
 	return tiles[GetTileIndex(x, y)].bLavaPossible;
 }
 
+void Map::SetLavaPossible(bool lavaPossible, std::size_t x, std::size_t y)
+{
+	tiles[GetTileIndex(x, y)].bLavaPossible = lavaPossible;
+}
 
 std::size_t Map::GetTilesetIndex(std::size_t x, std::size_t y) const
 {
