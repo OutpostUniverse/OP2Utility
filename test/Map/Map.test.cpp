@@ -20,3 +20,14 @@ TEST(Map, TrimTilesetSources) {
 		map.tilesetSources
 	);
 }
+
+TEST(Map, LavaPossible) {
+	Map map;
+	map.tiles.push_back(Tile());
+
+	EXPECT_NO_THROW(map.SetLavaPossible(true, 0, 0));
+	EXPECT_TRUE(map.GetLavaPossible(0, 0));
+
+	EXPECT_NO_THROW(map.SetLavaPossible(false, 0, 0));
+	EXPECT_FALSE(map.GetLavaPossible(0, 0));
+}
