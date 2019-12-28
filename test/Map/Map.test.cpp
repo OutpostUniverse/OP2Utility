@@ -21,6 +21,19 @@ TEST(Map, TrimTilesetSources) {
 	);
 }
 
+TEST(Map, CellType) {
+	Map map;
+	map.tiles.push_back(Tile());
+
+	EXPECT_NO_THROW(map.SetCellType(CellType::FastPassible2, 0, 0));
+	EXPECT_EQ(CellType::FastPassible2, map.GetCellType(0, 0));
+
+	// Pass a non-defined cell type and receive an error
+	EXPECT_THROW(map.SetCellType(static_cast<CellType>(9999), 0, 0), std::runtime_error);
+	// Ensure no change in original cell type after exception raised
+	EXPECT_EQ(CellType::FastPassible2, map.GetCellType(0, 0));
+}
+
 TEST(Map, LavaPossible) {
 	Map map;
 	map.tiles.push_back(Tile());
