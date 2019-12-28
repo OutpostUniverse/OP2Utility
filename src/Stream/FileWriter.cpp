@@ -42,7 +42,7 @@ namespace Stream
 			throw std::runtime_error("Empty filename provided.");
 		}
 
-		if (XFile::IsDirectory(filename) && XFile::PathExists(filename)) {
+		if (XFile::IsDirectory(filename)) {
 			throw std::runtime_error("Requested filename already exists as a directory.");
 		}
 
