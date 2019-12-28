@@ -73,8 +73,9 @@ TEST(FileWriter, MoveConstructible) {
 	XFile::DeletePath(filename);
 }
 
-TEST(FileWriter, EmptyFilename) {
+TEST(FileWriter, InvalidFilename) {
 	EXPECT_THROW(Stream::FileWriter fileWriter(""), std::runtime_error);
+	EXPECT_THROW(Stream::FileWriter fileWriter("data"), std::runtime_error);
 }
 
 TEST(FileWriter, DirectoryDoesNotExist) {
