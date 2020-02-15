@@ -27,7 +27,7 @@ namespace Stream
 		//   CanOpenNew
 		// If both flags are specified, no race condition can occur
 		FileWriter(const std::string& filename, OpenMode openMode = OpenMode::Default);
-		FileWriter(FileWriter&& fileWriter);
+		FileWriter(FileWriter&& fileWriter) noexcept;
 		~FileWriter() override;
 
 		// SeekableWriter methods
