@@ -1,8 +1,7 @@
 #include "FileWriter.h"
 #include "../XFile.h"
 #include <stdexcept>
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
+
 
 namespace Stream
 {
@@ -16,10 +15,10 @@ namespace Stream
 		}
 
 		// File existance checks
-		if ((openMode & OpenMode::CanOpenExisting) == 0 && fs::exists(filename)) {
+		if ((openMode & OpenMode::CanOpenExisting) == 0 && XFile::PathExists(filename)) {
 			throw std::runtime_error("Failed to open file for writing. Access to existing file not requested, and file already exists. Filename: " + filename);
 		}
-		if ((openMode & OpenMode::CanOpenNew) == 0 && !fs::exists(filename)) {
+		if ((openMode & OpenMode::CanOpenNew) == 0 && !XFile::PathExists(filename)) {
 			throw std::runtime_error("Failed to open file for writing. Access to open new file not requested, and file does not currently exist. Filename: " + filename);
 		}
 
