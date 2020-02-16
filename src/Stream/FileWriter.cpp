@@ -64,7 +64,7 @@ namespace Stream
 	}
 
 	FileWriter::FileWriter(FileWriter&& fileWriter) noexcept :
-		filename(std::move(fileWriter.filename)),
+		filename(fileWriter.filename),
 		file(std::move(fileWriter.file))
 	{
 	}
