@@ -23,7 +23,7 @@ namespace Stream
 			startingOffset(startingOffset),
 			sliceLength(sliceLength)
 		{
-			if (sliceLength > std::numeric_limits<decltype(startingOffset)>::max() - startingOffset) {
+			if (sliceLength > (std::numeric_limits<decltype(startingOffset)>::max)() - startingOffset) {
 				throw std::runtime_error(
 					"The stream slice would run past the maximum possible stream length."
 					+ IdentifySource()
@@ -109,7 +109,7 @@ namespace Stream
 		SliceReader<WrappedStreamType> Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const {
 			if (
 				sliceStartPosition + sliceLength > this->sliceLength ||
-				sliceLength > std::numeric_limits<decltype(sliceStartPosition)>::max() - sliceStartPosition
+				sliceLength > (std::numeric_limits<decltype(sliceStartPosition)>::max)() - sliceStartPosition
 			) {
 				throw std::runtime_error(
 					"Requested stream slice exceeds the bounds of current stream slice."

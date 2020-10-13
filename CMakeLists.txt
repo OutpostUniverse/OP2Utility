@@ -2,12 +2,17 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project("OP2Utility")
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 
 # https://cmake.org/cmake/help/v3.12/command/file.html
 # CMake documentation recommends not collecting all source files using a GLOB
 file(GLOB SOURCE_CODE
+	"src/BitTwiddle.cpp"
+	"src/BitTwiddle.h"
+	"src/Point.h"
+	"src/Rect.h"
 	"src/ResourceManager.cpp"
 	"src/ResourceManager.h"
 	"src/StringHelper.cpp"
@@ -18,10 +23,11 @@ file(GLOB SOURCE_CODE
 
 	"src/Archive/AdaptiveHuffmanTree.cpp"
 	"src/Archive/AdaptiveHuffmanTree.h"
+	"src/Archive/ArchiveFile.cpp"
 	"src/Archive/ArchiveFile.h"
-	"src/Archive/ArchivePacker.cpp"
-	"src/Archive/ArchivePacker.h"
-	"src/Archive/ArchiveUnpacker.cpp"
+#	"src/Archive/ArchivePacker.cpp"
+#	"src/Archive/ArchivePacker.h"
+#	"src/Archive/ArchiveUnpacker.cpp"
 	"src/Archive/BitStreamReader.cpp"
 	"src/Archive/BitStreamReader.h"
 	"src/Archive/ClmFile.cpp"
@@ -31,36 +37,41 @@ file(GLOB SOURCE_CODE
 	"src/Archive/HuffLZ.h"
 	"src/Archive/VolFile.cpp"
 	"src/Archive/VolFile.h"
+	"src/Archive/WaveFile.cpp"
 	"src/Archive/WaveFile.h"
 
-	"src/Map/CellType.h"
-	"src/Map/Rect.h"
-	"src/Map/Map.cpp"
-	"src/Map/Map.h"
-	"src/Map/MapHeader.h"
-	"src/Map/MapReader.cpp"
-	"src/Map/MapReader.h"
-	"src/Map/MapWriter.cpp"
-	"src/Map/MapWriter.h"
-	"src/Map/TerrainType.h"
-	"src/Map/TileData.h"
-	"src/Map/TileGroup.h"
-	"src/Map/TileInfo.h"
-	"src/Map/TilesetSource.h"
+#	"src/Map/CellType.h"
+#	"src/Map/Rect.h"
+#	"src/Map/Map.cpp"
+#	"src/Map/Map.h"
+#	"src/Map/MapHeader.h"
+#	"src/Map/MapReader.cpp"
+#	"src/Map/MapReader.h"
+#	"src/Map/MapWriter.cpp"
+#	"src/Map/MapWriter.h"
+#	"src/Map/TerrainType.h"
+#	"src/Map/TileData.h"
+#	"src/Map/TileGroup.h"
+#	"src/Map/TileInfo.h"
+#	"src/Map/TilesetSource.h"
 
-	"src/Stream/FileSliceReader.h"
-	"src/Stream/FileStreamReader.cpp"
-	"src/Stream/FileStreamReader.h"
-	"src/Stream/FileStreamWriter.cpp"
-	"src/Stream/FileStreamWriter.h"
-	"src/Stream/MemoryStreamReader.cpp"
-	"src/Stream/MemoryStreamReader.h"
-	"src/Stream/MemoryStreamWriter.cpp"
-	"src/Stream/MemoryStreamWriter.h"
-	"src/Stream/SeekableStreamReader.h"
-	"src/Stream/SeekableStreamWriter.h"
-	"src/Stream/StreamReader.h"
-	"src/Stream/StreamWriter.h")
+	"src/Stream/BidirectionalReader.h"
+	"src/Stream/BidirectionalWriter.h"
+	"src/Stream/DynamicMemoryWriter.cpp"
+	"src/Stream/DynamicMemoryWriter.h"
+	"src/Stream/FileReader.cpp"
+	"src/Stream/FileReader.h"
+	"src/Stream/FileWriter.cpp"
+	"src/Stream/FileWriter.h"
+	"src/Stream/ForwardReader.h"
+	"src/Stream/ForwardWriter.h"
+	"src/Stream/MemoryReader.cpp"
+	"src/Stream/MemoryReader.h"
+	"src/Stream/MemoryWriter.cpp"
+	"src/Stream/MemoryWriter.h"
+	"src/Stream/Reader.h"
+	"src/Stream/SliceReader.h"
+	"src/Stream/Writer.h")
 
 file(GLOB EXTERNAL_HEADERS "include/OP2Utility.h")
 
@@ -73,10 +84,11 @@ target_link_libraries(${PROJECT_NAME} stdc++fs)
 ENDIF()
 
 # Set Visual Studio to using static code generation in all default Cmake generated configurations
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+#set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+#set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+
 
 # Add filters (virtual folders) in Visual Studio that correspond in name to actual directories
 # https://cmake.org/cmake/help/v3.12/command/source_group.html

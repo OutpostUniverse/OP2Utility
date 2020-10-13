@@ -12,7 +12,7 @@ namespace Archive
 		m_ReadBuff(0)
 	{
 		// Check bufferSize does not exceed the max addressable bit index
-		if (bufferSize > std::numeric_limits<decltype(m_BufferBitSize)>::max() / 8) {
+		if (bufferSize > (std::numeric_limits<decltype(m_BufferBitSize)>::max)() / 8) {
 			throw std::runtime_error("BitStreamReader cannot support a buffer size of " + std::to_string(bufferSize));
 		}
 	}

@@ -18,7 +18,7 @@ namespace Archive
 		uint64_t GetArchiveFileSize() const { return m_ArchiveFileSize; };
 		std::size_t GetCount() const { return m_Count; };
 		bool Contains(const std::string& name);
-		void ExtractFile(const std::string& name, const std::string& pathOut);
+		void ExtractFileByName(const std::string& name, const std::string& pathOut);
 
 		virtual std::size_t GetIndex(const std::string& name);
 		virtual std::string GetName(std::size_t index) = 0;

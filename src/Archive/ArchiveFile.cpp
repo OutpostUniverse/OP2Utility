@@ -46,7 +46,7 @@ namespace Archive
 		return false;
 	}
 
-	void ArchiveFile::ExtractFile(const std::string& name, const std::string& pathOut)
+	void ArchiveFile::ExtractFileByName(const std::string& name, const std::string& pathOut)
 	{
 		ExtractFile(GetIndex(name), pathOut);
 	}

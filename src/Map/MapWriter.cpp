@@ -43,7 +43,7 @@ MapHeader Map::CreateHeader() const
 	mapHeader.lgWidthInTiles = GetWidthInTilesLog2(widthInTiles);
 	mapHeader.heightInTiles = heightInTiles;
 
-	if (tilesetSources.size() > std::numeric_limits<decltype(MapHeader::tilesetCount)>::max()) {
+	if (tilesetSources.size() > (std::numeric_limits<decltype(MapHeader::tilesetCount)>::max)()) {
 		throw std::runtime_error("Too many tilesets contained in map");
 	}
 

@@ -32,7 +32,7 @@ namespace Stream
 	void DynamicMemoryWriter::SeekForward(uint64_t offset)
 	{
 		auto streamSize = streamBuffer.size();
-		if (offset > std::numeric_limits<SizeType>::max() - streamSize) {
+		if (offset > (std::numeric_limits<SizeType>::max)() - streamSize) {
 			throw std::runtime_error("Seek forward beyond stream size limit");
 		}
 		// Zero fill to new size
