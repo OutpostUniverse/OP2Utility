@@ -13,25 +13,17 @@
 
 FROM ubuntu:20.04
 
-# Install CircleCI tools needed for primary containers
+# Install Development tools, Google Test library, and tools for primary CircleCI container
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    clang \
+    cmake \
+    libgtest-dev \
     git \
     ssh \
     tar \
     gzip \
     ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
-
-# Install gcc and clang compilers
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    clang \
-  && rm -rf /var/lib/apt/lists/*
-
-# Install Google Test (source package and build dependencies)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    cmake \
-    libgtest-dev \
   && rm -rf /var/lib/apt/lists/*
 
 # Compile and install Google Test
