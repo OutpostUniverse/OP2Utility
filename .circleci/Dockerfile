@@ -19,6 +19,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     clang \
     cmake \
     libgtest-dev \
+    libgmock-dev \
     git \
     ssh \
     tar \
