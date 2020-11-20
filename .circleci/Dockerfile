@@ -26,12 +26,3 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     gzip \
     ca-certificates \
   && rm -rf /var/lib/apt/lists/*
-
-# Compile and install Google Test
-ARG gtestBuildDir=/tmp/gtest/
-RUN mkdir -p ${gtestBuildDir} && \
-  cd ${gtestBuildDir} && \
-  cmake -DCMAKE_CXX_FLAGS="-std=c++17" /usr/src/gtest/ && \
-  make -C ${gtestBuildDir} && \
-  cp ${gtestBuildDir}lib*.a /usr/lib && \
-  rm -rf ${gtestBuildDir}
