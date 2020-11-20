@@ -11,7 +11,7 @@
 # Validate .circleci/config.yml file with:
 #   circleci config validate
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Install CircleCI tools needed for primary containers
 RUN apt-get update && apt-get install -y --no-install-recommends \
