@@ -12,7 +12,7 @@ Stream::MemoryReader CreateReader<Stream::MemoryReader>() {
 	return Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
 }
 
-INSTANTIATE_TYPED_TEST_CASE_P(BasicMemoryReader, BasicReaderTests, Stream::MemoryReader);
+INSTANTIATE_TYPED_TEST_SUITE_P(BasicMemoryReader, BasicReaderTests, Stream::MemoryReader);
 
 
 template <>
@@ -21,7 +21,7 @@ Stream::MemoryReader CreateSeekableReader<Stream::MemoryReader>() {
 	return Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
 }
 
-INSTANTIATE_TYPED_TEST_CASE_P(MemoryReader, SimpleSeekableReader, Stream::MemoryReader);
+INSTANTIATE_TYPED_TEST_SUITE_P(MemoryReader, SimpleSeekableReader, Stream::MemoryReader);
 
 
 // Simple test
