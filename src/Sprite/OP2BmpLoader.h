@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <cstddef>
+#include <vector>
 
 class OP2BmpLoader
 {
@@ -20,5 +21,6 @@ private:
 	Stream::FileReader bmpReader;
 	ArtFile artFile;
 
+	std::vector<Color> GetPalette(const ImageMeta& imageMeta);
 	std::unique_ptr<Stream::FileSliceReader> GetPixels(std::size_t startingIndex, std::size_t length);
 };

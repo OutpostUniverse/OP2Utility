@@ -14,8 +14,7 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 
 	ImageMeta& imageMeta = artFile.imageMetas[index];
 
-	std::vector<Color> palette(artFile.palettes[imageMeta.paletteIndex].size());
-	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].end(), palette.begin());
+	std::vector<Color> palette = GetPalette(imageMeta);
 
 	std::size_t pixelOffset = imageMeta.pixelDataOffset + 14 + sizeof(ImageHeader) + palette.size() * sizeof(Color);
 
@@ -30,6 +29,14 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 	}
 
 	BitmapFile::WriteIndexed(filenameOut, imageMeta.GetBitCount(), imageMeta.width, -static_cast<int32_t>(imageMeta.height), palette, pixelContainer);
+}
+
+std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
+{
+	std::vector<Color> palette(artFile.palettes[imageMeta.paletteIndex].size());
+	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].end(), palette.begin());
+
+	return palette;
 }
 
 std::unique_ptr<Stream::FileSliceReader> OP2BmpLoader::GetPixels(std::size_t startingIndex, std::size_t length)
