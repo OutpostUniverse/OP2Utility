@@ -2,6 +2,8 @@
 #include "../Stream/FileWriter.h"
 #include <stdexcept>
 #include <cmath>
+#include <cstdlib>
+
 
 void BitmapFile::WriteIndexed(std::string filename, const BitmapFile& bitmapFile)
 {
@@ -32,7 +34,7 @@ void BitmapFile::WriteIndexed(Stream::BidirectionalWriter& seekableWriter, uint1
 	WriteHeaders(seekableWriter, bitCount, width, height, palette);
 	seekableWriter.Write(palette);
 
-	WritePixels(seekableWriter, indexedPixels, width, bitCount);
+	WritePixels(seekableWriter, indexedPixels, width, height, bitCount);
 }
 
 void BitmapFile::WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
@@ -51,15 +53,18 @@ void BitmapFile::WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint1
 	seekableWriter.Write(imageHeader);
 }
 
-void BitmapFile::WritePixels(Stream::BidirectionalWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, uint16_t bitCount)
+void BitmapFile::WritePixels(Stream::BidirectionalWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, int32_t height, uint16_t bitCount)
 {
+	// Bitmap height may be negative depending on format
+	height = std::abs(height);
+
 	const auto pitch = ImageHeader::CalculatePitch(bitCount, width);
 	const auto bytesOfPixelsPerRow = ImageHeader::CalcPixelByteWidth(bitCount, width);
 	const std::vector<uint8_t> padding(pitch - bytesOfPixelsPerRow, 0);
 
-	for (std::size_t i = 0; i < pixels.size();) {
-		seekableWriter.Write(&pixels[i], bytesOfPixelsPerRow);
+	for (int y = 0; y < height; ++y)
+	{
+		seekableWriter.Write(&pixels[y * pitch], bytesOfPixelsPerRow);
 		seekableWriter.Write(padding);
-		i += pitch;
 	}
 }
