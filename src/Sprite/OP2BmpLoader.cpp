@@ -20,9 +20,9 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 	const std::size_t op2PaletteLength = 256;
 	std::size_t pixelOffset = static_cast<std::size_t>(imageMeta.pixelDataOffset) + 14 + sizeof(ImageHeader) + op2PaletteLength * sizeof(Color);
 
-	auto pixels = GetPixels(pixelOffset, imageMeta.scanLineByteWidth * imageMeta.height);
+	auto pixels = GetPixels(pixelOffset, static_cast<std::size_t>(imageMeta.scanLineByteWidth) * imageMeta.height);
 
-	std::vector<uint8_t> pixelContainer(imageMeta.scanLineByteWidth * imageMeta.height);
+	std::vector<uint8_t> pixelContainer(static_cast<std::size_t>(imageMeta.scanLineByteWidth) * imageMeta.height);
 	(*pixels).Read(pixelContainer);
 
 	// Outpost 2 stores pixels in normal raster scan order (top-down). This requires a negative height for BMP file format.
