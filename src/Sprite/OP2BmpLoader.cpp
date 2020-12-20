@@ -16,7 +16,9 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 
 	std::vector<Color> palette = GetPalette(imageMeta);
 
-	std::size_t pixelOffset = imageMeta.pixelDataOffset + 14 + sizeof(ImageHeader) + palette.size() * sizeof(Color);
+	// Palette length is always 256 for OP2's master BMP
+	const std::size_t op2PaletteLength = 256;
+	std::size_t pixelOffset = static_cast<std::size_t>(imageMeta.pixelDataOffset) + 14 + sizeof(ImageHeader) + op2PaletteLength * sizeof(Color);
 
 	auto pixels = GetPixels(pixelOffset, imageMeta.scanLineByteWidth * imageMeta.height);
 
@@ -33,7 +35,18 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 
 std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 {
-	std::vector<Color> palette(artFile.palettes[imageMeta.paletteIndex].size());
+	std::vector<Color> palette;
+
+	if (imageMeta.IsShadow())
+	{
+		// Shadow graphic uses a 2 color palette
+		palette.resize(2);
+	}
+	else
+	{
+		palette.resize(artFile.palettes[imageMeta.paletteIndex].size());
+	}
+
 	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].end(), palette.begin());
 
 	return palette;
