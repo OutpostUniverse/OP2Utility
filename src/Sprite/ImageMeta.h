@@ -29,6 +29,11 @@ struct ImageMeta {
 	uint32_t width; // Width of image in pixels
 	ImageType type;
 	uint16_t paletteIndex;
+
+	bool IsShadow() const
+	{
+		return type.bShadow != 0;
+	}
 };
 
 static_assert(18 + sizeof(ImageMeta::ImageType) == sizeof(ImageMeta), "ImageMeta is an unexpected size");
