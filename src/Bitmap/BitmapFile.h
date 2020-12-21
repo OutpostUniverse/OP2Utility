@@ -13,7 +13,8 @@ namespace Stream {
 	class BidirectionalReader;
 }
 
-// Bitmap File (BMP) only supports indexed color palettes (1, 2, and 8 bit BMPs). 
+// BitmapFile only Supports indexed palette BMPs. 
+// Writing and reading bitmaps is restricted to the subset of 1, 2 and 8 bit BMPs.
 class BitmapFile
 {
 public:
