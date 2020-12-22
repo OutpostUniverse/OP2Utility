@@ -37,7 +37,7 @@ std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 {
 	std::vector<Color> palette;
 
-	if (imageMeta.IsShadow())
+	if (imageMeta.type.isShadow)
 	{
 		// Shadow graphic uses a 2 color palette
 		palette.resize(2);
