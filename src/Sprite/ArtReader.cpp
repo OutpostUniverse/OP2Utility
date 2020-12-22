@@ -21,6 +21,12 @@ ArtFile ArtFile::Read(Stream::Reader& reader) {
 	return artFile;
 }
 
+// Read ArtFile from an rvalue stream (unnamed temporary)
+ArtFile ArtFile::Read(Stream::Reader&& reader) {
+	// Delegate to lvalue overload
+	return Read(reader);
+}
+
 void ArtFile::ReadPalette(Stream::Reader& reader, ArtFile& artFile)
 {
 	SectionHeader paletteSectionHeader;

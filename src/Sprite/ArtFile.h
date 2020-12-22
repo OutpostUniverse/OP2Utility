@@ -24,8 +24,9 @@ public:
 
 	static ArtFile Read(std::string filename);
 	static ArtFile Read(Stream::Reader& reader);
-	static void Write(std::string filename, const ArtFile& artFile);
-	static void Write(Stream::Writer&, const ArtFile& artFile);
+	static ArtFile Read(Stream::Reader&& reader);
+	void Write(std::string filename) const;
+	void Write(Stream::Writer& writer) const;
 
 	void VerifyImageIndexInBounds(std::size_t index);
 
@@ -40,8 +41,8 @@ private:
 
 
 	// Write Functions
-	static void WritePalettes(Stream::Writer& writer, const ArtFile& artFile);
-	static void WriteAnimations(Stream::Writer& writer, const ArtFile& artFile);
+	void WritePalettes(Stream::Writer& writer) const;
+	void WriteAnimations(Stream::Writer& writer) const;
 	static void WriteAnimation(Stream::Writer& writer, const Animation& animation);
 	static void WriteFrame(Stream::Writer& writer, const Animation::Frame& frame);
 

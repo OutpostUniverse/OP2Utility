@@ -7,7 +7,7 @@ Stream::FileSliceReader CreateSeekableReader<Stream::FileSliceReader>() {
 	return fileReader.Slice(5);
 }
 
-INSTANTIATE_TYPED_TEST_CASE_P(FileSliceReader, SimpleSeekableReader, Stream::FileSliceReader);
+INSTANTIATE_TYPED_TEST_SUITE_P(FileSliceReader, SimpleSeekableReader, Stream::FileSliceReader);
 
 
 TEST(FileSliceReader, SliceIsBoundsChecked) {

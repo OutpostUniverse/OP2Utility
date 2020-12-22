@@ -151,12 +151,12 @@ namespace Archive
 			// Read the file header
 			filesToPackReaders[i]->Read(header);
 			if (header.riffTag != tagRIFF || header.waveTag != tagWAVE) {
-				throw std::runtime_error("Error reading header from file " + indexEntries[i].GetFilename());
+				throw std::runtime_error("Error reading header from file " + filesToPackReaders[i]->GetFilename());
 			}
 
 			// Check that the file size makes sense (matches with header chunk length + 8)
 			if (header.chunkSize + 8 != filesToPackReaders[i]->Length()) {
-				throw std::runtime_error("Chunk size does not match file length in " + indexEntries[i].GetFilename());
+				throw std::runtime_error("Chunk size does not match file length in " + filesToPackReaders[i]->GetFilename());
 			}
 
 			// Find the format tag

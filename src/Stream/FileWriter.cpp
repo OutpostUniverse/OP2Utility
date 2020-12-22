@@ -1,7 +1,7 @@
 #include "FileWriter.h"
+#include "../XFile.h"
 #include <stdexcept>
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
+
 
 namespace Stream
 {
@@ -15,10 +15,10 @@ namespace Stream
 		}
 
 		// File existance checks
-		if ((openMode & OpenMode::CanOpenExisting) == 0 && fs::exists(filename)) {
+		if ((openMode & OpenMode::CanOpenExisting) == 0 && XFile::PathExists(filename)) {
 			throw std::runtime_error("Failed to open file for writing. Access to existing file not requested, and file already exists. Filename: " + filename);
 		}
-		if ((openMode & OpenMode::CanOpenNew) == 0 && !fs::exists(filename)) {
+		if ((openMode & OpenMode::CanOpenNew) == 0 && !XFile::PathExists(filename)) {
 			throw std::runtime_error("Failed to open file for writing. Access to open new file not requested, and file does not currently exist. Filename: " + filename);
 		}
 
@@ -35,16 +35,36 @@ namespace Stream
 
 
 	FileWriter::FileWriter(const std::string& filename, OpenMode openMode) :
-		filename(filename),
-		file(filename, TranslateFlags(filename, openMode))
+		filename(filename)
 	{
+		if (filename.empty()) {
+			throw std::runtime_error("Empty filename provided.");
+		}
+
+		if (XFile::IsDirectory(filename)) {
+			throw std::runtime_error("Requested filename already exists as a directory.");
+		}
+
+		// Create directory if it does not exist. ofstream will fail if directory does not exist.
+		auto directory = XFile::GetDirectory(filename);
+		if (!directory.empty() && !XFile::PathExists(directory)) 
+		{
+			if (!(openMode & OpenMode::CanOpenNew)) {
+				throw std::runtime_error("The directory does not exist. The write command was restricted from creating new files or directories.");
+			}
+
+			XFile::NewDirectory(directory);
+		}
+
+		file = std::ofstream(filename, TranslateFlags(filename, openMode));
+
 		if (!file.is_open()) {
 			throw std::runtime_error("File could not be opened. Filename: " + filename);
 		}
 	}
 
-	FileWriter::FileWriter(FileWriter&& fileWriter) :
-		filename(std::move(fileWriter.filename)),
+	FileWriter::FileWriter(FileWriter&& fileWriter) noexcept :
+		filename(fileWriter.filename),
 		file(std::move(fileWriter.file))
 	{
 	}

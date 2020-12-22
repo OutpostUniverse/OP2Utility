@@ -3,14 +3,14 @@ version: 2
 jobs:
   gcc:
     docker:
-      - image: outpostuniverse/circleci-gcc-clang-googletest
+      - image: outpostuniverse/op2utility:1.1
     steps:
       - checkout
       - run: make -k CXX=g++
       - run: make check CXX=g++
   clang:
     docker:
-      - image: outpostuniverse/circleci-gcc-clang-googletest
+      - image: outpostuniverse/op2utility:1.1
     steps:
       - checkout
       - run: make -k CXX=clang++

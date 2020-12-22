@@ -77,43 +77,43 @@ TEST(ImageHeader, VerifyValidBitCount)
 
 TEST(ImageHeader, CalculatePitch)
 {
-	EXPECT_EQ(4, ImageHeader::CalculatePitch(1, 1));
-	EXPECT_EQ(4, ImageHeader::CalculatePitch(1, 32));
-	EXPECT_EQ(8, ImageHeader::CalculatePitch(1, 33));
+	EXPECT_EQ(4u, ImageHeader::CalculatePitch(1, 1));
+	EXPECT_EQ(4u, ImageHeader::CalculatePitch(1, 32));
+	EXPECT_EQ(8u, ImageHeader::CalculatePitch(1, 33));
 
-	EXPECT_EQ(4, ImageHeader::CalculatePitch(4, 1));
-	EXPECT_EQ(4, ImageHeader::CalculatePitch(4, 8));
-	EXPECT_EQ(8, ImageHeader::CalculatePitch(4, 9));
+	EXPECT_EQ(4u, ImageHeader::CalculatePitch(4, 1));
+	EXPECT_EQ(4u, ImageHeader::CalculatePitch(4, 8));
+	EXPECT_EQ(8u, ImageHeader::CalculatePitch(4, 9));
 
-	EXPECT_EQ(4, ImageHeader::CalculatePitch(8, 1));
-	EXPECT_EQ(4, ImageHeader::CalculatePitch(8, 4));
-	EXPECT_EQ(8, ImageHeader::CalculatePitch(8, 5));
+	EXPECT_EQ(4u, ImageHeader::CalculatePitch(8, 1));
+	EXPECT_EQ(4u, ImageHeader::CalculatePitch(8, 4));
+	EXPECT_EQ(8u, ImageHeader::CalculatePitch(8, 5));
 
 	// Test non-static version of function
 	ImageHeader imageHeader;
 	imageHeader.bitCount = 1;
 	imageHeader.width = 1;
-	EXPECT_EQ(4, imageHeader.CalculatePitch());
+	EXPECT_EQ(4u, imageHeader.CalculatePitch());
 }
 
 TEST(ImageHeader, CalcByteWidth)
 {
-	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(1, 1));
-	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(1, 8));
-	EXPECT_EQ(2, ImageHeader::CalcPixelByteWidth(1, 9));
+	EXPECT_EQ(1u, ImageHeader::CalcPixelByteWidth(1, 1));
+	EXPECT_EQ(1u, ImageHeader::CalcPixelByteWidth(1, 8));
+	EXPECT_EQ(2u, ImageHeader::CalcPixelByteWidth(1, 9));
 
-	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(4, 1));
-	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(4, 2));
-	EXPECT_EQ(2, ImageHeader::CalcPixelByteWidth(4, 3));
+	EXPECT_EQ(1u, ImageHeader::CalcPixelByteWidth(4, 1));
+	EXPECT_EQ(1u, ImageHeader::CalcPixelByteWidth(4, 2));
+	EXPECT_EQ(2u, ImageHeader::CalcPixelByteWidth(4, 3));
 
-	EXPECT_EQ(1, ImageHeader::CalcPixelByteWidth(8, 1));
-	EXPECT_EQ(2, ImageHeader::CalcPixelByteWidth(8, 2));
+	EXPECT_EQ(1u, ImageHeader::CalcPixelByteWidth(8, 1));
+	EXPECT_EQ(2u, ImageHeader::CalcPixelByteWidth(8, 2));
 
 	// Test non-static version of function
 	ImageHeader imageHeader;
 	imageHeader.bitCount = 1;
 	imageHeader.width = 1;
-	EXPECT_EQ(1, imageHeader.CalcPixelByteWidth());
+	EXPECT_EQ(1u, imageHeader.CalcPixelByteWidth());
 }
 
 TEST(ImageHeader, Validate)

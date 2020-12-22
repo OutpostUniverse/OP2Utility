@@ -62,9 +62,15 @@
     <ClCompile Include="Stream\DynamicMemoryWriter.test.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <ClCompile Include="Stream\Writer.test.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.test.cpp" />
+    <ClCompile Include="Archive\ArchiveFile.test.cpp">
+      <Filter>Archive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Stream">
@@ -90,5 +96,8 @@
     <ClInclude Include="Stream\BidirectionalReader.test.h">
       <Filter>Stream</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -1,10 +1,16 @@
 #include "XFile.h"
 #include "StringHelper.h"
 #include <cstddef>
+#include <algorithm>
 
+#ifdef __cpp_lib_filesystem
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
 #include <experimental/filesystem>
-
 namespace fs = std::experimental::filesystem;
+#endif
+
 
 std::string XFile::GetFileExtension(const std::string& pathStr)
 {
@@ -86,9 +92,9 @@ std::string XFile::AppendToFilename(const std::string& filename, const std::stri
 	return newPath.string();
 }
 
-std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory)
+std::vector<std::string> XFile::Dir(const std::string& directory)
 {
-	// Brett208 6Aug17: Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
+	// Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
 	auto pathStr = directory.length() > 0 ? directory : "./";
 
 	std::vector<std::string> filenames;
@@ -99,39 +105,83 @@ std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& dir
 	return filenames;
 }
 
-std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex)
+template <typename SelectFunction>
+std::vector<std::string> Dir(const std::string& directory, SelectFunction selectFunction)
 {
-	std::vector<std::string> filenames = GetFilenamesFromDirectory(directory);
+	// Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
+	auto pathStr = directory.length() > 0 ? directory : "./";
 
-	// Loop starts at index size - 1 and ends after index 0 executes
-	for (std::size_t i = filenames.size(); i-- > 0; )
-	{
-		if (!std::regex_search(filenames[i], filenameRegex)) {
-			filenames.erase(filenames.begin() + i);
+	std::vector<std::string> filenames;
+	for (const auto& entry : fs::directory_iterator(pathStr)) {
+		auto pathString = entry.path().generic_string();
+		if (selectFunction(pathString)) {
+			filenames.push_back(XFile::GetFilename(pathString));
 		}
 	}
 
 	return filenames;
 }
 
-std::vector<std::string> XFile::GetFilenamesFromDirectory(const std::string& directory, const std::string& fileType)
+std::vector<std::string> XFile::Dir(const std::string& directory, const std::regex& filenameRegex)
 {
-	std::vector<std::string> filenames = GetFilenamesFromDirectory(directory);
-
-	// Loop starts at index size - 1 and ends after index 0 executes
-	for (std::size_t i = filenames.size(); i-- > 0; )
-	{
-		if (filenames.size() == 0) {
-			return filenames;
+	return ::Dir(
+		directory,
+		[&filenameRegex](const std::string& filename) {
+			return std::regex_search(filename, filenameRegex);
 		}
+	);
+}
 
-		std::string extension = fs::path(filenames[i]).extension().string();
-		if (extension != fileType) {
-			filenames.erase(filenames.begin() + i);
+std::vector<std::string> XFile::DirWithExtension(const std::string& directory, const std::string& extension)
+{
+	return ::Dir(
+		directory,
+		[&extension](const std::string& filename) {
+			return fs::path(filename).extension().string() == extension;
 		}
-	}
+	);
+}
 
-	return filenames;
+std::vector<std::string> XFile::DirFiles(const std::string& directory)
+{
+	return ::Dir(
+		directory,
+		[](const std::string& filename) {
+			return IsFile(filename);
+		}
+	);
+}
+
+std::vector<std::string> XFile::DirFiles(const std::string& directory, const std::regex& filenameRegex)
+{
+	return ::Dir(
+		directory,
+		[&filenameRegex](const std::string& filename) {
+			return std::regex_search(filename, filenameRegex) && IsFile(filename);
+		}
+	);
+}
+
+std::vector<std::string> XFile::DirFilesWithExtension(const std::string& directory, const std::string& extension)
+{
+	return ::Dir(
+		directory,
+		[&extension](const std::string& filename) {
+			return (fs::path(filename).extension().string() == extension) && IsFile(filename);
+		}
+	);
+}
+
+void XFile::EraseNonFilenames(std::vector<std::string>& directoryContents)
+{
+	directoryContents.erase(
+		std::remove_if(
+			directoryContents.begin(),
+			directoryContents.end(),
+			[](std::string path) { return !XFile::IsFile(path); }
+		),
+		directoryContents.end()
+	);
 }
 
 bool XFile::IsRootPath(const std::string& pathStr)

@@ -20,10 +20,28 @@ namespace XFile
 
 	bool IsFile(const std::string& path);
 
-	// Non-recursive search of directory that returns filename only (no directory)
-	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory);
-	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::string& fileType);
-	std::vector<std::string> GetFilenamesFromDirectory(const std::string& directory, const std::regex& filenameRegex);
+	// Non-recursive search that returns entire directory contents (not just filenames)
+	std::vector<std::string> Dir(const std::string& directory);
+
+	// Non-recursive search that returns entire directory contents (not just filenames)
+	std::vector<std::string> Dir(const std::string& directory, const std::regex& filenameRegex);
+
+	// Non-recursive search that returns entire directory contents (not just filenames)
+	// Extension includes the dot (.) prefix
+	std::vector<std::string> DirWithExtension(const std::string& directory, const std::string& extension);
+
+	// Non-recursive search that returns files from a directory (but not subfolders)
+	std::vector<std::string> DirFiles(const std::string& directory);
+
+	// Non-recursive search that returns files from a directory (but not subfolders)
+	std::vector<std::string> DirFiles(const std::string& directory, const std::regex& filenameRegex);
+
+	// Non-recursive search that returns files from a directory (but not subfolders)
+	// Extension includes the dot (.) prefix
+	std::vector<std::string> DirFilesWithExtension(const std::string& directory, const std::string& extension);
+
+	// Erase all paths that are not represent filenames (such as subdirectories)
+	void EraseNonFilenames(std::vector<std::string>& directoryContents);
 
 	std::string ChangeFileExtension(const std::string& filename, const std::string& newExtension);
 

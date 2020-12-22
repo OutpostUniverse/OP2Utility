@@ -172,6 +172,12 @@ namespace Archive
 
 	void VolFile::WriteVolume(const std::string& filename, CreateVolumeInfo& volInfo)
 	{
+		for (const auto& path : volInfo.filesToPack) {
+			if (XFile::PathsAreEqual(filename, path)) {
+				throw std::runtime_error("Cannot include a volume being overwritten in new volume " + filename);
+			}
+		}
+
 		Stream::FileWriter volWriter(filename);
 
 		WriteHeader(volWriter, volInfo);
@@ -283,6 +289,11 @@ namespace Archive
 		// Calculate the zero padded length of the string table and index table
 		volInfo.paddedStringTableLength = (volInfo.stringTableLength + 7) & ~3;
 		volInfo.paddedIndexTableLength = (volInfo.indexTableLength + 3) & ~3;
+
+		if (volInfo.indexEntries.size() == 0) {
+			return;
+		}
+
 		volInfo.indexEntries[0].dataBlockOffset = volInfo.paddedStringTableLength + volInfo.paddedIndexTableLength + 32;
 
 		// Calculate offsets to the files

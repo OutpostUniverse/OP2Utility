@@ -18,7 +18,7 @@ namespace Archive
 	{
 		for (std::size_t i = 0; i < GetCount(); ++i)
 		{
-			ExtractFile(i, XFile::ReplaceFilename(destDirectory, GetName(i)));
+			ExtractFile(i, XFile::Append(destDirectory, GetName(i)));
 		}
 	}
 

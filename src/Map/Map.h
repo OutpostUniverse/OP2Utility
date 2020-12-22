@@ -31,27 +31,6 @@ namespace Stream {
 class Map
 {
 public:
-	Map();
-
-	static Map ReadMap(std::string filename);
-	static Map ReadMap(Stream::Reader& mapStream);
-	static Map ReadSavedGame(std::string filename);
-	static Map ReadSavedGame(Stream::BidirectionalReader& savedGameStream);
-
-	void Write(const std::string& filename) const;
-	void Write(Stream::Writer& streamWriter) const;
-
-	inline void SetVersionTag(int32_t versionTag) { this->versionTag = versionTag; };
-	inline int32_t GetVersionTag() const { return versionTag; };
-	inline bool IsSavedGame() const { return isSavedGame; };
-	inline uint32_t WidthInTiles() const { return widthInTiles; };
-	inline uint32_t HeightInTiles() const { return heightInTiles; };
-
-	// Total number of tiles on map.
-	inline std::size_t TileCount() const
-	{
-		return tiles.size();
-	};
 
 	// 1D listing of all tiles on the associated map. See MapHeader data for height and width of map.
 	std::vector<Tile> tiles;
@@ -76,10 +55,37 @@ public:
 
 	std::vector<TileGroup> tileGroups;
 
-public:
+
+	Map();
+
+	static Map ReadMap(std::string filename);
+	static Map ReadMap(Stream::Reader& mapStream);
+	static Map ReadMap(Stream::Reader&& mapStream);
+
+	static Map ReadSavedGame(std::string filename);
+	static Map ReadSavedGame(Stream::BidirectionalReader& savedGameStream);
+	static Map ReadSavedGame(Stream::BidirectionalReader&& savedGameStream);
+
+	void Write(const std::string& filename) const;
+	void Write(Stream::Writer& streamWriter) const;
+
+	inline void SetVersionTag(uint32_t versionTag) { this->versionTag = versionTag; };
+	inline uint32_t GetVersionTag() const { return versionTag; };
+	inline bool IsSavedGame() const { return isSavedGame; };
+	inline uint32_t WidthInTiles() const { return widthInTiles; };
+	inline uint32_t HeightInTiles() const { return heightInTiles; };
+
+	// Total number of tiles on map.
+	inline std::size_t TileCount() const
+	{
+		return tiles.size();
+	};
+
 	std::size_t GetTileMappingIndex(std::size_t x, std::size_t y) const;
 	CellType GetCellType(std::size_t x, std::size_t y) const;
+	void SetCellType(CellType cellType, std::size_t x, std::size_t y);
 	bool GetLavaPossible(std::size_t x, std::size_t y) const;
+	void SetLavaPossible(bool lavaPossible, std::size_t x, std::size_t y);
 	std::size_t GetTilesetIndex(std::size_t x, std::size_t y) const;
 	std::size_t GetImageIndex(std::size_t x, std::size_t y) const;
 

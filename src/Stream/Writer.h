@@ -31,53 +31,41 @@ namespace Stream
 
 		// Trivially copyable data types
 		template<typename T>
-		inline std::enable_if_t<std::is_trivially_copyable<T>::value> Write(const T& object) {
+		inline
+		std::enable_if_t<std::is_trivially_copyable<T>::value>
+		Write(const T& object) {
 			WriteImplementation(&object, sizeof(object));
 		}
 
-		// Vector data types
-		template<typename T, typename A>
-		inline void Write(const std::vector<T, A>& vector) {
-			// Size calculation can't possibly overflow since the vector size necessarily fits in memory
-			WriteImplementation(vector.data(), vector.size() * sizeof(T));
+		// Non-trivial contiguous container of trivially copyable data types
+		template<typename T>
+		inline
+		std::enable_if_t<
+			!std::is_trivially_copyable<T>::value &&
+			std::is_trivially_copyable<typename T::value_type>::value
+		>
+		Write(const T& container) {
+			// Size calculation can't possibly overflow since the container size necessarily fits in memory
+			WriteImplementation(container.data(), container.size() * sizeof(typename T::value_type));
 		}
 
-		// Size prefixed vector data types
+		// Size prefixed container data types
 		// Ex: Write<uint32_t>(vector); // Write 32-bit vector size followed by vector data
-		template<typename SizeType, typename T, typename A>
-		void Write(const std::vector<T, A>& vector) {
-			auto vectorSize = vector.size();
-			// This check is trivially false if SizeType is larger than max vector size
-			if (vectorSize > std::numeric_limits<SizeType>::max()) {
-				throw std::runtime_error("Vector too large to save size field");
+		template<typename SizeType, typename T>
+		std::enable_if_t<
+			true
+		>
+		Write(const T& container) {
+			auto containerSize = container.size();
+			// This check is trivially false if SizeType is larger than max container size
+			if constexpr(std::numeric_limits<decltype(containerSize)>::max() > std::numeric_limits<SizeType>::max()) {
+				if (containerSize > std::numeric_limits<SizeType>::max()) {
+					throw std::runtime_error("Container too large to save size field");
+				}
 			}
-			// This can't overflow due to check above
-			auto typedSize = static_cast<SizeType>(vectorSize);
-			Write(typedSize);
-			Write(vector);
-		}
-
-		// String data types
-		// Does not write null terminator unless specifically included in string
-		template<typename CharT, typename Traits, typename Allocator>
-		void Write(const std::basic_string<CharT, Traits, Allocator>& string) {
-			// Size calculation can't possibly overflow since the string size necessarily fits in memory
-			Write(&string[0], string.size() * sizeof(CharT));
-		}
-
-		// Size prefixed string data types
-		// Ex: Write<uint32_t>(string); // Write 32-bit string length followed by string data
-		// Does not write null terminator unless specifically included in string
-		template<typename SizeType, typename CharT, typename Traits, typename Allocator>
-		void Write(const std::basic_string<CharT, Traits, Allocator>& string) {
-			auto stringSize = string.size();
-			// This check is trivially false if SizeType is larger than max string size
-			if (stringSize > std::numeric_limits<SizeType>::max()) {
-				throw std::runtime_error("String's size is too large to write in provided size field");
-			}
-			// This can't overflow due to check above
-			Write(static_cast<SizeType>(stringSize));
-			Write(string);
+			// Cast can't overflow due to check above
+			Write(static_cast<SizeType>(containerSize));
+			Write(container);
 		}
 
 		// Non trivially copyable data types with Write method

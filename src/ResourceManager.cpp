@@ -3,7 +3,6 @@
 #include "Archive/ClmFile.h"
 #include "Stream/BidirectionalReader.h"
 #include "XFile.h"
-#include <regex>
 
 using namespace Archive;
 
@@ -14,13 +13,13 @@ ResourceManager::ResourceManager(const std::string& archiveDirectory) :
 		throw std::runtime_error("Resource manager must be passed an archive directory.");
 	}
 
-	const auto volFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".vol");
+	const auto volFilenames = GetFilesFromDirectory(".vol");
 
 	for (const auto& volFilename : volFilenames) {
 		ArchiveFiles.push_back(std::make_unique<VolFile>(XFile::Append(archiveDirectory, volFilename)));
 	}
 
-	const auto clmFilenames = XFile::GetFilenamesFromDirectory(archiveDirectory, ".clm");
+	const auto clmFilenames = GetFilesFromDirectory(".clm");
 
 	for (const auto& clmFilename : clmFilenames) {
 		ArchiveFiles.push_back(std::make_unique<ClmFile>(XFile::Append(archiveDirectory, clmFilename)));
@@ -62,7 +61,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& fil
 {
 	std::regex filenameRegex(filenameRegexStr, std::regex_constants::icase);
 
-	std::vector<std::string> filenames = XFile::GetFilenamesFromDirectory(resourceRootDir, filenameRegex);
+	auto filenames = GetFilesFromDirectory(filenameRegex);
 
 	if (!accessArchives) {
 		return filenames;
@@ -83,7 +82,7 @@ std::vector<std::string> ResourceManager::GetAllFilenames(const std::string& fil
 
 std::vector<std::string> ResourceManager::GetAllFilenamesOfType(const std::string& extension, bool accessArchives)
 {
-	std::vector<std::string> filenames = XFile::GetFilenamesFromDirectory(resourceRootDir, extension);
+	auto filenames = GetFilesFromDirectory(extension);
 
 	if (!accessArchives) {
 		return filenames;
@@ -140,7 +139,7 @@ std::string ResourceManager::FindContainingArchivePath(const std::string& filena
 	for (const auto& archiveFile : ArchiveFiles)
 	{
 		if (archiveFile->Contains(filename)) {
-			return archiveFile->GetVolumeFilename();
+			return archiveFile->GetArchiveFilename();
 		}
 	}
 
@@ -154,7 +153,17 @@ std::vector<std::string> ResourceManager::GetArchiveFilenames()
 
 	for (const auto& archiveFile : ArchiveFiles)
 	{
-		archiveFilenames.push_back(archiveFile->GetVolumeFilename());
+		archiveFilenames.push_back(archiveFile->GetArchiveFilename());
 	}
 	return archiveFilenames;
+}
+
+std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::string& fileExtension)
+{
+	return XFile::DirFilesWithExtension(resourceRootDir, fileExtension);
+}
+
+std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::regex& filenameRegex)
+{
+	return XFile::DirFiles(resourceRootDir, filenameRegex);
 }

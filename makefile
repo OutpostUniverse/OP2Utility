@@ -1,26 +1,18 @@
 
-# Set compiler default to mingw
-# Can still override from command line or environment variables
-ifeq ($(origin CXX),default)
-	CXX := clang++-6.0
-endif
-
 SRCDIR := src
 BUILDDIR := .build
-BINDIR := $(BUILDDIR)/bin
-OBJDIR := $(BUILDDIR)/obj
-DEPDIR := $(BUILDDIR)/deps
+INTDIR := $(BUILDDIR)/obj
 OUTPUT := libOP2Utility.a
 
-CXXFLAGS := -std=c++14 -g -Wall -Wno-unknown-pragmas
+CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
 
-DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+DEPFLAGS = -MT $@ -MMD -MP -MF $(INTDIR)/$*.Td
 
 COMPILE.cpp = $(CXX) $(DEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
-POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
+POSTCOMPILE = @mv -f $(INTDIR)/$*.Td $(INTDIR)/$*.d && touch $@
 
 SRCS := $(shell find $(SRCDIR) -name '*.cpp')
-OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
+OBJS := $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
 all: $(OUTPUT)
@@ -29,73 +21,57 @@ $(OUTPUT): $(OBJS)
 	@mkdir -p ${@D}
 	ar rcs $@ $^
 
-$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d | build-folder
+$(OBJS): $(INTDIR)/%.o : $(SRCDIR)/%.cpp $(INTDIR)/%.d
+	@mkdir -p ${@D}
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
 
-.PHONY:build-folder
-build-folder:
-	@mkdir -p $(patsubst $(SRCDIR)/%,$(OBJDIR)/%, $(FOLDERS))
-	@mkdir -p $(patsubst $(SRCDIR)/%,$(DEPDIR)/%, $(FOLDERS))
+$(INTDIR)/%.d: ;
+.PRECIOUS: $(INTDIR)/%.d
 
-$(DEPDIR)/%.d: ;
-.PRECIOUS: $(DEPDIR)/%.d
+include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.d,$(SRCS)))
 
-include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
-
-.PHONY:clean, clean-deps, clean-all
+.PHONY: clean clean-all
 clean:
-	-rm -fr $(OBJDIR)
-	-rm -fr $(DEPDIR)
-	-rm -fr $(BINDIR)
+	-rm -fr $(INTDIR)
+clean-all: clean
+	-rm -fr $(BUILDDIR)
 	-rm -f $(OUTPUT)
-clean-deps:
-	-rm -fr $(DEPDIR)
-clean-all:
-	-rm -rf $(BUILDDIR)
 
 
-# Either of these should be a complete combined package. Only build one.
-GTESTSRCDIR := /usr/src/gtest/
-GMOCKSRCDIR := /usr/src/gmock/
-GTESTDIR := $(BUILDDIR)/gtest
-GMOCKDIR := $(BUILDDIR)/gmock
+GTESTSRCDIR := /usr/src/googletest/
+GTESTINCDIR := /usr/src/googletest/googletest/include/
+GTESTBUILDDIR := $(BUILDDIR)/gtest/
+GTESTLOCALLIBDIR := $(GTESTBUILDDIR)googlemock/
+GTESTLIBDIR := /usr/lib/
 
-.PHONY:gtest
+.PHONY: gtest gtest-install gtest-clean
 gtest:
-	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake -DCMAKE_CXX="$(CXX)" -DCMAKE_CXX_FLAGS="-std=c++17" $(GTESTSRCDIR)
-	make -C $(GTESTDIR)
+	mkdir -p "$(GTESTBUILDDIR)"
+	cd "$(GTESTBUILDDIR)" && cmake -DCMAKE_CXX_COMPILER="$(CXX)" -DCMAKE_C_COMPILER="$(CC)" -DCMAKE_CXX_FLAGS="-std=c++17" "$(GTESTSRCDIR)"
+	make -C "$(GTESTBUILDDIR)"
+gtest-install:
+	cp $(GTESTBUILDDIR)googlemock/gtest/lib*.a "$(GTESTLIBDIR)"
+	cp $(GTESTBUILDDIR)googlemock/lib*.a "$(GTESTLIBDIR)"
+gtest-clean:
+	rm -rf "$(GTESTBUILDDIR)"
 
-.PHONY:gmock
-gmock:
-	mkdir -p $(GMOCKDIR)
-	cd $(GMOCKDIR) && cmake -DCMAKE_CXX="$(CXX)" -DCMAKE_CXX_FLAGS="-std=c++17" $(GMOCKSRCDIR)
-	make -C $(GMOCKDIR)
-
-# This is used to detect if a separate GMock library was built, in which case, use it
-GMOCKLIB := $(wildcard $(GMOCKDIR)/libgmock.a)
 
 TESTDIR := test
-TESTOBJDIR := $(BUILDDIR)/testObj
+TESTINTDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
-TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
+TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
-TESTCPPFLAGS := -I$(SRCDIR) -I$(GMOCKSRCDIR)/gtest/include
-TESTLDFLAGS := -L./ -L$(GMOCKDIR) -L$(GMOCKDIR)/gtest/ -L$(GTESTDIR)
+TESTCPPFLAGS := -I$(SRCDIR) -I$(GTESTINCDIR)
+TESTLDFLAGS := -L./ -L$(GTESTLOCALLIBDIR) -L$(GTESTLOCALLIBDIR)/gtest/
 TESTLIBS := -lOP2Utility -lgtest -lgtest_main -lpthread -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
-# Conditionally add GMock if we built it separately
-# This is conditional to avoid errors in case the library is not found
-ifneq ($(strip $(GMOCKLIB)),)
-	TESTLIBS := -lgmock $(TESTLIBS)
-endif
 
-TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
+TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTINTDIR)/$*.Td
 TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
-TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
+TESTPOSTCOMPILE = @mv -f $(TESTINTDIR)/$*.Td $(TESTINTDIR)/$*.d && touch $@
 
-.PHONY:check
+.PHONY: check
 check: $(TESTOUTPUT)
 	cd test && ../$(TESTOUTPUT)
 
@@ -103,15 +79,12 @@ $(TESTOUTPUT): $(TESTOBJS) $(OUTPUT)
 	@mkdir -p ${@D}
 	$(CXX) $(TESTOBJS) $(TESTLDFLAGS) $(TESTLIBS) -o $@
 
-$(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build-folder
+$(TESTOBJS): $(TESTINTDIR)/%.o : $(TESTDIR)/%.cpp $(TESTINTDIR)/%.d
+	@mkdir -p ${@D}
 	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) -I$(SRCDIR) $<
 	$(TESTPOSTCOMPILE)
 
-.PHONY:test-build-folder
-test-build-folder:
-	@mkdir -p $(patsubst $(TESTDIR)/%,$(TESTOBJDIR)/%, $(TESTFOLDERS))
+$(TESTINTDIR)/%.d: ;
+.PRECIOUS: $(TESTINTDIR)/%.d
 
-$(TESTOBJDIR)/%.d: ;
-.PRECIOUS: $(TESTOBJDIR)/%.d
-
-include $(wildcard $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.d,$(TESTSRCS)))
+include $(wildcard $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.d,$(TESTSRCS)))

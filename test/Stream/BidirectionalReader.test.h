@@ -18,7 +18,7 @@ protected:
 	const unsigned int size = 5;
 };
 
-TYPED_TEST_CASE_P(SimpleSeekableReader);
+TYPED_TEST_SUITE_P(SimpleSeekableReader);
 
 TYPED_TEST_P(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
 	auto position = this->seekableReader.Position();
@@ -31,17 +31,17 @@ TYPED_TEST_P(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPosi
 TYPED_TEST_P(SimpleSeekableReader, StreamPositionUpdatesOnRead) {
 	char destinationBuffer;
 
-	EXPECT_EQ(0, this->seekableReader.Position());
+	EXPECT_EQ(0u, this->seekableReader.Position());
 
 	this->seekableReader.Read(destinationBuffer);
-	EXPECT_EQ(1, this->seekableReader.Position());
+	EXPECT_EQ(1u, this->seekableReader.Position());
 }
 
 TYPED_TEST_P(SimpleSeekableReader, StreamSizeMatchesInitialization) {
 	EXPECT_EQ(this->size, this->seekableReader.Length());
 }
 
-REGISTER_TYPED_TEST_CASE_P(SimpleSeekableReader,
+REGISTER_TYPED_TEST_SUITE_P(SimpleSeekableReader,
 	SeekRelativeOutOfBoundsBeginningPreservesPosition,
 	StreamPositionUpdatesOnRead,
 	StreamSizeMatchesInitialization

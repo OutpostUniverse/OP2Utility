@@ -2,6 +2,8 @@
 #include "BidirectionalReader.test.h"
 #include "Stream/MemoryReader.h"
 #include <array>
+#include <string>
+#include <stdexcept>
 
 
 template <>
@@ -10,7 +12,7 @@ Stream::MemoryReader CreateReader<Stream::MemoryReader>() {
 	return Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
 }
 
-INSTANTIATE_TYPED_TEST_CASE_P(BasicMemoryReader, BasicReaderTests, Stream::MemoryReader);
+INSTANTIATE_TYPED_TEST_SUITE_P(BasicMemoryReader, BasicReaderTests, Stream::MemoryReader);
 
 
 template <>
@@ -19,7 +21,7 @@ Stream::MemoryReader CreateSeekableReader<Stream::MemoryReader>() {
 	return Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
 }
 
-INSTANTIATE_TYPED_TEST_CASE_P(MemoryReader, SimpleSeekableReader, Stream::MemoryReader);
+INSTANTIATE_TYPED_TEST_SUITE_P(MemoryReader, SimpleSeekableReader, Stream::MemoryReader);
 
 
 // Simple test
@@ -28,8 +30,8 @@ TEST(MemoryStreamReaderTest, ZeroSizeStreamHasSafeOperations) {
 	Stream::MemoryReader stream(nullptr, 0);
 	
 	// Length and position
-	EXPECT_EQ(0, stream.Length());
-	EXPECT_EQ(0, stream.Position());
+	EXPECT_EQ(0u, stream.Length());
+	EXPECT_EQ(0u, stream.Position());
 	
 	// Seek to current position (should not cause error)
 	ASSERT_NO_THROW(stream.Seek(0));
@@ -38,7 +40,7 @@ TEST(MemoryStreamReaderTest, ZeroSizeStreamHasSafeOperations) {
 	
 	// Read 0 bytes
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
-	EXPECT_EQ(0, stream.ReadPartial(nullptr, 0));
+	EXPECT_EQ(0u, stream.ReadPartial(nullptr, 0));
 }
 
 
@@ -54,8 +56,8 @@ protected:
 
 TEST_F(EmptyMemoryStreamReader, ZeroSizeStreamHasSafeOperations) {
 	// Length and position
-	EXPECT_EQ(0, stream.Length());
-	EXPECT_EQ(0, stream.Position());
+	EXPECT_EQ(0u, stream.Length());
+	EXPECT_EQ(0u, stream.Position());
 
 	// Seek to current position (should not cause error)
 	ASSERT_NO_THROW(stream.Seek(0));
@@ -64,7 +66,7 @@ TEST_F(EmptyMemoryStreamReader, ZeroSizeStreamHasSafeOperations) {
 
 	// Read 0 bytes
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
-	EXPECT_EQ(0, stream.ReadPartial(nullptr, 0));
+	EXPECT_EQ(0u, stream.ReadPartial(nullptr, 0));
 }
 
 
@@ -94,4 +96,35 @@ TEST_F(SimpleMemoryReader, SeekRelativeOutOfBoundsEndPreservesPosition) {
 	auto position = stream.Position();
 	EXPECT_THROW(stream.SeekForward(6), std::runtime_error);
 	EXPECT_EQ(position, stream.Position());
+}
+
+TEST(MemoryReader, ReadNullTerminatedStringUnbounded)
+{
+	constexpr std::array<char, 5> terminatedBuffer{ 'n', 'u', 'l', 'l', '\0' };
+	Stream::MemoryReader reader(&terminatedBuffer[0], terminatedBuffer.size());
+
+	// Test unbounded read
+	EXPECT_EQ("null", reader.ReadNullTerminatedString());
+	// Stream is advanced by string length + null terminator
+	EXPECT_EQ(5u, reader.Position());
+}
+
+TEST(MemoryReader, ReadNullTerminatedStringBounded)
+{
+	constexpr std::array<char, 5> terminatedBuffer{ 'n', 'u', 'l', 'l', '\0' };
+	Stream::MemoryReader reader(&terminatedBuffer[0], terminatedBuffer.size());
+
+	// Test bounded read with maxCount characters
+	EXPECT_EQ("nu", reader.ReadNullTerminatedString(2));
+	// Stream is advanced by read length (no null terminator was seen)
+	EXPECT_EQ(2u, reader.Position());
+}
+
+TEST(MemoryReader, ReadNonNullTerminatedString)
+{
+	constexpr std::array<char, 5> nonTerminatedBuffer{ 'n', 'o', 'p', 'e', '!' };
+	Stream::MemoryReader reader(&nonTerminatedBuffer[0], nonTerminatedBuffer.size());
+
+	// Unbounded read of non-terminated string will throw when end of stream is reached
+	EXPECT_THROW(reader.ReadNullTerminatedString(), std::runtime_error);
 }

@@ -1,7 +1,9 @@
 #include "Stream/FileWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
+#include <string>
 
+void WriteToNewDirectory(const std::string& path);
 
 TEST(FileWriterOpenMode, BadFlagCombinations) {
 	using OpenMode = Stream::FileWriter::OpenMode;
@@ -50,8 +52,13 @@ TEST(FileWriterOpenMode, PermissionChecks) {
 	// Try to open existing file without permission for existing files
 	ASSERT_THROW(Stream::FileWriter writer(filename, OpenMode::CanOpenNew), std::runtime_error);
 
+	// Try to open new file in new directory with permission
+	const std::string directoryAndFilename("NewDirectory/OpenModePermissionChecks.temp");
+	ASSERT_NO_THROW(Stream::FileWriter writer(directoryAndFilename, OpenMode::CanOpenNew));
+
 	// Cleanup temporary file
 	XFile::DeletePath(filename);
+	XFile::DeletePath(directoryAndFilename);
 }
 
 
@@ -64,4 +71,27 @@ TEST(FileWriter, MoveConstructible) {
 
 	// Cleanup temporary file
 	XFile::DeletePath(filename);
+}
+
+TEST(FileWriter, InvalidFilename) {
+	EXPECT_THROW(Stream::FileWriter fileWriter(""), std::runtime_error);
+	EXPECT_THROW(Stream::FileWriter fileWriter("data"), std::runtime_error);
+}
+
+TEST(FileWriter, DirectoryDoesNotExist) {
+	WriteToNewDirectory("../NewDirectory/TestFile.temp");
+	WriteToNewDirectory("./NewDirectory/TestFile.temp");
+	WriteToNewDirectory("NewDirectory/TestFile.temp");
+}
+
+// Will delete the path after testing creation
+void WriteToNewDirectory(const std::string& path)
+{
+	// New directory should not be created when writer cannot create new files
+	EXPECT_THROW(Stream::FileWriter writer(path, Stream::FileWriter::OpenMode::CanOpenExisting), std::runtime_error);
+	EXPECT_FALSE(XFile::PathExists(path));
+
+	EXPECT_NO_THROW(Stream::FileWriter writer(path));
+
+	XFile::DeletePath(path);
 }

@@ -20,11 +20,25 @@ CellType Map::GetCellType(std::size_t x, std::size_t y) const
 	return tiles[GetTileIndex(x, y)].cellType;
 }
 
+void Map::SetCellType(CellType cellType, std::size_t x, std::size_t y)
+{
+	// Tube5 has the largest CellType index
+	if (cellType > CellType::Tube5) {
+		throw std::runtime_error("Improper cell type provided : CellType index = " + std::to_string(static_cast<int>(cellType)));
+	}
+
+	tiles[GetTileIndex(x, y)].cellType = cellType;
+}
+
 bool Map::GetLavaPossible(std::size_t x, std::size_t y) const
 {
 	return tiles[GetTileIndex(x, y)].bLavaPossible;
 }
 
+void Map::SetLavaPossible(bool lavaPossible, std::size_t x, std::size_t y)
+{
+	tiles[GetTileIndex(x, y)].bLavaPossible = lavaPossible;
+}
 
 std::size_t Map::GetTilesetIndex(std::size_t x, std::size_t y) const
 {
