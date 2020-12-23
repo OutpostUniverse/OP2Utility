@@ -6,17 +6,17 @@
 
 struct ImageMeta {
 	uint16_t GetBitCount() const {
-		return type.bShadow ? 1 : 8;
+		return type.isShadow ? 1 : 8;
 	}
 
 	struct ImageType {
-		uint16_t bGameGraphic : 1;  // 0 = MenuGraphic, 1 = GameGraphic
+		uint16_t isGameGraphic : 1;  // 0 = MenuGraphic, 1 = GameGraphic
 		uint16_t unknown1 : 1; // 2
-		uint16_t bShadow : 1; // 4
+		uint16_t isShadow : 1; // 4
 		uint16_t unknown2 : 1; // 8
 		uint16_t unknown3 : 1; // 16
 		uint16_t unknown4 : 1; // 32
-		uint16_t bTruckBed : 1; // 64
+		uint16_t isTruckBed : 1; // 64
 		uint16_t unknown5 : 1; // 128
 		uint16_t unknown6 : 8;
 	};
