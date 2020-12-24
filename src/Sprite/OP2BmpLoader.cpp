@@ -8,6 +8,9 @@
 OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::string artFilename) :
 	bmpReader(bmpFilename), artFile(ArtFile::Read(artFilename)) { }
 
+OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, Stream::BidirectionalReader& artFileStream) :
+	bmpReader(bmpFilename), artFile(ArtFile::Read(artFileStream)) { }
+
 void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOut) 
 {
 	artFile.VerifyImageIndexInBounds(index);
