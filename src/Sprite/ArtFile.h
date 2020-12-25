@@ -17,7 +17,7 @@ namespace Stream {
 struct ArtFile
 {
 public:
-	std::vector<Palette> palettes;
+	std::vector<Palette8Bit> palettes;
 	std::vector<ImageMeta> imageMetas;
 	std::vector<Animation> animations;
 	uint32_t unknownAnimationCount;

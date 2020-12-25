@@ -14,7 +14,7 @@ PaletteHeader PaletteHeader::CreatePaletteHeader()
 	PaletteHeader paletteHeader;
 	paletteHeader.remainingTagCount = 1;
 
-	const uint64_t dataSize = sizeof(Palette);
+	const uint64_t dataSize = sizeof(Palette8Bit);
 
 	uint64_t overallSize = 4 + sizeof(PaletteHeader::overallHeader) + 
 		sizeof(PaletteHeader::sectionHeader) + sizeof(PaletteHeader::remainingTagCount) + dataSize;
