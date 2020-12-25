@@ -14,9 +14,12 @@ namespace Stream {
 	class Writer;
 }
 
+// ArtFile stores sprites in 1 and 8 bit indexed bitmaps. 2 bit bitmaps represent shadows.
+// ArtFile may be packaged within a vol file and still register with Outpost 2.
 struct ArtFile
 {
 public:
+	// Palettes within ArtFile are stored in 8 bits of memory regardless of actual palette size (1 or 8 bit)
 	std::vector<Palette8Bit> palettes;
 	std::vector<ImageMeta> imageMetas;
 	std::vector<Animation> animations;
