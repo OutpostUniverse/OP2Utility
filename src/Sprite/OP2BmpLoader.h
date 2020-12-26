@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ArtFile.h"
-#include "../Stream/BidirectionalReader.h"
+#include "../Stream/Reader.h"
 #include "../Stream/SliceReader.h"
 #include <memory>
 #include <string>
@@ -12,7 +12,7 @@ class OP2BmpLoader
 {
 public:
 	OP2BmpLoader(std::string bmpFilename, std::string artFilename);
-	OP2BmpLoader(std::string bmpFilename, Stream::BidirectionalReader& artFileStream);
+	OP2BmpLoader(std::string bmpFilename, Stream::Reader& artFileStream);
 
 	void ExtractImage(std::size_t index, const std::string& filenameOut);
 
