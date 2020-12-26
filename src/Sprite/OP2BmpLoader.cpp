@@ -48,7 +48,7 @@ std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 		palette.resize(sizeof(Palette8Bit));
 	}
 
-	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].end(), palette.begin());
+	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].begin() + palette.size(), palette.begin());
 
 	return palette;
 }
