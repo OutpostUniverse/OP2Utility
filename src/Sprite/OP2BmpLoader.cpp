@@ -58,9 +58,9 @@ std::unique_ptr<Stream::FileSliceReader> OP2BmpLoader::GetPixels(std::size_t sta
 }
 
 std::size_t OP2BmpLoader::FrameCount(std::size_t animationIndex) const {
-	return artFile.animations[animationIndex].frames.size();
+	return artFile->animations[animationIndex].frames.size();
 }
 
 std::size_t OP2BmpLoader::LayerCount(std::size_t animationIndex, std::size_t frameIndex) const {
-	return artFile.animations[animationIndex].frames[frameIndex].layers.size();
+	return artFile->animations[animationIndex].frames[frameIndex].layers.size();
 }

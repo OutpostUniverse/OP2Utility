@@ -14,8 +14,8 @@ public:
 
 	void ExtractImage(std::size_t index, const std::string& filenameOut);
 
-	inline std::size_t ImageCount() const { return artFile.imageMetas.size(); }
-	inline std::size_t AnimationCount() const { return artFile.animations.size(); }
+	inline std::size_t ImageCount() const { return artFile->imageMetas.size(); }
+	inline std::size_t AnimationCount() const { return artFile->animations.size(); }
 	std::size_t FrameCount(std::size_t animationIndex) const;
 	std::size_t LayerCount(std::size_t animationIndex, std::size_t frameIndex) const;
 
