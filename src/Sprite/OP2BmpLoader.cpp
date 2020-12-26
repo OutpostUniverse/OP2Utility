@@ -39,12 +39,13 @@ std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 
 	if (imageMeta.type.isShadow)
 	{
-		// Shadow graphic uses a 2 color palette
-		palette.resize(2);
+		// Shadow sprites use a 2 color (1 bit) palette
+		palette.resize(sizeof(Palette1Bit));
 	}
 	else
 	{
-		palette.resize(artFile.palettes[imageMeta.paletteIndex].size());
+		// All other sprites use a 256 color (8 bit) palette
+		palette.resize(sizeof(Palette8Bit));
 	}
 
 	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].end(), palette.begin());
