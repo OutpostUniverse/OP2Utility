@@ -5,17 +5,14 @@
 #include <algorithm>
 #include <limits>
 
-OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::string artFilename) :
-	bmpReader(bmpFilename), artFile(ArtFile::Read(artFilename)) { }
-
-OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, Stream::Reader& artFileStream) :
-	bmpReader(bmpFilename), artFile(ArtFile::Read(artFileStream)) { }
+OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile) :
+	bmpReader(bmpFilename), artFile(artFile) { }
 
 void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOut) 
 {
-	artFile.VerifyImageIndexInBounds(index);
+	artFile->VerifyImageIndexInBounds(index);
 
-	ImageMeta& imageMeta = artFile.imageMetas[index];
+	ImageMeta& imageMeta = artFile->imageMetas[index];
 
 	std::vector<Color> palette = GetPalette(imageMeta);
 
@@ -47,10 +44,10 @@ std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 	}
 	else
 	{
-		palette.resize(artFile.palettes[imageMeta.paletteIndex].size());
+		palette.resize(artFile->palettes[imageMeta.paletteIndex].size());
 	}
 
-	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].end(), palette.begin());
+	std::copy(artFile->palettes[imageMeta.paletteIndex].begin(), artFile->palettes[imageMeta.paletteIndex].end(), palette.begin());
 
 	return palette;
 }

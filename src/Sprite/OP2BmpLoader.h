@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ArtFile.h"
-#include "../Stream/Reader.h"
 #include "../Stream/SliceReader.h"
 #include <memory>
 #include <string>
@@ -11,8 +10,7 @@
 class OP2BmpLoader
 {
 public:
-	OP2BmpLoader(std::string bmpFilename, std::string artFilename);
-	OP2BmpLoader(std::string bmpFilename, Stream::Reader& artFileStream);
+	OP2BmpLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile);
 
 	void ExtractImage(std::size_t index, const std::string& filenameOut);
 
@@ -21,7 +19,7 @@ private:
 	// Contains many images in pixels section with a default palette. 
 	// Actual palette data and range of pixels to form each image is contained in the .prt file.
 	Stream::FileReader bmpReader;
-	ArtFile artFile;
+	std::shared_ptr<ArtFile> artFile;
 
 	std::vector<Color> GetPalette(const ImageMeta& imageMeta);
 	std::unique_ptr<Stream::FileSliceReader> GetPixels(std::size_t startingIndex, std::size_t length);
