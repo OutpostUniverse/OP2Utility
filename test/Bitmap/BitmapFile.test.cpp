@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <stdexcept>
 
-void RoundTripSub(uint16_t bitCount, int32_t width, int32_t height)
+void WriteAndReadBitmapSub(uint16_t bitCount, int32_t width, int32_t height)
 {
 	const std::string filename("Sprite/data/BitmapTest.bmp");
 
@@ -27,23 +27,23 @@ TEST(BitmapFile, RoundTripWriteAndRead)
 	*/
 	{
 		SCOPED_TRACE("Monochrome");
-		RoundTripSub(1, 1, 1);
-		RoundTripSub(1, 1, 2);
-		RoundTripSub(1, 32, 1);
-		RoundTripSub(1, 33, 1);
+		WriteAndReadBitmapSub(1, 1, 1);
+		WriteAndReadBitmapSub(1, 1, 2);
+		WriteAndReadBitmapSub(1, 32, 1);
+		WriteAndReadBitmapSub(1, 33, 1);
 	}
 	{
 		SCOPED_TRACE("4 Bit");
-		RoundTripSub(4, 1, 1);
-		RoundTripSub(4, 1, 2);
-		RoundTripSub(4, 8, 1);
-		RoundTripSub(4, 9, 1);
+		WriteAndReadBitmapSub(4, 1, 1);
+		WriteAndReadBitmapSub(4, 1, 2);
+		WriteAndReadBitmapSub(4, 8, 1);
+		WriteAndReadBitmapSub(4, 9, 1);
 	}
 	{
 		SCOPED_TRACE("8 Bit");
-		RoundTripSub(8, 1, 1);
-		RoundTripSub(8, 1, 2);
-		RoundTripSub(8, 2, 1);
+		WriteAndReadBitmapSub(8, 1, 1);
+		WriteAndReadBitmapSub(8, 1, 2);
+		WriteAndReadBitmapSub(8, 2, 1);
 	}
 }
 
