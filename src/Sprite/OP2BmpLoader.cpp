@@ -5,14 +5,14 @@
 #include <algorithm>
 #include <limits>
 
-OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::string artFilename) :
-	bmpReader(bmpFilename), artFile(ArtFile::Read(artFilename)) { }
+OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile) :
+	bmpReader(bmpFilename), artFile(artFile) { }
 
 void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOut) 
 {
-	artFile.VerifyImageIndexInBounds(index);
+	artFile->VerifyImageIndexInBounds(index);
 
-	ImageMeta& imageMeta = artFile.imageMetas[index];
+	ImageMeta& imageMeta = artFile->imageMetas[index];
 
 	std::vector<Color> palette = GetPalette(imageMeta);
 
@@ -44,10 +44,10 @@ std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 	}
 	else
 	{
-		palette.resize(artFile.palettes[imageMeta.paletteIndex].size());
+		palette.resize(artFile->palettes[imageMeta.paletteIndex].size());
 	}
 
-	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].end(), palette.begin());
+	std::copy(artFile->palettes[imageMeta.paletteIndex].begin(), artFile->palettes[imageMeta.paletteIndex].end(), palette.begin());
 
 	return palette;
 }
@@ -58,9 +58,9 @@ std::unique_ptr<Stream::FileSliceReader> OP2BmpLoader::GetPixels(std::size_t sta
 }
 
 std::size_t OP2BmpLoader::FrameCount(std::size_t animationIndex) const {
-	return artFile.animations[animationIndex].frames.size();
+	return artFile->animations[animationIndex].frames.size();
 }
 
 std::size_t OP2BmpLoader::LayerCount(std::size_t animationIndex, std::size_t frameIndex) const {
-	return artFile.animations[animationIndex].frames[frameIndex].layers.size();
+	return artFile->animations[animationIndex].frames[frameIndex].layers.size();
 }
