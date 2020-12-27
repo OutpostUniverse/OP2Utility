@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <limits>
+#include <cstdint>
 
 OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile) :
 	bmpReader(bmpFilename), artFile(artFile) { }
@@ -35,18 +36,16 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 
 std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 {
-	std::vector<Color> palette;
+	uint16_t bitCount;
 
-	if (imageMeta.type.isShadow)
-	{
-		// Shadow sprites use a 2 color (1 bit) palette
-		palette.resize(sizeof(Palette1Bit));
+	if (imageMeta.type.isShadow) {
+		bitCount = 1;
 	}
-	else
-	{
-		// All other sprites use a 256 color (8 bit) palette
-		palette.resize(sizeof(Palette8Bit));
+	else {
+		bitCount = 8;
 	}
+
+	std::vector<Color> palette(std::size_t(1) << bitCount);
 
 	std::copy(artFile->palettes[imageMeta.paletteIndex].begin(), artFile->palettes[imageMeta.paletteIndex].begin() + palette.size(), palette.begin());
 
