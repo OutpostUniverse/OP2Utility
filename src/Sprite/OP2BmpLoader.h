@@ -7,10 +7,10 @@
 #include <cstddef>
 #include <vector>
 
-class OP2BmpLoader
+class OP2SpriteLoader
 {
 public:
-	OP2BmpLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile);
+	OP2SpriteLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile);
 
 	void ExtractImage(std::size_t index, const std::string& filenameOut);
 
