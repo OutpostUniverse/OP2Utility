@@ -1,4 +1,4 @@
-#include "OP2SpriteLoader.h"
+#include "SpriteLoader.h"
 #include "../Bitmap/ImageHeader.h"
 #include "../Bitmap/BitmapFile.h"
 #include <stdexcept>

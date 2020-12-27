@@ -177,7 +177,7 @@
     <ClInclude Include="src\Stream\DynamicMemoryWriter.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sprite\OP2SpriteLoader.h">
+    <ClInclude Include="src\Sprite\SpriteLoader.h">
       <Filter>Sprite</Filter>
     </ClInclude>
   </ItemGroup>
@@ -281,7 +281,7 @@
     <ClCompile Include="src\Map\SavedGameUnits.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sprite\OP2SpriteLoader.cpp">
+    <ClCompile Include="src\Sprite\SpriteLoader.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
   </ItemGroup>
