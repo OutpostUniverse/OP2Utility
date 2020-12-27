@@ -11,10 +11,10 @@
 // Sprites are reconditioned into standard indexed bitmap files after loading.
 // The sprites may be viewed and manipulated by standard bitmap applications and libraries after loading.
 // Outpost 2 tilesets (wells) are stored in a separate format from other in game sprites and cannot be loaded by this class.
-class OP2SpriteLoader
+class SpriteLoader
 {
 public:
-	OP2SpriteLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile);
+	SpriteLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile);
 
 	void ExtractImage(std::size_t index, const std::string& filenameOut);
 
