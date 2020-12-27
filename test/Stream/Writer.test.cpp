@@ -2,6 +2,7 @@
 #include "Stream/DynamicMemoryWriter.h"
 #include <gtest/gtest.h>
 #include <vector>
+#include <type_traits>
 
 // Note: Writer is an abstract class, so it can not be tested directly.
 // DynamicMemoryWriter will be used to test the template methods in Writer
@@ -29,4 +30,30 @@ TEST(Writer, CanSerializeVectorOfTrivialStruct) {
 	auto reader = writer.GetReader();
 	EXPECT_NO_THROW(reader.Read(readValue));
 	EXPECT_EQ(writeValue, readValue);
+}
+
+TEST(Writer, CanSerializeNonTrivialType) {
+	struct NonTrivialStruct {
+		virtual void virtualFunction() {};
+
+		void Write(Stream::Writer& writer) {
+			writer.Write(testInteger);
+		}
+
+		int testInteger = 1;
+	};
+
+	ASSERT_FALSE(std::is_trivially_copyable<NonTrivialStruct>::value);
+
+	NonTrivialStruct nonTrivialStruct;
+
+	// Write value
+	Stream::DynamicMemoryWriter writer;
+	EXPECT_NO_THROW(writer.Write(nonTrivialStruct));
+
+	// Read value
+	int destination;
+	auto reader = writer.GetReader();
+	reader.Read(destination);
+	EXPECT_EQ(destination, nonTrivialStruct.testInteger);
 }

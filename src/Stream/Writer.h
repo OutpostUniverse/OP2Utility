@@ -68,6 +68,19 @@ namespace Stream
 			Write(container);
 		}
 
+		// Non trivially copyable data types with Write method
+		// Type T must provide a member `void T::Write(Stream::Writer& writer)`
+		// If T is const, then its Write method must also be const
+		template<typename T>
+		inline
+		std::enable_if_t<
+			!std::is_trivially_copyable<T>::value &&
+			std::is_member_function_pointer<decltype(&T::Write)>::value
+		>
+		Write(T& object) {
+			object.Write(*this);
+		}
+
 		// Copy a Reader to a Writer
 		static const std::size_t DefaultCopyChunkSize = 0x00020000;
 		template<std::size_t BufferSize = DefaultCopyChunkSize>

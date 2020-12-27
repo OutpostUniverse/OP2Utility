@@ -5,14 +5,14 @@
 #include <algorithm>
 #include <limits>
 
-OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::string artFilename) :
-	bmpReader(bmpFilename), artFile(ArtFile::Read(artFilename)) { }
+OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile) :
+	bmpReader(bmpFilename), artFile(artFile) { }
 
 void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOut) 
 {
-	artFile.VerifyImageIndexInBounds(index);
+	artFile->VerifyImageIndexInBounds(index);
 
-	ImageMeta& imageMeta = artFile.imageMetas[index];
+	ImageMeta& imageMeta = artFile->imageMetas[index];
 
 	std::vector<Color> palette = GetPalette(imageMeta);
 
@@ -48,7 +48,7 @@ std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 		palette.resize(sizeof(Palette8Bit));
 	}
 
-	std::copy(artFile.palettes[imageMeta.paletteIndex].begin(), artFile.palettes[imageMeta.paletteIndex].begin() + palette.size(), palette.begin());
+	std::copy(artFile->palettes[imageMeta.paletteIndex].begin(), artFile->palettes[imageMeta.paletteIndex].begin() + palette.size(), palette.begin());
 
 	return palette;
 }
@@ -56,4 +56,12 @@ std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 std::unique_ptr<Stream::FileSliceReader> OP2BmpLoader::GetPixels(std::size_t startingIndex, std::size_t length)
 {
 	return std::make_unique<Stream::FileSliceReader>(bmpReader.Slice(startingIndex, length));
+}
+
+std::size_t OP2BmpLoader::FrameCount(std::size_t animationIndex) const {
+	return artFile->animations[animationIndex].frames.size();
+}
+
+std::size_t OP2BmpLoader::LayerCount(std::size_t animationIndex, std::size_t frameIndex) const {
+	return artFile->animations[animationIndex].frames[frameIndex].layers.size();
 }
