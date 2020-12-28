@@ -1,5 +1,4 @@
 #include "ArtFile.h"
-#include "PaletteHeader.h"
 #include "../Stream/FileWriter.h"
 #include <cstdint>
 #include <stdexcept>

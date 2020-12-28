@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PaletteHeader.h"
 #include "ImageMeta.h"
 #include "Animation.h"
 #include "../Bitmap/Color.h"
