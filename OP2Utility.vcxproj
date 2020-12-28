@@ -118,6 +118,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Sprite\TilesetLoader.cpp" />
     <ClInclude Include="src\Archive\CompressionType.h" />
     <ClInclude Include="src\Archive\WaveFile.h" />
     <ClInclude Include="include\OP2Utility.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="src\XFile.h" />
     <ClCompile Include="src\StringHelper.cpp" />
     <ClCompile Include="src\XFile.cpp" />
+    <ClInclude Include="src\Sprite\TilesetLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
