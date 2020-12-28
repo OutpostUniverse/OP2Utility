@@ -12,5 +12,9 @@ namespace Stream
 
 		// Seek to absolute position, given as offset from beginning of stream
 		virtual void Seek(uint64_t position) = 0;
+
+		void SeekBeginning() {
+			Seek(0);
+		}
 	};
 }

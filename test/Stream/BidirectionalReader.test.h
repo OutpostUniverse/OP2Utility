@@ -41,8 +41,17 @@ TYPED_TEST_P(SimpleSeekableReader, StreamSizeMatchesInitialization) {
 	EXPECT_EQ(this->size, this->seekableReader.Length());
 }
 
+TYPED_TEST_P(SimpleSeekableReader, SeekBeginningAndEnd) {
+	this->seekableReader.SeekEnd();
+	ASSERT_EQ(this->size, this->seekableReader.Position());
+
+	this->seekableReader.SeekBeginning();
+	EXPECT_EQ(0u, this->seekableReader.Position());
+}
+
 REGISTER_TYPED_TEST_SUITE_P(SimpleSeekableReader,
 	SeekRelativeOutOfBoundsBeginningPreservesPosition,
 	StreamPositionUpdatesOnRead,
-	StreamSizeMatchesInitialization
+	StreamSizeMatchesInitialization,
+	SeekBeginningAndEnd
 );
