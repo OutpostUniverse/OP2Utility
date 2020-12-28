@@ -15,8 +15,12 @@ namespace Stream {
 	class Writer;
 }
 
-// ArtFile stores sprites in 1 and 8 bit indexed bitmaps. 2 bit bitmaps represent shadows.
-// ArtFile may be packaged within a vol file and still register with Outpost 2.
+// ArtFile stores sprite metadata including color palettes. 
+// Composing an in game sprite requires the metadata from ArtFile and the pixel values from OP2_ART.bmp.
+// OP2_ART.bmp does not conform to standard bitmap file formatting.
+// Artfile uses two color palettes for image storage, 1 and 8 bit indexed bitmaps
+//  - All shadows sprites are repesented by 1 bit bitmaps
+//  - All other sprites are represented by 8 bit bitmaps
 struct ArtFile
 {
 public:
