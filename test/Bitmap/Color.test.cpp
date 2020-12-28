@@ -65,3 +65,10 @@ TEST(Color, CompareEqualNotEqualTransparent) {
 	EXPECT_NE(DiscreteColor::TransparentBlack, DiscreteColor::Black);
 	EXPECT_NE(DiscreteColor::TransparentWhite, DiscreteColor::White);
 }
+
+TEST(Color, Invert) {
+	Color color = DiscreteColor::Blue;
+	color.Invert();
+
+	EXPECT_EQ(color, DiscreteColor::Red);
+}
