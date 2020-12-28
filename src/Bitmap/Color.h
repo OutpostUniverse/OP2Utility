@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <cstdint>
 
 #pragma pack(push, 1) // Make sure structures are byte aligned
@@ -21,8 +20,6 @@ static_assert(4 == sizeof(Color), "Color is an unexpected size");
 
 bool operator==(const Color& lhs, const Color& rhs);
 bool operator!=(const Color& lhs, const Color& rhs);
-
-using Palette = std::array<Color, 256>;
 
 namespace DiscreteColor
 {

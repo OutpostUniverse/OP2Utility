@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <limits>
+#include <cstdint>
 
 SpriteLoader::SpriteLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile) :
 	bmpReader(bmpFilename), artFile(artFile) { }
@@ -35,19 +36,11 @@ void SpriteLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 
 std::vector<Color> SpriteLoader::GetPalette(const ImageMeta& imageMeta)
 {
-	std::vector<Color> palette;
+	const uint16_t bitCount = imageMeta.type.isShadow ? 1 : 8;
 
-	if (imageMeta.type.isShadow)
-	{
-		// Shadow graphic uses a 2 color palette
-		palette.resize(2);
-	}
-	else
-	{
-		palette.resize(artFile->palettes[imageMeta.paletteIndex].size());
-	}
+	std::vector<Color> palette(std::size_t(1) << bitCount);
 
-	std::copy(artFile->palettes[imageMeta.paletteIndex].begin(), artFile->palettes[imageMeta.paletteIndex].end(), palette.begin());
+	std::copy(artFile->palettes[imageMeta.paletteIndex].begin(), artFile->palettes[imageMeta.paletteIndex].begin() + palette.size(), palette.begin());
 
 	return palette;
 }

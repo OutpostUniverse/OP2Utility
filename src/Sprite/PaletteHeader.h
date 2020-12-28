@@ -4,6 +4,10 @@
 #include <array>
 #include <cstdint>
 
+struct Color;
+
+using Palette8Bit = std::array<Color, 256>;
+
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct PaletteHeader {

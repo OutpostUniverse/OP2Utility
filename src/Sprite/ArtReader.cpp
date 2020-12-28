@@ -1,5 +1,4 @@
 #include "ArtFile.h"
-#include "PaletteHeader.h"
 #include "../Stream/FileReader.h"
 #include <stdexcept>
 #include <cstdint>
