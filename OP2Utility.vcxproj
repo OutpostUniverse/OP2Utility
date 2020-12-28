@@ -168,7 +168,7 @@
     <ClCompile Include="src\Sprite\ArtReader.cpp" />
     <ClCompile Include="src\Sprite\ArtFile.cpp" />
     <ClCompile Include="src\Sprite\ArtWriter.cpp" />
-    <ClCompile Include="src\Sprite\OP2BmpLoader.cpp" />
+    <ClCompile Include="src\Sprite\SpriteLoader.cpp" />
     <ClCompile Include="src\Sprite\PaletteHeader.cpp" />
     <ClCompile Include="src\Sprite\SectionHeader.cpp" />
     <ClCompile Include="src\Stream\FileReader.cpp" />
@@ -179,7 +179,7 @@
     <ClInclude Include="src\Sprite\Animation.h" />
     <ClInclude Include="src\Sprite\ArtFile.h" />
     <ClInclude Include="src\Sprite\ImageMeta.h" />
-    <ClInclude Include="src\Sprite\OP2BmpLoader.h" />
+    <ClInclude Include="src\Sprite\SpriteLoader.h" />
     <ClInclude Include="src\Sprite\PaletteHeader.h" />
     <ClInclude Include="src\Sprite\SectionHeader.h" />
     <ClInclude Include="src\Stream\DynamicMemoryWriter.h" />

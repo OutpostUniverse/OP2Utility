@@ -10,6 +10,9 @@ struct Color {
 	uint8_t green;
 	uint8_t blue;
 	uint8_t alpha;
+
+	// Swap Red and Blue color values. Does not affect alpha.
+	void Invert();
 };
 
 static_assert(4 == sizeof(Color), "Color is an unexpected size");

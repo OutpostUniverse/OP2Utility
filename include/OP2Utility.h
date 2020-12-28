@@ -19,7 +19,7 @@
 #include "../src/Map/Map.h"
 
 #include "../src/Sprite/ArtFile.h"
-#include "../src/Sprite/OP2BmpLoader.h"
+#include "../src/Sprite/SpriteLoader.h"
 #include "../src/Bitmap/BitmapFile.h"
 
 #include "../src/Stream/FileReader.h"

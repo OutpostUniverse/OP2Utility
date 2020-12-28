@@ -1,4 +1,4 @@
-#include "OP2BmpLoader.h"
+#include "SpriteLoader.h"
 #include "../Bitmap/ImageHeader.h"
 #include "../Bitmap/BitmapFile.h"
 #include <stdexcept>
@@ -6,10 +6,10 @@
 #include <limits>
 #include <cstdint>
 
-OP2BmpLoader::OP2BmpLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile) :
+SpriteLoader::SpriteLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile) :
 	bmpReader(bmpFilename), artFile(artFile) { }
 
-void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOut) 
+void SpriteLoader::ExtractImage(std::size_t index, const std::string& filenameOut) 
 {
 	artFile->VerifyImageIndexInBounds(index);
 
@@ -34,7 +34,7 @@ void OP2BmpLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 	BitmapFile::WriteIndexed(filenameOut, imageMeta.GetBitCount(), imageMeta.width, -static_cast<int32_t>(imageMeta.height), palette, pixelContainer);
 }
 
-std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
+std::vector<Color> SpriteLoader::GetPalette(const ImageMeta& imageMeta)
 {
 	uint16_t bitCount;
 
@@ -52,15 +52,15 @@ std::vector<Color> OP2BmpLoader::GetPalette(const ImageMeta& imageMeta)
 	return palette;
 }
 
-std::unique_ptr<Stream::FileSliceReader> OP2BmpLoader::GetPixels(std::size_t startingIndex, std::size_t length)
+std::unique_ptr<Stream::FileSliceReader> SpriteLoader::GetPixels(std::size_t startingIndex, std::size_t length)
 {
 	return std::make_unique<Stream::FileSliceReader>(bmpReader.Slice(startingIndex, length));
 }
 
-std::size_t OP2BmpLoader::FrameCount(std::size_t animationIndex) const {
+std::size_t SpriteLoader::FrameCount(std::size_t animationIndex) const {
 	return artFile->animations[animationIndex].frames.size();
 }
 
-std::size_t OP2BmpLoader::LayerCount(std::size_t animationIndex, std::size_t frameIndex) const {
+std::size_t SpriteLoader::LayerCount(std::size_t animationIndex, std::size_t frameIndex) const {
 	return artFile->animations[animationIndex].frames[frameIndex].layers.size();
 }
