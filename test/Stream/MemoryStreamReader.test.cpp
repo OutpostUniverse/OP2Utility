@@ -16,12 +16,12 @@ INSTANTIATE_TYPED_TEST_SUITE_P(BasicMemoryReader, BasicReaderTests, Stream::Memo
 
 
 template <>
-Stream::MemoryReader CreateSeekableReader<Stream::MemoryReader>() {
+Stream::MemoryReader CreateBidirectionalReader<Stream::MemoryReader>() {
 	std::array<char, 5> buffer{ 't', 'e', 's', 't', '!' };
 	return Stream::MemoryReader(buffer.data(), buffer.size() * sizeof(char));
 }
 
-INSTANTIATE_TYPED_TEST_SUITE_P(MemoryReader, SimpleSeekableReader, Stream::MemoryReader);
+INSTANTIATE_TYPED_TEST_SUITE_P(MemoryReader, SimpleBidirectionalReader, Stream::MemoryReader);
 
 
 // Simple test
