@@ -36,14 +36,7 @@ void SpriteLoader::ExtractImage(std::size_t index, const std::string& filenameOu
 
 std::vector<Color> SpriteLoader::GetPalette(const ImageMeta& imageMeta)
 {
-	uint16_t bitCount;
-
-	if (imageMeta.type.isShadow) {
-		bitCount = 1;
-	}
-	else {
-		bitCount = 8;
-	}
+	const uint16_t bitCount = imageMeta.type.isShadow ? 1 : 8;
 
 	std::vector<Color> palette(std::size_t(1) << bitCount);
 
