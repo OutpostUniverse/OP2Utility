@@ -3,11 +3,11 @@
 #include <array>
 
 template <>
-Stream::FileReader CreateSeekableReader<Stream::FileReader>() {
+Stream::FileReader CreateBidirectionalReader<Stream::FileReader>() {
 	return Stream::FileReader("Stream/data/SimpleStream.txt");
 }
 
-INSTANTIATE_TYPED_TEST_SUITE_P(FileReader, SimpleSeekableReader, Stream::FileReader);
+INSTANTIATE_TYPED_TEST_SUITE_P(FileReader, SimpleBidirectionalReader, Stream::FileReader);
 
 
 TEST(FileReaderTest, AccessNonexistingFile) {

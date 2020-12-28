@@ -2,12 +2,12 @@
 #include "Stream/SliceReader.h"
 
 template <>
-Stream::FileSliceReader CreateSeekableReader<Stream::FileSliceReader>() {
+Stream::FileSliceReader CreateBidirectionalReader<Stream::FileSliceReader>() {
 	Stream::FileReader fileReader("Stream/data/SimpleStream.txt");
 	return fileReader.Slice(5);
 }
 
-INSTANTIATE_TYPED_TEST_SUITE_P(FileSliceReader, SimpleSeekableReader, Stream::FileSliceReader);
+INSTANTIATE_TYPED_TEST_SUITE_P(FileSliceReader, SimpleBidirectionalReader, Stream::FileSliceReader);
 
 
 TEST(FileSliceReader, SliceIsBoundsChecked) {

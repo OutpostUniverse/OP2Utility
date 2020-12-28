@@ -5,44 +5,53 @@
 
 
 template <class T>
-T CreateSeekableReader();
+T CreateBidirectionalReader();
 
 // Define a test fixture class template
 template <class T>
-class SimpleSeekableReader : public testing::Test {
+class SimpleBidirectionalReader : public testing::Test {
 protected:
 	// The ctor calls the factory function to create a reader implemented by T
-	SimpleSeekableReader() : seekableReader(CreateSeekableReader<T>()) {}
+	SimpleBidirectionalReader() : reader(CreateBidirectionalReader<T>()) {}
 
-	T seekableReader;
+	T reader;
 	const unsigned int size = 5;
 };
 
-TYPED_TEST_SUITE_P(SimpleSeekableReader);
+TYPED_TEST_SUITE_P(SimpleBidirectionalReader);
 
-TYPED_TEST_P(SimpleSeekableReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
-	auto position = this->seekableReader.Position();
-	EXPECT_THROW(this->seekableReader.SeekBackward(1), std::runtime_error);
-	EXPECT_EQ(position, this->seekableReader.Position());
+TYPED_TEST_P(SimpleBidirectionalReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
+	auto position = this->reader.Position();
+	EXPECT_THROW(this->reader.SeekBackward(1), std::runtime_error);
+	EXPECT_EQ(position, this->reader.Position());
 }
 
 // Then use TYPED_TEST(TestCaseName, TestName) to define a typed test,
 // similar to TEST_F.
-TYPED_TEST_P(SimpleSeekableReader, StreamPositionUpdatesOnRead) {
+TYPED_TEST_P(SimpleBidirectionalReader, StreamPositionUpdatesOnRead) {
 	char destinationBuffer;
 
-	EXPECT_EQ(0u, this->seekableReader.Position());
+	EXPECT_EQ(0u, this->reader.Position());
 
-	this->seekableReader.Read(destinationBuffer);
-	EXPECT_EQ(1u, this->seekableReader.Position());
+	this->reader.Read(destinationBuffer);
+	EXPECT_EQ(1u, this->reader.Position());
 }
 
-TYPED_TEST_P(SimpleSeekableReader, StreamSizeMatchesInitialization) {
-	EXPECT_EQ(this->size, this->seekableReader.Length());
+TYPED_TEST_P(SimpleBidirectionalReader, StreamSizeMatchesInitialization) {
+	EXPECT_EQ(this->size, this->reader.Length());
 }
 
-REGISTER_TYPED_TEST_SUITE_P(SimpleSeekableReader,
+TYPED_TEST_P(SimpleBidirectionalReader, SeekBeginningAndEnd) {
+	this->reader.SeekEnd();
+	ASSERT_EQ(this->size, this->reader.Position());
+
+	this->reader.SeekBeginning();
+	EXPECT_EQ(0u, this->reader.Position());
+}
+
+REGISTER_TYPED_TEST_SUITE_P(SimpleBidirectionalReader,
 	SeekRelativeOutOfBoundsBeginningPreservesPosition,
 	StreamPositionUpdatesOnRead,
-	StreamSizeMatchesInitialization
+	StreamSizeMatchesInitialization,
+	SeekBeginningAndEnd
 );
