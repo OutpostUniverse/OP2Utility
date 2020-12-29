@@ -7,10 +7,9 @@ namespace Stream {
 }
 
 
-static class TilesetLoader
+namespace TilesetLoader
 {
-public:
-	static constexpr Tag TagFileSignature = MakeTag("PBMP");
+	constexpr Tag TagFileSignature = MakeTag("PBMP");
 
-	static bool PeekIsCustomTileset(Stream::BidirectionalReader& reader);
-};
+	bool PeekIsCustomTileset(Stream::BidirectionalReader& reader);
+}
