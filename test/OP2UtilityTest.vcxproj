@@ -58,7 +58,7 @@
     <ClCompile Include="ResourceManager.test.cpp" />
     <ClCompile Include="Sprite\ArtReader.test.cpp" />
     <ClCompile Include="Sprite\ArtWriter.test.cpp" />
-    <ClCompile Include="Sprite\SpriteLoader.test.cpp" />
+    <ClCompile Include="Sprite\TilesetLoader.test.cpp" />
     <ClCompile Include="Stream\DynamicMemoryWriter.test.cpp" />
     <ClCompile Include="Stream\FileReader.test.cpp" />
     <ClCompile Include="Stream\SliceReader.test.cpp" />

@@ -71,7 +71,7 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
-    <ClCompile Include="Sprite\SpriteLoader.test.cpp">
+    <ClCompile Include="Sprite\TilesetLoader.test.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
   </ItemGroup>
