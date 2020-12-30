@@ -47,6 +47,8 @@ public:
 
 	void Validate() const;
 
+	void SwapRedAndBlue();
+
 private:
 	static void VerifyIndexedImageForSerialization(uint16_t bitCount);
 

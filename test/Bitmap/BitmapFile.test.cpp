@@ -84,6 +84,14 @@ TEST(BitmapFile, InitialColor)
 	}
 }
 
+TEST(BitmapFile, SwapRedAndBlue)
+{
+	auto bitmapFile = BitmapFile::CreateDefaultIndexed(8, 2, 2, DiscreteColor::Red);
+
+	bitmapFile.SwapRedAndBlue();
+	EXPECT_EQ(DiscreteColor::Blue, bitmapFile.palette[0]);
+}
+
 TEST(BitmapFile, Equality)
 {
 	BitmapFile bitmapFile1 = BitmapFile::CreateDefaultIndexed(1, 1, 1);	

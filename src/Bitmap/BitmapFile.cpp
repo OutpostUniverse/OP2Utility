@@ -62,6 +62,13 @@ void BitmapFile::Validate() const
 	VerifyPixelSizeMatchesImageDimensionsWithPitch();
 }
 
+void BitmapFile::SwapRedAndBlue()
+{
+	for (auto& color : palette) {
+		color.SwapRedAndBlue();
+	}
+}
+
 bool operator==(const BitmapFile& lhs, const BitmapFile& rhs) {
 	return lhs.bmpHeader == rhs.bmpHeader && 
 		lhs.imageHeader == rhs.imageHeader && 
