@@ -23,7 +23,8 @@ public:
 	std::vector<Color> palette;
 	std::vector<uint8_t> pixels;
 
-	static BitmapFile CreateDefaultIndexed(uint16_t bitCount, uint32_t width, uint32_t height);
+	// @param initialColor will set the first palette entry to the provided color
+	static BitmapFile CreateDefaultIndexed(uint16_t bitCount, uint32_t width, uint32_t height, Color initialColor = DiscreteColor::Black);
 
 	// BMP Reader only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	static BitmapFile ReadIndexed(const std::string& filename);
@@ -45,6 +46,8 @@ public:
 	static void VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize);
 
 	void Validate() const;
+
+	void SwapRedAndBlue();
 
 private:
 	static void VerifyIndexedImageForSerialization(uint16_t bitCount);

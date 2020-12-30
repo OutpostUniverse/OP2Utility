@@ -2,11 +2,12 @@
 #include <stdexcept>
 #include <cmath>
 
-BitmapFile BitmapFile::CreateDefaultIndexed(uint16_t bitCount, uint32_t width, uint32_t height)
+BitmapFile BitmapFile::CreateDefaultIndexed(uint16_t bitCount, uint32_t width, uint32_t height, Color initialColor)
 {
 	BitmapFile bitmapFile;
 	bitmapFile.imageHeader = ImageHeader::Create(width, height, bitCount);
 	bitmapFile.palette.resize(bitmapFile.imageHeader.CalcMaxIndexedPaletteSize());
+	bitmapFile.palette[0] = initialColor;
 	bitmapFile.pixels.resize(bitmapFile.imageHeader.CalculatePitch() * height);
 
 	const std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + bitmapFile.palette.size() * sizeof(Color);
@@ -59,6 +60,13 @@ void BitmapFile::Validate() const
 
 	VerifyIndexedPaletteSizeDoesNotExceedBitCount();
 	VerifyPixelSizeMatchesImageDimensionsWithPitch();
+}
+
+void BitmapFile::SwapRedAndBlue()
+{
+	for (auto& color : palette) {
+		color.SwapRedAndBlue();
+	}
 }
 
 bool operator==(const BitmapFile& lhs, const BitmapFile& rhs) {

@@ -72,6 +72,26 @@ TEST(BitmapFile, VerifyPixelSizeMatchesImageDimensionsWithPitch)
 	EXPECT_THROW(bitmapFile.VerifyPixelSizeMatchesImageDimensionsWithPitch(), std::runtime_error);
 }
 
+TEST(BitmapFile, InitialColor)
+{
+	auto bitmapFile = BitmapFile::CreateDefaultIndexed(8, 2, 2, DiscreteColor::Green);
+
+	ASSERT_EQ(DiscreteColor::Green, bitmapFile.palette[0]);
+
+	// Ensure all pixels are set to palette index 0 (so they register as the initial color)
+	for (const auto& pixel : bitmapFile.pixels) {
+		ASSERT_EQ(0u, pixel);
+	}
+}
+
+TEST(BitmapFile, SwapRedAndBlue)
+{
+	auto bitmapFile = BitmapFile::CreateDefaultIndexed(8, 2, 2, DiscreteColor::Red);
+
+	bitmapFile.SwapRedAndBlue();
+	EXPECT_EQ(DiscreteColor::Blue, bitmapFile.palette[0]);
+}
+
 TEST(BitmapFile, Equality)
 {
 	BitmapFile bitmapFile1 = BitmapFile::CreateDefaultIndexed(1, 1, 1);	

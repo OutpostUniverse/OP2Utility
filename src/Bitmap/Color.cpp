@@ -1,7 +1,7 @@
 #include "Color.h"
 #include <utility>
 
-void Color::Invert()
+void Color::SwapRedAndBlue()
 {
 	std::swap(red, blue);
 }
