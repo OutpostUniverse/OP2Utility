@@ -180,6 +180,9 @@
     <ClInclude Include="src\Sprite\SpriteLoader.h">
       <Filter>Sprite</Filter>
     </ClInclude>
+    <ClInclude Include="src\Sprite\TilesetLoader.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
@@ -282,6 +285,9 @@
       <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="src\Sprite\SpriteLoader.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite\TilesetLoader.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
   </ItemGroup>
