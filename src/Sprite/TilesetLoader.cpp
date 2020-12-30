@@ -26,7 +26,7 @@ namespace TilesetLoader
 			throw std::runtime_error("Tileset width must be exactly 32 pixels");
 		}
 
-		if (std::abs(tileset.imageHeader.height) % 32)
+		if (tileset.imageHeader.height % 32 != 0)
 		{
 			throw std::runtime_error("Tileset height must be a multiple of 32 pixels");
 		}
