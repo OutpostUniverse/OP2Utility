@@ -20,14 +20,14 @@ TEST(TilesetLoader, PeekIsCustomTileset)
 
 TEST(TilesetLoader, ValidateTileset)
 {
-	EXPECT_NO_THROW(TilesetLoader::ValidateTileset(BitmapFile::CreateDefaultIndexed(8, 32, 32)));
+	EXPECT_NO_THROW(TilesetLoader::ValidateTileset(BitmapFile::CreateIndexed(8, 32, 32)));
 
 	// Improper bit depth
-	EXPECT_THROW(TilesetLoader::ValidateTileset(BitmapFile::CreateDefaultIndexed(1, 32, 32)), std::runtime_error);
+	EXPECT_THROW(TilesetLoader::ValidateTileset(BitmapFile::CreateIndexed(1, 32, 32)), std::runtime_error);
 
 	// Improper width
-	EXPECT_THROW(TilesetLoader::ValidateTileset(BitmapFile::CreateDefaultIndexed(1, 64, 32)), std::runtime_error);
+	EXPECT_THROW(TilesetLoader::ValidateTileset(BitmapFile::CreateIndexed(1, 64, 32)), std::runtime_error);
 
 	// Improper Height
-	EXPECT_THROW(TilesetLoader::ValidateTileset(BitmapFile::CreateDefaultIndexed(1, 32, 70)), std::runtime_error);
+	EXPECT_THROW(TilesetLoader::ValidateTileset(BitmapFile::CreateIndexed(1, 32, 70)), std::runtime_error);
 }

@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <cmath>
 
-BitmapFile BitmapFile::CreateDefaultIndexed(uint16_t bitCount, uint32_t width, uint32_t height)
+BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height)
 {
 	BitmapFile bitmapFile;
 	bitmapFile.imageHeader = ImageHeader::Create(width, height, bitCount);
@@ -21,13 +21,13 @@ BitmapFile BitmapFile::CreateDefaultIndexed(uint16_t bitCount, uint32_t width, u
 	return bitmapFile;
 }
 
-BitmapFile BitmapFile::CreateDefaultIndexed(uint16_t bitCount, uint32_t width, uint32_t height, const std::vector<Color>& palette)
+BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, const std::vector<Color>& palette)
 {
 	if (palette.size() > std::size_t(1) << bitCount) {
 		throw std::runtime_error("Unable to create bitmap. Provided palette length is greater than provided bit count.");
 	}
 
-	auto bitmapFile = BitmapFile::CreateDefaultIndexed(bitCount, width, height);
+	auto bitmapFile = BitmapFile::CreateIndexed(bitCount, width, height);
 	std::copy(palette.begin(), palette.end(), bitmapFile.palette.begin());
 
 	return bitmapFile;
