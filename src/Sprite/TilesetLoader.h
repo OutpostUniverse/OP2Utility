@@ -9,7 +9,7 @@ namespace Stream {
 }
 
 
-namespace TilesetLoader
+namespace Tileset
 {
 	constexpr Tag TagFileSignature = MakeTag("PBMP");
 

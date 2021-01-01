@@ -3,7 +3,7 @@
 #include "../Stream/BidirectionalReader.h"
 #include <stdexcept>
 
-namespace TilesetLoader
+namespace Tileset
 {
 	bool PeekIsCustomTileset(Stream::BidirectionalReader& reader)
 	{
