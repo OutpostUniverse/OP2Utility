@@ -3,6 +3,7 @@
 #include "../../src/Stream/MemoryReader.h"
 #include "../../src/Tag.h"
 #include <gtest/gtest.h>
+#include <stdexcept>
 
 TEST(TilesetLoader, PeekIsCustomTileset)
 {
