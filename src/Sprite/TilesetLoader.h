@@ -12,7 +12,7 @@ namespace Stream {
 
 namespace Tileset
 {
-	constexpr Tag TagFileSignature = MakeTag("PBMP");
+	constexpr auto TagFileSignature = MakeTag("PBMP");
 
 	bool PeekIsCustomTileset(Stream::BidirectionalReader& reader);
 
