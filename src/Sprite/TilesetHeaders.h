@@ -28,4 +28,21 @@ namespace Tileset
 
 		void Validate() const;
 	};
+
+	struct PpalHeader
+	{
+		SectionHeader ppal;
+		SectionHeader head;
+		uint32_t tagCount;
+
+		constexpr static auto DefaultTagPpal = MakeTag("PPAL");
+		constexpr static uint32_t DefaultPpalSectionSize = 1048;
+		constexpr static auto DefaultTagHead = MakeTag("head");
+		constexpr static uint32_t DefaultHeadSectionSize = 4;
+		constexpr static uint32_t DefaultTagCount = 1;
+
+		static PpalHeader Create();
+
+		void Validate() const;
+	};
 }

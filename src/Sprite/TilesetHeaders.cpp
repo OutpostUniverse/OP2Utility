@@ -38,4 +38,37 @@ namespace Tileset
 			throwReadError("Header tag count", tagCount, DefaultTagCount);
 		}
 	}
+
+
+	PpalHeader PpalHeader::Create()
+	{
+		return PpalHeader{
+			SectionHeader(DefaultTagPpal, DefaultPpalSectionSize),
+			SectionHeader(DefaultTagHead, DefaultHeadSectionSize),
+			DefaultTagCount
+		};
+	}
+
+	void PpalHeader::Validate() const
+	{
+		if (ppal.tag != DefaultTagPpal) {
+			throwReadError("PPAL Tag", ppal.tag, DefaultTagPpal);
+		}
+
+		if (ppal.length != DefaultPpalSectionSize) {
+			throwReadError("PPAL Section Size", ppal.length, DefaultPpalSectionSize);
+		}
+
+		if (head.tag != DefaultTagHead) {
+			throwReadError("PPAL Head Tag", head.tag, DefaultTagHead);
+		}
+
+		if (head.length != DefaultHeadSectionSize) {
+			throwReadError("PPAL Head Section Size", head.length, DefaultHeadSectionSize);
+		}
+
+		if (tagCount != DefaultTagCount) {
+			throwReadError("PPAL Section Tag Count", tagCount, DefaultTagCount);
+		}
+	}
 }
