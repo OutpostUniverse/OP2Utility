@@ -186,6 +186,9 @@
     <ClInclude Include="src\Sprite\TilesetCommon.h">
       <Filter>Sprite</Filter>
     </ClInclude>
+    <ClInclude Include="src\Sprite\TilesetHeaders.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
@@ -294,6 +297,9 @@
       <Filter>Sprite</Filter>
     </ClCompile>
     <ClCompile Include="src\Sprite\TilesetCommon.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite\TilesetHeaders.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
   </ItemGroup>

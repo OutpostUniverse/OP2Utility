@@ -119,6 +119,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Sprite\TilesetCommon.cpp" />
+    <ClCompile Include="src\Sprite\TilesetHeaders.cpp" />
     <ClCompile Include="src\Sprite\TilesetLoader.cpp" />
     <ClInclude Include="src\Archive\CompressionType.h" />
     <ClInclude Include="src\Archive\WaveFile.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\Sprite\PaletteHeader.h" />
     <ClInclude Include="src\Sprite\SectionHeader.h" />
     <ClInclude Include="src\Sprite\TilesetCommon.h" />
+    <ClInclude Include="src\Sprite\TilesetHeaders.h" />
     <ClInclude Include="src\Stream\DynamicMemoryWriter.h" />
     <ClInclude Include="src\Stream\SliceReader.h" />
     <ClInclude Include="src\Stream\FileReader.h" />
