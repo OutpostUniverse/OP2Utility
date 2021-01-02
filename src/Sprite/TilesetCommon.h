@@ -3,11 +3,15 @@
 
 #pragma once
 
+#include "../Tag.h"
 #include <string>
 #include <cstdint>
 
 namespace Tileset
 {
+	constexpr auto DefaultTagData = MakeTag("data");
+	constexpr uint32_t DefaultPaletteHeaderSize = 1024;
+
 	void throwReadError(std::string propertyName, std::string value, std::string expectedValue);
 	void throwReadError(std::string propertyName, uint32_t value, uint32_t expectedValue);
 
