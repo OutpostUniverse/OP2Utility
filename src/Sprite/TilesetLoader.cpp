@@ -1,4 +1,5 @@
 #include "TilesetLoader.h"
+#include "TilesetCommon.h"
 #include "../Bitmap/BitmapFile.h"
 #include "../Stream/BidirectionalReader.h"
 #include <cstdint>
@@ -6,11 +7,6 @@
 
 namespace Tileset
 {
-	void throwReadError(std::string propertyName, std::string value, std::string expectedValue);
-	void throwReadError(std::string propertyName, uint32_t value, uint32_t expectedValue);
-
-	std::string formatReadErrorMessage(std::string propertyName, std::string value, std::string expectedValue);
-
 	bool PeekIsCustomTileset(Stream::BidirectionalReader& reader)
 	{
 		Tag tag;
@@ -38,20 +34,5 @@ namespace Tileset
 			throw std::runtime_error("Tileset property Pixel Height reads " + std::to_string(tileset.imageHeader.height) +
 				". Expected value must be a multiple of " + std::to_string(DefaultPixelHeightMultiple) + " pixels");
 		}
-	}
-
-	void throwReadError(std::string propertyName, std::string value, std::string expectedValue)
-	{
-		throw std::runtime_error(formatReadErrorMessage(propertyName, value, expectedValue));
-	}
-
-	void throwReadError(std::string propertyName, uint32_t value, uint32_t expectedValue)
-	{
-		throwReadError(propertyName, std::to_string(value), std::to_string(expectedValue));
-	}
-
-	std::string formatReadErrorMessage(std::string propertyName, std::string value, std::string expectedValue)
-	{
-		return "Tileset property " + propertyName + " reads. Expected a value of " + expectedValue + ".";
 	}
 }
