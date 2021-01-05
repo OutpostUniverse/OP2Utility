@@ -7,7 +7,7 @@ void WriteAndReadBitmapSub(uint16_t bitCount, int32_t width, int32_t height)
 {
 	const std::string filename("Sprite/data/BitmapTest.bmp");
 
-	BitmapFile bitmapFile = BitmapFile::CreateDefaultIndexed(bitCount, width, height);
+	BitmapFile bitmapFile = BitmapFile::CreateIndexed(bitCount, width, height);
 	BitmapFile bitmapFile2;
 
 	EXPECT_NO_THROW(BitmapFile::WriteIndexed(filename, bitmapFile));
@@ -54,7 +54,7 @@ TEST(BitmapFile, VerifyIndexedPaletteSizeDoesNotExceedBitCount)
 	EXPECT_THROW(BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount(1, 3), std::runtime_error);
 
 	// Test non-static version of function
-	BitmapFile bitmapFile = BitmapFile::CreateDefaultIndexed(1, 1, 1);
+	BitmapFile bitmapFile = BitmapFile::CreateIndexed(1, 1, 1);
 	EXPECT_NO_THROW(bitmapFile.VerifyIndexedPaletteSizeDoesNotExceedBitCount());
 	bitmapFile.palette.resize(3);
 	EXPECT_THROW(bitmapFile.VerifyIndexedPaletteSizeDoesNotExceedBitCount(), std::runtime_error);
@@ -66,15 +66,15 @@ TEST(BitmapFile, VerifyPixelSizeMatchesImageDimensionsWithPitch)
 	EXPECT_THROW(BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(1, 1, 1, 1), std::runtime_error);
 
 	// Test non-static version of function
-	BitmapFile bitmapFile = BitmapFile::CreateDefaultIndexed(1, 1, 1);;
+	BitmapFile bitmapFile = BitmapFile::CreateIndexed(1, 1, 1);;
 	EXPECT_NO_THROW(bitmapFile.VerifyPixelSizeMatchesImageDimensionsWithPitch());
 	bitmapFile.pixels.resize(1, 0);
 	EXPECT_THROW(bitmapFile.VerifyPixelSizeMatchesImageDimensionsWithPitch(), std::runtime_error);
 }
 
-TEST(BitmapFile, InitialColor)
+TEST(BitmapFile, CreateWithPalette)
 {
-	auto bitmapFile = BitmapFile::CreateDefaultIndexed(8, 2, 2, DiscreteColor::Green);
+	auto bitmapFile = BitmapFile::CreateIndexed(8, 2, 2, { DiscreteColor::Green });
 
 	ASSERT_EQ(DiscreteColor::Green, bitmapFile.palette[0]);
 
@@ -82,11 +82,15 @@ TEST(BitmapFile, InitialColor)
 	for (const auto& pixel : bitmapFile.pixels) {
 		ASSERT_EQ(0u, pixel);
 	}
+
+	// Proivde palette with more indices than bit count supports
+	std::vector<Color> palette{ DiscreteColor::Green, DiscreteColor::Red, DiscreteColor::Blue };
+	EXPECT_THROW(bitmapFile = BitmapFile::CreateIndexed(1, 2, 2, palette), std::runtime_error);
 }
 
 TEST(BitmapFile, SwapRedAndBlue)
 {
-	auto bitmapFile = BitmapFile::CreateDefaultIndexed(8, 2, 2, DiscreteColor::Red);
+	auto bitmapFile = BitmapFile::CreateIndexed(8, 2, 2, { DiscreteColor::Red });
 
 	bitmapFile.SwapRedAndBlue();
 	EXPECT_EQ(DiscreteColor::Blue, bitmapFile.palette[0]);
@@ -94,7 +98,7 @@ TEST(BitmapFile, SwapRedAndBlue)
 
 TEST(BitmapFile, Equality)
 {
-	BitmapFile bitmapFile1 = BitmapFile::CreateDefaultIndexed(1, 1, 1);	
+	BitmapFile bitmapFile1 = BitmapFile::CreateIndexed(1, 1, 1);	
 	auto bitmapFile2 = bitmapFile1;
 
 	EXPECT_TRUE(bitmapFile1 == bitmapFile2);
