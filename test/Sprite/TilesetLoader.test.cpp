@@ -27,14 +27,16 @@ TEST(TilesetLoader, ReadTileset)
 	Stream::DynamicMemoryWriter writer;
 	tileset.WriteIndexed(writer);
 	
-	auto newTileset = Tileset::ReadTileset(writer.GetReader());
+	auto reader = writer.GetReader();
+	auto newTileset = Tileset::ReadTileset(reader);
 
 	EXPECT_EQ(tileset, newTileset);
 
 	// Well formed standard bitmap - Wrong width for a tileset
 	tileset = BitmapFile::CreateIndexed(8, 20, 32, { DiscreteColor::Red });
 	tileset.WriteIndexed(writer);
-	EXPECT_THROW(Tileset::ReadTileset(writer.GetReader()), std::runtime_error);
+	auto reader2 = writer.GetReader();
+	EXPECT_THROW(Tileset::ReadTileset(reader2), std::runtime_error);
 }
 
 TEST(TilesetLoader, ValidateTileset)
