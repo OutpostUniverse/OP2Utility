@@ -37,6 +37,11 @@ void BitmapFile::WriteIndexed(Stream::BidirectionalWriter& seekableWriter, uint1
 	WritePixels(seekableWriter, indexedPixels, width, height, bitCount);
 }
 
+void BitmapFile::WriteIndexed(Stream::BidirectionalWriter& writer) const
+{
+	WriteIndexed(writer, imageHeader.bitCount, imageHeader.width, imageHeader.height, palette, pixels);
+}
+
 void BitmapFile::WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);

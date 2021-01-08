@@ -35,6 +35,7 @@ public:
 	static void WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
 	static void WriteIndexed(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
 	static void WriteIndexed(std::string filename, const BitmapFile& bitmapFile);
+	void WriteIndexed(Stream::BidirectionalWriter& writer) const;
 
 	void VerifyIndexedPaletteSizeDoesNotExceedBitCount() const;
 	static void VerifyIndexedPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize);
