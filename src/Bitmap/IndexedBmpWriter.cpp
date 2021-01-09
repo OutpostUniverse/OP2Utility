@@ -5,16 +5,16 @@
 #include <cstdlib>
 
 
-void BitmapFile::WriteIndexed(std::string filename, const BitmapFile& bitmapFile)
+void BitmapFile::WriteIndexed(std::string filename)
 {
 	// Test all properties that are auto-generated as correct when writing bitmap piecemeal
-	if (bitmapFile.imageHeader.compression != BmpCompression::Uncompressed) {
+	if (imageHeader.compression != BmpCompression::Uncompressed) {
 		throw std::runtime_error("Unable to write compressed bitmap files");
 	}
 
-	bitmapFile.Validate();
+	Validate();
 
-	WriteIndexed(filename, bitmapFile.imageHeader.bitCount, bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, bitmapFile.palette, bitmapFile.pixels);
+	WriteIndexed(filename, imageHeader.bitCount, imageHeader.width, imageHeader.height, palette, pixels);
 }
 
 void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)

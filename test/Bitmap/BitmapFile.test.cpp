@@ -10,7 +10,7 @@ void WriteAndReadBitmapSub(uint16_t bitCount, int32_t width, int32_t height)
 	BitmapFile bitmapFile = BitmapFile::CreateIndexed(bitCount, width, height);
 	BitmapFile bitmapFile2;
 
-	EXPECT_NO_THROW(BitmapFile::WriteIndexed(filename, bitmapFile));
+	EXPECT_NO_THROW(bitmapFile.WriteIndexed(filename));
 	EXPECT_NO_THROW(bitmapFile2 = BitmapFile::ReadIndexed(filename));
 	EXPECT_EQ(bitmapFile, bitmapFile2);
 
