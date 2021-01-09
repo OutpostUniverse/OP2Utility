@@ -15,26 +15,23 @@ void BitmapFile::WriteIndexed(std::string filename) const
 	Validate();
 
 	Stream::FileWriter fileWriter(filename);
-	WriteIndexed(fileWriter, imageHeader.bitCount, imageHeader.width, imageHeader.height, palette, pixels);
-}
-
-void BitmapFile::WriteIndexed(Stream::Writer& writer, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
-{
-	VerifyIndexedImageForSerialization(bitCount);
-	VerifyIndexedPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
-	VerifyPixelSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
-
-	palette.resize(ImageHeader::CalcMaxIndexedPaletteSize(bitCount), DiscreteColor::Black);
-
-	WriteHeaders(writer, bitCount, width, height, palette);
-	writer.Write(palette);
-
-	WritePixels(writer, indexedPixels, width, height, bitCount);
+	WriteIndexed(fileWriter);
 }
 
 void BitmapFile::WriteIndexed(Stream::Writer& writer) const
 {
-	WriteIndexed(writer, imageHeader.bitCount, imageHeader.width, imageHeader.height, palette, pixels);
+	VerifyIndexedImageForSerialization(imageHeader.bitCount);
+	VerifyIndexedPaletteSizeDoesNotExceedBitCount(imageHeader.bitCount, palette.size());
+	VerifyPixelSizeMatchesImageDimensionsWithPitch(imageHeader.bitCount, imageHeader.width, imageHeader.height, pixels.size());
+
+	// Brett208: Should remove need to resize the palette to full length before writing to Stream
+	auto paletteFullLength = palette;
+	paletteFullLength.resize(ImageHeader::CalcMaxIndexedPaletteSize(imageHeader.bitCount), DiscreteColor::Black);
+
+	WriteHeaders(writer, imageHeader.bitCount, imageHeader.width, imageHeader.height, palette);
+	writer.Write(palette);
+
+	WritePixels(writer, pixels, imageHeader.width, imageHeader.height, imageHeader.bitCount);
 }
 
 void BitmapFile::WriteHeaders(Stream::Writer& writer, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
