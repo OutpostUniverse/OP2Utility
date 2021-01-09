@@ -33,6 +33,14 @@ BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t
 	return bitmapFile;
 }
 
+BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette, std::vector<uint8_t> pixels)
+{
+	auto bitmap = CreateIndexed(bitCount, width, height, palette);
+	bitmap.pixels = pixels;
+
+	return bitmap;
+}
+
 void BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount() const
 {
 	return BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount(imageHeader.bitCount, palette.size());

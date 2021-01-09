@@ -25,6 +25,7 @@ public:
 
 	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height);
 	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette);
+	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette, std::vector<uint8_t> pixels);
 
 	// BMP Reader only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	static BitmapFile ReadIndexed(const std::string& filename);
