@@ -9,7 +9,7 @@
 #include <cstddef>
 
 namespace Stream {
-	class BidirectionalWriter;
+	class Writer;
 	class BidirectionalReader;
 }
 
@@ -33,9 +33,9 @@ public:
 	// BMP Writer only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	// @indexedPixels: Must include padding to fill each image row out to the next 4 byte memory border (pitch).
 	static void WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
-	static void WriteIndexed(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
+	static void WriteIndexed(Stream::Writer& writer, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
 	static void WriteIndexed(std::string filename, const BitmapFile& bitmapFile);
-	void WriteIndexed(Stream::BidirectionalWriter& writer) const;
+	void WriteIndexed(Stream::Writer& writer) const;
 
 	void VerifyIndexedPaletteSizeDoesNotExceedBitCount() const;
 	static void VerifyIndexedPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize);
@@ -60,8 +60,8 @@ private:
 	static void ReadPixels(Stream::BidirectionalReader& seekableReader, BitmapFile& bitmapFile);
 
 	// Write
-	static void WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette);
-	static void WritePixels(Stream::BidirectionalWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, int32_t height, uint16_t bitCount);
+	static void WriteHeaders(Stream::Writer& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette);
+	static void WritePixels(Stream::Writer& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, int32_t height, uint16_t bitCount);
 };
 
 bool operator==(const BitmapFile& lhs, const BitmapFile& rhs);
