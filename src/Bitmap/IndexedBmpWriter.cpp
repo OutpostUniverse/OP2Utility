@@ -14,13 +14,8 @@ void BitmapFile::WriteIndexed(std::string filename)
 
 	Validate();
 
-	WriteIndexed(filename, imageHeader.bitCount, imageHeader.width, imageHeader.height, palette, pixels);
-}
-
-void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
-{
 	Stream::FileWriter fileWriter(filename);
-	WriteIndexed(fileWriter, bitCount, width, height, palette, indexedPixels);
+	WriteIndexed(fileWriter, imageHeader.bitCount, imageHeader.width, imageHeader.height, palette, pixels);
 }
 
 void BitmapFile::WriteIndexed(Stream::Writer& writer, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
