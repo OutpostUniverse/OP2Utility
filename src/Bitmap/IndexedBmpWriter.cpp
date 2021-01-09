@@ -5,7 +5,7 @@
 #include <cstdlib>
 
 
-void BitmapFile::WriteIndexed(std::string filename)
+void BitmapFile::WriteIndexed(std::string filename) const
 {
 	// Test all properties that are auto-generated as correct when writing bitmap piecemeal
 	if (imageHeader.compression != BmpCompression::Uncompressed) {
