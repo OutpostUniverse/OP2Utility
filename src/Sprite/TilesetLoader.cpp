@@ -31,20 +31,16 @@ namespace Tileset
 		if (PeekIsCustomTileset(reader)) {
 			return ReadCustomTileset(reader);
 		}
-
-		BitmapFile tileset;
 		
 		try {
-			tileset = BitmapFile::ReadIndexed(reader);
+			auto tileset = BitmapFile::ReadIndexed(reader);
+			ValidateTileset(tileset);
+			return tileset;
 		}
 		catch (std::exception& e) {
-			// Repackage exceptions from bitmap reading to include source is tileset
+			// Repackage exceptions from bitmap reading to include bitmap exception is related to tileset loading
 			throw std::runtime_error("Unable to read tileset represented as standard bitmap. " + std::string(e.what()));
 		}
-
-		ValidateTileset(tileset);
-
-		return tileset;
 	}
 
 	BitmapFile ReadCustomTileset(Stream::Reader& reader)
