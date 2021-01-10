@@ -9,7 +9,7 @@
 #include <cstddef>
 
 namespace Stream {
-	class BidirectionalWriter;
+	class Writer;
 	class BidirectionalReader;
 }
 
@@ -25,6 +25,7 @@ public:
 
 	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height);
 	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette);
+	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette, std::vector<uint8_t> pixels);
 
 	// BMP Reader only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	static BitmapFile ReadIndexed(const std::string& filename);
@@ -32,9 +33,8 @@ public:
 
 	// BMP Writer only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	// @indexedPixels: Must include padding to fill each image row out to the next 4 byte memory border (pitch).
-	static void WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
-	static void WriteIndexed(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels);
-	static void WriteIndexed(std::string filename, const BitmapFile& bitmapFile);
+	void WriteIndexed(std::string filename) const;
+	void WriteIndexed(Stream::Writer& writer) const;
 
 	void VerifyIndexedPaletteSizeDoesNotExceedBitCount() const;
 	static void VerifyIndexedPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize);
@@ -59,8 +59,8 @@ private:
 	static void ReadPixels(Stream::BidirectionalReader& seekableReader, BitmapFile& bitmapFile);
 
 	// Write
-	static void WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette);
-	static void WritePixels(Stream::BidirectionalWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, int32_t height, uint16_t bitCount);
+	static void WriteHeaders(Stream::Writer& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette);
+	static void WritePixels(Stream::Writer& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, int32_t height, uint16_t bitCount);
 };
 
 bool operator==(const BitmapFile& lhs, const BitmapFile& rhs);

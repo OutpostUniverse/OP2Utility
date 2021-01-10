@@ -5,39 +5,36 @@
 #include <cstdlib>
 
 
-void BitmapFile::WriteIndexed(std::string filename, const BitmapFile& bitmapFile)
+void BitmapFile::WriteIndexed(std::string filename) const
 {
 	// Test all properties that are auto-generated as correct when writing bitmap piecemeal
-	if (bitmapFile.imageHeader.compression != BmpCompression::Uncompressed) {
+	if (imageHeader.compression != BmpCompression::Uncompressed) {
 		throw std::runtime_error("Unable to write compressed bitmap files");
 	}
 
-	bitmapFile.Validate();
+	Validate();
 
-	WriteIndexed(filename, bitmapFile.imageHeader.bitCount, bitmapFile.imageHeader.width, bitmapFile.imageHeader.height, bitmapFile.palette, bitmapFile.pixels);
-}
-
-void BitmapFile::WriteIndexed(std::string filename, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
-{
 	Stream::FileWriter fileWriter(filename);
-	WriteIndexed(fileWriter, bitCount, width, height, palette, indexedPixels);
+	WriteIndexed(fileWriter);
 }
 
-void BitmapFile::WriteIndexed(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int32_t width, int32_t height, std::vector<Color> palette, const std::vector<uint8_t>& indexedPixels)
+void BitmapFile::WriteIndexed(Stream::Writer& writer) const
 {
-	VerifyIndexedImageForSerialization(bitCount);
-	VerifyIndexedPaletteSizeDoesNotExceedBitCount(bitCount, palette.size());
-	VerifyPixelSizeMatchesImageDimensionsWithPitch(bitCount, width, height, indexedPixels.size());
+	VerifyIndexedImageForSerialization(imageHeader.bitCount);
+	VerifyIndexedPaletteSizeDoesNotExceedBitCount(imageHeader.bitCount, palette.size());
+	VerifyPixelSizeMatchesImageDimensionsWithPitch(imageHeader.bitCount, imageHeader.width, imageHeader.height, pixels.size());
 
-	palette.resize(ImageHeader::CalcMaxIndexedPaletteSize(bitCount), DiscreteColor::Black);
+	// Brett208: Should remove need to resize the palette to full length before writing to Stream
+	auto paletteFullLength = palette;
+	paletteFullLength.resize(ImageHeader::CalcMaxIndexedPaletteSize(imageHeader.bitCount), DiscreteColor::Black);
 
-	WriteHeaders(seekableWriter, bitCount, width, height, palette);
-	seekableWriter.Write(palette);
+	WriteHeaders(writer, imageHeader.bitCount, imageHeader.width, imageHeader.height, palette);
+	writer.Write(palette);
 
-	WritePixels(seekableWriter, indexedPixels, width, height, bitCount);
+	WritePixels(writer, pixels, imageHeader.width, imageHeader.height, imageHeader.bitCount);
 }
 
-void BitmapFile::WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
+void BitmapFile::WriteHeaders(Stream::Writer& writer, uint16_t bitCount, int width, int height, const std::vector<Color>& palette)
 {
 	std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + palette.size() * sizeof(Color);
 	std::size_t fileSize = pixelOffset + ImageHeader::CalculatePitch(bitCount, width) * std::abs(height);
@@ -49,11 +46,11 @@ void BitmapFile::WriteHeaders(Stream::BidirectionalWriter& seekableWriter, uint1
 	auto bmpHeader = BmpHeader::Create(static_cast<uint32_t>(fileSize), static_cast<uint32_t>(pixelOffset));
 	auto imageHeader = ImageHeader::Create(width, height, bitCount);
 
-	seekableWriter.Write(bmpHeader);
-	seekableWriter.Write(imageHeader);
+	writer.Write(bmpHeader);
+	writer.Write(imageHeader);
 }
 
-void BitmapFile::WritePixels(Stream::BidirectionalWriter& seekableWriter, const std::vector<uint8_t>& pixels, int32_t width, int32_t height, uint16_t bitCount)
+void BitmapFile::WritePixels(Stream::Writer& writer, const std::vector<uint8_t>& pixels, int32_t width, int32_t height, uint16_t bitCount)
 {
 	// Bitmap height may be negative depending on format
 	height = std::abs(height);
@@ -64,7 +61,7 @@ void BitmapFile::WritePixels(Stream::BidirectionalWriter& seekableWriter, const 
 
 	for (int y = 0; y < height; ++y)
 	{
-		seekableWriter.Write(&pixels[y * pitch], bytesOfPixelsPerRow);
-		seekableWriter.Write(padding);
+		writer.Write(&pixels[y * pitch], bytesOfPixelsPerRow);
+		writer.Write(padding);
 	}
 }

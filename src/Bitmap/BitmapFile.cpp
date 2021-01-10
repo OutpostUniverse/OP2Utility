@@ -33,6 +33,15 @@ BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t
 	return bitmapFile;
 }
 
+BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette, std::vector<uint8_t> pixels)
+{
+	auto bitmap = CreateIndexed(bitCount, width, height, palette);
+	bitmap.pixels = pixels;
+	bitmap.VerifyPixelSizeMatchesImageDimensionsWithPitch();
+
+	return bitmap;
+}
+
 void BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount() const
 {
 	return BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount(imageHeader.bitCount, palette.size());
@@ -53,7 +62,7 @@ void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch() const
 void BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(uint16_t bitCount, int32_t width, int32_t height, std::size_t pixelsWithPitchSize)
 {
 	if (pixelsWithPitchSize != ImageHeader::CalculatePitch(bitCount, width) * std::abs(height)) {
-		throw std::runtime_error("The size of pixels does not match the image's height time pitch");
+		throw std::runtime_error("The size of pixels does not match the image's height times pitch");
 	}
 }
 

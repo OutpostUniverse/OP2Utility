@@ -1,6 +1,7 @@
 #include "../../src/Sprite/TilesetLoader.h"
 #include "../../src/Bitmap/BitmapFile.h"
 #include "../../src/Stream/MemoryReader.h"
+#include "../../src/Stream/DynamicMemoryWriter.h"
 #include "../../src/Tag.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
@@ -17,6 +18,23 @@ TEST(TilesetLoader, PeekIsCustomTileset)
 	Stream::MemoryReader reader2(&wrongFileSignature, sizeof(wrongFileSignature));
 	EXPECT_FALSE(Tileset::PeekIsCustomTileset(reader2));
 	EXPECT_EQ(0u, reader2.Position());
+}
+
+TEST(TilesetLoader, ReadTileset)
+{	
+	// Well formed standard bitmap
+	auto tileset = BitmapFile::CreateIndexed(8, 32, 32, { DiscreteColor::Red });
+	Stream::DynamicMemoryWriter writer;
+	tileset.WriteIndexed(writer);
+	
+	auto newTileset = Tileset::ReadTileset(writer.GetReader());
+
+	EXPECT_EQ(tileset, newTileset);
+
+	// Well formed standard bitmap - Wrong width for a tileset
+	tileset = BitmapFile::CreateIndexed(8, 20, 32, { DiscreteColor::Red });
+	tileset.WriteIndexed(writer);
+	EXPECT_THROW(Tileset::ReadTileset(writer.GetReader()), std::runtime_error);
 }
 
 TEST(TilesetLoader, ValidateTileset)

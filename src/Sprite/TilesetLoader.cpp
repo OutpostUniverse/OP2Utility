@@ -21,6 +21,28 @@ namespace Tileset
 		return tag == TagFileSignature;
 	}
 
+	BitmapFile ReadTileset(Stream::BidirectionalReader&& reader)
+	{
+		return ReadTileset(reader); // Delegate to lvalue overload
+	}
+
+	BitmapFile ReadTileset(Stream::BidirectionalReader& reader)
+	{
+		if (PeekIsCustomTileset(reader)) {
+			return ReadCustomTileset(reader);
+		}
+		
+		try {
+			auto tileset = BitmapFile::ReadIndexed(reader);
+			ValidateTileset(tileset);
+			return tileset;
+		}
+		catch (std::exception& e) {
+			// Repackage exceptions from bitmap reading to include bitmap exception is related to tileset loading
+			throw std::runtime_error("Unable to read tileset represented as standard bitmap. " + std::string(e.what()));
+		}
+	}
+
 	BitmapFile ReadCustomTileset(Stream::Reader& reader)
 	{
 		SectionHeader fileSignature;
