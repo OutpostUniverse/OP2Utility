@@ -19,6 +19,7 @@ namespace Tileset
 	// Read either custom tileset format or standard bitmap format tileset into memory
 	// After reading into memory, if needed, reformats into standard 8 bit indexed bitmap before returning
 	BitmapFile ReadTileset(Stream::BidirectionalReader& reader);
+	BitmapFile ReadTileset(Stream::BidirectionalReader&& reader);
 
 	// Read tileset represented by Outpost 2 specific format into memory
 	// After Reading into memory, reformats into standard 8 bit indexed bitmap before returning results

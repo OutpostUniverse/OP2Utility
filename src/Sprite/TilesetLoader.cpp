@@ -21,6 +21,11 @@ namespace Tileset
 		return tag == TagFileSignature;
 	}
 
+	BitmapFile ReadTileset(Stream::BidirectionalReader&& reader)
+	{
+		return ReadTileset(reader); // Delegate to lvalue overload
+	}
+
 	BitmapFile ReadTileset(Stream::BidirectionalReader& reader)
 	{
 		if (PeekIsCustomTileset(reader)) {
