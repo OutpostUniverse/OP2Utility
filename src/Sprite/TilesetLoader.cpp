@@ -12,6 +12,12 @@ namespace Tileset
 	void ValidatePaletteHeader(const SectionHeader& paletteHeader);
 	void ValidatePixelHeader(const SectionHeader& pixelHeader, int32_t height);
 
+
+	bool PeekIsCustomTileset(Stream::BidirectionalReader&& reader)
+	{
+		return PeekIsCustomTileset(reader); // Delegate to lvalue overload
+	}
+
 	bool PeekIsCustomTileset(Stream::BidirectionalReader& reader)
 	{
 		Tag tag;
@@ -41,6 +47,11 @@ namespace Tileset
 			// Repackage exceptions from bitmap reading to include bitmap exception is related to tileset loading
 			throw std::runtime_error("Unable to read tileset represented as standard bitmap. " + std::string(e.what()));
 		}
+	}
+
+	BitmapFile ReadCustomTileset(Stream::Reader&& reader)
+	{
+		return ReadCustomTileset(reader); // Delegate to lvalue overload
 	}
 
 	BitmapFile ReadCustomTileset(Stream::Reader& reader)
