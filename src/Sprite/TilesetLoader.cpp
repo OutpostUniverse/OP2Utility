@@ -3,6 +3,7 @@
 #include "TilesetCommon.h"
 #include "../Bitmap/BitmapFile.h"
 #include "../Stream/BidirectionalReader.h"
+#include "../Stream/Writer.h"
 #include <cstdint>
 #include <stdexcept>
 
@@ -11,6 +12,9 @@ namespace Tileset
 	void ValidateFileSignatureHeader(const SectionHeader& fileSignatureHeader);
 	void ValidatePaletteHeader(const SectionHeader& paletteHeader);
 	void ValidatePixelHeader(const SectionHeader& pixelHeader, int32_t height);
+	uint32_t CalculatePbmpSectionSize(uint32_t pixelLength);
+	uint32_t CalculatePixelHeaderLength(int32_t height);
+	void SwapPaletteRedAndBlue(std::vector<Color>& palette);
 
 
 	bool PeekIsCustomTileset(Stream::BidirectionalReader&& reader)
@@ -88,6 +92,30 @@ namespace Tileset
 		return bitmapFile;
 	}
 
+	void WriteCustomTileset(Stream::Writer& writer, const BitmapFile& tileset)
+	{
+		ValidateTileset(tileset);
+
+		SectionHeader fileSignature{ TagFileSignature, CalculatePbmpSectionSize(tileset.imageHeader.height) };
+		// Unknown if the custom format takes negative height values like a normal BITMAP
+		TilesetHeader tilesetHeader = TilesetHeader::Create(tileset.imageHeader.height / TilesetHeader::DefaultPixelHeightMultiple);
+		PpalHeader ppalHeader = PpalHeader::Create();
+		
+		SectionHeader paletteHeader{ DefaultTagData, DefaultPaletteHeaderSize };
+		auto palette = tileset.palette;
+		SwapPaletteRedAndBlue(palette);
+
+		SectionHeader pixelHeader{ DefaultTagData, CalculatePixelHeaderLength(tilesetHeader.pixelHeight) };
+
+		writer.Write(fileSignature);
+		writer.Write(tilesetHeader);
+		writer.Write(ppalHeader);
+		writer.Write(paletteHeader);
+		writer.Write(palette);
+		writer.Write(pixelHeader);
+		writer.Write(tileset.pixels);
+	}
+
 	void ValidateTileset(const BitmapFile& tileset)
 	{
 		constexpr uint32_t DefaultPixelWidth = 32;
@@ -139,11 +167,33 @@ namespace Tileset
 			throwReadError("Pixel Header Tag", pixelHeader.tag, DefaultTagData);
 		}
 
-		// Because tilesets are have a bitDepth of 8 and are always 32 pixels wide, 
-		// can assume a padding of 0 bytes on each scan line.
-		uint32_t expectedLenth = TilesetHeader::DefaultPixelWidth * height;
+		auto expectedLenth = CalculatePixelHeaderLength(height);
 		if (pixelHeader.length != expectedLenth) {
 			throwReadError("Pixel Header Length", pixelHeader.length, expectedLenth);
+		}
+	}
+
+	uint32_t CalculatePbmpSectionSize(uint32_t pixelLength)
+	{
+		return sizeof(Tag) + // PBMP Header
+			sizeof(TilesetHeader) +
+			sizeof(PpalHeader) +
+			sizeof(Tag) + DefaultPaletteHeaderSize, //Palette and Header
+			sizeof(Tag) + CalculatePixelHeaderLength(pixelLength) - //Pixels and Header
+			16;
+	}
+
+	uint32_t CalculatePixelHeaderLength(int32_t height)
+	{
+		// Because tilesets are have a bitDepth of 8 and are always 32 pixels wide, 
+		// can assume a padding of 0 bytes on each scan line.
+		return TilesetHeader::DefaultPixelWidth * height;
+	}
+
+	void SwapPaletteRedAndBlue(std::vector<Color>& palette)
+	{
+		for (auto& color : palette) {
+			color.SwapRedAndBlue();
 		}
 	}
 }

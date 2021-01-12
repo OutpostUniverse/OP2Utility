@@ -20,6 +20,28 @@ TEST(TilesetLoader, PeekIsCustomTileset)
 	EXPECT_EQ(0u, reader2.Position());
 }
 
+TEST(TilesetLoader, WriteCustomTileset)
+{
+	Stream::DynamicMemoryWriter writer;
+
+	auto tileset1 = BitmapFile::CreateIndexed(8, 32, 32, { DiscreteColor::Red});
+	Tileset::WriteCustomTileset(writer, tileset1);
+
+	// Read just written tileset to ensure it was well formed
+	auto tileset2 = Tileset::ReadTileset(writer.GetReader());
+
+	EXPECT_EQ(tileset1, tileset2);
+}
+
+TEST(TilesetLoader, WriteCustomTilesetError)
+{
+	Stream::DynamicMemoryWriter writer;
+
+	// Use incorrect pixel width - Ensure error is thrown
+	auto tileset = BitmapFile::CreateIndexed(8, 20, 32, { DiscreteColor::Red });
+	EXPECT_THROW(Tileset::WriteCustomTileset(writer, tileset), std::runtime_error);
+}
+
 TEST(TilesetLoader, ReadTileset)
 {	
 	// Well formed standard bitmap
