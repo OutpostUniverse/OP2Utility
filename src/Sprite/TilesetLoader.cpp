@@ -48,7 +48,6 @@ namespace Tileset
 			return tileset;
 		}
 		catch (std::exception& e) {
-			// Repackage exceptions from bitmap reading to include bitmap exception is related to tileset loading
 			throw std::runtime_error("Unable to read tileset represented as standard bitmap. " + std::string(e.what()));
 		}
 	}
