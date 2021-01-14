@@ -178,7 +178,7 @@ namespace Tileset
 		return sizeof(Tag) + // PBMP Header
 			sizeof(TilesetHeader) +
 			sizeof(PpalHeader) +
-			sizeof(Tag) + DefaultPaletteHeaderSize, //Palette and Header
+			sizeof(Tag) + DefaultPaletteHeaderSize + //Palette and Header
 			sizeof(Tag) + CalculatePixelHeaderLength(pixelLength) - //Pixels and Header
 			16;
 	}
