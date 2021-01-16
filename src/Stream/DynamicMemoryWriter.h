@@ -41,6 +41,9 @@ namespace Stream
 		// Get read access to the written data
 		MemoryReader GetReader();
 
+		// Clear set memory and reset stream position to 0
+		void Clear();
+
 	protected:
 		void WriteImplementation(const void* buffer, std::size_t size) override;
 

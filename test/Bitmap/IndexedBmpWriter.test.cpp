@@ -1,5 +1,6 @@
 #include "../src/Bitmap/Color.h"
 #include "../src/Bitmap/BitmapFile.h"
+#include "../src/Stream/DynamicMemoryWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
 #include <string>
@@ -10,12 +11,11 @@ TEST(BitmapFile, InvalidBitCountThrows)
 {
 	const std::vector<Color> palette(8);
 	const std::vector<uint8_t> pixels(4, 0);
-	const std::string filename = "Sprite/data/MonochromeTest.bmp";
+	Stream::DynamicMemoryWriter writer;
 
-	EXPECT_THROW(BitmapFile::CreateIndexed(3, 1, 1, palette, pixels).WriteIndexed(filename), std::runtime_error);
-	EXPECT_THROW(BitmapFile::CreateIndexed(32, 1, 1, palette, pixels).WriteIndexed(filename), std::runtime_error);
-
-	XFile::DeletePath(filename);
+	EXPECT_THROW(BitmapFile::CreateIndexed(3, 1, 1, palette, pixels).WriteIndexed(writer), std::runtime_error);
+	writer.Clear();
+	EXPECT_THROW(BitmapFile::CreateIndexed(32, 1, 1, palette, pixels).WriteIndexed(writer), std::runtime_error);
 }
 
 TEST(BitmapFile, TooManyPaletteEntriesThrows)

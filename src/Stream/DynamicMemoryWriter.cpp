@@ -56,4 +56,10 @@ namespace Stream
 	MemoryReader DynamicMemoryWriter::GetReader() {
 		return MemoryReader(streamBuffer.data(), streamBuffer.size());
 	}
+
+	// Clear all currently set memory
+	void DynamicMemoryWriter::Clear() {
+		SeekBeginning();
+		streamBuffer.clear();
+	}
 }
