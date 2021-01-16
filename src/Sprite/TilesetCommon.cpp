@@ -15,6 +15,6 @@ namespace Tileset
 
 	std::string formatReadErrorMessage(std::string propertyName, std::string value, std::string expectedValue)
 	{
-		return "Tileset property " + propertyName + " reads. Expected a value of " + expectedValue + ".";
+		return "Tileset property " + propertyName + " reads " + value + ". Expected value of " + expectedValue + ".";
 	}
 }
