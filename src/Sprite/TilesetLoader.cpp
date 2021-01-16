@@ -117,7 +117,7 @@ namespace Tileset
 
 	void ValidateTileset(const BitmapFile& tileset)
 	{
-		constexpr uint32_t DefaultPixelWidth = 32;
+		constexpr int32_t DefaultPixelWidth = 32;
 		constexpr uint32_t DefaultPixelHeightMultiple = DefaultPixelWidth;
 		constexpr uint32_t DefaultBitDepth = 8;
 
