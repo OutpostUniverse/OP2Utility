@@ -119,10 +119,10 @@ namespace Tileset
 	{
 		constexpr int32_t DefaultPixelWidth = 32;
 		constexpr uint32_t DefaultPixelHeightMultiple = DefaultPixelWidth;
-		constexpr uint32_t DefaultBitDepth = 8;
+		constexpr uint16_t DefaultBitCount = 8;
 
-		if (tileset.imageHeader.bitCount != DefaultBitDepth) {
-			throwReadError("Bit Depth", tileset.imageHeader.bitCount, DefaultBitDepth);
+		if (tileset.imageHeader.bitCount != DefaultBitCount) {
+			throwReadError("Bit Depth", tileset.imageHeader.bitCount, DefaultBitCount);
 		}
 
 		if (tileset.imageHeader.width != DefaultPixelWidth) {
