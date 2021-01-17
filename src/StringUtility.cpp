@@ -1,4 +1,4 @@
-#include "StringHelper.h"
+#include "StringUtility.h"
 #include <algorithm>
 #include <cstddef>
 

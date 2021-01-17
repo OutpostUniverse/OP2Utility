@@ -1,5 +1,5 @@
 #include "XFile.h"
-#include "StringHelper.h"
+#include "StringUtility.h"
 #include <cstddef>
 #include <algorithm>
 

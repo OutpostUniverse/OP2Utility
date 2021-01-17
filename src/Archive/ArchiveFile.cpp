@@ -1,6 +1,6 @@
 #include "ArchiveFile.h"
 #include "../XFile.h"
-#include "../StringHelper.h"
+#include "../StringUtility.h"
 #include "../Stream/BidirectionalReader.h"
 #include "../Stream/FileWriter.h"
 #include <array>
