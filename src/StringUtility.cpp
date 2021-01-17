@@ -25,7 +25,7 @@ namespace StringUtility
 		// Loop starts at index size - 1 and ends after index 0 executes
 		for (std::size_t i = stringsToSearch.size(); i-- > 0; ) {
 			for (const auto& stringToRemove : stringsForRemoval) {
-				if (CheckIfStringsAreEqual(stringsToSearch[i], stringToRemove)) {
+				if (IsEqual(stringsToSearch[i], stringToRemove)) {
 					stringsToSearch.erase(stringsToSearch.begin() + i);
 					break;
 				}
@@ -35,7 +35,7 @@ namespace StringUtility
 		return stringsToSearch;
 	}
 
-	bool CheckIfStringsAreEqual(const std::string& string1, const std::string& string2)
+	bool IsEqual(const std::string& string1, const std::string& string2)
 	{
 		if (string1.size() != string2.size()) {
 			return false;
@@ -75,7 +75,7 @@ namespace StringUtility
 	// Compares 2 strings without considering casing of letters. Compatible with std library sort functions.
 	// This function is required because built in comparison between 2 characters defaults to an uppercase
 	// letter being higher precedent than ANY lowercase letter.
-	bool StringCompareCaseInsensitive(const std::string& string1, const std::string& string2)
+	bool IsEqualCaseInsensitive(const std::string& string1, const std::string& string2)
 	{
 		unsigned int i = 0;
 		while ((i < string1.length()) && (i < string2.length()))

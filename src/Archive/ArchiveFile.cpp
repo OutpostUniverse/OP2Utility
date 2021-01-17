@@ -79,7 +79,7 @@ namespace Archive
 	{
 		for (std::size_t i = 1; i < names.size(); ++i)
 		{
-			if (StringUtility::CheckIfStringsAreEqual(names[i - 1], names[i])) {
+			if (StringUtility::IsEqual(names[i - 1], names[i])) {
 				throw std::runtime_error("Unable to create an archive containing files with the same name. Duplicate name: " + names[i]);
 			}
 		}
@@ -87,6 +87,6 @@ namespace Archive
 
 	bool ArchiveFile::ComparePathFilenames(const std::string path1, const std::string path2)
 	{
-		return StringUtility::StringCompareCaseInsensitive(XFile::GetFilename(path1), XFile::GetFilename(path2));
+		return StringUtility::IsEqualCaseInsensitive(XFile::GetFilename(path1), XFile::GetFilename(path2));
 	}
 }
