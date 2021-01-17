@@ -3,14 +3,13 @@
 #include <string>
 #include <vector>
 
-class StringHelper
+namespace StringUtility
 {
-public:
-	static void ConvertToUpper(std::string& str);
-	static std::string ConvertToUpper(const std::string& str);
-	static std::vector<std::string> RemoveStrings(std::vector<std::string> stringsToSearch, const std::vector<std::string>& stringsForRemoval);
-	static bool CheckIfStringsAreEqual(const std::string& string1, const std::string& string2);
-	static bool ContainsStringCaseInsensitive(std::vector<std::string> stringsToSearch, std::string stringToFind);
-	static bool StringCompareCaseInsensitive(const std::string& string1, const std::string& string2);
-	static bool ContainsNonAsciiChars(std::string str);
-};
+	void ConvertToUpper(std::string& str);
+	std::string ConvertToUpper(const std::string& str);
+	std::vector<std::string> RemoveStrings(std::vector<std::string> stringsToSearch, const std::vector<std::string>& stringsForRemoval);
+	bool CheckIfStringsAreEqual(const std::string& string1, const std::string& string2);
+	bool ContainsStringCaseInsensitive(std::vector<std::string> stringsToSearch, std::string stringToFind);
+	bool StringCompareCaseInsensitive(const std::string& string1, const std::string& string2);
+	bool ContainsNonAsciiChars(std::string str);
+}
