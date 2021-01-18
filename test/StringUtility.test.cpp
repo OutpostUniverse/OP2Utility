@@ -4,6 +4,15 @@
 
 using namespace StringUtility;
 
+class ImplicitStringConversionTestFixture {
+public:
+	std::string data;
+
+	operator std::string() const {
+		return data;
+	}
+};
+
 TEST(String, stringFrom) {
 	EXPECT_EQ("SomeStringValue", StringFrom("SomeStringValue"));
 	EXPECT_EQ("SomeStringValue", StringFrom(std::string{ "SomeStringValue" }));
@@ -39,4 +48,8 @@ TEST(String, stringFrom) {
 	EXPECT_THAT(StringFrom(0.0f), testing::StartsWith("0.0"));
 	EXPECT_THAT(StringFrom(0.0), testing::StartsWith("0.0"));
 	EXPECT_THAT(StringFrom(0.0l), testing::StartsWith("0.0"));
+
+	// Implicit string conversion
+	ImplicitStringConversionTestFixture implicitStringConversionTestFixture{ "testString" };
+	EXPECT_EQ("testString", StringFrom(implicitStringConversionTestFixture));
 }

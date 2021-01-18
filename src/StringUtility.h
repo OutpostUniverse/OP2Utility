@@ -19,6 +19,9 @@ namespace StringUtility
 		if constexpr (std::is_same_v<T, std::string> || std::is_same_v<T, const char*>) {
 			return value;
 		}
+		else if constexpr (std::is_convertible<T, std::string>::value) {
+			return value;
+		}
 		else if constexpr (std::is_same_v<T, bool>) {
 			return value ? "true" : "false";
 		}
