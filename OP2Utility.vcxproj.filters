@@ -293,9 +293,6 @@
     <ClCompile Include="src\Sprite\TilesetLoader.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sprite\TilesetCommon.cpp">
-      <Filter>Sprite</Filter>
-    </ClCompile>
     <ClCompile Include="src\Sprite\TilesetHeaders.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>

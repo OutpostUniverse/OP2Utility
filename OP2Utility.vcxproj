@@ -118,7 +118,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Sprite\TilesetCommon.cpp" />
     <ClCompile Include="src\Sprite\TilesetHeaders.cpp" />
     <ClCompile Include="src\Sprite\TilesetLoader.cpp" />
     <ClInclude Include="src\Archive\CompressionType.h" />
