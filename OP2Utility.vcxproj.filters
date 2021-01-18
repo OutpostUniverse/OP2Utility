@@ -36,9 +36,6 @@
     <ClInclude Include="src\XFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\StringHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -189,12 +186,12 @@
     <ClInclude Include="src\Sprite\TilesetHeaders.h">
       <Filter>Sprite</Filter>
     </ClInclude>
+    <ClInclude Include="src\StringUtility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\XFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\StringHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ResourceManager.cpp">
@@ -296,11 +293,11 @@
     <ClCompile Include="src\Sprite\TilesetLoader.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sprite\TilesetCommon.cpp">
-      <Filter>Sprite</Filter>
-    </ClCompile>
     <ClCompile Include="src\Sprite\TilesetHeaders.cpp">
       <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StringUtility.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

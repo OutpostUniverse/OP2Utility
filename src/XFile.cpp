@@ -1,5 +1,5 @@
 #include "XFile.h"
-#include "StringHelper.h"
+#include "StringUtility.h"
 #include <cstddef>
 #include <algorithm>
 
@@ -34,9 +34,9 @@ bool XFile::IsFile(const std::string& path)
 bool XFile::ExtensionMatches(const std::string& pathStr, const std::string& extension)
 {
 	std::string pathExtension = GetFileExtension(pathStr);
-	StringHelper::ConvertToUpper(pathExtension);
+	StringUtility::ConvertToUpper(pathExtension);
 
-	std::string extensionUpper = StringHelper::ConvertToUpper(extension);
+	std::string extensionUpper = StringUtility::ConvertToUpper(extension);
 
 	if (extensionUpper.length() > 0 && extensionUpper[0] != '.') {
 		extensionUpper.insert(0, ".");
@@ -222,8 +222,8 @@ std::string XFile::GetFilename(const std::string& pathStr)
 
 bool XFile::PathsAreEqual(std::string pathStr1, std::string pathStr2)
 {
-	StringHelper::ConvertToUpper(pathStr1);
-	StringHelper::ConvertToUpper(pathStr2);
+	StringUtility::ConvertToUpper(pathStr1);
+	StringUtility::ConvertToUpper(pathStr2);
 
 	fs::path path1(pathStr1);
 	if (path1.has_relative_path() && path1.relative_path() == path1.filename()) {

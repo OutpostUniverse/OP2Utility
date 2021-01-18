@@ -4,16 +4,27 @@
 #pragma once
 
 #include "../Tag.h"
+#include "../StringUtility.h"
 #include <string>
 #include <cstdint>
+#include <type_traits>
+#include <stdexcept>
 
 namespace Tileset
 {
 	constexpr auto DefaultTagData = MakeTag("data");
 	constexpr uint32_t DefaultPaletteHeaderSize = 1024;
 
-	void throwReadError(std::string propertyName, std::string value, std::string expectedValue);
-	void throwReadError(std::string propertyName, uint32_t value, uint32_t expectedValue);
+	template<typename T>
+	std::string formatReadErrorMessage(std::string propertyName, T value, T expectedValue)
+	{
+		using namespace StringUtility;
+		return "Tileset property " + propertyName + " reads " + StringFrom(value) + ". Expected a value of " + StringFrom(expectedValue) + ".";
+	}
 
-	std::string formatReadErrorMessage(std::string propertyName, std::string value, std::string expectedValue);
+	template<typename T>
+	void throwReadError(std::string propertyName, T value, T expectedValue)
+	{
+		throw std::runtime_error(formatReadErrorMessage(propertyName, value, expectedValue));
+	}
 }

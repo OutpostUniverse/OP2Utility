@@ -74,6 +74,7 @@
     <ClCompile Include="Sprite\TilesetLoader.test.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
+    <ClCompile Include="StringUtility.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Stream">
