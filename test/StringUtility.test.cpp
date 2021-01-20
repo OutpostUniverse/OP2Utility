@@ -4,6 +4,24 @@
 
 using namespace StringUtility;
 
+TEST(StringUtility, ConvertToUpperInPlace)
+{
+	std::string str("abc");
+	ConvertToUpperInPlace(str);
+
+	EXPECT_EQ("ABC", str);
+}
+
+TEST(StringUtility, ConvertToUpper)
+{
+	std::string str("abc");
+	std::string newStr = ConvertToUpper("abc");
+
+	EXPECT_EQ("ABC", newStr);
+	EXPECT_NE(str, newStr);
+}
+
+
 class ImplicitStringConversionTestFixture {
 public:
 	std::string data;
