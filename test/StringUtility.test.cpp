@@ -15,7 +15,7 @@ TEST(StringUtility, ConvertToUpperInPlace)
 TEST(StringUtility, ConvertToUpper)
 {
 	std::string str("abc");
-	std::string newStr = ConvertToUpper("abc");
+	std::string newStr = ConvertToUpper(str);
 
 	EXPECT_EQ("ABC", newStr);
 	EXPECT_NE(str, newStr);
