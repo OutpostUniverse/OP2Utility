@@ -5,8 +5,8 @@
 
 namespace StringUtility
 {
-	void ConvertToUpper(std::string& str);
-	std::string ConvertToUpper(const std::string& str);
+	void ConvertToUpperInPlace(std::string& str);
+	std::string ConvertToUpper(std::string str);
 	std::vector<std::string> RemoveStrings(std::vector<std::string> stringsToSearch, const std::vector<std::string>& stringsForRemoval);
 	bool IsEqual(const std::string& string1, const std::string& string2);
 	bool IsEqualCaseInsensitive(const std::string& string1, const std::string& string2);
