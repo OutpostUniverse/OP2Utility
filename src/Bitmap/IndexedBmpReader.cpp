@@ -20,6 +20,11 @@ BitmapFile BitmapFile::ReadIndexed(Stream::BidirectionalReader& reader)
 	return bitmapFile;
 }
 
+BitmapFile BitmapFile::ReadIndexed(Stream::BidirectionalReader&& reader)
+{
+	return ReadIndexed(reader); // Delegate to lvalue overload
+}
+
 BmpHeader BitmapFile::ReadBmpHeader(Stream::BidirectionalReader& seekableReader)
 {
 	BmpHeader bmpHeader;
