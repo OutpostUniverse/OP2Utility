@@ -8,16 +8,21 @@ BitmapFile BitmapFile::ReadIndexed(const std::string& filename)
 	return ReadIndexed(fileReader);
 }
 
-BitmapFile BitmapFile::ReadIndexed(Stream::BidirectionalReader& seekableReader)
+BitmapFile BitmapFile::ReadIndexed(Stream::BidirectionalReader& reader)
 {
 	BitmapFile bitmapFile;
-	bitmapFile.bmpHeader = ReadBmpHeader(seekableReader);
-	bitmapFile.imageHeader = ReadImageHeader(seekableReader);
+	bitmapFile.bmpHeader = ReadBmpHeader(reader);
+	bitmapFile.imageHeader = ReadImageHeader(reader);
 
-	ReadPalette(seekableReader, bitmapFile);
-	ReadPixels(seekableReader, bitmapFile);
+	ReadPalette(reader, bitmapFile);
+	ReadPixels(reader, bitmapFile);
 
 	return bitmapFile;
+}
+
+BitmapFile BitmapFile::ReadIndexed(Stream::BidirectionalReader&& reader)
+{
+	return ReadIndexed(reader); // Delegate to lvalue overload
 }
 
 BmpHeader BitmapFile::ReadBmpHeader(Stream::BidirectionalReader& seekableReader)

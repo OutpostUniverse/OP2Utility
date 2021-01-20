@@ -29,12 +29,14 @@ public:
 
 	// BMP Reader only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	static BitmapFile ReadIndexed(const std::string& filename);
-	static BitmapFile ReadIndexed(Stream::BidirectionalReader& seekableReader);
+	static BitmapFile ReadIndexed(Stream::BidirectionalReader& reader);
+	static BitmapFile ReadIndexed(Stream::BidirectionalReader&& reader);
 
 	// BMP Writer only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	// @indexedPixels: Must include padding to fill each image row out to the next 4 byte memory border (pitch).
 	void WriteIndexed(std::string filename) const;
 	void WriteIndexed(Stream::Writer& writer) const;
+	void WriteIndexed(Stream::Writer&& writer) const;
 
 	void VerifyIndexedPaletteSizeDoesNotExceedBitCount() const;
 	static void VerifyIndexedPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize);
