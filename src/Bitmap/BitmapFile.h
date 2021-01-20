@@ -35,6 +35,7 @@ public:
 	// @indexedPixels: Must include padding to fill each image row out to the next 4 byte memory border (pitch).
 	void WriteIndexed(std::string filename) const;
 	void WriteIndexed(Stream::Writer& writer) const;
+	void WriteIndexed(Stream::Writer&& writer) const;
 
 	void VerifyIndexedPaletteSizeDoesNotExceedBitCount() const;
 	static void VerifyIndexedPaletteSizeDoesNotExceedBitCount(uint16_t bitCount, std::size_t paletteSize);
