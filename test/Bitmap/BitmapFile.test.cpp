@@ -1,20 +1,19 @@
 #include "../src/Bitmap/BitmapFile.h"
+#include "../src/Stream/DynamicMemoryWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
 
 void WriteAndReadBitmapSub(uint16_t bitCount, int32_t width, int32_t height)
 {
-	const std::string filename("Sprite/data/BitmapTest.bmp");
+	Stream::DynamicMemoryWriter writer;
 
 	BitmapFile bitmapFile = BitmapFile::CreateIndexed(bitCount, width, height);
 	BitmapFile bitmapFile2;
 
-	EXPECT_NO_THROW(bitmapFile.WriteIndexed(filename));
-	EXPECT_NO_THROW(bitmapFile2 = BitmapFile::ReadIndexed(filename));
+	EXPECT_NO_THROW(bitmapFile.WriteIndexed(writer));
+	EXPECT_NO_THROW(bitmapFile2 = BitmapFile::ReadIndexed(writer.GetReader()));
 	EXPECT_EQ(bitmapFile, bitmapFile2);
-
-	XFile::DeletePath(filename);
 }
 
 TEST(BitmapFile, RoundTripWriteAndRead)
