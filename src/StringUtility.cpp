@@ -4,19 +4,18 @@
 
 namespace StringUtility
 {
-	void ConvertToUpper(std::string& str)
+	void ConvertToUpperInPlace(std::string& str)
 	{
 		for (auto& c : str) {
 			c = toupper(c);
 		}
 	}
 
-	std::string ConvertToUpper(const std::string& str)
+	std::string ConvertToUpper(std::string str)
 	{
-		std::string newString = str;
-		ConvertToUpper(newString);
+		ConvertToUpperInPlace(str);
 
-		return newString;
+		return str;
 	}
 
 	// Returns a new vector with matching strings removed. Case insensitive.
