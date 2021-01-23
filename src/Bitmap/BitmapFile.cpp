@@ -2,12 +2,12 @@
 #include <stdexcept>
 #include <cmath>
 
-BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height)
+BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height)
 {
 	BitmapFile bitmapFile;
 	bitmapFile.imageHeader = ImageHeader::Create(width, height, bitCount);
 	bitmapFile.palette.resize(bitmapFile.imageHeader.CalcMaxIndexedPaletteSize());
-	bitmapFile.pixels.resize(bitmapFile.imageHeader.CalculatePitch() * height);
+	bitmapFile.pixels.resize(bitmapFile.imageHeader.CalculatePitch() * std::abs(height));
 
 	const std::size_t pixelOffset = sizeof(BmpHeader) + sizeof(ImageHeader) + bitmapFile.palette.size() * sizeof(Color);
 	const std::size_t bitmapFileSize = pixelOffset + bitmapFile.pixels.size() * sizeof(uint8_t);
@@ -21,7 +21,7 @@ BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t
 	return bitmapFile;
 }
 
-BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette)
+BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height, std::vector<Color> palette)
 {
 	if (palette.size() > std::size_t(1) << bitCount) {
 		throw std::runtime_error("Unable to create bitmap. Provided palette length is greater than provided bit count.");
@@ -33,7 +33,7 @@ BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t
 	return bitmapFile;
 }
 
-BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette, std::vector<uint8_t> pixels)
+BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height, std::vector<Color> palette, std::vector<uint8_t> pixels)
 {
 	auto bitmap = CreateIndexed(bitCount, width, height, palette);
 	bitmap.pixels = pixels;
