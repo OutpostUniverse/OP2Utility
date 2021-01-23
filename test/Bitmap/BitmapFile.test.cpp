@@ -87,6 +87,18 @@ TEST(BitmapFile, CreateWithPalette)
 	EXPECT_THROW(bitmapFile = BitmapFile::CreateIndexed(1, 2, 2, palette), std::runtime_error);
 }
 
+TEST(BitmapFile, ScanLineOrientation)
+{
+	{ // Test Negative Height
+		auto bitmap = BitmapFile::CreateIndexed(1, 32, -32);
+		EXPECT_EQ(ScanLineOrientation::TopDown, bitmap.ScanLineOrientation());
+	}
+	{ // Test Positive Height
+		auto bitmap = BitmapFile::CreateIndexed(1, 32, 32);
+		EXPECT_EQ(ScanLineOrientation::BottomUp, bitmap.ScanLineOrientation());
+	}
+}
+
 TEST(BitmapFile, SwapRedAndBlue)
 {
 	auto bitmapFile = BitmapFile::CreateIndexed(8, 2, 2, { DiscreteColor::Red });

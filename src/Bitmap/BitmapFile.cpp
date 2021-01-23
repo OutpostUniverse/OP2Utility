@@ -82,6 +82,11 @@ void BitmapFile::Validate() const
 	VerifyPixelSizeMatchesImageDimensionsWithPitch();
 }
 
+ScanLineOrientation BitmapFile::ScanLineOrientation() const
+{
+	return imageHeader.height < 0 ? ScanLineOrientation::TopDown : ScanLineOrientation::BottomUp;
+}
+
 void BitmapFile::SwapRedAndBlue()
 {
 	for (auto& color : palette) {
