@@ -91,7 +91,7 @@ namespace Tileset
 		return bitmapFile;
 	}
 
-	void WriteCustomTileset(Stream::Writer& writer, const BitmapFile& tileset)
+	void WriteCustomTileset(Stream::Writer& writer, BitmapFile tileset)
 	{
 		ValidateTileset(tileset);
 
@@ -101,8 +101,7 @@ namespace Tileset
 		PpalHeader ppalHeader = PpalHeader::Create();
 		
 		SectionHeader paletteHeader{ DefaultTagData, DefaultPaletteHeaderSize };
-		auto palette = tileset.palette;
-		SwapPaletteRedAndBlue(palette);
+		SwapPaletteRedAndBlue(tileset.palette);
 
 		SectionHeader pixelHeader{ DefaultTagData, CalculatePixelHeaderLength(tilesetHeader.pixelHeight) };
 
@@ -110,7 +109,7 @@ namespace Tileset
 		writer.Write(tilesetHeader);
 		writer.Write(ppalHeader);
 		writer.Write(paletteHeader);
-		writer.Write(palette);
+		writer.Write(tileset.palette);
 		writer.Write(pixelHeader);
 		writer.Write(tileset.pixels);
 	}
