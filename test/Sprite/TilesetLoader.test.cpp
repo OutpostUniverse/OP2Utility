@@ -24,7 +24,7 @@ TEST(TilesetLoader, WriteCustomTileset)
 {
 	Stream::DynamicMemoryWriter writer;
 
-	auto tileset1 = BitmapFile::CreateIndexed(8, 32, 32, { DiscreteColor::Red});
+	auto tileset1 = BitmapFile::CreateIndexed(8, 32, -32, { DiscreteColor::Red});
 	Tileset::WriteCustomTileset(writer, tileset1);
 
 	// Read just written tileset to ensure it was well formed
