@@ -13,7 +13,7 @@ TEST(TilesetLoader, PeekIsCustomTileset)
 	Stream::MemoryReader reader1(&Tileset::TagFileSignature, sizeof(Tileset::TagFileSignature));
 	EXPECT_TRUE(Tileset::PeekIsCustomTileset(reader1));
 	EXPECT_EQ(0u, reader1.Position());
-	
+
 	const Tag wrongFileSignature("TEST");
 	Stream::MemoryReader reader2(&wrongFileSignature, sizeof(wrongFileSignature));
 	EXPECT_FALSE(Tileset::PeekIsCustomTileset(reader2));
@@ -48,7 +48,7 @@ TEST(TilesetLoader, ReadTileset)
 	auto tileset = BitmapFile::CreateIndexed(8, 32, 32, { DiscreteColor::Red });
 	Stream::DynamicMemoryWriter writer;
 	tileset.WriteIndexed(writer);
-	
+
 	auto newTileset = Tileset::ReadTileset(writer.GetReader());
 
 	EXPECT_EQ(tileset, newTileset);
