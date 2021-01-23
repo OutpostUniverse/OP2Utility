@@ -82,7 +82,7 @@ std::size_t ImageHeader::CalcPixelByteWidth() const
 std::size_t ImageHeader::CalcPixelByteWidth(uint16_t bitCount, int32_t width)
 {
 	const std::size_t bitsPerByte = 8;
-	return ((width * bitCount) + (bitsPerByte - 1)) / bitsPerByte;
+	return ((width * static_cast<std::size_t>(bitCount)) + (bitsPerByte - 1)) / bitsPerByte;
 }
 
 void ImageHeader::Validate() const
