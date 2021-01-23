@@ -11,9 +11,9 @@ namespace Tileset
 {
 	void ValidateFileSignatureHeader(const SectionHeader& fileSignatureHeader);
 	void ValidatePaletteHeader(const SectionHeader& paletteHeader);
-	void ValidatePixelHeader(const SectionHeader& pixelHeader, int32_t height);
+	void ValidatePixelHeader(const SectionHeader& pixelHeader, uint32_t height);
 	uint32_t CalculatePbmpSectionSize(uint32_t pixelLength);
-	uint32_t CalculatePixelHeaderLength(int32_t height);
+	uint32_t CalculatePixelHeaderLength(uint32_t height);
 	void SwapPaletteRedAndBlue(std::vector<Color>& palette);
 
 
@@ -160,7 +160,7 @@ namespace Tileset
 		}
 	}
 
-	void ValidatePixelHeader(const SectionHeader& pixelHeader, int32_t height)
+	void ValidatePixelHeader(const SectionHeader& pixelHeader, uint32_t height)
 	{
 		if (pixelHeader.tag != DefaultTagData) {
 			throwReadError("Pixel Header Tag", pixelHeader.tag, DefaultTagData);
@@ -182,7 +182,7 @@ namespace Tileset
 			16;
 	}
 
-	uint32_t CalculatePixelHeaderLength(int32_t height)
+	uint32_t CalculatePixelHeaderLength(uint32_t height)
 	{
 		// Because tilesets are have a bitDepth of 8 and are always 32 pixels wide, 
 		// can assume a padding of 0 bytes on each scan line.
