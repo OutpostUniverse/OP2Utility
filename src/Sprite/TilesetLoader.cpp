@@ -95,15 +95,20 @@ namespace Tileset
 	{
 		ValidateTileset(tileset);
 
-		SectionHeader fileSignature{ TagFileSignature, CalculatePbmpSectionSize(tileset.imageHeader.height) };
-		// Unknown if the custom format takes negative height values like a normal BITMAP
-		TilesetHeader tilesetHeader = TilesetHeader::Create(tileset.imageHeader.height / TilesetHeader::DefaultPixelHeightMultiple);
+		// OP2 Custom Tileset assumes a positive height and TopDown Scan Line (Contradicts Windows Bitmap File Format)
+		if (tileset.ScanLineOrientation() == ScanLineOrientation::BottomUp) {
+			tileset.InvertScanLines();
+		}
+		auto absoluteHeight = tileset.AbsoluteHeight();
+
+		SectionHeader fileSignature{ TagFileSignature, CalculatePbmpSectionSize(absoluteHeight) };
+		TilesetHeader tilesetHeader = TilesetHeader::Create(absoluteHeight / TilesetHeader::DefaultPixelHeightMultiple);
 		PpalHeader ppalHeader = PpalHeader::Create();
 		
 		SectionHeader paletteHeader{ DefaultTagData, DefaultPaletteHeaderSize };
 		SwapPaletteRedAndBlue(tileset.palette);
 
-		SectionHeader pixelHeader{ DefaultTagData, CalculatePixelHeaderLength(tilesetHeader.pixelHeight) };
+		SectionHeader pixelHeader{ DefaultTagData, CalculatePixelHeaderLength(absoluteHeight) };
 
 		writer.Write(fileSignature);
 		writer.Write(tilesetHeader);
