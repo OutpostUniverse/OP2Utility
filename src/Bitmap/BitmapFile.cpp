@@ -87,6 +87,11 @@ ScanLineOrientation BitmapFile::ScanLineOrientation() const
 	return imageHeader.height < 0 ? ScanLineOrientation::TopDown : ScanLineOrientation::BottomUp;
 }
 
+uint32_t BitmapFile::AbsoluteHeight() const
+{
+	return std::abs(imageHeader.height);
+}
+
 void BitmapFile::SwapRedAndBlue()
 {
 	for (auto& color : palette) {

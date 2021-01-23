@@ -99,6 +99,18 @@ TEST(BitmapFile, ScanLineOrientation)
 	}
 }
 
+TEST(BitmapFile, AbsoluteHeight)
+{
+	{ // Test Positive Height
+		auto bitmap = BitmapFile::CreateIndexed(1, 32, 32);
+		EXPECT_EQ(32, bitmap.AbsoluteHeight());
+	}
+	{ // Test Negative Height
+		auto bitmap = BitmapFile::CreateIndexed(1, 32, -32);
+		EXPECT_EQ(32, bitmap.AbsoluteHeight());
+	}
+}
+
 TEST(BitmapFile, SwapRedAndBlue)
 {
 	auto bitmapFile = BitmapFile::CreateIndexed(8, 2, 2, { DiscreteColor::Red });
