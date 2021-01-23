@@ -91,11 +91,11 @@ TEST(BitmapFile, ScanLineOrientation)
 {
 	{ // Test Negative Height
 		auto bitmap = BitmapFile::CreateIndexed(1, 32, -32);
-		EXPECT_EQ(ScanLineOrientation::TopDown, bitmap.ScanLineOrientation());
+		EXPECT_EQ(ScanLineOrientation::TopDown, bitmap.GetScanLineOrientation());
 	}
 	{ // Test Positive Height
 		auto bitmap = BitmapFile::CreateIndexed(1, 32, 32);
-		EXPECT_EQ(ScanLineOrientation::BottomUp, bitmap.ScanLineOrientation());
+		EXPECT_EQ(ScanLineOrientation::BottomUp, bitmap.GetScanLineOrientation());
 	}
 }
 
@@ -134,12 +134,12 @@ TEST(BitmapFile, InvertScanLines)
 	auto bitmap = BitmapFile::CreateIndexed(8, 8, 2, { /* Empty Palette */ }, pixels);
 	bitmap.InvertScanLines();
 
-	EXPECT_EQ(ScanLineOrientation::TopDown, bitmap.ScanLineOrientation());
+	EXPECT_EQ(ScanLineOrientation::TopDown, bitmap.GetScanLineOrientation());
 	EXPECT_EQ(invertedPixels, bitmap.pixels);
 
 	bitmap.InvertScanLines();
 
-	EXPECT_EQ(ScanLineOrientation::BottomUp, bitmap.ScanLineOrientation());
+	EXPECT_EQ(ScanLineOrientation::BottomUp, bitmap.GetScanLineOrientation());
 	EXPECT_EQ(pixels, bitmap.pixels);
 }
 

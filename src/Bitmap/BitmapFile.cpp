@@ -82,7 +82,7 @@ void BitmapFile::Validate() const
 	VerifyPixelSizeMatchesImageDimensionsWithPitch();
 }
 
-ScanLineOrientation BitmapFile::ScanLineOrientation() const
+ScanLineOrientation BitmapFile::GetScanLineOrientation() const
 {
 	return imageHeader.height < 0 ? ScanLineOrientation::TopDown : ScanLineOrientation::BottomUp;
 }

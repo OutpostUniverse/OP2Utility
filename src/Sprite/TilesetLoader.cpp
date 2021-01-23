@@ -96,7 +96,7 @@ namespace Tileset
 		ValidateTileset(tileset);
 
 		// OP2 Custom Tileset assumes a positive height and TopDown Scan Line (Contradicts Windows Bitmap File Format)
-		if (tileset.ScanLineOrientation() == ScanLineOrientation::BottomUp) {
+		if (tileset.GetScanLineOrientation() == ScanLineOrientation::BottomUp) {
 			tileset.InvertScanLines();
 		}
 		auto absoluteHeight = tileset.AbsoluteHeight();

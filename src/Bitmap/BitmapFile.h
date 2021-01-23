@@ -55,7 +55,7 @@ public:
 
 	void Validate() const;
 
-	ScanLineOrientation ScanLineOrientation() const;
+	ScanLineOrientation GetScanLineOrientation() const;
 	uint32_t AbsoluteHeight() const;
 	void SwapRedAndBlue();
 	void InvertScanLines();
