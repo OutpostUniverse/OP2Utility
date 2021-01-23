@@ -58,6 +58,7 @@ public:
 	ScanLineOrientation ScanLineOrientation() const;
 	uint32_t AbsoluteHeight() const;
 	void SwapRedAndBlue();
+	void InvertScanLines();
 
 private:
 	static void VerifyIndexedImageForSerialization(uint16_t bitCount);

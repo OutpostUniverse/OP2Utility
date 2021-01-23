@@ -99,6 +99,22 @@ void BitmapFile::SwapRedAndBlue()
 	}
 }
 
+void BitmapFile::InvertScanLines()
+{
+	imageHeader.height *= -1;
+
+	std::vector<uint8_t> invertedPixels;
+
+	const auto pitch = imageHeader.CalculatePitch();
+	for (auto row = AbsoluteHeight(); row; --row)
+	{
+		auto iterator = invertedPixels.end();
+		invertedPixels.insert(iterator, pixels.begin() + (row - 1) * pitch, pixels.begin() + row * pitch);
+	}
+
+	pixels = std::move(invertedPixels);
+}
+
 bool operator==(const BitmapFile& lhs, const BitmapFile& rhs) {
 	return lhs.bmpHeader == rhs.bmpHeader && 
 		lhs.imageHeader == rhs.imageHeader && 

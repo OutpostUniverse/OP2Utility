@@ -119,6 +119,30 @@ TEST(BitmapFile, SwapRedAndBlue)
 	EXPECT_EQ(DiscreteColor::Blue, bitmapFile.palette[0]);
 }
 
+TEST(BitmapFile, InvertScanLines)
+{
+	const std::vector<uint8_t> pixels{
+		1, 1, 1, 1, 1, 1, 1, 1,
+		0, 0, 0, 0, 0, 0, 0, 0
+	};
+
+	const std::vector<uint8_t> invertedPixels{
+		0, 0, 0, 0, 0, 0, 0, 0,
+		1, 1, 1, 1, 1, 1, 1, 1
+	};
+
+	auto bitmap = BitmapFile::CreateIndexed(8, 8, 2, { /* Empty Palette */ }, pixels);
+	bitmap.InvertScanLines();
+
+	EXPECT_EQ(ScanLineOrientation::TopDown, bitmap.ScanLineOrientation());
+	EXPECT_EQ(invertedPixels, bitmap.pixels);
+
+	bitmap.InvertScanLines();
+
+	EXPECT_EQ(ScanLineOrientation::BottomUp, bitmap.ScanLineOrientation());
+	EXPECT_EQ(pixels, bitmap.pixels);
+}
+
 TEST(BitmapFile, Equality)
 {
 	BitmapFile bitmapFile1 = BitmapFile::CreateIndexed(1, 1, 1);	
