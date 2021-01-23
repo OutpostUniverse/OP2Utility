@@ -75,7 +75,7 @@ namespace Tileset
 		reader.Read(paletteHeader);
 		ValidatePaletteHeader(paletteHeader);
 
-		auto bitmapFile = BitmapFile::CreateIndexed(tilesetHeader.bitDepth, tilesetHeader.pixelWidth, tilesetHeader.pixelHeight);
+		auto bitmapFile = BitmapFile::CreateIndexed(tilesetHeader.bitDepth, tilesetHeader.pixelWidth, tilesetHeader.pixelHeight * -1);
 		reader.Read(bitmapFile.palette);
 
 		SectionHeader pixelHeader;
