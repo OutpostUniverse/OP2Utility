@@ -11,9 +11,9 @@ namespace Tileset
 {
 	void ValidateFileSignatureHeader(const SectionHeader& fileSignatureHeader);
 	void ValidatePaletteHeader(const SectionHeader& paletteHeader);
-	void ValidatePixelHeader(const SectionHeader& pixelHeader, int32_t height);
+	void ValidatePixelHeader(const SectionHeader& pixelHeader, uint32_t height);
 	uint32_t CalculatePbmpSectionSize(uint32_t pixelLength);
-	uint32_t CalculatePixelHeaderLength(int32_t height);
+	uint32_t CalculatePixelHeaderLength(uint32_t height);
 	void SwapPaletteRedAndBlue(std::vector<Color>& palette);
 
 
@@ -75,7 +75,7 @@ namespace Tileset
 		reader.Read(paletteHeader);
 		ValidatePaletteHeader(paletteHeader);
 
-		auto bitmapFile = BitmapFile::CreateIndexed(tilesetHeader.bitDepth, tilesetHeader.pixelWidth, tilesetHeader.pixelHeight);
+		auto bitmapFile = BitmapFile::CreateIndexed(tilesetHeader.bitDepth, tilesetHeader.pixelWidth, tilesetHeader.pixelHeight * -1);
 		reader.Read(bitmapFile.palette);
 
 		SectionHeader pixelHeader;
@@ -91,26 +91,30 @@ namespace Tileset
 		return bitmapFile;
 	}
 
-	void WriteCustomTileset(Stream::Writer& writer, const BitmapFile& tileset)
+	void WriteCustomTileset(Stream::Writer& writer, BitmapFile tileset)
 	{
 		ValidateTileset(tileset);
 
-		SectionHeader fileSignature{ TagFileSignature, CalculatePbmpSectionSize(tileset.imageHeader.height) };
-		// Unknown if the custom format takes negative height values like a normal BITMAP
-		TilesetHeader tilesetHeader = TilesetHeader::Create(tileset.imageHeader.height / TilesetHeader::DefaultPixelHeightMultiple);
+		// OP2 Custom Tileset assumes a positive height and TopDown Scan Line (Contradicts Windows Bitmap File Format)
+		if (tileset.GetScanLineOrientation() == ScanLineOrientation::BottomUp) {
+			tileset.InvertScanLines();
+		}
+		auto absoluteHeight = tileset.AbsoluteHeight();
+
+		SectionHeader fileSignature{ TagFileSignature, CalculatePbmpSectionSize(absoluteHeight) };
+		TilesetHeader tilesetHeader = TilesetHeader::Create(absoluteHeight / TilesetHeader::DefaultPixelHeightMultiple);
 		PpalHeader ppalHeader = PpalHeader::Create();
 		
 		SectionHeader paletteHeader{ DefaultTagData, DefaultPaletteHeaderSize };
-		auto palette = tileset.palette;
-		SwapPaletteRedAndBlue(palette);
+		SwapPaletteRedAndBlue(tileset.palette);
 
-		SectionHeader pixelHeader{ DefaultTagData, CalculatePixelHeaderLength(tilesetHeader.pixelHeight) };
+		SectionHeader pixelHeader{ DefaultTagData, CalculatePixelHeaderLength(absoluteHeight) };
 
 		writer.Write(fileSignature);
 		writer.Write(tilesetHeader);
 		writer.Write(ppalHeader);
 		writer.Write(paletteHeader);
-		writer.Write(palette);
+		writer.Write(tileset.palette);
 		writer.Write(pixelHeader);
 		writer.Write(tileset.pixels);
 	}
@@ -160,7 +164,7 @@ namespace Tileset
 		}
 	}
 
-	void ValidatePixelHeader(const SectionHeader& pixelHeader, int32_t height)
+	void ValidatePixelHeader(const SectionHeader& pixelHeader, uint32_t height)
 	{
 		if (pixelHeader.tag != DefaultTagData) {
 			throwReadError("Pixel Header Tag", pixelHeader.tag, DefaultTagData);
@@ -182,7 +186,7 @@ namespace Tileset
 			16;
 	}
 
-	uint32_t CalculatePixelHeaderLength(int32_t height)
+	uint32_t CalculatePixelHeaderLength(uint32_t height)
 	{
 		// Because tilesets are have a bitDepth of 8 and are always 32 pixels wide, 
 		// can assume a padding of 0 bytes on each scan line.

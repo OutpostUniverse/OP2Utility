@@ -3,13 +3,13 @@
 
 namespace Tileset
 {
-	TilesetHeader TilesetHeader::Create(std::int32_t heightInTiles)
+	TilesetHeader TilesetHeader::Create(uint32_t heightInTiles)
 	{
 		return TilesetHeader{
 			SectionHeader(DefaultTagHead, DefaultSectionSize),
 			DefaultTagCount,
 			DefaultPixelWidth,
-			heightInTiles * static_cast<int32_t>(DefaultPixelHeightMultiple),
+			heightInTiles * DefaultPixelHeightMultiple,
 			DefaultBitDepth,
 			DefaultFlags
 		};

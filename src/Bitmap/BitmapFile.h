@@ -13,6 +13,12 @@ namespace Stream {
 	class BidirectionalReader;
 }
 
+enum class ScanLineOrientation
+{
+	TopDown,
+	BottomUp
+};
+
 // BitmapFile only supports indexed palette BMPs. 
 // Writing and reading bitmaps is restricted to the subset of 1, 2 and 8 bit BMPs.
 class BitmapFile
@@ -23,9 +29,9 @@ public:
 	std::vector<Color> palette;
 	std::vector<uint8_t> pixels;
 
-	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height);
-	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette);
-	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, uint32_t height, std::vector<Color> palette, std::vector<uint8_t> pixels);
+	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height);
+	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height, std::vector<Color> palette);
+	static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height, std::vector<Color> palette, std::vector<uint8_t> pixels);
 
 	// BMP Reader only supports indexed color palettes (1, 2, and 8 bit BMPs).
 	static BitmapFile ReadIndexed(const std::string& filename);
@@ -49,7 +55,10 @@ public:
 
 	void Validate() const;
 
+	ScanLineOrientation GetScanLineOrientation() const;
+	uint32_t AbsoluteHeight() const;
 	void SwapRedAndBlue();
+	void InvertScanLines();
 
 private:
 	static void VerifyIndexedImageForSerialization(uint16_t bitCount);

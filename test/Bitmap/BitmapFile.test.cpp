@@ -87,12 +87,60 @@ TEST(BitmapFile, CreateWithPalette)
 	EXPECT_THROW(bitmapFile = BitmapFile::CreateIndexed(1, 2, 2, palette), std::runtime_error);
 }
 
+TEST(BitmapFile, ScanLineOrientation)
+{
+	{ // Test Negative Height
+		auto bitmap = BitmapFile::CreateIndexed(1, 32, -32);
+		EXPECT_EQ(ScanLineOrientation::TopDown, bitmap.GetScanLineOrientation());
+	}
+	{ // Test Positive Height
+		auto bitmap = BitmapFile::CreateIndexed(1, 32, 32);
+		EXPECT_EQ(ScanLineOrientation::BottomUp, bitmap.GetScanLineOrientation());
+	}
+}
+
+TEST(BitmapFile, AbsoluteHeight)
+{
+	{ // Test Positive Height
+		auto bitmap = BitmapFile::CreateIndexed(1, 32, 32);
+		EXPECT_EQ(32, bitmap.AbsoluteHeight());
+	}
+	{ // Test Negative Height
+		auto bitmap = BitmapFile::CreateIndexed(1, 32, -32);
+		EXPECT_EQ(32, bitmap.AbsoluteHeight());
+	}
+}
+
 TEST(BitmapFile, SwapRedAndBlue)
 {
 	auto bitmapFile = BitmapFile::CreateIndexed(8, 2, 2, { DiscreteColor::Red });
 
 	bitmapFile.SwapRedAndBlue();
 	EXPECT_EQ(DiscreteColor::Blue, bitmapFile.palette[0]);
+}
+
+TEST(BitmapFile, InvertScanLines)
+{
+	const std::vector<uint8_t> pixels{
+		1, 1, 1, 1, 1, 1, 1, 1,
+		0, 0, 0, 0, 0, 0, 0, 0
+	};
+
+	const std::vector<uint8_t> invertedPixels{
+		0, 0, 0, 0, 0, 0, 0, 0,
+		1, 1, 1, 1, 1, 1, 1, 1
+	};
+
+	auto bitmap = BitmapFile::CreateIndexed(8, 8, 2, { /* Empty Palette */ }, pixels);
+	bitmap.InvertScanLines();
+
+	EXPECT_EQ(ScanLineOrientation::TopDown, bitmap.GetScanLineOrientation());
+	EXPECT_EQ(invertedPixels, bitmap.pixels);
+
+	bitmap.InvertScanLines();
+
+	EXPECT_EQ(ScanLineOrientation::BottomUp, bitmap.GetScanLineOrientation());
+	EXPECT_EQ(pixels, bitmap.pixels);
 }
 
 TEST(BitmapFile, Equality)

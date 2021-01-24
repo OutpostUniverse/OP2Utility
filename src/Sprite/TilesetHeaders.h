@@ -12,7 +12,7 @@ namespace Tileset
 		SectionHeader sectionHead;
 		uint32_t tagCount;
 		uint32_t pixelWidth;
-		int32_t pixelHeight;
+		uint32_t pixelHeight; // Assume height is always positive, unlike standard Windows Bitmap Format
 		uint32_t bitDepth;
 		uint32_t flags;
 
@@ -24,7 +24,7 @@ namespace Tileset
 		constexpr static uint32_t DefaultBitDepth = 8;
 		constexpr static uint32_t DefaultFlags = 8; // Unsure meaning of Flags
 
-		static TilesetHeader Create(std::int32_t heightInTiles);
+		static TilesetHeader Create(std::uint32_t heightInTiles);
 
 		void Validate() const;
 	};
