@@ -104,12 +104,13 @@ void BitmapFile::InvertScanLines()
 	imageHeader.height *= -1;
 
 	std::vector<uint8_t> invertedPixels;
+	invertedPixels.reserve(pixels.size());
 
 	const auto pitch = imageHeader.CalculatePitch();
-	for (auto row = AbsoluteHeight(); row; --row)
+	for (std::size_t row = AbsoluteHeight(); row-- > 0; )
 	{
 		auto iterator = invertedPixels.end();
-		invertedPixels.insert(iterator, pixels.begin() + (row - 1) * pitch, pixels.begin() + row * pitch);
+		invertedPixels.insert(iterator, pixels.begin() + row * pitch, pixels.begin() + (row + 1) * pitch);
 	}
 
 	pixels = std::move(invertedPixels);
