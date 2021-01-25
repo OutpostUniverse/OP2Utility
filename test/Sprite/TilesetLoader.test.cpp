@@ -2,9 +2,13 @@
 #include "../../src/Bitmap/BitmapFile.h"
 #include "../../src/Stream/MemoryReader.h"
 #include "../../src/Stream/DynamicMemoryWriter.h"
+#include "../../src/Stream/FileReader.h"
+#include "../../src/Stream/FileWriter.h"
 #include "../../src/Tag.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
+
+using namespace OP2Utility;
 
 TEST(TilesetLoader, PeekIsCustomTileset)
 {

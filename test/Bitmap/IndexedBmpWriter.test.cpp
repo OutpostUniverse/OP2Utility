@@ -7,7 +7,8 @@
 #include <vector>
 #include <cstdint>
 
-using namespace Stream;
+using namespace OP2Utility;
+using namespace OP2Utility::Stream;
 
 TEST(BitmapFile, InvalidBitCountThrows)
 {

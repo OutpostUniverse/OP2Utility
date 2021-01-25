@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	class MemoryReader : public BidirectionalReader {
 	public:

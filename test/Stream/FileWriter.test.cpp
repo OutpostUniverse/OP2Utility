@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 #include <string>
 
+using namespace OP2Utility;
+
 void WriteToNewDirectory(const std::string& path);
 
 TEST(FileWriterOpenMode, BadFlagCombinations) {

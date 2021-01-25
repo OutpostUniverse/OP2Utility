@@ -3,7 +3,7 @@
 #include "ForwardWriter.h"
 #include <cstdint>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	class BidirectionalWriter : public ForwardWriter {
 	public:

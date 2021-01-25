@@ -5,6 +5,7 @@
 #include <string>
 #include <stdexcept>
 
+using namespace OP2Utility;
 
 template <>
 Stream::MemoryReader CreateReader<Stream::MemoryReader>() {

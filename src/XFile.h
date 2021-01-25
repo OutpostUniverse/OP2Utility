@@ -5,7 +5,7 @@
 #include <regex>
 
 // Cross platform file system access.
-namespace XFile
+namespace OP2Utility::XFile
 {
 	//Returns the file extension as a std::string including the leading dot (.).
 	//If no extension is available, an empty string is returned.

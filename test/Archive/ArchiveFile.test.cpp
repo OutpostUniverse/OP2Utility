@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+using namespace OP2Utility;
+
 void TestEmptyArchive(Archive::ArchiveFile& archiveFile, const std::string& archiveFilename);
 
 

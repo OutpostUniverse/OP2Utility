@@ -2,16 +2,18 @@
 
 #include "../Tag.h"
 
-class BitmapFile;
+namespace OP2Utility 
+{
+	class BitmapFile;
 
-namespace Stream {
-	class Reader;
-	class BidirectionalReader;
-	class Writer;
+	namespace Stream {
+		class Reader;
+		class BidirectionalReader;
+		class Writer;
+	}
 }
 
-
-namespace Tileset
+namespace OP2Utility::Tileset
 {
 	constexpr auto TagFileSignature = MakeTag("PBMP");
 

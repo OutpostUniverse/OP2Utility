@@ -2,6 +2,8 @@
 #include "../src/Stream/DynamicMemoryWriter.h"
 #include <gtest/gtest.h>
 
+using namespace OP2Utility;
+
 TEST(ArtReader, ReadMissingFile) {
 	EXPECT_THROW(ArtFile::Read("MissingFile.prt"), std::runtime_error);
 

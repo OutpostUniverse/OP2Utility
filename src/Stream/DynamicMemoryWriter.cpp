@@ -3,7 +3,7 @@
 #include <limits>
 #include <stdexcept>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	DynamicMemoryWriter::DynamicMemoryWriter() {
 	}

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	// Represents compression flags used by Outpost 2 .VOL files to compress files
 	// See FileFormat Archive Vol.txt for more details

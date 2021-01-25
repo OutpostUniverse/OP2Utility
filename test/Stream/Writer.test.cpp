@@ -4,6 +4,8 @@
 #include <vector>
 #include <type_traits>
 
+using namespace OP2Utility;
+
 // Note: Writer is an abstract class, so it can not be tested directly.
 // DynamicMemoryWriter will be used to test the template methods in Writer
 

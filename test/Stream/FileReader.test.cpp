@@ -2,6 +2,8 @@
 #include "Stream/FileReader.h"
 #include <array>
 
+using namespace OP2Utility;
+
 template <>
 Stream::FileReader CreateBidirectionalReader<Stream::FileReader>() {
 	return Stream::FileReader("Stream/data/SimpleStream.txt");

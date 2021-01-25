@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include <stdexcept>
 
+using namespace OP2Utility;
+
 TEST(BmpHeader, Create)
 {
 	const uint32_t fileSize = 100;
