@@ -106,7 +106,7 @@ std::vector<std::string> XFile::Dir(const std::string& directory)
 }
 
 template <typename SelectFunction>
-std::vector<std::string> Dir(const std::string& directory, SelectFunction selectFunction)
+std::vector<std::string> DirInternal(const std::string& directory, SelectFunction selectFunction)
 {
 	// Creating a path with an empty string will prevent the directory_iterator from finding files in the current relative path.
 	auto pathStr = directory.length() > 0 ? directory : "./";
@@ -124,7 +124,7 @@ std::vector<std::string> Dir(const std::string& directory, SelectFunction select
 
 std::vector<std::string> XFile::Dir(const std::string& directory, const std::regex& filenameRegex)
 {
-	return ::Dir(
+	return ::DirInternal(
 		directory,
 		[&filenameRegex](const std::string& filename) {
 			return std::regex_search(filename, filenameRegex);
@@ -134,7 +134,7 @@ std::vector<std::string> XFile::Dir(const std::string& directory, const std::reg
 
 std::vector<std::string> XFile::DirWithExtension(const std::string& directory, const std::string& extension)
 {
-	return ::Dir(
+	return ::DirInternal(
 		directory,
 		[&extension](const std::string& filename) {
 			return fs::path(filename).extension().string() == extension;
@@ -144,7 +144,7 @@ std::vector<std::string> XFile::DirWithExtension(const std::string& directory, c
 
 std::vector<std::string> XFile::DirFiles(const std::string& directory)
 {
-	return ::Dir(
+	return ::DirInternal(
 		directory,
 		[](const std::string& filename) {
 			return IsFile(filename);
@@ -154,7 +154,7 @@ std::vector<std::string> XFile::DirFiles(const std::string& directory)
 
 std::vector<std::string> XFile::DirFiles(const std::string& directory, const std::regex& filenameRegex)
 {
-	return ::Dir(
+	return ::DirInternal(
 		directory,
 		[&filenameRegex](const std::string& filename) {
 			return std::regex_search(filename, filenameRegex) && IsFile(filename);
@@ -164,7 +164,7 @@ std::vector<std::string> XFile::DirFiles(const std::string& directory, const std
 
 std::vector<std::string> XFile::DirFilesWithExtension(const std::string& directory, const std::string& extension)
 {
-	return ::Dir(
+	return ::DirInternal(
 		directory,
 		[&extension](const std::string& filename) {
 			return (fs::path(filename).extension().string() == extension) && IsFile(filename);
