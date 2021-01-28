@@ -23,11 +23,8 @@ namespace OP2Utility
 		class BidirectionalReader;
 	}
 
-	// FILE FORMAT DOCUMENTATION:
-	//     Outpost2SVN\OllyDbg\InternalData\FileFormat SavedGame and Map.txt.
-
 	// ALT IMPLEMENTATION (with COM support)
-	//     Outpost2SVN\MapEditor\OP2Editor.
+	//     https://github.com/OutpostUniverse/OP2Editor
 
 	//An Outpost 2 map file.
 	class Map
