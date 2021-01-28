@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct Point32
@@ -21,3 +23,4 @@ struct Point16
 static_assert(4 == sizeof(Point16), "Point16 is an unexpected size");
 
 #pragma pack(pop)
+}

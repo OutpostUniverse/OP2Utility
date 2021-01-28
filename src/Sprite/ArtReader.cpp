@@ -5,6 +5,8 @@
 #include <cstddef>
 #include <algorithm>
 
+namespace OP2Utility
+{
 ArtFile ArtFile::Read(std::string filename) {
 	Stream::FileReader mapReader(filename);
 	return Read(mapReader);
@@ -144,4 +146,5 @@ void ArtFile::VerifyCountsMatchHeader(const ArtFile& artFile, std::size_t frameC
 	if (actualUnknownCount != unknownCount) {
 		throw std::runtime_error("Unknown count does not match.");
 	}
+}
 }

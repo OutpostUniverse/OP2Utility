@@ -4,6 +4,8 @@
 #include <vector>
 #include <array>
 
+namespace OP2Utility
+{
 static const uint32_t DefaultSizeOfUnit = 120;
 
 // Placeholder for unknown object
@@ -37,3 +39,4 @@ struct SavedGameUnits
 
 	void CheckSizeOfUnit() const;
 };
+}

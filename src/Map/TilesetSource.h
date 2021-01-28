@@ -3,6 +3,8 @@
 #include <string>
 #include <cstdint>
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 // Facilitates finding the source BMP file (well00XX.bmp) for a tile set.
@@ -31,3 +33,4 @@ struct TilesetSource
 };
 
 #pragma pack(pop)
+}

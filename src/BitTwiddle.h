@@ -3,5 +3,8 @@
 
 #include <cstdint>
 
+namespace OP2Utility
+{
 bool IsPowerOf2(uint32_t value);
 uint32_t Log2OfPowerOf2(uint32_t value);
+}

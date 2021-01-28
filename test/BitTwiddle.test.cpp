@@ -1,6 +1,7 @@
 #include "../src/BitTwiddle.h"
 #include <gtest/gtest.h>
 
+using namespace OP2Utility;
 
 TEST(BitTwiddle, IsPowerOf2) {
 	EXPECT_TRUE(IsPowerOf2(1));

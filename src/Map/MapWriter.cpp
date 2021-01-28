@@ -6,6 +6,8 @@
 #include <cmath>
 #include <limits>
 
+namespace OP2Utility
+{
 void Map::Write(const std::string& filename) const
 {
 	Stream::FileWriter mapStream(filename);
@@ -103,4 +105,4 @@ void Map::WriteContainerSize(Stream::Writer& stream, std::size_t size)
 
 	stream.Write(static_cast<uint32_t>(size));
 }
-	
+}

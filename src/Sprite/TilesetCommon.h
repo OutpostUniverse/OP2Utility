@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <stdexcept>
 
-namespace Tileset
+namespace OP2Utility::Tileset
 {
 	constexpr auto DefaultTagData = MakeTag("data");
 	constexpr uint32_t DefaultPaletteHeaderSize = 1024;

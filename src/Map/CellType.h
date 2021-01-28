@@ -1,5 +1,7 @@
 #pragma once
 
+namespace OP2Utility
+{
 // CellTypes returned and set by the GameMap class
 enum class CellType
 {
@@ -36,3 +38,4 @@ enum class CellType
 	Tube4,
 	Tube5,
 };
+}

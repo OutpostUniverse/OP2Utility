@@ -3,7 +3,7 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	MemoryReader::MemoryReader(const void* const buffer, std::size_t size) :
 		streamBuffer(static_cast<const char* const>(buffer)), streamSize(size), position(0) { }

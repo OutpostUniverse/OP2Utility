@@ -1,7 +1,8 @@
 #include "ArtFile.h"
 #include <stdexcept>
 
-
+namespace OP2Utility
+{
 constexpr Tag ArtFile::TagPalette;
 
 
@@ -39,4 +40,5 @@ void ArtFile::CountFrames(std::size_t& frameCount, std::size_t& layerCount, std:
 			layerCount += frame.layers.size();
 		}
 	}
+}
 }

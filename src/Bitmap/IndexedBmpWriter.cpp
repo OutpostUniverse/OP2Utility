@@ -4,7 +4,8 @@
 #include <cmath>
 #include <cstdlib>
 
-
+namespace OP2Utility
+{
 void BitmapFile::WriteIndexed(std::string filename) const
 {
 	// Test all properties that are auto-generated as correct when writing bitmap piecemeal
@@ -69,4 +70,5 @@ void BitmapFile::WritePixels(Stream::Writer& writer, const std::vector<uint8_t>&
 		writer.Write(&pixels[y * pitch], bytesOfPixelsPerRow);
 		writer.Write(padding);
 	}
+}
 }

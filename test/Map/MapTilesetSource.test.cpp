@@ -1,6 +1,8 @@
 #include "Map/TilesetSource.h"
 #include <gtest/gtest.h>
 
+using namespace OP2Utility;
+
 TEST(MapTilesetSource, ComparisonOperators) {
 	const TilesetSource blue{"well0000.bmp", 1};
 	const TilesetSource well0{"well0000.bmp", 1};

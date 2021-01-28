@@ -7,6 +7,8 @@
 #include <cstddef>
 #include <vector>
 
+namespace OP2Utility
+{
 // Loads Outpost 2 in game sprites from their custom format.
 // Sprites are reconditioned into standard indexed bitmap files after loading.
 // The sprites may be viewed and manipulated by standard bitmap applications and libraries after loading.
@@ -33,3 +35,4 @@ private:
 	std::vector<Color> GetPalette(const ImageMeta& imageMeta);
 	std::unique_ptr<Stream::FileSliceReader> GetPixels(std::size_t startingIndex, std::size_t length);
 };
+}

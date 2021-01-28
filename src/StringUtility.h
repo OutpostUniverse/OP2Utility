@@ -4,7 +4,7 @@
 #include <vector>
 #include <type_traits>
 
-namespace StringUtility
+namespace OP2Utility::StringUtility
 {
 	void ConvertToUpperInPlace(std::string& str);
 	std::string ConvertToUpper(std::string str);

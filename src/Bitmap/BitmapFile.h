@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <cstddef>
 
+namespace OP2Utility
+{
 namespace Stream {
 	class Writer;
 	class BidirectionalReader;
@@ -76,3 +78,4 @@ private:
 
 bool operator==(const BitmapFile& lhs, const BitmapFile& rhs);
 bool operator!=(const BitmapFile& lhs, const BitmapFile& rhs);
+}

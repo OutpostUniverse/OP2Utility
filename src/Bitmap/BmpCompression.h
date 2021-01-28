@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+namespace OP2Utility
+{
 enum class BmpCompression : uint32_t
 {
 	Uncompressed,
@@ -9,3 +11,4 @@ enum class BmpCompression : uint32_t
 	RLE4,
 	Bitfields
 };
+}

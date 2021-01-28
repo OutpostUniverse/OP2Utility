@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cstring>
 
+namespace OP2Utility
+{
 ImageHeader ImageHeader::Create(int32_t width, int32_t height, uint16_t bitCount)
 {
 	VerifyValidBitCount(bitCount);
@@ -125,4 +127,5 @@ bool operator==(const ImageHeader& lhs, const ImageHeader& rhs) {
 
 bool operator!=(const ImageHeader& lhs, const ImageHeader& rhs) {
 	return !operator==(lhs, rhs);
+}
 }

@@ -1,6 +1,8 @@
 #include "BidirectionalReader.test.h"
 #include "Stream/SliceReader.h"
 
+using namespace OP2Utility;
+
 template <>
 Stream::FileSliceReader CreateBidirectionalReader<Stream::FileSliceReader>() {
 	Stream::FileReader fileReader("Stream/data/SimpleStream.txt");

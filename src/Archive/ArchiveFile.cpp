@@ -7,7 +7,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	ArchiveFile::ArchiveFile(const std::string& filename) :
 		m_ArchiveFilename(filename), m_Count(0), m_ArchiveFileSize(0) { }

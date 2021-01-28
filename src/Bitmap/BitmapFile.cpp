@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <cmath>
 
+namespace OP2Utility
+{
 BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height)
 {
 	BitmapFile bitmapFile;
@@ -125,4 +127,5 @@ bool operator==(const BitmapFile& lhs, const BitmapFile& rhs) {
 
 bool operator!=(const BitmapFile& lhs, const BitmapFile& rhs) {
 	return !operator==(lhs, rhs);
+}
 }

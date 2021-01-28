@@ -1,7 +1,7 @@
 #include "TilesetHeaders.h"
 #include "TilesetCommon.h"
 
-namespace Tileset
+namespace OP2Utility::Tileset
 {
 	TilesetHeader TilesetHeader::Create(uint32_t heightInTiles)
 	{

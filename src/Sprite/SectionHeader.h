@@ -4,6 +4,8 @@
 #include <array>
 #include <cstddef>
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct SectionHeader
@@ -25,3 +27,4 @@ struct SectionHeader
 static_assert(8 == sizeof(SectionHeader), "SectionHeader is an unexpected size");
 
 #pragma pack(pop)
+}

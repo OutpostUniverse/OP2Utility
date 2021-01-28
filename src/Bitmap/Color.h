@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct Color {
@@ -36,4 +38,5 @@ namespace DiscreteColor
 
 	const Color TransparentBlack{ 0, 0, 0, 255 };
 	const Color TransparentWhite{ 255, 255, 255, 255 };
+}
 }

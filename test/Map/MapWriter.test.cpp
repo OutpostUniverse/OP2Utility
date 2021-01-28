@@ -6,6 +6,8 @@
 #include <vector>
 #include <stdexcept>
 
+using namespace OP2Utility;
+
 TEST(MapWriter, EmptyMap)
 {
 	// Write to File

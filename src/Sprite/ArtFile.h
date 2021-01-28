@@ -10,6 +10,8 @@
 #include <string>
 #include <cstddef>
 
+namespace OP2Utility
+{
 namespace Stream {
 	class Reader;
 	class Writer;
@@ -60,3 +62,4 @@ private:
 
 	static constexpr auto TagPalette = MakeTag("CPAL");
 };
+}

@@ -11,7 +11,7 @@ namespace fs = std::filesystem;
 namespace fs = std::experimental::filesystem;
 #endif
 
-namespace XFile
+namespace OP2Utility::XFile
 {
 	std::string GetFileExtension(const std::string& pathStr)
 	{

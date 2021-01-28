@@ -7,6 +7,8 @@
 #include <regex>
 #include <cstddef>
 
+namespace OP2Utility
+{
 namespace Stream {
 	class BidirectionalReader;
 }
@@ -38,3 +40,4 @@ private:
 	std::vector<std::string> GetFilesFromDirectory(const std::string& fileExtension);
 	std::vector<std::string> GetFilesFromDirectory(const std::regex& filenameRegex);
 };
+}

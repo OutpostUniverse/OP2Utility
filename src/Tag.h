@@ -4,7 +4,8 @@
 #include <utility>
 #include <iostream>
 
-
+namespace OP2Utility
+{
 // Template method implementation details. Not for external use.
 namespace Detail {
 	template<typename Type, std::size_t N, std::size_t... IndexSequence>
@@ -68,4 +69,5 @@ private:
 // Factory method to construct a Tag from a string literal
 inline constexpr Tag MakeTag(const char (&tagText)[5]) {
 	return Tag(tagText);
+}
 }

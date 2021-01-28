@@ -3,7 +3,7 @@
 #include <string>
 #include <limits>
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	BitStreamReader::BitStreamReader(void *buffer, std::size_t bufferSize) :
 		m_BufferBitSize(bufferSize << 3),

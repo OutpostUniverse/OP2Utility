@@ -6,7 +6,7 @@
 #include <climits>
 #include <typeinfo>
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	// Volume section header tags
 	constexpr auto TagVOL_ = MakeTag("VOL "); // Volume file tag

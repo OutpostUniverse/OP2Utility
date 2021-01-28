@@ -1,6 +1,8 @@
 #include "BmpHeader.h"
 #include <stdexcept>
 
+namespace OP2Utility
+{
 const std::array<char, 2> BmpHeader::FileSignature{ 'B', 'M' };
 const uint16_t BmpHeader::DefaultReserved1 = 0;
 const uint16_t BmpHeader::DefaultReserved2 = 0;
@@ -28,4 +30,5 @@ bool operator==(const BmpHeader& lhs, const BmpHeader& rhs) {
 
 bool operator!=(const BmpHeader& lhs, const BmpHeader& rhs) {
 	return !operator==(lhs, rhs);
+}
 }

@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <algorithm>
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	ClmFile::ClmFile(const std::string& filename) : ArchiveFile(filename), clmFileReader(filename)
 	{

@@ -1,6 +1,7 @@
 #include "../src/Rect.h"
 #include <gtest/gtest.h>
 
+using namespace OP2Utility;
 
 TEST(Rect, CanComputeWidthAndHeight) {
 	const Rect rect1{0, 0, 640, 480};

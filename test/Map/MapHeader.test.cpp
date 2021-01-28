@@ -1,6 +1,8 @@
 #include "Map/MapHeader.h"
 #include <gtest/gtest.h>
 
+using namespace OP2Utility;
+
 TEST(MapHeader, VersionTagValid) {
 	MapHeader mapHeader;
 

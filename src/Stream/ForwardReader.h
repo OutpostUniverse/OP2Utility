@@ -3,7 +3,7 @@
 #include "Reader.h"
 #include <cstdint>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	class ForwardReader : public Reader {
 	public:

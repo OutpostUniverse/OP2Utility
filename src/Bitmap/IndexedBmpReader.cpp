@@ -2,6 +2,8 @@
 #include "../Stream/FileReader.h"
 #include <stdexcept>
 
+namespace OP2Utility
+{
 BitmapFile BitmapFile::ReadIndexed(const std::string& filename)
 {
 	Stream::FileReader fileReader(filename);
@@ -73,4 +75,5 @@ void BitmapFile::ReadPixels(Stream::BidirectionalReader& seekableReader, BitmapF
 	bitmapFile.pixels.clear();
 	bitmapFile.pixels.resize(pixelContainerSize);
 	seekableReader.Read(bitmapFile.pixels);
+}
 }

@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <cstring>
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct BmpHeader
@@ -31,3 +33,4 @@ static_assert(14 == sizeof(BmpHeader), "BmpHeader is an unexpected size");
 
 bool operator==(const BmpHeader& lhs, const BmpHeader& rhs);
 bool operator!=(const BmpHeader& lhs, const BmpHeader& rhs);
+}

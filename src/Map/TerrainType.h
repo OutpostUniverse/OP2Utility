@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct Range16
@@ -62,3 +64,4 @@ struct TerrainType
 static_assert(264 == sizeof(TerrainType), "TerrainType is an unexpected size");
 
 #pragma pack(pop)
+}

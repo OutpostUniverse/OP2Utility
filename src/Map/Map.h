@@ -11,6 +11,8 @@
 #include <cstddef>
 #include <cstdint>
 
+namespace OP2Utility
+{
 enum class CellType;
 
 struct MapHeader;
@@ -118,3 +120,4 @@ private:
 	static void ReadTileGroups(Stream::Reader& stream, Map& map);
 	static TileGroup ReadTileGroup(Stream::Reader& stream);
 };
+}

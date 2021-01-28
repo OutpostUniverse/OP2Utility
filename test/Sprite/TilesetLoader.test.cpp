@@ -6,6 +6,8 @@
 #include <gtest/gtest.h>
 #include <stdexcept>
 
+using namespace OP2Utility;
+
 TEST(TilesetLoader, PeekIsCustomTileset)
 {
 	// Ensure bool return is correct and that peek does not affect stream position

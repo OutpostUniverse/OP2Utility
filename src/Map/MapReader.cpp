@@ -7,6 +7,8 @@
 #include <array>
 #include <cstring>
 
+namespace OP2Utility
+{
 const std::array<char, 10> tilesetHeader{ "TILE SET\x1a" };
 
 Map Map::ReadMap(std::string filename)
@@ -192,4 +194,5 @@ TileGroup Map::ReadTileGroup(Stream::Reader& stream)
 	stream.Read<uint32_t>(tileGroup.name);
 
 	return tileGroup;
+}
 }

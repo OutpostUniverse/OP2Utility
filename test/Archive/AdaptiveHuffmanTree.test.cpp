@@ -1,6 +1,7 @@
 #include "Archive/AdaptiveHuffmanTree.h"
 #include <gtest/gtest.h>
 
+using namespace OP2Utility;
 
 TEST(AdaptiveHuffmanTreeTests, SimpleTree2) {
 	// Construct minimum non-degenerate binary tree with 2 data nodes

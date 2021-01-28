@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+namespace OP2Utility
+{
 // A set of tiles that group together to form a feature in Outpost 2, such as a large rock or cliff.
 struct TileGroup
 {
@@ -18,3 +20,4 @@ struct TileGroup
 	// Tiles used in TileGroup listed in 1D (all of row 0 tiles first, then row 1, etc).
 	std::vector<uint32_t> mappingIndices;
 };
+}

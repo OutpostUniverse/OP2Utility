@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <algorithm>
 
+namespace OP2Utility
+{
 void ArtFile::Write(std::string filename) const
 {
 	Stream::FileWriter artWriter(filename);
@@ -117,4 +119,5 @@ void ArtFile::WriteFrame(Stream::Writer& writer, const Animation::Frame& frame)
 	}
 
 	writer.Write(frame.layers);
+}
 }

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <array>
 
+using namespace OP2Utility;
 
 TEST(DynamicMemoryWriter, LengthAutoExpands) {
 	const std::array<uint8_t, 4> data = {0, 1, 2, 3};

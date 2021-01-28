@@ -3,6 +3,7 @@
 #include <sstream>
 #include <type_traits>
 
+using namespace OP2Utility;
 
 TEST(Tag, RemoveLastElement) {
 	// Note: Empty string (size 0) omitted, since variables may always take at least 1 byte

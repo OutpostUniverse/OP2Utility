@@ -4,6 +4,8 @@
 #include <gtest/gtest.h>
 #include <stdexcept>
 
+using namespace OP2Utility;
+
 void WriteAndReadBitmapSub(uint16_t bitCount, int32_t width, int32_t height)
 {
 	Stream::DynamicMemoryWriter writer;

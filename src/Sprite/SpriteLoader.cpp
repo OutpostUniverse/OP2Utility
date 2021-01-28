@@ -6,6 +6,8 @@
 #include <limits>
 #include <cstdint>
 
+namespace OP2Utility
+{
 SpriteLoader::SpriteLoader(std::string bmpFilename, std::shared_ptr<ArtFile> artFile) :
 	bmpReader(bmpFilename), artFile(artFile) { }
 
@@ -57,4 +59,5 @@ std::size_t SpriteLoader::FrameCount(std::size_t animationIndex) const {
 
 std::size_t SpriteLoader::LayerCount(std::size_t animationIndex, std::size_t frameIndex) const {
 	return artFile->animations[animationIndex].frames[frameIndex].layers.size();
+}
 }

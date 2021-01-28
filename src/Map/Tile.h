@@ -2,6 +2,8 @@
 
 #include "CellType.h"
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 // Outpost 2 Tile metadata. Implemented as a Bitfield structure (32 bits total)
@@ -35,3 +37,4 @@ struct Tile
 static_assert(4 == sizeof(Tile), "Tile is an unexpected size");
 
 #pragma pack(pop)
+}

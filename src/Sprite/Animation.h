@@ -5,6 +5,8 @@
 #include <vector>
 #include <cstdint>
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 struct Animation {
@@ -57,3 +59,4 @@ struct Animation {
 };
 
 #pragma pack(pop)
+}

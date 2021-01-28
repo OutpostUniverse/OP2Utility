@@ -4,6 +4,8 @@
 #include "Stream/BidirectionalReader.h"
 #include "XFile.h"
 
+namespace OP2Utility
+{
 using namespace Archive;
 
 ResourceManager::ResourceManager(const std::string& archiveDirectory) :
@@ -166,4 +168,5 @@ std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::strin
 std::vector<std::string> ResourceManager::GetFilesFromDirectory(const std::regex& filenameRegex)
 {
 	return XFile::DirFiles(resourceRootDir, filenameRegex);
+}
 }

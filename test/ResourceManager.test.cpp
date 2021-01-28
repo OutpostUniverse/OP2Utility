@@ -4,6 +4,8 @@
 #include <gtest/gtest.h>
 #include <stdexcept>
 
+using namespace OP2Utility;
+
 TEST(ResourceManager, ConstructResourceManager)
 {
 	// Load Resource Manager where directories exist with .vol and .clm 'extensions'

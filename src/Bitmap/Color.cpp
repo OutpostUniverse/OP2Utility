@@ -1,6 +1,8 @@
 #include "Color.h"
 #include <utility>
 
+namespace OP2Utility
+{
 void Color::SwapRedAndBlue()
 {
 	std::swap(red, blue);
@@ -15,4 +17,5 @@ bool operator==(const Color& lhs, const Color& rhs) {
 
 bool operator!=(const Color& lhs, const Color& rhs) {
 	return !operator==(lhs, rhs);
+}
 }

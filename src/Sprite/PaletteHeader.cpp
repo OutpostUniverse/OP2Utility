@@ -1,7 +1,8 @@
 #include "PaletteHeader.h"
 #include "../Bitmap/Color.h"
 
-
+namespace OP2Utility
+{
 constexpr auto TagSection = MakeTag("PPAL");
 constexpr auto TagHeader = MakeTag("head");
 constexpr auto TagData = MakeTag("data");
@@ -41,4 +42,5 @@ void PaletteHeader::Validate()
 	{
 		throw std::runtime_error("Lengths defined in palette headers do not match.");
 	}
+}
 }

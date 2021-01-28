@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	class ArchiveFile
 	{

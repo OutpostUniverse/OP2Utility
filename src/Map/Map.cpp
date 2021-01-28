@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <stdexcept>
 
+namespace OP2Utility
+{
 Map::Map() :
 	versionTag(MapHeader::MinMapVersion),
 	isSavedGame(false),
@@ -81,4 +83,5 @@ void Map::CheckMinVersionTag(uint32_t versionTag)
 			"Found version tag is " + std::to_string(versionTag) + "."
 		);
 	}
+}
 }

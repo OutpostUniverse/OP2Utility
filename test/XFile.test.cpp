@@ -3,6 +3,7 @@
 #include <gmock/gmock.h>
 #include <regex>
 
+using namespace OP2Utility;
 
 TEST(XFile, HasRootComponent) {
 	EXPECT_TRUE(XFile::HasRootComponent("/Path/File.ext"));

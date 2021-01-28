@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structure is byte aligned
 
 // Outpost 2 map and save file header
@@ -53,3 +55,4 @@ struct MapHeader
 static_assert(20 == sizeof(MapHeader), "MapHeader is an unexpected size");
 
 #pragma pack(pop)
+}

@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+namespace OP2Utility
+{
 #pragma pack(push, 1) // Make sure structures are byte aligned
 
 // Metadata that applies to all tiles on a map with the same Tileset and TileIndex.
@@ -24,3 +26,4 @@ struct TileMapping
 static_assert(8 == sizeof(TileMapping), "TileMapping is an unexpected size");
 
 #pragma pack(pop)
+}
