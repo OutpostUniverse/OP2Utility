@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	/**
 	 * \brief Memory backed stream, which grows dynamically in size as data is added

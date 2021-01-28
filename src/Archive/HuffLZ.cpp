@@ -1,7 +1,7 @@
 #include "HuffLZ.h"
 #include <cstring>
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	// Constructs the object around an existing bit stream
 	HuffLZ::HuffLZ(const BitStreamReader& bitStream) :

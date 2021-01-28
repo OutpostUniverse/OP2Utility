@@ -2,7 +2,7 @@
 #include <cstring> //memcpy
 #include <stdexcept>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	MemoryWriter::MemoryWriter(void* buffer, std::size_t size) :
 		streamBuffer(static_cast<char*>(buffer)), streamSize(size), offset(0) { }

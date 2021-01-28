@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 #include <string>
 
+using namespace OP2Utility;
+
 TEST(MapReader, MissingFile) {
 	EXPECT_THROW(Map::ReadMap("MissingFile.map"), std::runtime_error);
 	EXPECT_THROW(Map::ReadSavedGame("MissingFile.op2"), std::runtime_error);

@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <limits>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	// Creates a stream which is a slice of an existing stream.
 	// Access is bounds checked according to the slice parameters.

@@ -1,6 +1,8 @@
 #include "Map/Map.h"
 #include <gtest/gtest.h>
 
+using namespace OP2Utility;
+
 TEST(Map, TrimTilesetSources) {
 	Map map;
 

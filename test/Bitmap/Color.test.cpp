@@ -1,6 +1,8 @@
 #include "../src/Bitmap/Color.h"
 #include <gtest/gtest.h>
 
+using namespace OP2Utility;
+
 TEST(Color, CompareEqual) {
 	// Note: Internally EXPECT_EQ uses `operator ==`
 	//       EXPECT_EQ has better error formatting than calling == explicitly

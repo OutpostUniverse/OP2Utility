@@ -3,6 +3,7 @@
 #include "Stream/BidirectionalReader.h"
 #include <gtest/gtest.h>
 
+using namespace OP2Utility;
 
 template <class T>
 T CreateBidirectionalReader();

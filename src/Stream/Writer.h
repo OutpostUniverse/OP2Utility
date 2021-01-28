@@ -10,7 +10,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	class Writer {
 	protected:

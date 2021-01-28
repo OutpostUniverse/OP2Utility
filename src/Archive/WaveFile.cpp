@@ -1,6 +1,6 @@
 #include "WaveFile.h"
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	WaveHeader WaveHeader::Create(const WaveFormatEx& waveFormat, uint32_t dataLength)
 	{

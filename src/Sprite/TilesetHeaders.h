@@ -5,7 +5,7 @@
 #include "../Tag.h"
 #include <cstdint>
 
-namespace Tileset
+namespace OP2Utility::Tileset
 {
 	struct TilesetHeader
 	{

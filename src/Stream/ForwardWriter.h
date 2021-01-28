@@ -3,7 +3,7 @@
 #include "Writer.h"
 #include <cstdint>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	class ForwardWriter : public Writer
 	{

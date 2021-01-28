@@ -11,7 +11,7 @@
 #include <array>
 #include <memory>
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	class ClmFile : public ArchiveFile
 	{

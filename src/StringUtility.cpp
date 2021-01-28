@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cstddef>
 
-namespace StringUtility
+namespace OP2Utility::StringUtility
 {
 	void ConvertToUpperInPlace(std::string& str)
 	{

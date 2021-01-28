@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <cstdint>
 
+using namespace OP2Utility;
+
 TEST(ImageHeader, Create)
 {
 	const int32_t width = 10;

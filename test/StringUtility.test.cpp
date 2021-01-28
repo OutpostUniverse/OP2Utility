@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-using namespace StringUtility;
+using namespace OP2Utility::StringUtility;
 
 TEST(StringUtility, ConvertToUpperInPlace)
 {

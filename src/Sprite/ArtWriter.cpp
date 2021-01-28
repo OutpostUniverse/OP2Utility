@@ -4,117 +4,120 @@
 #include <stdexcept>
 #include <algorithm>
 
-void ArtFile::Write(std::string filename) const
+namespace OP2Utility
 {
-	Stream::FileWriter artWriter(filename);
-	Write(artWriter);
-}
-
-void ArtFile::Write(Stream::Writer& writer) const
-{
-	ValidateImageMetadata();
-
-	WritePalettes(writer);
-
-	writer.Write<uint32_t>(imageMetas);
-
-	WriteAnimations(writer);
-}
-
-void ArtFile::WritePalettes(Stream::Writer& writer) const
-{
-	if (palettes.size() > UINT32_MAX) {
-		throw std::runtime_error("Art file contains too many palettes.");
+	void ArtFile::Write(std::string filename) const
+	{
+		Stream::FileWriter artWriter(filename);
+		Write(artWriter);
 	}
 
-	writer.Write(SectionHeader(TagPalette, static_cast<uint32_t>(palettes.size())));
+	void ArtFile::Write(Stream::Writer& writer) const
+	{
+		ValidateImageMetadata();
 
-	// Intentially do not pass palette as reference to allow local modification
-	// Switch red and blue color to match Outpost 2 custom format.
-	for (auto pallete : palettes) {
-		writer.Write(PaletteHeader::CreatePaletteHeader());
+		WritePalettes(writer);
 
-		for (auto& color : pallete) {
-			std::swap(color.red, color.blue);
+		writer.Write<uint32_t>(imageMetas);
+
+		WriteAnimations(writer);
+	}
+
+	void ArtFile::WritePalettes(Stream::Writer& writer) const
+	{
+		if (palettes.size() > UINT32_MAX) {
+			throw std::runtime_error("Art file contains too many palettes.");
 		}
 
-		writer.Write(pallete);
-	}
-}
+		writer.Write(SectionHeader(TagPalette, static_cast<uint32_t>(palettes.size())));
 
-void ArtFile::WriteAnimations(Stream::Writer& writer) const
-{
-	if (animations.size() > UINT32_MAX) {
-		throw std::runtime_error("There are too many animations contained in the ArtFile.");
-	}
+		// Intentially do not pass palette as reference to allow local modification
+		// Switch red and blue color to match Outpost 2 custom format.
+		for (auto pallete : palettes) {
+			writer.Write(PaletteHeader::CreatePaletteHeader());
 
-	writer.Write(static_cast<uint32_t>(animations.size()));
+			for (auto& color : pallete) {
+				std::swap(color.red, color.blue);
+			}
 
-	std::size_t frameCount;
-	std::size_t layerCount;
-	std::size_t unknownCount;
-	CountFrames(frameCount, layerCount, unknownCount);
-
-	if (frameCount > UINT32_MAX) {
-		throw std::runtime_error("There are too many frames to write to file.");
+			writer.Write(pallete);
+		}
 	}
 
-	if (layerCount > UINT32_MAX) {
-		throw std::runtime_error("There are too many layers to write to file.");
-	}
-
-	if (unknownCount > UINT32_MAX) {
-		throw std::runtime_error("There are too many unknown container items to write to file.");
-	}
-
-	writer.Write(static_cast<uint32_t>(frameCount));
-	writer.Write(static_cast<uint32_t>(layerCount));
-	writer.Write(static_cast<uint32_t>(unknownCount));
-
-	for (const auto& animation : animations)
+	void ArtFile::WriteAnimations(Stream::Writer& writer) const
 	{
-		WriteAnimation(writer, animation);
-	}
-}
+		if (animations.size() > UINT32_MAX) {
+			throw std::runtime_error("There are too many animations contained in the ArtFile.");
+		}
 
-void ArtFile::WriteAnimation(Stream::Writer& writer, const Animation& animation)
-{
-	writer.Write(animation.unknown);
-	writer.Write(animation.selectionRect);
-	writer.Write(animation.pixelDisplacement);
-	writer.Write(animation.unknown2);
+		writer.Write(static_cast<uint32_t>(animations.size()));
 
-	std::size_t frameCount = animation.frames.size();
-	if (frameCount > UINT32_MAX) {
-		throw std::runtime_error("There are too many frames in animation to write");
-	}
-	writer.Write(static_cast<uint32_t>(frameCount));
+		std::size_t frameCount;
+		std::size_t layerCount;
+		std::size_t unknownCount;
+		CountFrames(frameCount, layerCount, unknownCount);
 
-	for (const auto& frame : animation.frames) {
-		WriteFrame(writer, frame);
-	}
+		if (frameCount > UINT32_MAX) {
+			throw std::runtime_error("There are too many frames to write to file.");
+		}
 
-	writer.Write<uint32_t>(animation.unknownContainer);
-}
+		if (layerCount > UINT32_MAX) {
+			throw std::runtime_error("There are too many layers to write to file.");
+		}
 
-void ArtFile::WriteFrame(Stream::Writer& writer, const Animation::Frame& frame)
-{
-	if (frame.layerMetadata.count != frame.layers.size()) {
-		throw std::runtime_error("Recorded layer count must match number of written layers.");
-	}
+		if (unknownCount > UINT32_MAX) {
+			throw std::runtime_error("There are too many unknown container items to write to file.");
+		}
 
-	writer.Write(frame.layerMetadata);
-	writer.Write(frame.unknownBitfield);
+		writer.Write(static_cast<uint32_t>(frameCount));
+		writer.Write(static_cast<uint32_t>(layerCount));
+		writer.Write(static_cast<uint32_t>(unknownCount));
 
-	if (frame.layerMetadata.bReadOptionalData) {
-		writer.Write(frame.optional1);
-		writer.Write(frame.optional2);
+		for (const auto& animation : animations)
+		{
+			WriteAnimation(writer, animation);
+		}
 	}
 
-	if (frame.unknownBitfield.bReadOptionalData) {
-		writer.Write(frame.optional3);
-		writer.Write(frame.optional4);
+	void ArtFile::WriteAnimation(Stream::Writer& writer, const Animation& animation)
+	{
+		writer.Write(animation.unknown);
+		writer.Write(animation.selectionRect);
+		writer.Write(animation.pixelDisplacement);
+		writer.Write(animation.unknown2);
+
+		std::size_t frameCount = animation.frames.size();
+		if (frameCount > UINT32_MAX) {
+			throw std::runtime_error("There are too many frames in animation to write");
+		}
+		writer.Write(static_cast<uint32_t>(frameCount));
+
+		for (const auto& frame : animation.frames) {
+			WriteFrame(writer, frame);
+		}
+
+		writer.Write<uint32_t>(animation.unknownContainer);
 	}
 
-	writer.Write(frame.layers);
+	void ArtFile::WriteFrame(Stream::Writer& writer, const Animation::Frame& frame)
+	{
+		if (frame.layerMetadata.count != frame.layers.size()) {
+			throw std::runtime_error("Recorded layer count must match number of written layers.");
+		}
+
+		writer.Write(frame.layerMetadata);
+		writer.Write(frame.unknownBitfield);
+
+		if (frame.layerMetadata.bReadOptionalData) {
+			writer.Write(frame.optional1);
+			writer.Write(frame.optional2);
+		}
+
+		if (frame.unknownBitfield.bReadOptionalData) {
+			writer.Write(frame.optional3);
+			writer.Write(frame.optional4);
+		}
+
+		writer.Write(frame.layers);
+	}
 }

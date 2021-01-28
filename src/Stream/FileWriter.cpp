@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	std::ios_base::openmode FileWriter::TranslateFlags(const std::string& filename, OpenMode openMode) {
 		// Check for bad flag combinations

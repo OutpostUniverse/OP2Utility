@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <stdexcept>
 
-namespace Tileset
+namespace OP2Utility::Tileset
 {
 	void ValidateFileSignatureHeader(const SectionHeader& fileSignatureHeader);
 	void ValidatePaletteHeader(const SectionHeader& paletteHeader);

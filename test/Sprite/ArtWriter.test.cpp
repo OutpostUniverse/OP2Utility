@@ -6,6 +6,8 @@
 #include <string>
 #include <stdexcept>
 
+using namespace OP2Utility;
+
 TEST(ArtWriter, Empty)
 {
 	// Write to File

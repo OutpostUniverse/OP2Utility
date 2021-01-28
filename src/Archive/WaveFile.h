@@ -4,7 +4,7 @@
 #include <array>
 #include <cstdint>
 
-namespace Archive
+namespace OP2Utility::Archive
 {
 	constexpr auto tagRIFF = MakeTag("RIFF");
 	constexpr auto tagWAVE = MakeTag("WAVE");

@@ -2,7 +2,7 @@
 #include "SliceReader.h"
 #include <stdexcept>
 
-namespace Stream
+namespace OP2Utility::Stream
 {
 	// Defers calls to C++ standard library methods
 	FileReader::FileReader(std::string filename) :
