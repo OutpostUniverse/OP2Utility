@@ -4,13 +4,13 @@
 
 namespace OP2Utility
 {
-class BitmapFile;
+	class BitmapFile;
 
-namespace Stream {
-	class Reader;
-	class BidirectionalReader;
-	class Writer;
-}
+	namespace Stream {
+		class Reader;
+		class BidirectionalReader;
+		class Writer;
+	}
 }
 
 namespace OP2Utility::Tileset
