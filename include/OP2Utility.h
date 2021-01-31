@@ -29,5 +29,5 @@
 #include "../src/Stream/MemoryWriter.h"
 
 #include "../src/ResourceManager.h"
-#include "../src/StringHelper.h"
+#include "../src/StringUtility.h"
 #include "../src/XFile.h"
