@@ -54,6 +54,7 @@
     <ClCompile Include="Map\MapTilesetSource.test.cpp" />
     <ClCompile Include="Map\MapWriter.test.cpp" />
     <ClCompile Include="Map\SavedGameUnits.test.cpp" />
+    <ClCompile Include="MasterInclude.test.cpp" />
     <ClCompile Include="Rect.test.cpp" />
     <ClCompile Include="ResourceManager.test.cpp" />
     <ClCompile Include="Sprite\ArtReader.test.cpp" />

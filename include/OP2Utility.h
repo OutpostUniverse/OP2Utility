@@ -6,10 +6,13 @@
 // directly related to programming new scenarios.
 
 /*This includes
- - Handling Outpost 2 Archvies (both CLM and VOL)
- - Handling Outpost 2 map files
- - File and Memory Stream manipulation
+ - Outpost 2 archives (both CLM and VOL)
+ - Outpost 2 map files
+ - Outpost 2 tileset loading and conversion
+ - Outpost 2 sprite loading (experimental)
+ - File and memory stream manipulation
  - Cross platform file system support
+ - Indexed Windows bitmap file support (expiremental)
 */
 
 #include "../src/Archive/ArchiveFile.h"
@@ -29,5 +32,5 @@
 #include "../src/Stream/MemoryWriter.h"
 
 #include "../src/ResourceManager.h"
-#include "../src/StringHelper.h"
+#include "../src/StringUtility.h"
 #include "../src/XFile.h"

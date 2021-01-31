@@ -75,6 +75,7 @@
       <Filter>Sprite</Filter>
     </ClCompile>
     <ClCompile Include="StringUtility.test.cpp" />
+    <ClCompile Include="MasterInclude.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Stream">
