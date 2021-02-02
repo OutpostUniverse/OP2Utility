@@ -18,7 +18,7 @@ Main features:
  - Indexed Bitmap manipulation (experimental)
 
 The library can be compiled and used on both Windows and Linux. Both x86 (32-bit) and x64 architectures are fully supported. Partial unit test coverage is made using [Google Test](https://github.com/google/googletest). Supported compilers:
- - Visual Studio 2017
+ - Visual Studio
  - GCC
  - Clang
 
