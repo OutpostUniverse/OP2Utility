@@ -6,7 +6,7 @@ using namespace OP2Utility;
 template <>
 Stream::FileSliceReader CreateBidirectionalReader<Stream::FileSliceReader>() {
 	Stream::FileReader fileReader("Stream/data/SimpleStream.txt");
-	return fileReader.Slice(5);
+	return fileReader.Slice(1, 4);
 }
 
 INSTANTIATE_TYPED_TEST_SUITE_P(FileSliceReader, SimpleBidirectionalReader, Stream::FileSliceReader);
