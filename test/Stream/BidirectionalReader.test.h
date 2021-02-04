@@ -13,10 +13,13 @@ template <class T>
 class SimpleBidirectionalReader : public testing::Test {
 protected:
 	// The ctor calls the factory function to create a reader implemented by T
-	SimpleBidirectionalReader() : reader(CreateBidirectionalReader<T>()) {}
+	SimpleBidirectionalReader() :
+		reader{CreateBidirectionalReader<T>()},
+		size{reader.Length()}
+	{}
 
 	T reader;
-	const unsigned int size = 5;
+	const uint64_t size;
 };
 
 TYPED_TEST_SUITE_P(SimpleBidirectionalReader);
