@@ -21,6 +21,14 @@ protected:
 
 TYPED_TEST_SUITE_P(SimpleBidirectionalReader);
 
+TYPED_TEST_P(SimpleBidirectionalReader, Seek) {
+	EXPECT_NO_THROW(this->reader.Seek(1));
+	EXPECT_EQ(1, reader.Position());
+
+	EXPECT_NO_THROW(this->reader.SeekBackward(1));
+	EXPECT_EQ(0, reader.Position());
+}
+
 TYPED_TEST_P(SimpleBidirectionalReader, SeekRelativeOutOfBoundsBeginningPreservesPosition) {
 	auto position = this->reader.Position();
 	EXPECT_THROW(this->reader.SeekBackward(1), std::runtime_error);
@@ -51,6 +59,7 @@ TYPED_TEST_P(SimpleBidirectionalReader, SeekBeginningAndEnd) {
 }
 
 REGISTER_TYPED_TEST_SUITE_P(SimpleBidirectionalReader,
+	Seek,
 	SeekRelativeOutOfBoundsBeginningPreservesPosition,
 	StreamPositionUpdatesOnRead,
 	StreamSizeMatchesInitialization,
