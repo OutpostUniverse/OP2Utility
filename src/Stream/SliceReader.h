@@ -75,7 +75,7 @@ namespace OP2Utility::Stream
 		}
 
 		void SeekBackward(uint64_t offset) override {
-			if (Position() - offset < startingOffset) {
+			if (offset > Position()) {
 				throw std::runtime_error(
 					"Seek backward by offset of " + std::to_string(offset) + " is beyond the bounds of the stream slice."
 					+ IdentifySource()
