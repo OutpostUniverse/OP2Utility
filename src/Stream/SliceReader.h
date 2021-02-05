@@ -63,7 +63,7 @@ namespace OP2Utility::Stream
 
 
 		void SeekForward(uint64_t offset) override {
-			if (Position() + offset > startingOffset + sliceLength)
+			if (Position() + offset > sliceLength)
 			{
 				throw std::runtime_error(
 					"Seek forward by offset of " + std::to_string(offset) + " is beyond the bounds of the stream slice."
