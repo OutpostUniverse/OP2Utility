@@ -66,6 +66,7 @@ TEST_F(EmptyMemoryStreamReader, ZeroSizeStreamHasSafeOperations) {
 	ASSERT_NO_THROW(stream.SeekBackward(0));
 
 	// Read 0 bytes
+	ASSERT_NO_THROW(stream.Peek(nullptr, 0));
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
 	EXPECT_EQ(0u, stream.ReadPartial(nullptr, 0));
 }
@@ -78,6 +79,13 @@ protected:
 	const std::array<char, 5> buffer{ 't', 'e', 's', 't', '!' };
 	Stream::MemoryReader stream;
 };
+
+TEST_F(SimpleMemoryReader, Peek) {
+	char c;
+	ASSERT_NO_THROW(stream.Peek(&c, sizeof(c)));
+	ASSERT_EQ(0, stream.Position());
+	ASSERT_EQ(buffer[0], c);
+}
 
 TEST_F(SimpleMemoryReader, SeekOutOfBoundsEndPreservesPosition) {
 	// Check for strong exception safety

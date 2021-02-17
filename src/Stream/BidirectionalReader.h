@@ -7,6 +7,11 @@ namespace OP2Utility::Stream
 {
 	class BidirectionalReader : public ForwardReader {
 	public:
+		inline void Peek(void* buffer, std::size_t size) {
+			ReadImplementation(buffer, size);
+			SeekBackward(size);
+		}
+
 		// Seek backward by a relative amount, given as offset from current position
 		virtual void SeekBackward(uint64_t offset) = 0;
 
