@@ -25,7 +25,7 @@ namespace OP2Utility::Tileset
 	bool PeekIsCustomTileset(Stream::BidirectionalReader& reader)
 	{
 		Tag tag;
-		reader.Peek(&tag, sizeof(tag));
+		reader.Peek(tag);
 
 		return tag == TagFileSignature;
 	}
