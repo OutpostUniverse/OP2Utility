@@ -26,7 +26,7 @@ namespace OP2Utility::Stream
 		// Helper methods, which depend only on the above interface
 		// ====
 
-		inline void Read(void* buffer, std::size_t size) {
+		void Read(void* buffer, std::size_t size) {
 			ReadImplementation(buffer, size);
 		}
 
@@ -35,7 +35,6 @@ namespace OP2Utility::Stream
 
 		// Trivially copyable data types
 		template<typename T>
-		inline
 		std::enable_if_t<std::is_trivially_copyable<T>::value>
 		Read(T& object) {
 			ReadImplementation(&object, sizeof(object));
@@ -45,7 +44,6 @@ namespace OP2Utility::Stream
 		// Reads into entire length of passed container. Call container.resize(size) before
 		// passing container into this function to ensure proper container size is read
 		template<typename T>
-		inline
 		std::enable_if_t<
 			!std::is_trivially_copyable<T>::value &&
 			std::is_trivially_copyable<typename T::value_type>::value
