@@ -22,7 +22,7 @@ namespace OP2Utility::Stream
 	public:
 		virtual ~Writer() = default;
 
-		inline void Write(const void* buffer, std::size_t size) {
+		void Write(const void* buffer, std::size_t size) {
 			WriteImplementation(buffer, size);
 		}
 
@@ -31,7 +31,6 @@ namespace OP2Utility::Stream
 
 		// Trivially copyable data types
 		template<typename T>
-		inline
 		std::enable_if_t<std::is_trivially_copyable<T>::value>
 		Write(const T& object) {
 			WriteImplementation(&object, sizeof(object));
@@ -39,7 +38,6 @@ namespace OP2Utility::Stream
 
 		// Non-trivial contiguous container of trivially copyable data types
 		template<typename T>
-		inline
 		std::enable_if_t<
 			!std::is_trivially_copyable<T>::value &&
 			std::is_trivially_copyable<typename T::value_type>::value
@@ -72,7 +70,6 @@ namespace OP2Utility::Stream
 		// Type T must provide a member `void T::Write(Stream::Writer& writer)`
 		// If T is const, then its Write method must also be const
 		template<typename T>
-		inline
 		std::enable_if_t<
 			!std::is_trivially_copyable<T>::value &&
 			std::is_member_function_pointer<decltype(&T::Write)>::value

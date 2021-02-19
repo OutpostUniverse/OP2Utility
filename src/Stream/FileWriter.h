@@ -38,7 +38,7 @@ namespace OP2Utility::Stream
 		void SeekForward(uint64_t offset) override;
 		void SeekBackward(uint64_t offset) override;
 
-		inline const std::string& GetFilename() const {
+		const std::string& GetFilename() const {
 			return filename;
 		}
 
