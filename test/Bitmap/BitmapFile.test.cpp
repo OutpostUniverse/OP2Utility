@@ -48,6 +48,20 @@ TEST(BitmapFile, RoundTripWriteAndRead)
 	}
 }
 
+TEST(BitmapFile, PeekIsBitmapFile)
+{
+	{
+		Stream::DynamicMemoryWriter writer;
+		BitmapFile::CreateIndexed(1, 1, 1).WriteIndexed(writer);
+		EXPECT_TRUE(BitmapFile::PeekIsBitmap(writer.GetReader()));
+	}
+	{
+		Stream::DynamicMemoryWriter writer;
+		writer.Write("test");
+		EXPECT_FALSE(BitmapFile::PeekIsBitmap(writer.GetReader()));
+	}
+}
+
 TEST(BitmapFile, VerifyIndexedPaletteSizeDoesNotExceedBitCount)
 {
 	EXPECT_NO_THROW(BitmapFile::VerifyIndexedPaletteSizeDoesNotExceedBitCount(1, 1));

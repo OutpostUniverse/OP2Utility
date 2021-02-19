@@ -31,6 +31,9 @@ namespace OP2Utility
 		std::vector<Color> palette;
 		std::vector<uint8_t> pixels;
 
+		static bool PeekIsBitmap(Stream::BidirectionalReader& reader);
+		static bool PeekIsBitmap(Stream::BidirectionalReader&& reader);
+
 		static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height);
 		static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height, std::vector<Color> palette);
 		static BitmapFile CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height, std::vector<Color> palette, std::vector<uint8_t> pixels);

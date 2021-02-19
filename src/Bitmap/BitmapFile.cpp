@@ -1,9 +1,25 @@
 #include "BitmapFile.h"
+#include "../Tag.h"
+#include "../Stream/BidirectionalReader.h"
 #include <stdexcept>
 #include <cmath>
+#include <array>
 
 namespace OP2Utility
 {
+	bool BitmapFile::PeekIsBitmap(Stream::BidirectionalReader& reader)
+	{
+		std::array<char, 2> fileSignature;
+		reader.Peek(fileSignature);
+
+		return fileSignature == BmpHeader::FileSignature;
+	}
+
+	bool BitmapFile::PeekIsBitmap(Stream::BidirectionalReader&& reader)
+	{
+		return PeekIsBitmap(reader); // Delegate to lvalue overload
+	}
+
 	BitmapFile BitmapFile::CreateIndexed(uint16_t bitCount, uint32_t width, int32_t height)
 	{
 		BitmapFile bitmapFile;
