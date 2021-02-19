@@ -67,7 +67,7 @@ namespace OP2Utility
 
 
 	// Factory method to construct a Tag from a string literal
-	inline constexpr Tag MakeTag(const char(&tagText)[5]) {
+	constexpr Tag MakeTag(const char(&tagText)[5]) {
 		return Tag(tagText);
 	}
 }

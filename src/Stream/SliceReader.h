@@ -120,7 +120,7 @@ namespace OP2Utility::Stream
 			return SliceReader(wrappedStream, this->startingOffset + sliceStartPosition, sliceLength);
 		}
 
-		inline const std::string& GetFilename() const {
+		const std::string& GetFilename() const {
 			return wrappedStream.GetFilename();
 		}
 

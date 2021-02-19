@@ -13,11 +13,11 @@ namespace OP2Utility
 		int32_t x2;
 		int32_t y2;
 
-		inline int32_t Width() const {
+		int32_t Width() const {
 			return x2 - x1;
 		}
 
-		inline int32_t Height() const {
+		int32_t Height() const {
 			return y2 - y1;
 		}
 
