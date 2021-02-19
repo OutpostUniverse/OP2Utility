@@ -15,7 +15,7 @@ namespace OP2Utility::Stream
 		// Trivially copyable data types
 		template<typename T>
 		std::enable_if_t<std::is_trivially_copyable<T>::value>
-			Peek(T& object) {
+		Peek(T& object) {
 			Peek(&object, sizeof(object));
 		}
 
