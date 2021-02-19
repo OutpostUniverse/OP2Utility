@@ -25,26 +25,6 @@ Stream::MemoryReader CreateBidirectionalReader<Stream::MemoryReader>() {
 INSTANTIATE_TYPED_TEST_SUITE_P(MemoryReader, SimpleBidirectionalReader, Stream::MemoryReader);
 
 
-// Simple test
-
-TEST(MemoryStreamReaderTest, ZeroSizeStreamHasSafeOperations) {
-	Stream::MemoryReader stream(nullptr, 0);
-	
-	// Length and position
-	EXPECT_EQ(0u, stream.Length());
-	EXPECT_EQ(0u, stream.Position());
-	
-	// Seek to current position (should not cause error)
-	ASSERT_NO_THROW(stream.Seek(0));
-	ASSERT_NO_THROW(stream.SeekForward(0));
-	ASSERT_NO_THROW(stream.SeekBackward(0));
-	
-	// Read 0 bytes
-	ASSERT_NO_THROW(stream.Read(nullptr, 0));
-	EXPECT_EQ(0u, stream.ReadPartial(nullptr, 0));
-}
-
-
 // Test with fixture
 
 // Setup fixture
@@ -66,6 +46,7 @@ TEST_F(EmptyMemoryStreamReader, ZeroSizeStreamHasSafeOperations) {
 	ASSERT_NO_THROW(stream.SeekBackward(0));
 
 	// Read 0 bytes
+	ASSERT_NO_THROW(stream.Peek(nullptr, 0));
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
 	EXPECT_EQ(0u, stream.ReadPartial(nullptr, 0));
 }
@@ -78,6 +59,13 @@ protected:
 	const std::array<char, 5> buffer{ 't', 'e', 's', 't', '!' };
 	Stream::MemoryReader stream;
 };
+
+TEST_F(SimpleMemoryReader, Peek) {
+	char c;
+	ASSERT_NO_THROW(stream.Peek(c));
+	ASSERT_EQ(0, stream.Position());
+	ASSERT_EQ(buffer[0], c);
+}
 
 TEST_F(SimpleMemoryReader, SeekOutOfBoundsEndPreservesPosition) {
 	// Check for strong exception safety

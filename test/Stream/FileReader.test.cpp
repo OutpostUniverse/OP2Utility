@@ -29,6 +29,7 @@ TEST(FileReaderTest, ZeroSizeStreamHasSafeOperations) {
 	ASSERT_NO_THROW(stream.SeekBackward(0));
 
 	// Read 0 bytes
+	ASSERT_NO_THROW(stream.Peek(nullptr, 0));
 	ASSERT_NO_THROW(stream.Read(nullptr, 0));
 	EXPECT_EQ(0u, stream.ReadPartial(nullptr, 0));
 }
