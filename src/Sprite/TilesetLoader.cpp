@@ -118,6 +118,11 @@ namespace OP2Utility::Tileset
 		writer.Write(tileset.pixels);
 	}
 
+	void WriteCustomTileset(Stream::Writer&& writer, const BitmapFile& tileset)
+	{
+		WriteCustomTileset(writer, tileset);
+	}
+
 	void ValidateTileset(const BitmapFile& tileset)
 	{
 		constexpr int32_t DefaultPixelWidth = 32;
