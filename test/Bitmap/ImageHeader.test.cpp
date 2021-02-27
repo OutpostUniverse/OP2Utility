@@ -1,9 +1,13 @@
 #include "../src/Bitmap/ImageHeader.h"
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <stdexcept>
 #include <cstdint>
+#include <string>
 
 using namespace OP2Utility;
+
+void TestInvalidImageHeaderSize(const ImageHeader& imageHeader, std::string exceptionSubstring);
 
 TEST(ImageHeader, Create)
 {
@@ -124,10 +128,17 @@ TEST(ImageHeader, Validate)
 
 	EXPECT_NO_THROW(imageHeader.Validate());
 
-	imageHeader.headerSize = 0;
-	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
-	imageHeader.headerSize = sizeof(ImageHeader);
+	imageHeader.headerSize = sizeof(ImageHeaderV4);
+	TestInvalidImageHeaderSize(imageHeader, "version 4");
 
+	imageHeader.headerSize = sizeof(ImageHeaderV5);
+	TestInvalidImageHeaderSize(imageHeader, "version 5");
+	
+	imageHeader.headerSize = 0;
+	TestInvalidImageHeaderSize(imageHeader, "Unknown");
+
+	imageHeader.headerSize = sizeof(ImageHeader);
+	
 	imageHeader.planes = 0;
 	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
 	imageHeader.planes = ImageHeader::DefaultPlanes;
@@ -143,6 +154,23 @@ TEST(ImageHeader, Validate)
 	imageHeader.importantColorCount = 3;
 	EXPECT_THROW(imageHeader.Validate(), std::runtime_error);
 	imageHeader.importantColorCount = ImageHeader::DefaultImportantColorCount;
+}
+
+void TestInvalidImageHeaderSize(const ImageHeader& imageHeader, std::string exceptionSubstring)
+{
+	try {
+		imageHeader.Validate();
+	}
+	catch (const std::runtime_error& e) {
+		ASSERT_THAT(e.what(), ::testing::HasSubstr(exceptionSubstring));
+		return;
+	}
+	catch (...) {
+		ADD_FAILURE() << "An ImageHeader containing the size of " << exceptionSubstring << " threw the wrong type of exception";
+		return;
+	}
+
+	ADD_FAILURE() << "An ImageHeader containing the size of " << exceptionSubstring << " should have thrown an exception, but did not";
 }
 
 TEST(ImageHeader, Equality)
