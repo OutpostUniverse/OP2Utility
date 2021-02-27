@@ -59,6 +59,43 @@ namespace OP2Utility
 
 	static_assert(40 == sizeof(ImageHeader), "ImageHeader is an unexpected size");
 
+	struct ImageHeaderV4 {
+		ImageHeader imageHeader;
+		uint32_t redMask;
+		uint32_t greenMask;
+		uint32_t blueMask;
+		uint32_t alphaMask;
+		uint32_t colorSpaceType;
+		int32_t redEndpointX;
+		int32_t redEndpointY;
+		int32_t redEndpointZ;
+		int32_t greenEndpointX;
+		int32_t greenEndpointY;
+		int32_t greenEndpointZ;
+		int32_t blueEndpointX;
+		int32_t blueEndpointY;
+		int32_t blueEndpointZ;
+		uint32_t gammaRed;
+		uint32_t gammaGreen;
+		uint32_t gammaBlue;
+	};
+
+	static_assert(108 == sizeof(ImageHeaderV4), "ImageHeaderV4 is an unexpected size");
+
+	struct ImageHeaderV5 {
+		ImageHeaderV4 imageHeader;
+		uint32_t gamutMatchingIntent;
+		// Offset in bytes from the beginning of the image header to the start of the profile data
+		uint32_t profileDataOffset;
+		// Size in bytes of embedded profile data
+		uint32_t profileDataSize;
+		// Reservered member should always be set to zero.
+		uint32_t reserved;
+	};
+
+	static_assert(124 == sizeof(ImageHeaderV5), "ImageHeaderV5 is an unexpected size");
+
+
 #pragma pack(pop)
 
 	bool operator==(const ImageHeader& lhs, const ImageHeader& rhs);

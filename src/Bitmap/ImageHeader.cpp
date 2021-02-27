@@ -1,4 +1,5 @@
 #include "ImageHeader.h"
+#include "../StringUtility.h"
 #include <string>
 #include <stdexcept>
 #include <algorithm>
@@ -90,7 +91,15 @@ namespace OP2Utility
 	void ImageHeader::Validate() const
 	{
 		if (headerSize != sizeof(ImageHeader)) {
-			throw std::runtime_error("Image Header size must be equal to " + std::to_string(sizeof(ImageHeader)));
+			if (headerSize == sizeof(ImageHeaderV4)) {
+				throw std::runtime_error("Image Header size indicates header version 4. Only version 1 is supported.");
+			}
+			
+			if (headerSize == sizeof(ImageHeaderV5)) {
+				throw std::runtime_error("Image header size indicates header version 5. Only version 1 is supported.");
+			}
+
+			throw std::runtime_error("Unknown image header size of " + StringUtility::StringFrom(headerSize) + " detected. Header size must be equal to " + std::to_string(sizeof(ImageHeader)));
 		}
 
 		if (planes != DefaultPlanes) {
