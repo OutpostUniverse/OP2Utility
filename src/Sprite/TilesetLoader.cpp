@@ -174,9 +174,9 @@ namespace OP2Utility::Tileset
 			throwReadError("Pixel Header Tag", pixelHeader.tag, DefaultTagData);
 		}
 
-		auto expectedLenth = CalculatePixelHeaderLength(height);
-		if (pixelHeader.length != expectedLenth) {
-			throwReadError("Pixel Header Length", pixelHeader.length, expectedLenth);
+		auto expectedLength = CalculatePixelHeaderLength(height);
+		if (pixelHeader.length != expectedLength) {
+			throwReadError("Pixel Header Length", pixelHeader.length, expectedLength);
 		}
 	}
 
