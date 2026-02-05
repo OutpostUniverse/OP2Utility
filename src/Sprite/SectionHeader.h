@@ -3,6 +3,7 @@
 #include "../Tag.h"
 #include <array>
 #include <cstddef>
+#include <cstdint>
 
 namespace OP2Utility
 {
