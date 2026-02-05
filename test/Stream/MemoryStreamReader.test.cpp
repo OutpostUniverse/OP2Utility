@@ -63,7 +63,7 @@ protected:
 TEST_F(SimpleMemoryReader, Peek) {
 	char c;
 	ASSERT_NO_THROW(stream.Peek(c));
-	ASSERT_EQ(0, stream.Position());
+	ASSERT_EQ(0u, stream.Position());
 	ASSERT_EQ(buffer[0], c);
 }
 
