@@ -3,6 +3,7 @@
 #include "../XFile.h"
 #include <stdexcept>
 #include <algorithm>
+#include <cstring>
 
 namespace OP2Utility::Archive
 {
