@@ -119,11 +119,11 @@ TEST(BitmapFile, AbsoluteHeight)
 {
 	{ // Test Positive Height
 		auto bitmap = BitmapFile::CreateIndexed(1, 32, 32);
-		EXPECT_EQ(32, bitmap.AbsoluteHeight());
+		EXPECT_EQ(32u, bitmap.AbsoluteHeight());
 	}
 	{ // Test Negative Height
 		auto bitmap = BitmapFile::CreateIndexed(1, 32, -32);
-		EXPECT_EQ(32, bitmap.AbsoluteHeight());
+		EXPECT_EQ(32u, bitmap.AbsoluteHeight());
 	}
 }
 
