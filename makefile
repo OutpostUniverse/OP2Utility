@@ -4,6 +4,9 @@ BUILDDIR := .build
 INTDIR := $(BUILDDIR)/obj
 OUTPUT := libOP2Utility.a
 
+clangWarnNotInterested := -Wno-c++98-compat-pedantic -Wno-pre-c++17-compat
+clangWarnShow := -Weverything $(clangWarnNotInterested)
+
 CXXFLAGS_WARN := -Wall -Wno-unknown-pragmas
 CXXFLAGS := -std=c++17 -g $(CXXFLAGS_EXTRA) $(CXXFLAGS_WARN)
 
@@ -97,6 +100,12 @@ clean-all: clean
 
 
 ## Linting ##
+
+.PHONY: show-warnings
+show-warnings:
+	@$(MAKE) clean > /dev/null
+	$(MAKE) --output-sync all CXX=clang++ CXXFLAGS_WARN="$(clangWarnShow)" 2>&1 >/dev/null | grep -o "\[-W.*\]" | sort | uniq
+	@$(MAKE) clean > /dev/null
 
 .PHONY: lint
 lint: cppcheck cppclean cppinclude
