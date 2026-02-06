@@ -86,6 +86,7 @@ include $(wildcard $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.d,$(TESTSRCS)))
 .PHONY: clean clean-all
 clean:
 	-rm -fr $(INTDIR)
+	-rm -fr $(TESTINTDIR)
 clean-all: clean
 	-rm -fr $(BUILDDIR)
 	-rm -f $(OUTPUT)
