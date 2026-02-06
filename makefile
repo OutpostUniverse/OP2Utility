@@ -64,6 +64,9 @@ TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTINTDIR)/$*.Td
 TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTINTDIR)/$*.Td $(TESTINTDIR)/$*.d && touch $@
 
+.PHONY: test
+test: $(TESTOUTPUT)
+
 .PHONY: check
 check: $(TESTOUTPUT)
 	cd test && ../$(TESTOUTPUT)
