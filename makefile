@@ -4,7 +4,8 @@ BUILDDIR := .build
 INTDIR := $(BUILDDIR)/obj
 OUTPUT := libOP2Utility.a
 
-CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
+CXXFLAGS_WARN := -Wall -Wno-unknown-pragmas
+CXXFLAGS := -std=c++17 -g $(CXXFLAGS_WARN)
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(INTDIR)/$*.Td
 
