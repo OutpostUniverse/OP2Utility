@@ -31,13 +31,6 @@ $(INTDIR)/%.d: ;
 
 include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.d,$(SRCS)))
 
-.PHONY: clean clean-all
-clean:
-	-rm -fr $(INTDIR)
-clean-all: clean
-	-rm -fr $(BUILDDIR)
-	-rm -f $(OUTPUT)
-
 
 GTESTSRCDIR := /usr/src/googletest/
 GTESTINCDIR := /usr/src/googletest/googletest/include/
@@ -71,6 +64,9 @@ TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTINTDIR)/$*.Td
 TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTINTDIR)/$*.Td $(TESTINTDIR)/$*.d && touch $@
 
+.PHONY: test
+test: $(TESTOUTPUT)
+
 .PHONY: check
 check: $(TESTOUTPUT)
 	cd test && ../$(TESTOUTPUT)
@@ -88,3 +84,12 @@ $(TESTINTDIR)/%.d: ;
 .PRECIOUS: $(TESTINTDIR)/%.d
 
 include $(wildcard $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.d,$(TESTSRCS)))
+
+
+.PHONY: clean clean-all
+clean:
+	-rm -fr $(INTDIR)
+	-rm -fr $(TESTINTDIR)
+clean-all: clean
+	-rm -fr $(BUILDDIR)
+	-rm -f $(OUTPUT)
