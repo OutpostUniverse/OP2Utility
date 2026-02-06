@@ -115,3 +115,21 @@ cppinclude:
 .PHONY: cppinclude-detailed
 cppinclude-detailed:
 	cppinclude
+
+
+## Debugging ##
+
+.PHONY: stale
+stale:
+	@$(MAKE) -n | grep -oE '[^ ]+\.cpp$$' || true
+
+.PHONY: stale-objs
+stale-objs:
+	@$(MAKE) -n | grep -oE '[^ ]+\.o$$' || true
+
+# This can create a lot of extra tab auto complete entries, so maybe disable by default
+AllObjectFiles := $(OBJS)) $(TESTOBJS)
+AllObjectShortNames := #$(sort $(basename $(notdir $(AllObjectFiles))))
+.PHONY: $(AllObjectShortNames)
+$(AllObjectShortNames):
+	$(MAKE) $(filter %$@.o,$(AllObjectFiles))
