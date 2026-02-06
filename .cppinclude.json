@@ -1,0 +1,6 @@
+{
+	"project_dir": "src",
+	"include_dirs": ["/usr/include"],
+	"ignore_dirs": [],
+	"ignore_files": []
+}

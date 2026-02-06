@@ -4,7 +4,11 @@ BUILDDIR := .build
 INTDIR := $(BUILDDIR)/obj
 OUTPUT := libOP2Utility.a
 
-CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
+clangWarnNotInterested := -Wno-c++98-compat-pedantic -Wno-pre-c++17-compat
+clangWarnShow := -Weverything $(clangWarnNotInterested)
+
+CXXFLAGS_WARN := -Wall -Wno-unknown-pragmas
+CXXFLAGS := -std=c++17 -g $(CXXFLAGS_EXTRA) $(CXXFLAGS_WARN)
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(INTDIR)/$*.Td
 
@@ -93,3 +97,56 @@ clean:
 clean-all: clean
 	-rm -fr $(BUILDDIR)
 	-rm -f $(OUTPUT)
+
+
+## Linting ##
+
+.PHONY: show-warnings
+show-warnings:
+	@$(MAKE) clean > /dev/null
+	$(MAKE) --output-sync all CXX=clang++ CXXFLAGS_WARN="$(clangWarnShow)" 2>&1 >/dev/null | grep -o "\[-W.*\]" | sort | uniq
+	@$(MAKE) clean > /dev/null
+
+.PHONY: lint
+lint: cppcheck cppclean cppinclude
+
+.PHONY: cppcheck
+cppcheck:
+	cppcheck --quiet "$(SRCDIR)"
+
+.PHONY: cppclean
+cppclean:
+	cppclean --quiet "$(SRCDIR)"
+
+.PHONY: cppinclude
+cppinclude:
+	cppinclude --show_details=false --report_limit=30
+
+.PHONY: cppinclude-detailed
+cppinclude-detailed:
+	cppinclude
+
+
+## Debugging ##
+
+.PHONY: stale
+stale:
+	@$(MAKE) -n | grep -oE '[^ ]+\.cpp$$' || true
+
+.PHONY: stale-objs
+stale-objs:
+	@$(MAKE) -n | grep -oE '[^ ]+\.o$$' || true
+
+# This can create a lot of extra tab auto complete entries, so maybe disable by default
+AllObjectFiles := $(OBJS)) $(TESTOBJS)
+AllObjectShortNames := #$(sort $(basename $(notdir $(AllObjectFiles))))
+.PHONY: $(AllObjectShortNames)
+$(AllObjectShortNames):
+	$(MAKE) $(filter %$@.o,$(AllObjectFiles))
+
+
+## Compile performance ##
+
+.PHONY: flame-charts
+flame-charts:
+	$(MAKE) all CXX=clang++ CXXFLAGS_EXTRA="-ftime-trace"
