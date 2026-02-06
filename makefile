@@ -31,13 +31,6 @@ $(INTDIR)/%.d: ;
 
 include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.d,$(SRCS)))
 
-.PHONY: clean clean-all
-clean:
-	-rm -fr $(INTDIR)
-clean-all: clean
-	-rm -fr $(BUILDDIR)
-	-rm -f $(OUTPUT)
-
 
 GTESTSRCDIR := /usr/src/googletest/
 GTESTINCDIR := /usr/src/googletest/googletest/include/
@@ -88,3 +81,11 @@ $(TESTINTDIR)/%.d: ;
 .PRECIOUS: $(TESTINTDIR)/%.d
 
 include $(wildcard $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.d,$(TESTSRCS)))
+
+
+.PHONY: clean clean-all
+clean:
+	-rm -fr $(INTDIR)
+clean-all: clean
+	-rm -fr $(BUILDDIR)
+	-rm -f $(OUTPUT)
