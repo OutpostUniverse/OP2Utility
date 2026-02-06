@@ -5,7 +5,7 @@ INTDIR := $(BUILDDIR)/obj
 OUTPUT := libOP2Utility.a
 
 CXXFLAGS_WARN := -Wall -Wno-unknown-pragmas
-CXXFLAGS := -std=c++17 -g $(CXXFLAGS_WARN)
+CXXFLAGS := -std=c++17 -g $(CXXFLAGS_EXTRA) $(CXXFLAGS_WARN)
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(INTDIR)/$*.Td
 
