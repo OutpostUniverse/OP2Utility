@@ -93,3 +93,25 @@ clean:
 clean-all: clean
 	-rm -fr $(BUILDDIR)
 	-rm -f $(OUTPUT)
+
+
+## Linting ##
+
+.PHONY: lint
+lint: cppcheck cppclean cppinclude
+
+.PHONY: cppcheck
+cppcheck:
+	cppcheck --quiet "$(SRCDIR)"
+
+.PHONY: cppclean
+cppclean:
+	cppclean --quiet "$(SRCDIR)"
+
+.PHONY: cppinclude
+cppinclude:
+	cppinclude --show_details=false --report_limit=30
+
+.PHONY: cppinclude-detailed
+cppinclude-detailed:
+	cppinclude
