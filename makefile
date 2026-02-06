@@ -134,3 +134,10 @@ AllObjectShortNames := #$(sort $(basename $(notdir $(AllObjectFiles))))
 .PHONY: $(AllObjectShortNames)
 $(AllObjectShortNames):
 	$(MAKE) $(filter %$@.o,$(AllObjectFiles))
+
+
+## Compile performance ##
+
+.PHONY: flame-charts
+flame-charts:
+	$(MAKE) all CXX=clang++ CXXFLAGS_EXTRA="-ftime-trace"
