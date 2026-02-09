@@ -6,7 +6,7 @@
 
 namespace OP2Utility
 {
-	static const uint32_t DefaultSizeOfUnit = 120;
+	constexpr uint32_t DefaultSizeOfUnit = 120;
 
 	// Placeholder for unknown object
 	struct ObjectType1
