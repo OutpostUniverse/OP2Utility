@@ -35,6 +35,8 @@ namespace OP2Utility
 		// Allow construction from other Tag objects
 		constexpr Tag(const Tag& other) = default;
 
+		constexpr Tag& operator=(const Tag& other) = default;
+
 		// Equality and inequality comparable
 		bool operator ==(const Tag rhs) const {
 			return text == rhs.text;
