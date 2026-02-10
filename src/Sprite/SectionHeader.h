@@ -22,7 +22,7 @@ namespace OP2Utility
 		void Validate(Tag tagName) const;
 
 		// Includes sectionHeader
-		std::size_t TotalLength() const { return length + sizeof(tag); };
+		std::size_t TotalLength() const { return length + sizeof(tag); }
 	};
 
 	static_assert(8 == sizeof(SectionHeader), "SectionHeader is an unexpected size");

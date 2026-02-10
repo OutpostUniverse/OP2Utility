@@ -14,9 +14,9 @@ namespace OP2Utility::Archive
 		ArchiveFile(const std::string& filename);
 		virtual ~ArchiveFile();
 
-		std::string GetArchiveFilename() const { return m_ArchiveFilename; };
-		uint64_t GetArchiveFileSize() const { return m_ArchiveFileSize; };
-		std::size_t GetCount() const { return m_Count; };
+		std::string GetArchiveFilename() const { return m_ArchiveFilename; }
+		uint64_t GetArchiveFileSize() const { return m_ArchiveFileSize; }
+		std::size_t GetCount() const { return m_Count; }
 		bool Contains(const std::string& name);
 		void ExtractFile(const std::string& name, const std::string& pathOut);
 
