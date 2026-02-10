@@ -172,7 +172,7 @@ namespace OP2Utility::Archive
 		if (code < 256)
 		{
 			// code is an ASCII code. Output it.
-			WriteCharToBuffer((char)code);
+			WriteCharToBuffer(static_cast<char>(code));
 		}
 		else
 		{
