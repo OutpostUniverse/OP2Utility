@@ -3,9 +3,6 @@
 
 namespace OP2Utility
 {
-	constexpr Tag ArtFile::TagPalette;
-
-
 	void ArtFile::VerifyImageIndexInBounds(std::size_t index)
 	{
 		if (index > imageMetas.size()) {
