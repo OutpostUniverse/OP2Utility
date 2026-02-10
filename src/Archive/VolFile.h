@@ -18,7 +18,7 @@ namespace OP2Utility::Archive
 	{
 	public:
 		VolFile(const std::string& filename);
-		~VolFile();
+		~VolFile() override;
 
 		// Internal file status
 		//std::size_t GetIndex(const std::string& name) override;

@@ -17,7 +17,7 @@ namespace OP2Utility::Archive
 	{
 	public:
 		ClmFile(const std::string& filename);
-		virtual ~ClmFile();
+		~ClmFile() override;
 
 		std::string GetName(std::size_t index) override;
 		uint32_t GetSize(std::size_t index) override;
