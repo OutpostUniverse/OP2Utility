@@ -22,6 +22,9 @@ namespace OP2Utility::Stream
 		// This method is similar to Read, except it does not raise an exception if the buffer can not be filled
 		virtual std::size_t ReadPartial(void* buffer, std::size_t size) noexcept = 0;
 
+		constexpr Reader() = default;
+		constexpr Reader(const Reader& other) = default;
+
 		virtual ~Reader() = default;
 
 		// Helper methods, which depend only on the above interface
