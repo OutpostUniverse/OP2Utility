@@ -68,17 +68,17 @@ namespace OP2Utility
 		void Write(const std::string& filename) const;
 		void Write(Stream::Writer& streamWriter) const;
 
-		void SetVersionTag(uint32_t versionTag) { this->versionTag = versionTag; };
-		uint32_t GetVersionTag() const { return versionTag; };
-		bool IsSavedGame() const { return isSavedGame; };
-		uint32_t WidthInTiles() const { return widthInTiles; };
-		uint32_t HeightInTiles() const { return heightInTiles; };
+		void SetVersionTag(uint32_t versionTag) { this->versionTag = versionTag; }
+		uint32_t GetVersionTag() const { return versionTag; }
+		bool IsSavedGame() const { return isSavedGame; }
+		uint32_t WidthInTiles() const { return widthInTiles; }
+		uint32_t HeightInTiles() const { return heightInTiles; }
 
 		// Total number of tiles on map.
 		std::size_t TileCount() const
 		{
 			return tiles.size();
-		};
+		}
 
 		std::size_t GetTileMappingIndex(std::size_t x, std::size_t y) const;
 		CellType GetCellType(std::size_t x, std::size_t y) const;
