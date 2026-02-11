@@ -7,6 +7,8 @@ namespace OP2Utility::Stream
 {
 	class BidirectionalWriter : public ForwardWriter {
 	public:
+		~BidirectionalWriter() override;
+
 		// Seek backward by a relative amount, given as offset from current position
 		virtual void SeekBackward(uint64_t offset) = 0;
 

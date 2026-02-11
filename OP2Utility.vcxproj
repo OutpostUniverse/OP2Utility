@@ -174,6 +174,7 @@
     <ClCompile Include="src\Sprite\PaletteHeader.cpp" />
     <ClCompile Include="src\Sprite\SectionHeader.cpp" />
     <ClCompile Include="src\Stream\BidirectionalReader.cpp" />
+    <ClCompile Include="src\Stream\BidirectionalWriter.cpp" />
     <ClCompile Include="src\Stream\FileReader.cpp" />
     <ClCompile Include="src\Stream\FileWriter.cpp" />
     <ClCompile Include="src\Stream\ForwardReader.cpp" />

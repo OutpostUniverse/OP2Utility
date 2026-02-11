@@ -221,6 +221,9 @@
     <ClCompile Include="src\Stream\BidirectionalReader.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
+    <ClCompile Include="src\Stream\BidirectionalWriter.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
     <ClCompile Include="src\Stream\FileReader.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
