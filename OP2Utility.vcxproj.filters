@@ -218,6 +218,9 @@
     <ClCompile Include="src\Map\MapReader.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="src\Stream\BidirectionalReader.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
     <ClCompile Include="src\Stream\FileReader.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
