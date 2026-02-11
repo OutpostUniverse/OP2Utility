@@ -3,6 +3,9 @@
 
 namespace OP2Utility::Stream
 {
+	Reader::~Reader() = default;
+
+
 	std::string Reader::ReadNullTerminatedString(std::size_t maxCount)
 	{
 		std::string str;

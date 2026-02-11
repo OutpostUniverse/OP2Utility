@@ -25,7 +25,7 @@ namespace OP2Utility::Stream
 		constexpr Reader() = default;
 		constexpr Reader(const Reader& other) = default;
 
-		virtual ~Reader() = default;
+		virtual ~Reader();
 
 		// Helper methods, which depend only on the above interface
 		// ====
