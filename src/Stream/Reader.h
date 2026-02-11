@@ -91,22 +91,6 @@ namespace OP2Utility::Stream
 		// Read characters into a string until a null terminator is encountered
 		// Does not include the null terminator in the returned string
 		// Use maxCount to restrict the size of the returned string
-		std::string ReadNullTerminatedString(std::size_t maxCount = SIZE_MAX)
-		{
-			std::string str;
-
-			char c;
-			for (std::size_t i = 0; i < maxCount; ++i)
-			{
-				Read(c);
-				if (c == '\0') {
-					break;
-				}
-
-				str.push_back(c);
-			}
-
-			return str;
-		}
+		std::string ReadNullTerminatedString(std::size_t maxCount = SIZE_MAX);
 	};
 }

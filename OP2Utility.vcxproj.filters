@@ -230,6 +230,9 @@
     <ClCompile Include="src\Stream\MemoryWriter.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
+    <ClCompile Include="src\Stream\Reader.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
     <ClCompile Include="src\Stream\DynamicMemoryWriter.cpp">
       <Filter>Stream</Filter>
     </ClCompile>

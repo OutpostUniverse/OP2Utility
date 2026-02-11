@@ -178,6 +178,7 @@
     <ClCompile Include="src\Stream\DynamicMemoryWriter.cpp" />
     <ClCompile Include="src\Stream\MemoryWriter.cpp" />
     <ClCompile Include="src\Stream\MemoryReader.cpp" />
+    <ClCompile Include="src\Stream\Reader.cpp" />
     <ClInclude Include="src\Sprite\Animation.h" />
     <ClInclude Include="src\Sprite\ArtFile.h" />
     <ClInclude Include="src\Sprite\ImageMeta.h" />
