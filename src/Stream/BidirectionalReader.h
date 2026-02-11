@@ -7,6 +7,8 @@ namespace OP2Utility::Stream
 {
 	class BidirectionalReader : public ForwardReader {
 	public:
+		~BidirectionalReader() override;
+
 		void Peek(void* buffer, std::size_t size) {
 			ReadImplementation(buffer, size);
 			SeekBackward(size);

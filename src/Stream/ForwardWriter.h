@@ -8,6 +8,8 @@ namespace OP2Utility::Stream
 	class ForwardWriter : public Writer
 	{
 	public:
+		~ForwardWriter() override;
+
 		// Get the size of the stream
 		virtual uint64_t Length() = 0;
 

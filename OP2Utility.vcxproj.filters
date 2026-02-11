@@ -218,16 +218,34 @@
     <ClCompile Include="src\Map\MapReader.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="src\Stream\BidirectionalReader.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stream\BidirectionalWriter.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
     <ClCompile Include="src\Stream\FileReader.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
     <ClCompile Include="src\Stream\FileWriter.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
+    <ClCompile Include="src\Stream\ForwardReader.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stream\ForwardWriter.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
     <ClCompile Include="src\Stream\MemoryReader.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
     <ClCompile Include="src\Stream\MemoryWriter.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stream\Reader.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stream\Writer.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
     <ClCompile Include="src\Stream\DynamicMemoryWriter.cpp">
