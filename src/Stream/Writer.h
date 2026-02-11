@@ -20,7 +20,7 @@ namespace OP2Utility::Stream
 		virtual void WriteImplementation(const void* buffer, std::size_t size) = 0;
 
 	public:
-		virtual ~Writer() = default;
+		virtual ~Writer();
 
 		void Write(const void* buffer, std::size_t size) {
 			WriteImplementation(buffer, size);
