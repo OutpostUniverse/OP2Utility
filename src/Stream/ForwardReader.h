@@ -7,6 +7,8 @@ namespace OP2Utility::Stream
 {
 	class ForwardReader : public Reader {
 	public:
+		~ForwardReader() override;
+
 		// Get the size of the stream
 		virtual uint64_t Length() = 0;
 

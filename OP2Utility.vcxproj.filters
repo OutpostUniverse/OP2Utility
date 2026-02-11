@@ -224,6 +224,9 @@
     <ClCompile Include="src\Stream\FileWriter.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
+    <ClCompile Include="src\Stream\ForwardReader.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
     <ClCompile Include="src\Stream\MemoryReader.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
