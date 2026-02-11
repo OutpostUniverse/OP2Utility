@@ -176,6 +176,7 @@
     <ClCompile Include="src\Stream\FileReader.cpp" />
     <ClCompile Include="src\Stream\FileWriter.cpp" />
     <ClCompile Include="src\Stream\ForwardReader.cpp" />
+    <ClCompile Include="src\Stream\ForwardWriter.cpp" />
     <ClCompile Include="src\Stream\DynamicMemoryWriter.cpp" />
     <ClCompile Include="src\Stream\MemoryWriter.cpp" />
     <ClCompile Include="src\Stream\MemoryReader.cpp" />
