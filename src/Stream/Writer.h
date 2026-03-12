@@ -47,6 +47,23 @@ namespace OP2Utility::Stream
 			WriteImplementation(container.data(), container.size() * sizeof(typename T::value_type));
 		}
 
+		// Arbitrary container of writeable data types
+		// For use when the container is non-contiguous, or the element type is not trivially copyable
+		template<typename T>
+		inline
+		std::enable_if_t<
+			// The enable_if check needs to change to something like:
+			// is_iterable<T> && is_writeable<typename T::value_type>
+			// For now, we leave the old check to avoid ambiguity
+			!std::is_trivially_copyable<typename T::value_type>::value
+		>
+		Write(const T& container) {
+			// Loop over all elements and call custom serializer for type
+			for (const auto& element : container) {
+				Write(element);   // Call custom serializer
+			}
+		}
+
 		// Size prefixed container data types
 		// Ex: Write<uint32_t>(vector); // Write 32-bit vector size followed by vector data
 		template<typename SizeType, typename T>
