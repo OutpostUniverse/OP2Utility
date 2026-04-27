@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [x86, x64]
+        configuration: [Release]
+    runs-on: windows-2025
+    env:
+      Platform: ${{ matrix.platform }}
+      Configuration: ${{ matrix.configuration }}
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v3
+
+    - name: Restore nuget dependency cache
+      uses: actions/cache/restore@v5
+      id: cacheRestoreNuget
+      with:
+        path: packages
+        key: nugetCache-${{ runner.os }}-${{ matrix.platform }}-${{ hashFiles('**/packages.config') }}
+
+    - name: Install nuget dependencies
+      run: |
+        nuget restore
+
+    - name: Save nuget dependency cache
+      uses: actions/cache/save@v5
+      if: steps.cacheRestoreNuget.outputs.cache-hit != 'true'
+      with:
+        path: packages
+        key: ${{ steps.cacheRestoreNuget.outputs.cache-primary-key }}
+
+    - name: Build
+      run: |
+        msbuild . /maxCpuCount
+
+    - name: Test
+      working-directory: ./test/
+      run: ../${{env.Platform}}/${{env.Configuration}}/OP2UtilityTest.exe
