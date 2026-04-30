@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="OP2Utility.vcxproj" />
+  <Project Path="test/OP2UtilityTest.vcxproj" />
+</Solution>
