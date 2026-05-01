@@ -1,5 +1,4 @@
 #include <Sprite/ArtFile.h>
-#include <XFile.h>
 #include <Stream/DynamicMemoryWriter.h>
 #include <XFile.h>
 
