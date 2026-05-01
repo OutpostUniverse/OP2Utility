@@ -1,5 +1,5 @@
-#include "Map/Map.h"
-#include "Stream/DynamicMemoryWriter.h"
+#include <Map/Map.h>
+#include <Stream/DynamicMemoryWriter.h>
 #include <gtest/gtest.h>
 #include <string>
 

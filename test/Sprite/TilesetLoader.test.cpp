@@ -1,8 +1,8 @@
-#include "Sprite/TilesetLoader.h"
-#include "Bitmap/BitmapFile.h"
-#include "Stream/MemoryReader.h"
-#include "Stream/DynamicMemoryWriter.h"
-#include "Tag.h"
+#include <Sprite/TilesetLoader.h>
+#include <Bitmap/BitmapFile.h>
+#include <Stream/MemoryReader.h>
+#include <Stream/DynamicMemoryWriter.h>
+#include <Tag.h>
 #include <gtest/gtest.h>
 #include <stdexcept>
 

@@ -1,7 +1,7 @@
-#include "Map/Map.h"
-#include "Map/MapHeader.h"
-#include "Stream/DynamicMemoryWriter.h"
-#include "XFile.h"
+#include <Map/Map.h>
+#include <Map/MapHeader.h>
+#include <Stream/DynamicMemoryWriter.h>
+#include <XFile.h>
 #include <gtest/gtest.h>
 #include <vector>
 #include <stdexcept>

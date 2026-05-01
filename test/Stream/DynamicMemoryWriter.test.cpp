@@ -1,4 +1,4 @@
-#include "Stream/DynamicMemoryWriter.h"
+#include <Stream/DynamicMemoryWriter.h>
 #include <gtest/gtest.h>
 #include <cstdint>
 #include <array>

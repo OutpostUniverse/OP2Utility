@@ -1,6 +1,6 @@
 #include "Reader.test.h"
 #include "BidirectionalReader.test.h"
-#include "Stream/MemoryReader.h"
+#include <Stream/MemoryReader.h>
 #include <array>
 #include <string>
 #include <stdexcept>

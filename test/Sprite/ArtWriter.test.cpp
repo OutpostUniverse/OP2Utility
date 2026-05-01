@@ -1,7 +1,7 @@
-#include "Sprite/ArtFile.h"
-#include "XFile.h"
-#include "Stream/DynamicMemoryWriter.h"
-#include "XFile.h"
+#include <Sprite/ArtFile.h>
+#include <XFile.h>
+#include <Stream/DynamicMemoryWriter.h>
+#include <XFile.h>
 #include <gtest/gtest.h>
 #include <string>
 #include <stdexcept>

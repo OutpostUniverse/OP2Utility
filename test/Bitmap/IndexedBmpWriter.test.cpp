@@ -1,7 +1,7 @@
-#include "Bitmap/Color.h"
-#include "Bitmap/BitmapFile.h"
-#include "Stream/DynamicMemoryWriter.h"
-#include "XFile.h"
+#include <Bitmap/Color.h>
+#include <Bitmap/BitmapFile.h>
+#include <Stream/DynamicMemoryWriter.h>
+#include <XFile.h>
 #include <gtest/gtest.h>
 #include <string>
 #include <vector>
