@@ -1,8 +1,11 @@
 #include <Bitmap/BitmapFile.h>
 #include <Stream/DynamicMemoryWriter.h>
 #include <XFile.h>
+
 #include <gtest/gtest.h>
+
 #include <stdexcept>
+
 
 using namespace OP2Utility;
 

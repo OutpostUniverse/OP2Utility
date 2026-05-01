@@ -1,5 +1,7 @@
 #include "BidirectionalReader.test.h"
+
 #include <Stream/SliceReader.h>
+
 
 using namespace OP2Utility;
 

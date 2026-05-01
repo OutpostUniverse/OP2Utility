@@ -1,7 +1,10 @@
 #include <Map/Map.h>
 #include <Stream/DynamicMemoryWriter.h>
+
 #include <gtest/gtest.h>
+
 #include <string>
+
 
 using namespace OP2Utility;
 

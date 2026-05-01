@@ -1,5 +1,7 @@
 #include <BitTwiddle.h>
+
 #include <gtest/gtest.h>
+
 
 using namespace OP2Utility;
 

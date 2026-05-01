@@ -1,6 +1,9 @@
 #include "BidirectionalReader.test.h"
+
 #include <Stream/FileReader.h>
+
 #include <array>
+
 
 using namespace OP2Utility;
 

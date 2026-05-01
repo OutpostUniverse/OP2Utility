@@ -1,7 +1,10 @@
 #include <XFile.h>
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
 #include <regex>
+
 
 using namespace OP2Utility;
 

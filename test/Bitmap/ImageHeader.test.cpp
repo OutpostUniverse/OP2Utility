@@ -1,9 +1,12 @@
 #include <Bitmap/ImageHeader.h>
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+
 #include <stdexcept>
 #include <cstdint>
 #include <string>
+
 
 using namespace OP2Utility;
 

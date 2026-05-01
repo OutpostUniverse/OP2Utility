@@ -2,10 +2,13 @@
 #include <Bitmap/BitmapFile.h>
 #include <Stream/DynamicMemoryWriter.h>
 #include <XFile.h>
+
 #include <gtest/gtest.h>
+
 #include <string>
 #include <vector>
 #include <cstdint>
+
 
 using namespace OP2Utility;
 using namespace OP2Utility::Stream;

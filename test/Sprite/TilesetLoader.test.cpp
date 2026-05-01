@@ -3,8 +3,11 @@
 #include <Stream/MemoryReader.h>
 #include <Stream/DynamicMemoryWriter.h>
 #include <Tag.h>
+
 #include <gtest/gtest.h>
+
 #include <stdexcept>
+
 
 using namespace OP2Utility;
 

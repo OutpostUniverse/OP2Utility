@@ -2,9 +2,12 @@
 #include <XFile.h>
 #include <Stream/DynamicMemoryWriter.h>
 #include <XFile.h>
+
 #include <gtest/gtest.h>
+
 #include <string>
 #include <stdexcept>
+
 
 using namespace OP2Utility;
 
