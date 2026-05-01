@@ -1,4 +1,4 @@
-#include "../src/Rect.h"
+#include "Rect.h"
 #include <gtest/gtest.h>
 
 using namespace OP2Utility;

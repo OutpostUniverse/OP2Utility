@@ -1,4 +1,4 @@
-#include "../src/Tag.h"
+#include "Tag.h"
 #include <gtest/gtest.h>
 #include <sstream>
 #include <type_traits>

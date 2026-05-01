@@ -1,6 +1,6 @@
-#include "../src/ResourceManager.h"
-#include "../src/Archive/VolFile.h"
-#include "../src/XFile.h"
+#include "ResourceManager.h"
+#include "Archive/VolFile.h"
+#include "XFile.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
 

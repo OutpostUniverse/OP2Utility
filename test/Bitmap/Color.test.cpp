@@ -1,4 +1,4 @@
-#include "../src/Bitmap/Color.h"
+#include "Bitmap/Color.h"
 #include <gtest/gtest.h>
 
 using namespace OP2Utility;

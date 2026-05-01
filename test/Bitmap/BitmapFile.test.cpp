@@ -1,5 +1,5 @@
-#include "../src/Bitmap/BitmapFile.h"
-#include "../src/Stream/DynamicMemoryWriter.h"
+#include "Bitmap/BitmapFile.h"
+#include "Stream/DynamicMemoryWriter.h"
 #include "XFile.h"
 #include <gtest/gtest.h>
 #include <stdexcept>

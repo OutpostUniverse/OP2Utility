@@ -1,4 +1,4 @@
-#include "../src/BitTwiddle.h"
+#include "BitTwiddle.h"
 #include <gtest/gtest.h>
 
 using namespace OP2Utility;
