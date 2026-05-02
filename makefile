@@ -19,6 +19,7 @@ SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
+.PHONY: all
 all: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
