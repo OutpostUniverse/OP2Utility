@@ -1,4 +1,6 @@
 
+.DEFAULT_GOAL := op2utility
+
 SRCDIR := src
 BUILDDIR := .build
 INTDIR := $(BUILDDIR)/obj
