@@ -1,4 +1,9 @@
 
+.DEFAULT_GOAL := op2utility
+
+.PHONY: all
+all: op2utility test
+
 SRCDIR := src
 BUILDDIR := .build
 INTDIR := $(BUILDDIR)/obj
@@ -19,7 +24,8 @@ SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
-all: $(OUTPUT)
+.PHONY: op2utility
+op2utility: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
 	@mkdir -p ${@D}
