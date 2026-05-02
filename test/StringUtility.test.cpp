@@ -1,6 +1,8 @@
-#include "../src/StringUtility.h"
+#include <StringUtility.h>
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
 
 using namespace OP2Utility::StringUtility;
 

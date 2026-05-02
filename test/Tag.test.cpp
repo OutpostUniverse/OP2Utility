@@ -1,7 +1,10 @@
-#include "../src/Tag.h"
+#include <Tag.h>
+
 #include <gtest/gtest.h>
+
 #include <sstream>
 #include <type_traits>
+
 
 using namespace OP2Utility;
 

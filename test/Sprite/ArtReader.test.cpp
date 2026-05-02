@@ -1,6 +1,8 @@
-#include "../src/Sprite/ArtFile.h"
-#include "../src/Stream/DynamicMemoryWriter.h"
+#include <Sprite/ArtFile.h>
+#include <Stream/DynamicMemoryWriter.h>
+
 #include <gtest/gtest.h>
+
 
 using namespace OP2Utility;
 

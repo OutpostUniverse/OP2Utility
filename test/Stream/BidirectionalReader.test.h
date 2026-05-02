@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Stream/BidirectionalReader.h"
+#include <Stream/BidirectionalReader.h>
+
 #include <gtest/gtest.h>
+
 
 using namespace OP2Utility;
 

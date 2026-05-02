@@ -1,10 +1,13 @@
-#include "../../src/Sprite/TilesetLoader.h"
-#include "../../src/Bitmap/BitmapFile.h"
-#include "../../src/Stream/MemoryReader.h"
-#include "../../src/Stream/DynamicMemoryWriter.h"
-#include "../../src/Tag.h"
+#include <Sprite/TilesetLoader.h>
+#include <Bitmap/BitmapFile.h>
+#include <Stream/MemoryReader.h>
+#include <Stream/DynamicMemoryWriter.h>
+#include <Tag.h>
+
 #include <gtest/gtest.h>
+
 #include <stdexcept>
+
 
 using namespace OP2Utility;
 

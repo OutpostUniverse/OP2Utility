@@ -1,10 +1,12 @@
-#include "../src/Sprite/ArtFile.h"
-#include "../src/XFile.h"
-#include "Stream/DynamicMemoryWriter.h"
-#include "XFile.h"
+#include <Sprite/ArtFile.h>
+#include <Stream/DynamicMemoryWriter.h>
+#include <XFile.h>
+
 #include <gtest/gtest.h>
+
 #include <string>
 #include <stdexcept>
+
 
 using namespace OP2Utility;
 

@@ -1,7 +1,10 @@
-#include "../src/Bitmap/BmpHeader.h"
+#include <Bitmap/BmpHeader.h>
+
 #include <gtest/gtest.h>
+
 #include <stdexcept>
 #include <cstdint>
+
 
 using namespace OP2Utility;
 

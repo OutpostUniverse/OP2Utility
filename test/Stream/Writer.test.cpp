@@ -1,8 +1,11 @@
-#include "Stream/Writer.h"
-#include "Stream/DynamicMemoryWriter.h"
+#include <Stream/Writer.h>
+#include <Stream/DynamicMemoryWriter.h>
+
 #include <gtest/gtest.h>
+
 #include <vector>
 #include <type_traits>
+
 
 using namespace OP2Utility;
 

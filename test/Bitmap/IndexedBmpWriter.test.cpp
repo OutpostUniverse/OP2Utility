@@ -1,11 +1,14 @@
-#include "../src/Bitmap/Color.h"
-#include "../src/Bitmap/BitmapFile.h"
-#include "../src/Stream/DynamicMemoryWriter.h"
-#include "XFile.h"
+#include <Bitmap/Color.h>
+#include <Bitmap/BitmapFile.h>
+#include <Stream/DynamicMemoryWriter.h>
+#include <XFile.h>
+
 #include <gtest/gtest.h>
+
 #include <string>
 #include <vector>
 #include <cstdint>
+
 
 using namespace OP2Utility;
 using namespace OP2Utility::Stream;
