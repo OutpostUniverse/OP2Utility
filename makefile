@@ -1,6 +1,9 @@
 
 .DEFAULT_GOAL := op2utility
 
+.PHONY: all
+all: op2utility
+
 SRCDIR := src
 BUILDDIR := .build
 INTDIR := $(BUILDDIR)/obj
@@ -20,9 +23,6 @@ POSTCOMPILE = @mv -f $(INTDIR)/$*.Td $(INTDIR)/$*.d && touch $@
 SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
-
-.PHONY: all
-all: op2utility
 
 .PHONY: op2utility
 op2utility: $(OUTPUT)
