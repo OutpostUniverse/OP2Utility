@@ -20,7 +20,10 @@ OBJS := $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
 .PHONY: all
-all: $(OUTPUT)
+all: op2utility
+
+.PHONY: op2utility
+op2utility: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
 	@mkdir -p ${@D}
