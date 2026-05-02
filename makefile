@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := op2utility
 
 .PHONY: all
-all: op2utility
+all: op2utility test
 
 SRCDIR := src
 BUILDDIR := .build
