@@ -302,7 +302,7 @@ namespace OP2Utility::Archive
 
 	bool ClmFile::ClmHeader::CheckFileVersion() const {
 		return fileVersion == standardFileVersion;
-	};
+	}
 
 	bool ClmFile::ClmHeader::CheckUnknown() const {
 		return unknown == standardUnknown;
