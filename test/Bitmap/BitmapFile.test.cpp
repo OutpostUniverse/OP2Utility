@@ -9,6 +9,8 @@
 
 using namespace OP2Utility;
 
+namespace
+{
 void WriteAndReadBitmapSub(uint16_t bitCount, int32_t width, int32_t height)
 {
 	Stream::DynamicMemoryWriter writer;
@@ -20,6 +22,8 @@ void WriteAndReadBitmapSub(uint16_t bitCount, int32_t width, int32_t height)
 	EXPECT_NO_THROW(bitmapFile2 = BitmapFile::ReadIndexed(writer.GetReader()));
 	EXPECT_EQ(bitmapFile, bitmapFile2);
 }
+}
+
 
 TEST(BitmapFile, RoundTripWriteAndRead)
 {
