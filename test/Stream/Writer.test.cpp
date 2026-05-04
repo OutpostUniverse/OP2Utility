@@ -39,7 +39,7 @@ TEST(Writer, CanSerializeVectorOfTrivialStruct) {
 
 TEST(Writer, CanSerializeNonTrivialType) {
 	struct NonTrivialStruct {
-		virtual void virtualFunction() {};
+		virtual void virtualFunction() {}
 
 		void Write(Stream::Writer& writer) {
 			writer.Write(testInteger);
