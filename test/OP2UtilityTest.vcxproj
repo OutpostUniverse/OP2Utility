@@ -22,7 +22,7 @@
     <ProjectGuid>{e4517bf0-202c-41b0-85f8-fbe2e8a76f51}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
