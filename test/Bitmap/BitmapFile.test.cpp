@@ -84,7 +84,7 @@ TEST(BitmapFile, VerifyPixelSizeMatchesImageDimensionsWithPitch)
 	EXPECT_THROW(BitmapFile::VerifyPixelSizeMatchesImageDimensionsWithPitch(1, 1, 1, 1), std::runtime_error);
 
 	// Test non-static version of function
-	BitmapFile bitmapFile = BitmapFile::CreateIndexed(1, 1, 1);;
+	BitmapFile bitmapFile = BitmapFile::CreateIndexed(1, 1, 1);
 	EXPECT_NO_THROW(bitmapFile.VerifyPixelSizeMatchesImageDimensionsWithPitch());
 	bitmapFile.pixels.resize(1, 0);
 	EXPECT_THROW(bitmapFile.VerifyPixelSizeMatchesImageDimensionsWithPitch(), std::runtime_error);
