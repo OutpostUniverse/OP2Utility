@@ -33,7 +33,7 @@ namespace OP2Utility::Tileset
 	{
 		SectionHeader ppal;
 		SectionHeader head;
-		uint32_t tagCount;
+		uint32_t tagCount{};
 
 		constexpr static auto DefaultTagPpal = MakeTag("PPAL");
 		constexpr static uint32_t DefaultPpalSectionSize = 1048;
