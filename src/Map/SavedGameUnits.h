@@ -34,8 +34,8 @@ namespace OP2Utility
 		std::vector<uint32_t> objects2;
 		uint32_t nextUnitIndex{}; //Type UnitID
 		uint32_t prevUnitIndex{}; //Type UnitID
-		std::array<UnitRecord, 2047> units; // Was 1023 before patch
-		std::array<uint32_t, 2048> freeUnits;
+		std::array<UnitRecord, 2047> units{}; // Was 1023 before patch
+		std::array<uint32_t, 2048> freeUnits{};
 
 		void CheckSizeOfUnit() const;
 	};
