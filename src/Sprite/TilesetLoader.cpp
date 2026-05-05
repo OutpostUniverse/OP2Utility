@@ -74,7 +74,12 @@ namespace OP2Utility::Tileset
 		reader.Read(paletteHeader);
 		ValidatePaletteHeader(paletteHeader);
 
-		auto bitmapFile = BitmapFile::CreateIndexed(tilesetHeader.bitDepth, tilesetHeader.pixelWidth, tilesetHeader.pixelHeight * -1);
+		const auto bitDepth = static_cast<uint16_t>(tilesetHeader.bitDepth);
+		if (static_cast<uint32_t>(bitDepth) != tilesetHeader.bitDepth) {
+			throw std::runtime_error("Invalid bitDepth reading custom tileset: " + std::to_string(tilesetHeader.bitDepth));
+		}
+
+		auto bitmapFile = BitmapFile::CreateIndexed(bitDepth, tilesetHeader.pixelWidth, tilesetHeader.pixelHeight * -1);
 		reader.Read(bitmapFile.palette);
 
 		SectionHeader pixelHeader;
