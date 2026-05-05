@@ -27,13 +27,13 @@ namespace OP2Utility
 
 			static_assert(8 == sizeof(Layer), "Animation::Frame::Layer is an unexpected size");
 
-			LayerMetadata layerMetadata;
-			LayerMetadata unknownBitfield;
+			LayerMetadata layerMetadata{};
+			LayerMetadata unknownBitfield{};
 
-			uint8_t optional1;
-			uint8_t optional2;
-			uint8_t optional3;
-			uint8_t optional4;
+			uint8_t optional1{};
+			uint8_t optional2{};
+			uint8_t optional3{};
+			uint8_t optional4{};
 
 			// Maximum count of items in container is 128
 			std::vector<Layer> layers;
