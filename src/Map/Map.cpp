@@ -7,6 +7,7 @@
 namespace OP2Utility
 {
 	Map::Map() :
+		clipRect{},
 		versionTag(MapHeader::MinMapVersion),
 		isSavedGame(false),
 		widthInTiles(0),

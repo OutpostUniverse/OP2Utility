@@ -27,13 +27,13 @@ namespace OP2Utility
 
 			static_assert(8 == sizeof(Layer), "Animation::Frame::Layer is an unexpected size");
 
-			LayerMetadata layerMetadata;
-			LayerMetadata unknownBitfield;
+			LayerMetadata layerMetadata{};
+			LayerMetadata unknownBitfield{};
 
-			uint8_t optional1;
-			uint8_t optional2;
-			uint8_t optional3;
-			uint8_t optional4;
+			uint8_t optional1{};
+			uint8_t optional2{};
+			uint8_t optional3{};
+			uint8_t optional4{};
 
 			// Maximum count of items in container is 128
 			std::vector<Layer> layers;
@@ -48,10 +48,10 @@ namespace OP2Utility
 
 		static_assert(16 == sizeof(UnknownContainer), "Animation::UnknownContainer is an unexpected size");
 
-		uint32_t unknown;
-		Rect selectionRect; // pixels
-		Point32 pixelDisplacement; // Reverse direction from an offset, origin is center of tile
-		uint32_t unknown2; //(0x3C CC/DIRT/Garage/Std. Lab construction/dock, 0x0D spider walking)
+		uint32_t unknown{};
+		Rect selectionRect{}; // pixels
+		Point32 pixelDisplacement{}; // Reverse direction from an offset, origin is center of tile
+		uint32_t unknown2{}; //(0x3C CC/DIRT/Garage/Std. Lab construction/dock, 0x0D spider walking)
 
 		std::vector<Frame> frames;
 

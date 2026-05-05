@@ -409,7 +409,12 @@ namespace OP2Utility::Archive
 		m_Count = packedFileCount;
 	}
 
-	VolFile::SectionHeader::SectionHeader() {}
+	VolFile::SectionHeader::SectionHeader() :
+		tag{},
+		length{},
+		padding{}
+	{}
+
 	VolFile::SectionHeader::SectionHeader(Tag tag, uint32_t length, VolPadding padding)
 		: tag(tag), length(length), padding(padding) {}
 }

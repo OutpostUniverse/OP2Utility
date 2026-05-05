@@ -16,7 +16,7 @@ namespace OP2Utility
 		std::string tilesetFilename;
 
 		// Number of Tiles in set (represented on BMP).
-		uint32_t numTiles;
+		uint32_t numTiles{};
 
 
 		bool operator==(const TilesetSource& rhs) const {
