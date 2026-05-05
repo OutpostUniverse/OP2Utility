@@ -80,10 +80,10 @@ namespace OP2Utility::Archive
 			std::vector<std::unique_ptr<Stream::BidirectionalReader>> fileStreamReaders;
 			std::vector<std::string> filesToPack;
 			std::vector<std::string> names;
-			uint32_t stringTableLength;
-			uint32_t indexTableLength;
-			uint32_t paddedStringTableLength;
-			uint32_t paddedIndexTableLength;
+			uint32_t stringTableLength{};
+			uint32_t indexTableLength{};
+			uint32_t paddedStringTableLength{};
+			uint32_t paddedIndexTableLength{};
 
 			std::size_t fileCount() const
 			{
