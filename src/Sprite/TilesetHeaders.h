@@ -10,11 +10,11 @@ namespace OP2Utility::Tileset
 	struct TilesetHeader
 	{
 		SectionHeader sectionHead;
-		uint32_t tagCount;
-		uint32_t pixelWidth;
-		uint32_t pixelHeight; // Assume height is always positive, unlike standard Windows Bitmap Format
-		uint32_t bitDepth;
-		uint32_t flags;
+		uint32_t tagCount{};
+		uint32_t pixelWidth{};
+		uint32_t pixelHeight{}; // Assume height is always positive, unlike standard Windows Bitmap Format
+		uint32_t bitDepth{};
+		uint32_t flags{};
 
 		constexpr static auto DefaultTagHead = MakeTag("head");
 		constexpr static uint32_t DefaultSectionSize = 0x14;
