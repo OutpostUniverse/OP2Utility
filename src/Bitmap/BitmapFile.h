@@ -26,8 +26,8 @@ namespace OP2Utility
 	class BitmapFile
 	{
 	public:
-		BmpHeader bmpHeader;
-		ImageHeader imageHeader;
+		BmpHeader bmpHeader{};
+		ImageHeader imageHeader{};
 		std::vector<Color> palette;
 		std::vector<uint8_t> pixels;
 
