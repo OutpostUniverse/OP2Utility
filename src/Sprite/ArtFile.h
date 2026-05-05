@@ -30,7 +30,7 @@ namespace OP2Utility
 		std::vector<Palette8Bit> palettes;
 		std::vector<ImageMeta> imageMetas;
 		std::vector<Animation> animations;
-		uint32_t unknownAnimationCount;
+		uint32_t unknownAnimationCount{};
 
 		static ArtFile Read(std::string filename);
 		static ArtFile Read(Stream::Reader& reader);
