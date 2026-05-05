@@ -42,7 +42,7 @@ jobs:
 
     - name: Build
       run: |
-        msbuild . /maxCpuCount
+        msbuild . /maxCpuCount /warnAsError
 
     - name: Test
       working-directory: ./test/
