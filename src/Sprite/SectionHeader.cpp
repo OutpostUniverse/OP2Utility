@@ -3,7 +3,7 @@
 
 namespace OP2Utility
 {
-	SectionHeader::SectionHeader() : length(0) {}
+	SectionHeader::SectionHeader() : tag{}, length(0) {}
 	SectionHeader::SectionHeader(Tag tag, uint32_t length) : tag(tag), length(length) {}
 
 	void SectionHeader::Validate(Tag tagName) const
