@@ -195,7 +195,7 @@ namespace OP2Utility::Archive
 
 
 	// Performs a tree lookup guided by the bitstream to find the next code
-	int HuffLZ::GetNextCode()
+	unsigned short HuffLZ::GetNextCode()
 	{
 		int nodeIndex;
 		bool bBit;

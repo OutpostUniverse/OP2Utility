@@ -22,7 +22,7 @@ namespace OP2Utility::Archive
 		void FillDecompressBuffer();				// Decompress until buffer is near full
 		std::size_t CopyAvailableData(char *buff, std::size_t size);// Copies already decompressed data
 		bool DecompressCode();	// Decompresses a code and returns false at end of stream
-		int GetNextCode();
+		unsigned short GetNextCode();
 		unsigned int GetRepeatOffset();
 		void WriteCharToBuffer(char c);
 
