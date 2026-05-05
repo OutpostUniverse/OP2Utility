@@ -48,10 +48,10 @@ namespace OP2Utility
 
 		static_assert(16 == sizeof(UnknownContainer), "Animation::UnknownContainer is an unexpected size");
 
-		uint32_t unknown;
-		Rect selectionRect; // pixels
-		Point32 pixelDisplacement; // Reverse direction from an offset, origin is center of tile
-		uint32_t unknown2; //(0x3C CC/DIRT/Garage/Std. Lab construction/dock, 0x0D spider walking)
+		uint32_t unknown{};
+		Rect selectionRect{}; // pixels
+		Point32 pixelDisplacement{}; // Reverse direction from an offset, origin is center of tile
+		uint32_t unknown2{}; //(0x3C CC/DIRT/Garage/Std. Lab construction/dock, 0x0D spider walking)
 
 		std::vector<Frame> frames;
 
