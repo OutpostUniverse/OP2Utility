@@ -7,7 +7,7 @@ namespace OP2Utility::StringUtility
 	void ConvertToUpperInPlace(std::string& str)
 	{
 		for (auto& c : str) {
-			c = toupper(c);
+			c = static_cast<char>(toupper(static_cast<unsigned char>(c)));
 		}
 	}
 
