@@ -56,7 +56,6 @@ namespace OP2Utility
 
 	uint32_t Map::GetWidthInTilesLog2(uint32_t widthInTiles) const
 	{
-		//if (!IsPowerOf2(widthInTiles)) {
 		if (widthInTiles && !IsPowerOf2(widthInTiles)) {
 			throw std::runtime_error("Map width in tiles must be a power of 2");
 		}
