@@ -68,7 +68,7 @@ namespace OP2Utility
 		void Write(const std::string& filename) const;
 		void Write(Stream::Writer& streamWriter) const;
 
-		void SetVersionTag(uint32_t versionTag) { this->versionTag = versionTag; }
+		void SetVersionTag(uint32_t newVersionTag) { this->versionTag = newVersionTag; }
 		uint32_t GetVersionTag() const { return versionTag; }
 		bool IsSavedGame() const { return isSavedGame; }
 		uint32_t WidthInTiles() const { return widthInTiles; }
