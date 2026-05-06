@@ -74,7 +74,7 @@ namespace OP2Utility
 	std::size_t ImageHeader::CalculatePitch(uint16_t bitCount, int32_t width)
 	{
 		const auto bytesOfPixelsPerRow = CalcPixelByteWidth(bitCount, width);
-		return (bytesOfPixelsPerRow + 3) & ~3;
+		return (bytesOfPixelsPerRow + 3) & ~3u;
 	}
 
 	std::size_t ImageHeader::CalcPixelByteWidth() const
