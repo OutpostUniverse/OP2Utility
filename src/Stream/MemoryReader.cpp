@@ -36,13 +36,13 @@ namespace OP2Utility::Stream
 		return position;
 	}
 
-	void MemoryReader::Seek(uint64_t position) {
-		if (position > streamSize) {
+	void MemoryReader::Seek(uint64_t newPosition) {
+		if (newPosition > streamSize) {
 			throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 		}
 
-		// position is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
-		this->position = static_cast<std::size_t>(position);
+		// newPosition is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
+		this->position = static_cast<std::size_t>(newPosition);
 	}
 
 	void MemoryReader::SeekForward(uint64_t offset)
