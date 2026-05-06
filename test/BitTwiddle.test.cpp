@@ -17,7 +17,7 @@ TEST(BitTwiddle, IsPowerOf2) {
 	EXPECT_TRUE(IsPowerOf2(256));
 	EXPECT_TRUE(IsPowerOf2(512));
 
-	EXPECT_TRUE(IsPowerOf2(1 << 31));
+	EXPECT_TRUE(IsPowerOf2(1u << 31));
 
 	EXPECT_FALSE(IsPowerOf2(0));
 	EXPECT_FALSE(IsPowerOf2(3));
@@ -38,5 +38,5 @@ TEST(BitTwiddle, Log2OfPowerOf2) {
 	EXPECT_EQ(8u, Log2OfPowerOf2(256));
 	EXPECT_EQ(9u, Log2OfPowerOf2(512));
 
-	EXPECT_EQ(31u, Log2OfPowerOf2(1 << 31));
+	EXPECT_EQ(31u, Log2OfPowerOf2(1u << 31));
 }
