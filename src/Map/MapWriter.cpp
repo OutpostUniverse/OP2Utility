@@ -24,7 +24,7 @@ namespace OP2Utility
 	void Map::Write(const std::string& filename) const
 	{
 		Stream::FileWriter mapStream(filename);
-		this->Write(mapStream);
+		Write(mapStream);
 	}
 
 	void Map::Write(Stream::Writer& mapStream) const
