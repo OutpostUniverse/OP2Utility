@@ -287,8 +287,8 @@ namespace OP2Utility::Archive
 		volInfo.indexTableLength = static_cast<uint32_t>(volInfo.fileCount()) * sizeof(IndexEntry);
 
 		// Calculate the zero padded length of the string table and index table
-		volInfo.paddedStringTableLength = (volInfo.stringTableLength + 7) & ~3;
-		volInfo.paddedIndexTableLength = (volInfo.indexTableLength + 3) & ~3;
+		volInfo.paddedStringTableLength = (volInfo.stringTableLength + 7) & ~3u;
+		volInfo.paddedIndexTableLength = (volInfo.indexTableLength + 3) & ~3u;
 
 		if (volInfo.indexEntries.size() == 0) {
 			return;
@@ -300,7 +300,7 @@ namespace OP2Utility::Archive
 		for (std::size_t i = 1; i < volInfo.fileCount(); ++i)
 		{
 			const IndexEntry& previousIndex = volInfo.indexEntries[i - 1];
-			volInfo.indexEntries[i].dataBlockOffset = (previousIndex.dataBlockOffset + previousIndex.fileSize + 11) & ~3;
+			volInfo.indexEntries[i].dataBlockOffset = (previousIndex.dataBlockOffset + previousIndex.fileSize + 11) & ~3u;
 		}
 	}
 
