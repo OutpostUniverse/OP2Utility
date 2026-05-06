@@ -68,7 +68,7 @@ namespace OP2Utility
 		void Write(const std::string& filename) const;
 		void Write(Stream::Writer& streamWriter) const;
 
-		void SetVersionTag(uint32_t versionTag) { this->versionTag = versionTag; }
+		void SetVersionTag(uint32_t newVersionTag) { versionTag = newVersionTag; }
 		uint32_t GetVersionTag() const { return versionTag; }
 		bool IsSavedGame() const { return isSavedGame; }
 		uint32_t WidthInTiles() const { return widthInTiles; }
@@ -102,7 +102,6 @@ namespace OP2Utility
 
 		// Write
 		MapHeader CreateHeader() const;
-		uint32_t GetWidthInTilesLog2(uint32_t widthInTiles) const;
 		static void WriteTilesetSources(Stream::Writer& stream, const std::vector<TilesetSource>& tilesetSources);
 		static void WriteTileGroups(Stream::Writer& stream, const std::vector<TileGroup>& tileGroups);
 		static void WriteContainerSize(Stream::Writer& stream, std::size_t size);

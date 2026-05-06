@@ -97,19 +97,19 @@ namespace OP2Utility::Stream
 		}
 
 
-		SliceReader<WrappedStreamType> Slice(uint64_t sliceLength) {
-			auto slice = Slice(Position(), sliceLength);
+		SliceReader<WrappedStreamType> Slice(uint64_t newSliceLength) {
+			auto slice = Slice(Position(), newSliceLength);
 
 			// Wait until slice is successfully created before seeking forward.
-			SeekForward(sliceLength);
+			SeekForward(newSliceLength);
 
 			return slice;
 		}
 
-		SliceReader<WrappedStreamType> Slice(uint64_t sliceStartPosition, uint64_t sliceLength) const {
+		SliceReader<WrappedStreamType> Slice(uint64_t sliceStartPosition, uint64_t newSliceLength) const {
 			if (
-				sliceStartPosition + sliceLength > this->sliceLength ||
-				sliceLength > std::numeric_limits<decltype(sliceStartPosition)>::max() - sliceStartPosition
+				sliceStartPosition + newSliceLength > this->sliceLength ||
+				newSliceLength > std::numeric_limits<decltype(sliceStartPosition)>::max() - sliceStartPosition
 			) {
 				throw std::runtime_error(
 					"Requested stream slice exceeds the bounds of current stream slice."
@@ -117,7 +117,7 @@ namespace OP2Utility::Stream
 				);
 			}
 
-			return SliceReader(wrappedStream, this->startingOffset + sliceStartPosition, sliceLength);
+			return SliceReader(wrappedStream, this->startingOffset + sliceStartPosition, newSliceLength);
 		}
 
 		const std::string& GetFilename() const {

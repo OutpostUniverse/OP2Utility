@@ -6,12 +6,25 @@
 #include <cmath>
 #include <limits>
 
+
 namespace OP2Utility
 {
+	namespace
+	{
+		uint32_t GetWidthInTilesLog2(uint32_t widthInTiles)
+		{
+			if (widthInTiles && !IsPowerOf2(widthInTiles)) {
+				throw std::runtime_error("Map width in tiles must be a power of 2");
+			}
+			return Log2OfPowerOf2(widthInTiles);
+		}
+	}
+
+
 	void Map::Write(const std::string& filename) const
 	{
 		Stream::FileWriter mapStream(filename);
-		this->Write(mapStream);
+		Write(mapStream);
 	}
 
 	void Map::Write(Stream::Writer& mapStream) const
@@ -52,15 +65,6 @@ namespace OP2Utility
 		mapHeader.tilesetCount = static_cast<uint32_t>(tilesetSources.size());
 
 		return mapHeader;
-	}
-
-	uint32_t Map::GetWidthInTilesLog2(uint32_t widthInTiles) const
-	{
-		//if (!IsPowerOf2(widthInTiles)) {
-		if (widthInTiles && !IsPowerOf2(widthInTiles)) {
-			throw std::runtime_error("Map width in tiles must be a power of 2");
-		}
-		return Log2OfPowerOf2(widthInTiles);
 	}
 
 	void Map::WriteTilesetSources(Stream::Writer& stream, const std::vector<TilesetSource>& tilesetSources)

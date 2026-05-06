@@ -129,17 +129,17 @@ namespace OP2Utility::Archive
 
 			// Load data into temporary memory buffer
 			std::size_t length = sectionHeader.length;
-			std::vector<uint8_t> buffer(length);
-			archiveFileReader.Read(buffer);
+			std::vector<uint8_t> compressedBuffer(length);
+			archiveFileReader.Read(compressedBuffer);
 
-			HuffLZ decompressor(BitStreamReader(buffer.data(), length));
+			HuffLZ decompressor(BitStreamReader(compressedBuffer.data(), length));
 
 			Stream::FileWriter fileStreamWriter(pathOut);
 
 			do
 			{
-				const void *buffer = decompressor.GetInternalBuffer(&length);
-				fileStreamWriter.Write(buffer, length);
+				const void *decompressedBuffer = decompressor.GetInternalBuffer(&length);
+				fileStreamWriter.Write(decompressedBuffer, length);
 			} while (length);
 		}
 		catch (const std::exception& e)

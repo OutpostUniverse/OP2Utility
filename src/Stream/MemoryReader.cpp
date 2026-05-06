@@ -36,35 +36,35 @@ namespace OP2Utility::Stream
 		return position;
 	}
 
-	void MemoryReader::Seek(uint64_t position) {
-		if (position > streamSize) {
+	void MemoryReader::Seek(uint64_t newPosition) {
+		if (newPosition > streamSize) {
 			throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 		}
 
-		// position is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
-		this->position = static_cast<std::size_t>(position);
+		// newPosition is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
+		position = static_cast<std::size_t>(newPosition);
 	}
 
 	void MemoryReader::SeekForward(uint64_t offset)
 	{
-		uint64_t newPosition = this->position + offset;
+		uint64_t newPosition = position + offset;
 		
-		if (newPosition > streamSize || newPosition < this->position) // Check if offset wraps past max size.
+		if (newPosition > streamSize || newPosition < position) // Check if offset wraps past max size.
 		{
 			throw std::runtime_error("Change in offset puts read position outside bounds of buffer.");
 		}
 
 		// offset is checked against size of streamSize, which cannot exceed SIZE_MAX (max size of std::size_t)
-		this->position = static_cast<std::size_t>(newPosition);
+		position = static_cast<std::size_t>(newPosition);
 	}
 
 	void MemoryReader::SeekBackward(uint64_t offset)
 	{
-		if (offset > this->position) {
+		if (offset > position) {
 			throw std::runtime_error("Change in offset puts read position outside bounds of buffer.");
 		}
 
-		this->position -= static_cast<std::size_t>(offset);
+		position -= static_cast<std::size_t>(offset);
 	}
 
 	MemoryReader MemoryReader::Slice(uint64_t sliceLength)
