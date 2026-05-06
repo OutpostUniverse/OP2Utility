@@ -93,7 +93,7 @@ namespace OP2Utility
 		void TrimTilesetSources();
 
 	private:
-		int32_t versionTag;
+		uint32_t versionTag;
 		bool isSavedGame;
 		uint32_t widthInTiles;
 		uint32_t heightInTiles;
