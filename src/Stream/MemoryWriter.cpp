@@ -29,8 +29,6 @@ namespace OP2Utility::Stream
 
 	void MemoryWriter::Seek(uint64_t newOffset)
 	{
-		// Checking if newOffset goes below 0 is unnecessary. Arithmetic on a signed and unsigned number results
-		// in a signed number that will wraparound to a large positive and be caught.
 		if (newOffset > streamSize) {
 			throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 		}
