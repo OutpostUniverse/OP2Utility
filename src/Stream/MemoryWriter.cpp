@@ -33,16 +33,16 @@ namespace OP2Utility::Stream
 			throw std::runtime_error("Change in offset places read position outside bounds of buffer.");
 		}
 
-		this->offset = static_cast<std::size_t>(newOffset);
+		offset = static_cast<std::size_t>(newOffset);
 	}
 
 	void MemoryWriter::SeekForward(uint64_t forwardOffset)
 	{
-		Seek(this->offset + forwardOffset);
+		Seek(offset + forwardOffset);
 	}
 
 	void MemoryWriter::SeekBackward(uint64_t backwardOffset)
 	{
-		Seek(this->offset - backwardOffset);
+		Seek(offset - backwardOffset);
 	}
 }
