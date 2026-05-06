@@ -102,7 +102,6 @@ namespace OP2Utility
 
 		// Write
 		MapHeader CreateHeader() const;
-		uint32_t GetWidthInTilesLog2(uint32_t widthInTiles) const;
 		static void WriteTilesetSources(Stream::Writer& stream, const std::vector<TilesetSource>& tilesetSources);
 		static void WriteTileGroups(Stream::Writer& stream, const std::vector<TileGroup>& tileGroups);
 		static void WriteContainerSize(Stream::Writer& stream, std::size_t size);
