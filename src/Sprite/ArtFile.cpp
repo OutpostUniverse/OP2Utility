@@ -14,7 +14,7 @@ namespace OP2Utility
 	{
 		for (const auto& imageMeta : imageMetas) {
 			// Bitwise operation rounds up to the next 4 byte interval
-			if (imageMeta.scanLineByteWidth != ((imageMeta.width + 3) & ~3)) {
+			if (imageMeta.scanLineByteWidth != ((imageMeta.width + 3) & ~3u)) {
 				throw std::runtime_error("Image scan line byte width is not valid. It must be the width of the image rounded up to a 4 byte interval.");
 			}
 
