@@ -7,10 +7,10 @@
 
 namespace OP2Utility
 {
-#pragma pack(push, 1) // Make sure structures are byte aligned
-
 	struct Animation {
 		struct Frame {
+
+#pragma pack(push, 1) // Make sure structures are byte aligned
 			struct LayerMetadata {
 				uint8_t count : 7;
 				uint8_t bReadOptionalData : 1;
@@ -26,6 +26,7 @@ namespace OP2Utility
 			};
 
 			static_assert(8 == sizeof(Layer), "Animation::Frame::Layer is an unexpected size");
+#pragma pack(pop)
 
 			LayerMetadata layerMetadata{};
 			LayerMetadata unknownBitfield{};
@@ -39,6 +40,7 @@ namespace OP2Utility
 			std::vector<Layer> layers;
 		};
 
+#pragma pack(push, 1) // Make sure structures are byte aligned
 		struct UnknownContainer {
 			uint32_t unknown1;
 			uint32_t unknown2;
@@ -47,6 +49,7 @@ namespace OP2Utility
 		};
 
 		static_assert(16 == sizeof(UnknownContainer), "Animation::UnknownContainer is an unexpected size");
+#pragma pack(pop)
 
 		uint32_t unknown{};
 		Rect selectionRect{}; // pixels
@@ -57,6 +60,4 @@ namespace OP2Utility
 
 		std::vector<UnknownContainer> unknownContainer;
 	};
-
-#pragma pack(pop)
 }
