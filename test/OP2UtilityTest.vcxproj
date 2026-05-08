@@ -71,16 +71,16 @@
     <ClCompile Include="XFile.test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OP2Utility.vcxproj">
-      <Project>{980d53d9-f9e2-4682-9307-1303c9e42313}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Stream\Reader.test.h" />
     <ClInclude Include="Stream\BidirectionalReader.test.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OP2Utility.vcxproj">
+      <Project>{980d53d9-f9e2-4682-9307-1303c9e42313}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition="'$(Language)'=='C++'">
     <CAExcludePath>..\packages;$(CAExcludePath)</CAExcludePath>
