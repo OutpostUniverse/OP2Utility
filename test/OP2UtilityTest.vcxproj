@@ -82,7 +82,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemDefinitionGroup />
   <PropertyGroup Condition="'$(Language)'=='C++'">
     <CAExcludePath>..\packages;$(CAExcludePath)</CAExcludePath>
   </PropertyGroup>
