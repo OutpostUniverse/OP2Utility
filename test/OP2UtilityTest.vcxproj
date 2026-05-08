@@ -132,17 +132,17 @@
     <ClCompile Include="Sprite\TilesetLoader.test.cpp" />
     <ClCompile Include="Stream\DynamicMemoryWriter.test.cpp" />
     <ClCompile Include="Stream\FileReader.test.cpp" />
+    <ClCompile Include="Stream\MemoryStreamReader.test.cpp" />
     <ClCompile Include="Stream\SliceReader.test.cpp" />
     <ClCompile Include="Stream\FileWriter.test.cpp" />
-    <ClCompile Include="Stream\MemoryStreamReader.test.cpp" />
     <ClCompile Include="Stream\Writer.test.cpp" />
     <ClCompile Include="StringUtility.test.cpp" />
     <ClCompile Include="Tag.test.cpp" />
     <ClCompile Include="XFile.test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Stream\Reader.test.h" />
     <ClInclude Include="Stream\BidirectionalReader.test.h" />
+    <ClInclude Include="Stream\Reader.test.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
