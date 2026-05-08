@@ -118,10 +118,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Sprite\TilesetHeaders.cpp" />
-    <ClCompile Include="src\Sprite\TilesetLoader.cpp" />
     <ClCompile Include="src\Archive\ArchiveFile.cpp" />
     <ClCompile Include="src\Archive\WaveFile.cpp" />
+    <ClCompile Include="src\Archive\AdaptiveHuffmanTree.cpp" />
+    <ClCompile Include="src\Archive\BitStreamReader.cpp" />
+    <ClCompile Include="src\Archive\ClmFile.cpp" />
+    <ClCompile Include="src\Archive\HuffLZ.cpp" />
+    <ClCompile Include="src\Archive\VolFile.cpp" />
     <ClCompile Include="src\Bitmap\BitmapFile.cpp" />
     <ClCompile Include="src\Bitmap\BmpHeader.cpp" />
     <ClCompile Include="src\Bitmap\Color.cpp" />
@@ -135,17 +138,14 @@
     <ClCompile Include="src\Map\MapWriter.cpp" />
     <ClCompile Include="src\Map\SavedGameUnits.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
-    <ClCompile Include="src\Archive\AdaptiveHuffmanTree.cpp" />
-    <ClCompile Include="src\Archive\BitStreamReader.cpp" />
-    <ClCompile Include="src\Archive\ClmFile.cpp" />
-    <ClCompile Include="src\Archive\HuffLZ.cpp" />
-    <ClCompile Include="src\Archive\VolFile.cpp" />
     <ClCompile Include="src\Sprite\ArtReader.cpp" />
     <ClCompile Include="src\Sprite\ArtFile.cpp" />
     <ClCompile Include="src\Sprite\ArtWriter.cpp" />
     <ClCompile Include="src\Sprite\SpriteLoader.cpp" />
     <ClCompile Include="src\Sprite\PaletteHeader.cpp" />
     <ClCompile Include="src\Sprite\SectionHeader.cpp" />
+    <ClCompile Include="src\Sprite\TilesetHeaders.cpp" />
+    <ClCompile Include="src\Sprite\TilesetLoader.cpp" />
     <ClCompile Include="src\Stream\BidirectionalReader.cpp" />
     <ClCompile Include="src\Stream\BidirectionalWriter.cpp" />
     <ClCompile Include="src\Stream\FileReader.cpp" />
@@ -163,6 +163,12 @@
   <ItemGroup>
     <ClInclude Include="src\Archive\CompressionType.h" />
     <ClInclude Include="src\Archive\WaveFile.h" />
+    <ClInclude Include="src\Archive\AdaptiveHuffmanTree.h" />
+    <ClInclude Include="src\Archive\ArchiveFile.h" />
+    <ClInclude Include="src\Archive\BitStreamReader.h" />
+    <ClInclude Include="src\Archive\ClmFile.h" />
+    <ClInclude Include="src\Archive\HuffLZ.h" />
+    <ClInclude Include="src\Archive\VolFile.h" />
     <ClInclude Include="include\OP2Utility.h" />
     <ClInclude Include="src\Bitmap\BmpCompression.h" />
     <ClInclude Include="src\Bitmap\BmpHeader.h" />
@@ -182,12 +188,6 @@
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\Rect.h" />
     <ClInclude Include="src\ResourceManager.h" />
-    <ClInclude Include="src\Archive\AdaptiveHuffmanTree.h" />
-    <ClInclude Include="src\Archive\ArchiveFile.h" />
-    <ClInclude Include="src\Archive\BitStreamReader.h" />
-    <ClInclude Include="src\Archive\ClmFile.h" />
-    <ClInclude Include="src\Archive\HuffLZ.h" />
-    <ClInclude Include="src\Archive\VolFile.h" />
     <ClInclude Include="src\Sprite\Animation.h" />
     <ClInclude Include="src\Sprite\ArtFile.h" />
     <ClInclude Include="src\Sprite\ImageMeta.h" />
@@ -196,6 +196,7 @@
     <ClInclude Include="src\Sprite\SectionHeader.h" />
     <ClInclude Include="src\Sprite\TilesetCommon.h" />
     <ClInclude Include="src\Sprite\TilesetHeaders.h" />
+    <ClInclude Include="src\Sprite\TilesetLoader.h" />
     <ClInclude Include="src\Stream\DynamicMemoryWriter.h" />
     <ClInclude Include="src\Stream\SliceReader.h" />
     <ClInclude Include="src\Stream\FileReader.h" />
@@ -211,7 +212,6 @@
     <ClInclude Include="src\StringUtility.h" />
     <ClInclude Include="src\Tag.h" />
     <ClInclude Include="src\XFile.h" />
-    <ClInclude Include="src\Sprite\TilesetLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
