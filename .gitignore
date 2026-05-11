@@ -14,3 +14,6 @@ libOP2Utility.a
 
 # Nuget
 **/packages
+
+# Vcpkg
+**/vcpkg_installed/
