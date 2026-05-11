@@ -2,7 +2,6 @@
 **/x64
 **/Debug
 **/Release
-**/packages
 .build/
 *.user
 *.vs
@@ -12,3 +11,9 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 libOP2Utility.a
+
+# Nuget
+**/packages
+
+# Vcpkg
+**/vcpkg_installed/
