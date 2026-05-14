@@ -110,6 +110,8 @@ clean-all: clean
 .PHONY: show-warnings
 show-warnings:
 	@$(MAKE) clean > /dev/null
+	$(MAKE) --output-sync CXX=clang++ CXXFLAGS_WARN="$(clangWarnShow)" 2>&1 >/dev/null | grep -o "\[-W.*\]" | sort | uniq
+	@echo
 	$(MAKE) --output-sync all CXX=clang++ CXXFLAGS_WARN="$(clangWarnShow)" 2>&1 >/dev/null | grep -o "\[-W.*\]" | sort | uniq
 	@$(MAKE) clean > /dev/null
 
