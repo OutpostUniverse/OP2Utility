@@ -139,11 +139,11 @@ cppinclude-detailed:
 
 .PHONY: stale
 stale:
-	@$(MAKE) -n | grep -oE '[^ ]+\.cpp$$' || true
+	@$(MAKE) all -n | grep -oE '[^ ]+\.cpp$$' || true
 
 .PHONY: stale-objs
 stale-objs:
-	@$(MAKE) -n | grep -oE '[^ ]+\.o$$' || true
+	@$(MAKE) all -n | grep -oE '[^ ]+\.o$$' || true
 
 # This can create a lot of extra tab auto complete entries, so maybe disable by default
 AllObjectFiles := $(OBJS)) $(TESTOBJS)
