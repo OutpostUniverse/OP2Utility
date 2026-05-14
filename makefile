@@ -110,6 +110,8 @@ clean-all: clean
 .PHONY: show-warnings
 show-warnings:
 	@$(MAKE) clean > /dev/null
+	$(MAKE) --output-sync CXX=clang++ CXXFLAGS_WARN="$(clangWarnShow)" 2>&1 >/dev/null | grep -o "\[-W.*\]" | sort | uniq
+	@echo
 	$(MAKE) --output-sync all CXX=clang++ CXXFLAGS_WARN="$(clangWarnShow)" 2>&1 >/dev/null | grep -o "\[-W.*\]" | sort | uniq
 	@$(MAKE) clean > /dev/null
 
@@ -137,11 +139,11 @@ cppinclude-detailed:
 
 .PHONY: stale
 stale:
-	@$(MAKE) -n | grep -oE '[^ ]+\.cpp$$' || true
+	@$(MAKE) all -n | grep -oE '[^ ]+\.cpp$$' || true
 
 .PHONY: stale-objs
 stale-objs:
-	@$(MAKE) -n | grep -oE '[^ ]+\.o$$' || true
+	@$(MAKE) all -n | grep -oE '[^ ]+\.o$$' || true
 
 # This can create a lot of extra tab auto complete entries, so maybe disable by default
 AllObjectFiles := $(OBJS)) $(TESTOBJS)
