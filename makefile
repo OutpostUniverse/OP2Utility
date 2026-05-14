@@ -67,7 +67,7 @@ TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
 TESTCPPFLAGS := -I$(SRCDIR) -I$(GTESTINCDIR)
 TESTLDFLAGS := -L./ -L$(GTESTLOCALLIBDIR) -L$(GTESTLOCALLIBDIR)/gtest/
-TESTLIBS := -lOP2Utility -lgtest -lgtest_main -lpthread -lstdc++fs
+TESTLIBS := -lOP2Utility -lgmock_main -lgmock -lgtest -lpthread -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
 TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTINTDIR)/$*.Td
