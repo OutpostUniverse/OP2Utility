@@ -13,7 +13,7 @@ clangWarnNotInterested := -Wno-c++98-compat-pedantic -Wno-pre-c++17-compat
 clangWarnShow := -Weverything $(clangWarnNotInterested)
 
 CXXFLAGS_WARN := -Wall -Wno-unknown-pragmas
-CXXFLAGS := -std=c++17 -g $(CXXFLAGS_EXTRA) $(CXXFLAGS_WARN)
+CXXFLAGS := -std=c++20 -g $(CXXFLAGS_EXTRA) $(CXXFLAGS_WARN)
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(INTDIR)/$*.Td
 
@@ -51,7 +51,7 @@ GTESTLIBDIR := /usr/lib/
 .PHONY: gtest gtest-install gtest-clean
 gtest:
 	mkdir -p "$(GTESTBUILDDIR)"
-	cd "$(GTESTBUILDDIR)" && cmake -DCMAKE_CXX_COMPILER="$(CXX)" -DCMAKE_C_COMPILER="$(CC)" -DCMAKE_CXX_FLAGS="-std=c++17" "$(GTESTSRCDIR)"
+	cd "$(GTESTBUILDDIR)" && cmake -DCMAKE_CXX_COMPILER="$(CXX)" -DCMAKE_C_COMPILER="$(CC)" -DCMAKE_CXX_FLAGS="-std=c++20" "$(GTESTSRCDIR)"
 	make -C "$(GTESTBUILDDIR)"
 gtest-install:
 	cp $(GTESTBUILDDIR)googlemock/gtest/lib*.a "$(GTESTLIBDIR)"
