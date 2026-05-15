@@ -15,6 +15,7 @@ jobs:
     env:
       Platform: ${{ matrix.platform }}
       Configuration: ${{ matrix.configuration }}
+      VcpkgManifestInstall: false
 
     steps:
     - uses: actions/checkout@v6
@@ -22,23 +23,31 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v3
 
-    - name: Restore nuget dependency cache
-      uses: actions/cache/restore@v5
-      id: cacheRestoreNuget
-      with:
-        path: packages
-        key: nugetCache-${{ runner.os }}-${{ matrix.platform }}-${{ hashFiles('**/packages.config') }}
-
-    - name: Install nuget dependencies
+    - name: Integrate vcpkg
       run: |
-        nuget restore
+        vcpkg --version
+        vcpkg integrate install
 
-    - name: Save nuget dependency cache
-      uses: actions/cache/save@v5
-      if: steps.cacheRestoreNuget.outputs.cache-hit != 'true'
+    - name: Restore vcpkg dependency cache
+      uses: actions/cache/restore@v5
+      id: cacheRestoreVcpkg
       with:
-        path: packages
-        key: ${{ steps.cacheRestoreNuget.outputs.cache-primary-key }}
+        path: test/vcpkg_installed
+        key: vcpkgCache-${{ runner.os }}-${{ matrix.platform }}-${{ hashFiles('test/vcpkg.json') }}
+
+    - name: Install vcpkg dependencies
+      if: steps.cacheRestoreVcpkg.outputs.cache-hit != 'true'
+      env:
+        VcpkgManifestInstall: true
+      run: |
+        msbuild . /target:VcpkgInstallManifestDependencies
+
+    - name: Save vcpkg dependency cache
+      uses: actions/cache/save@v5
+      if: steps.cacheRestoreVcpkg.outputs.cache-hit != 'true'
+      with:
+        path: test/vcpkg_installed
+        key: ${{ steps.cacheRestoreVcpkg.outputs.cache-primary-key }}
 
     - name: Build
       run: |

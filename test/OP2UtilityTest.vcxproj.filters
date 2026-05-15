@@ -69,8 +69,6 @@
     <ClCompile Include="Archive\ArchiveFile.test.cpp">
       <Filter>Archive</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
     <ClCompile Include="Sprite\TilesetLoader.test.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
@@ -103,6 +101,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="vcpkg.json" />
   </ItemGroup>
 </Project>
