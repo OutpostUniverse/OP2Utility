@@ -60,7 +60,7 @@ gtest-clean:
 	rm -rf "$(GTESTBUILDDIR)"
 
 
-TESTDIR := test
+TESTDIR := OP2UtilityTest
 TESTINTDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.o,$(TESTSRCS))
