@@ -1,0 +1,8 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "op2utility-test",
+  "dependencies": [
+    "gtest"
+  ],
+  "builtin-baseline": "031f4afe03be385aee354f15be6e6b1fe57497c7"
+}
