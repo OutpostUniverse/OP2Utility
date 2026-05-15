@@ -1,5 +1,5 @@
 {
-	"project_dir": "src",
+	"project_dir": "OP2Utility/src",
 	"include_dirs": ["/usr/include"],
 	"ignore_dirs": [],
 	"ignore_files": []

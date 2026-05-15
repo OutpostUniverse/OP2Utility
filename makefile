@@ -4,9 +4,9 @@
 .PHONY: all
 all: op2utility test
 
-SRCDIR := src
+SRCDIR := OP2Utility/src
 BUILDDIR := .build
-INTDIR := $(BUILDDIR)/obj
+INTDIR := $(BUILDDIR)/OP2Utility/obj
 OUTPUT := libOP2Utility.a
 
 clangWarnNotInterested := -Wno-c++98-compat-pedantic -Wno-pre-c++17-compat
@@ -60,7 +60,7 @@ gtest-clean:
 	rm -rf "$(GTESTBUILDDIR)"
 
 
-TESTDIR := test
+TESTDIR := OP2UtilityTest
 TESTINTDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.o,$(TESTSRCS))
@@ -79,7 +79,7 @@ test: $(TESTOUTPUT)
 
 .PHONY: check
 check: $(TESTOUTPUT)
-	cd test && ../$(TESTOUTPUT)
+	cd "$(TESTDIR)" && "../$(TESTOUTPUT)"
 
 $(TESTOUTPUT): $(TESTOBJS) $(OUTPUT)
 	@mkdir -p ${@D}

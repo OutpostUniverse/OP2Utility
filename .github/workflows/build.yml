@@ -32,8 +32,8 @@ jobs:
       uses: actions/cache/restore@v5
       id: cacheRestoreVcpkg
       with:
-        path: test/vcpkg_installed
-        key: vcpkgCache-${{ runner.os }}-${{ matrix.platform }}-${{ hashFiles('test/vcpkg.json') }}
+        path: OP2UtilityTest/vcpkg_installed
+        key: vcpkgCache-${{ runner.os }}-${{ matrix.platform }}-${{ hashFiles('OP2UtilityTest/vcpkg.json') }}
 
     - name: Install vcpkg dependencies
       if: steps.cacheRestoreVcpkg.outputs.cache-hit != 'true'
@@ -46,7 +46,7 @@ jobs:
       uses: actions/cache/save@v5
       if: steps.cacheRestoreVcpkg.outputs.cache-hit != 'true'
       with:
-        path: test/vcpkg_installed
+        path: OP2UtilityTest/vcpkg_installed
         key: ${{ steps.cacheRestoreVcpkg.outputs.cache-primary-key }}
 
     - name: Build
@@ -54,5 +54,5 @@ jobs:
         msbuild . /maxCpuCount /warnAsError
 
     - name: Test
-      working-directory: ./test/
+      working-directory: OP2UtilityTest/
       run: ../${{env.Platform}}/${{env.Configuration}}/OP2UtilityTest.exe
