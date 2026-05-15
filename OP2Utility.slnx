@@ -3,6 +3,6 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="OP2Utility.vcxproj" Id="980d53d9-f9e2-4682-9307-1303c9e42313" />
+  <Project Path="OP2Utility/OP2Utility.vcxproj" Id="980d53d9-f9e2-4682-9307-1303c9e42313" />
   <Project Path="test/OP2UtilityTest.vcxproj" Id="e4517bf0-202c-41b0-85f8-fbe2e8a76f51" />
 </Solution>

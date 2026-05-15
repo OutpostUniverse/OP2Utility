@@ -4,9 +4,9 @@
 .PHONY: all
 all: op2utility test
 
-SRCDIR := src
+SRCDIR := OP2Utility/src
 BUILDDIR := .build
-INTDIR := $(BUILDDIR)/obj
+INTDIR := $(BUILDDIR)/OP2Utility/obj
 OUTPUT := libOP2Utility.a
 
 clangWarnNotInterested := -Wno-c++98-compat-pedantic -Wno-pre-c++17-compat
