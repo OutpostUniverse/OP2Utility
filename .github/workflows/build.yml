@@ -54,5 +54,5 @@ jobs:
         msbuild . /maxCpuCount /warnAsError
 
     - name: Test
-      working-directory: ./OP2UtilityTest/
+      working-directory: OP2UtilityTest/
       run: ../${{env.Platform}}/${{env.Configuration}}/OP2UtilityTest.exe
