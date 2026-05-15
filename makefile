@@ -79,7 +79,7 @@ test: $(TESTOUTPUT)
 
 .PHONY: check
 check: $(TESTOUTPUT)
-	cd $(TESTDIR) && ../$(TESTOUTPUT)
+	cd "$(TESTDIR)" && "../$(TESTOUTPUT)"
 
 $(TESTOUTPUT): $(TESTOBJS) $(OUTPUT)
 	@mkdir -p ${@D}
