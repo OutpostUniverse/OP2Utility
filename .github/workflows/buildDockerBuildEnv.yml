@@ -7,8 +7,8 @@ jobs:
   dockerBuild:
     runs-on: ubuntu-latest
     env:
-      buildPath: .circleci/
-      imageName: ghcr.io/outpostuniverse/op2utility:1.2
+      buildPath: dockerBuildEnv/
+      imageName: ghcr.io/outpostuniverse/op2utility:1.3
 
     steps:
       - uses: actions/checkout@v6
