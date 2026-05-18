@@ -64,7 +64,7 @@ jobs:
         compiler: [g++, clang++]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/outpostuniverse/op2utility:1.3
+      image: ghcr.io/outpostuniverse/op2utility:1.4
       env:
         CXX: ${{ matrix.compiler }}
 
