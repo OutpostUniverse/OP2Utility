@@ -3,13 +3,8 @@
 #include <cstddef>
 #include <algorithm>
 
-#ifdef __cpp_lib_filesystem
 #include <filesystem>
 namespace fs = std::filesystem;
-#else
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#endif
 
 namespace OP2Utility::XFile
 {
