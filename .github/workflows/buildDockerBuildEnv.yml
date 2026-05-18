@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       buildPath: dockerBuildEnv/
-      imageName: ghcr.io/outpostuniverse/op2utility:1.3
+      imageName: ghcr.io/outpostuniverse/op2utility:1.4
 
     steps:
       - uses: actions/checkout@v6

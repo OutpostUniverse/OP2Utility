@@ -13,6 +13,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     build-essential \
     clang \
     cmake \
+    git \
+    ca-certificates \
     libgtest-dev \
     libgmock-dev \
   && rm -rf /var/lib/apt/lists/*
