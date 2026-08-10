@@ -57,7 +57,7 @@ TEST(FileWriterOpenMode, PermissionChecks) {
 	ASSERT_THROW(Stream::FileWriter writer(filename, OpenMode::CanOpenNew), std::runtime_error);
 
 	// Try to open new file in new directory with permission
-	const std::string folder{"NewDirectory/"};
+	const std::string folder{"NewDirectoryPermissionChecks/"};
 	const std::string directoryAndFilename(folder + "OpenModePermissionChecks.temp");
 	ASSERT_NO_THROW(Stream::FileWriter writer(directoryAndFilename, OpenMode::CanOpenNew));
 
@@ -95,7 +95,7 @@ TEST(FileWriter, DirectoryDoesNotExistFail) {
 }
 
 TEST(FileWriter, DirectoryDoesNotExistCreate) {
-	const std::string folder{"NewDirectory/"};
+	const std::string folder{"NewDirectoryCreated/"};
 	const std::string path{folder + "TestFile.temp"};
 
 	EXPECT_NO_THROW(Stream::FileWriter writer(path));
