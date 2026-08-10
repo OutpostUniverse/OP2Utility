@@ -82,12 +82,16 @@ TEST(FileWriter, InvalidFilename) {
 	EXPECT_THROW(Stream::FileWriter fileWriter("data"), std::runtime_error);
 }
 
-TEST(FileWriter, DirectoryDoesNotExist) {
+TEST(FileWriter, DirectoryDoesNotExistFail) {
 	const std::string& path("NewDirectory/TestFile.temp");
 
 	// New directory should not be created when writer cannot create new files
 	EXPECT_THROW(Stream::FileWriter writer(path, Stream::FileWriter::OpenMode::CanOpenExisting), std::runtime_error);
 	EXPECT_FALSE(XFile::PathExists(path));
+}
+
+TEST(FileWriter, DirectoryDoesNotExistCreate) {
+	const std::string& path("NewDirectory/TestFile.temp");
 
 	EXPECT_NO_THROW(Stream::FileWriter writer(path));
 
