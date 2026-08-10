@@ -83,7 +83,7 @@ TEST(FileWriter, InvalidFilename) {
 }
 
 TEST(FileWriter, DirectoryDoesNotExistFail) {
-	const std::string& path("NewDirectory/TestFile.temp");
+	const std::string& path("NewDirectoryNotCreated/TestFile.temp");
 
 	// New directory should not be created when writer cannot create new files
 	EXPECT_THROW(Stream::FileWriter writer(path, Stream::FileWriter::OpenMode::CanOpenExisting), std::runtime_error);
