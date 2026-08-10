@@ -94,6 +94,7 @@ TEST(FileWriter, DirectoryDoesNotExistCreate) {
 	const std::string& path("NewDirectory/TestFile.temp");
 
 	EXPECT_NO_THROW(Stream::FileWriter writer(path));
+	EXPECT_TRUE(XFile::PathExists(path));
 
 	// Delete the path after testing creation
 	XFile::DeletePath(path);
