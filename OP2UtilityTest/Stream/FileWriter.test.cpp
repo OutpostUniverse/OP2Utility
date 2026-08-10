@@ -8,7 +8,6 @@
 
 using namespace OP2Utility;
 
-void WriteToNewDirectory(const std::string& path);
 
 TEST(FileWriterOpenMode, BadFlagCombinations) {
 	using OpenMode = Stream::FileWriter::OpenMode;
@@ -58,12 +57,14 @@ TEST(FileWriterOpenMode, PermissionChecks) {
 	ASSERT_THROW(Stream::FileWriter writer(filename, OpenMode::CanOpenNew), std::runtime_error);
 
 	// Try to open new file in new directory with permission
-	const std::string directoryAndFilename("NewDirectory/OpenModePermissionChecks.temp");
+	const std::string folder{"NewDirectoryPermissionChecks/"};
+	const std::string directoryAndFilename(folder + "OpenModePermissionChecks.temp");
 	ASSERT_NO_THROW(Stream::FileWriter writer(directoryAndFilename, OpenMode::CanOpenNew));
 
 	// Cleanup temporary file
 	XFile::DeletePath(filename);
 	XFile::DeletePath(directoryAndFilename);
+	XFile::DeletePath(folder);
 }
 
 
@@ -83,20 +84,25 @@ TEST(FileWriter, InvalidFilename) {
 	EXPECT_THROW(Stream::FileWriter fileWriter("data"), std::runtime_error);
 }
 
-TEST(FileWriter, DirectoryDoesNotExist) {
-	WriteToNewDirectory("../NewDirectory/TestFile.temp");
-	WriteToNewDirectory("./NewDirectory/TestFile.temp");
-	WriteToNewDirectory("NewDirectory/TestFile.temp");
-}
+TEST(FileWriter, DirectoryDoesNotExistFail) {
+	const std::string folder{"NewDirectoryNotCreated/"};
+	const std::string path{folder + "TestFile.temp"};
 
-// Will delete the path after testing creation
-void WriteToNewDirectory(const std::string& path)
-{
 	// New directory should not be created when writer cannot create new files
 	EXPECT_THROW(Stream::FileWriter writer(path, Stream::FileWriter::OpenMode::CanOpenExisting), std::runtime_error);
+	EXPECT_FALSE(XFile::PathExists(folder));
 	EXPECT_FALSE(XFile::PathExists(path));
+}
+
+TEST(FileWriter, DirectoryDoesNotExistCreate) {
+	const std::string folder{"NewDirectoryCreated/"};
+	const std::string path{folder + "TestFile.temp"};
 
 	EXPECT_NO_THROW(Stream::FileWriter writer(path));
+	EXPECT_TRUE(XFile::PathExists(folder));
+	EXPECT_TRUE(XFile::PathExists(path));
 
+	// Delete the path after testing creation
 	XFile::DeletePath(path);
+	XFile::DeletePath(folder);
 }
