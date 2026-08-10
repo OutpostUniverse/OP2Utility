@@ -8,7 +8,6 @@
 
 using namespace OP2Utility;
 
-void WriteToNewDirectory(const std::string& path);
 
 TEST(FileWriterOpenMode, BadFlagCombinations) {
 	using OpenMode = Stream::FileWriter::OpenMode;
@@ -84,17 +83,14 @@ TEST(FileWriter, InvalidFilename) {
 }
 
 TEST(FileWriter, DirectoryDoesNotExist) {
-	WriteToNewDirectory("NewDirectory/TestFile.temp");
-}
+	const std::string& path("NewDirectory/TestFile.temp");
 
-// Will delete the path after testing creation
-void WriteToNewDirectory(const std::string& path)
-{
 	// New directory should not be created when writer cannot create new files
 	EXPECT_THROW(Stream::FileWriter writer(path, Stream::FileWriter::OpenMode::CanOpenExisting), std::runtime_error);
 	EXPECT_FALSE(XFile::PathExists(path));
 
 	EXPECT_NO_THROW(Stream::FileWriter writer(path));
 
+	// Delete the path after testing creation
 	XFile::DeletePath(path);
 }
