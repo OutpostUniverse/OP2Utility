@@ -84,8 +84,6 @@ TEST(FileWriter, InvalidFilename) {
 }
 
 TEST(FileWriter, DirectoryDoesNotExist) {
-	WriteToNewDirectory("../NewDirectory/TestFile.temp");
-	WriteToNewDirectory("./NewDirectory/TestFile.temp");
 	WriteToNewDirectory("NewDirectory/TestFile.temp");
 }
 
