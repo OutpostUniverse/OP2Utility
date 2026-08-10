@@ -102,4 +102,5 @@ TEST(FileWriter, DirectoryDoesNotExistCreate) {
 
 	// Delete the path after testing creation
 	XFile::DeletePath(path);
+	XFile::DeletePath(folder);
 }
