@@ -10,9 +10,9 @@
 FROM ubuntu:resolute-20260421
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    build-essential \
+    g++ \
+    make \
     clang \
-    cmake \
     git \
     ca-certificates \
     libgtest-dev \
